@@ -1,0 +1,32 @@
+'use strict';
+const {
+  Model
+} = require('sequelize');
+module.exports = (sequelize, DataTypes) => {
+  class stakeholder extends Model {
+    /**
+     * Helper method for defining associations.
+     * This method is not a part of Sequelize lifecycle.
+     * The `models/index` file will call this method automatically.
+     */
+    static associate(models) {
+      // define association here
+    }
+  }
+  stakeholder.init({
+    parent_id: DataTypes.UUID,
+    type_id: DataTypes.UUID,
+    category_id: DataTypes.UUID,
+    subcategory_id: DataTypes.UUID,
+    trade_name: DataTypes.STRING,
+    tin: DataTypes.STRING,
+    ownership_id: DataTypes.UUID,
+    businessfield_id: DataTypes.UUID,
+    origin: DataTypes.STRING,
+    operation_location: DataTypes.STRING
+  }, {
+    sequelize,
+    modelName: 'stakeholder',
+  });
+  return stakeholder;
+};

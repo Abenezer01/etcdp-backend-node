@@ -1,51 +1,39 @@
 'use strict';
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('addresses', {
+    await queryInterface.createTable('studyperiodcosts', {
       id: {
         allowNull: false,
+        autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.UUID
+        type: Sequelize.INTEGER
       },
       parent_id: {
-        type: Sequelize.UUID,
-        references: {
-          model: 'addresses',
-          key: 'id'
-        },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE'
+        type: Sequelize.UUID
       },
-      model_id: {
-        type: Sequelize.UUID,
-        allowNull: false
-      },
-      country: {
+      higher_institute: {
         type: Sequelize.STRING
       },
-      region: {
+      study_field_title: {
         type: Sequelize.STRING
       },
-      city: {
+      description: {
+        type: Sequelize.TEXT
+      },
+      study_program: {
         type: Sequelize.STRING
       },
-      subcity: {
+      study_level: {
         type: Sequelize.STRING
       },
-      street: {
+      study_period: {
         type: Sequelize.STRING
       },
-      block_number: {
-        type: Sequelize.STRING
-      },
-      house_number: {
-        type: Sequelize.STRING
-      },
-      latitude: {
+      study_cost: {
         type: Sequelize.DOUBLE
       },
-      longitude: {
-        type: Sequelize.DOUBLE
+      revision_no: {
+        type: Sequelize.INTEGER
       },
       createdAt: {
         allowNull: false,
@@ -58,6 +46,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('addresses');
+    await queryInterface.dropTable('studyperiodcosts');
   }
 };
