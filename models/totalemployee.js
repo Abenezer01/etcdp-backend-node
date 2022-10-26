@@ -14,6 +14,11 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   totalemployee.init({
+    id: {
+      type: DataTypes.UUID,
+      primaryKey: true,
+      defaultValue: DataTypes.UUIDV4
+    },
     parent_id: DataTypes.UUID,
     stakeholder_id: DataTypes.UUID,
     year: DataTypes.INTEGER,
@@ -21,7 +26,10 @@ module.exports = (sequelize, DataTypes) => {
     department_id: DataTypes.UUID,
     nationality: DataTypes.STRING,
     gender: DataTypes.STRING,
-    quantity: DataTypes.INTEGER
+    quantity: DataTypes.INTEGER,
+    revision_no: {
+      type: DataTypes.INTEGER
+    }
   }, {
     sequelize,
     modelName: 'totalemployee',

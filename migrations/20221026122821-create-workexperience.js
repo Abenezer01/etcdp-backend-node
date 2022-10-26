@@ -4,12 +4,17 @@ module.exports = {
     await queryInterface.createTable('workexperiences', {
       id: {
         allowNull: false,
-        autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.UUID
       },
       parent_id: {
-        type: Sequelize.UUID
+        type: Sequelize.UUID,
+        references: {
+          model: 'workexperiences',
+          key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
       stakeholder_id: {
         type: Sequelize.UUID
@@ -25,6 +30,9 @@ module.exports = {
       },
       experience_id: {
         type: Sequelize.UUID
+      },
+      revision_no: {
+        type: Sequelize.INTEGER
       },
       createdAt: {
         allowNull: false,

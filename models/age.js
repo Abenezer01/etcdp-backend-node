@@ -14,12 +14,20 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   age.init({
+    id: {
+      type: DataTypes.UUID,
+      primaryKey: true,
+      defaultValue: DataTypes.UUIDV4
+    },
     parent_id: DataTypes.UUID,
     stakeholder_id: DataTypes.UUID,
     year: DataTypes.INTEGER,
     domain: DataTypes.STRING,
     gender: DataTypes.STRING,
-    age_id: DataTypes.UUID
+    age_id: DataTypes.UUID,
+    revision_no: {
+      type: DataTypes.INTEGER
+    }
   }, {
     sequelize,
     modelName: 'age',

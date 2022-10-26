@@ -14,12 +14,20 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   workexperience.init({
+    id: {
+      type: DataTypes.UUID,
+      primaryKey: true,
+      defaultValue: DataTypes.UUIDV4
+    },
     parent_id: DataTypes.UUID,
     stakeholder_id: DataTypes.UUID,
     year: DataTypes.INTEGER,
     domain: DataTypes.STRING,
     gender: DataTypes.STRING,
-    experience_id: DataTypes.UUID
+    experience_id: DataTypes.UUID,
+    revision_no: {
+      type: DataTypes.INTEGER
+    }
   }, {
     sequelize,
     modelName: 'workexperience',

@@ -14,13 +14,21 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   training.init({
+    id: {
+      type: DataTypes.UUID,
+      primaryKey: true,
+      defaultValue: DataTypes.UUIDV4
+    },
     parent_id: DataTypes.UUID,
     title: DataTypes.STRING,
     training: DataTypes.STRING,
     description: DataTypes.TEXT,
     provider: DataTypes.STRING,
     provision_date: DataTypes.DATE,
-    revision_no: DataTypes.INTEGER
+    revision_no: DataTypes.INTEGER,
+    revision_no: {
+      type: DataTypes.INTEGER
+    }
   }, {
     sequelize,
     modelName: 'training',

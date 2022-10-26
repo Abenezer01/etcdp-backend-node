@@ -4,12 +4,17 @@ module.exports = {
     await queryInterface.createTable('certificates', {
       id: {
         allowNull: false,
-        autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.UUID
       },
       parent_id: {
-        type: Sequelize.UUID
+        type: Sequelize.UUID,
+        references: {
+          model: 'certificates',
+          key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
       stakeholder_id: {
         type: Sequelize.UUID
@@ -37,6 +42,9 @@ module.exports = {
       },
       initial_certificate_issue_date: {
         type: Sequelize.DATE
+      },
+      revision_no: {
+        type: Sequelize.INTEGER
       },
       createdAt: {
         allowNull: false,

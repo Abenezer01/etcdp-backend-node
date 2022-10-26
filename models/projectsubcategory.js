@@ -14,11 +14,19 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   projectsubcategory.init({
+    id: {
+      type: DataTypes.UUID,
+      primaryKey: true,
+      defaultValue: DataTypes.UUIDV4
+    },
     parent_id: DataTypes.UUID,
     category_id: DataTypes.UUID,
     title: DataTypes.STRING,
     description: DataTypes.TEXT,
-    revision_no: DataTypes.INTEGER
+    revision_no: DataTypes.INTEGER,
+    revision_no: {
+      type: DataTypes.INTEGER
+    }
   }, {
     sequelize,
     modelName: 'projectsubcategory',

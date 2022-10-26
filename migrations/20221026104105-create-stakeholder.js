@@ -4,12 +4,17 @@ module.exports = {
     await queryInterface.createTable('stakeholders', {
       id: {
         allowNull: false,
-        autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.UUID
       },
       parent_id: {
-        type: Sequelize.UUID
+        type: Sequelize.UUID,
+        references: {
+          model: 'stakeholders',
+          key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
       type_id: {
         type: Sequelize.UUID
@@ -37,6 +42,9 @@ module.exports = {
       },
       operation_location: {
         type: Sequelize.STRING
+      },
+      revision_no: {
+        type: Sequelize.INTEGER
       },
       createdAt: {
         allowNull: false,

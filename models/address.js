@@ -32,7 +32,10 @@ module.exports = (sequelize, DataTypes) => {
     block_number: DataTypes.STRING,
     house_number: DataTypes.STRING,
     latitude: DataTypes.DOUBLE,
-    longitude: DataTypes.DOUBLE
+    longitude: DataTypes.DOUBLE,
+    revision_no: {
+      type: DataTypes.INTEGER
+    }
   }, {
     sequelize,
     modelName: 'address',

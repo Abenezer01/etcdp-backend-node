@@ -14,6 +14,11 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   studyperiodcost.init({
+    id: {
+      type: DataTypes.UUID,
+      primaryKey: true,
+      defaultValue: DataTypes.UUIDV4
+    },
     parent_id: DataTypes.UUID,
     higher_institute: DataTypes.STRING,
     study_field_title: DataTypes.STRING,
@@ -22,7 +27,10 @@ module.exports = (sequelize, DataTypes) => {
     study_level: DataTypes.STRING,
     study_period: DataTypes.STRING,
     study_cost: DataTypes.DOUBLE,
-    revision_no: DataTypes.INTEGER
+    revision_no: DataTypes.INTEGER,
+    revision_no: {
+      type: DataTypes.INTEGER
+    }
   }, {
     sequelize,
     modelName: 'studyperiodcost',

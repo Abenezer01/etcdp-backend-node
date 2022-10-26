@@ -14,6 +14,11 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   stakeholder.init({
+    id: {
+      type: DataTypes.UUID,
+      primaryKey: true,
+      defaultValue: DataTypes.UUIDV4
+    },
     parent_id: DataTypes.UUID,
     type_id: DataTypes.UUID,
     category_id: DataTypes.UUID,
@@ -23,7 +28,10 @@ module.exports = (sequelize, DataTypes) => {
     ownership_id: DataTypes.UUID,
     businessfield_id: DataTypes.UUID,
     origin: DataTypes.STRING,
-    operation_location: DataTypes.STRING
+    operation_location: DataTypes.STRING,
+    revision_no: {
+      type: DataTypes.INTEGER
+    }
   }, {
     sequelize,
     modelName: 'stakeholder',

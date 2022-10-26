@@ -4,12 +4,17 @@ module.exports = {
     await queryInterface.createTable('totalemployees', {
       id: {
         allowNull: false,
-        autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.UUID
       },
       parent_id: {
-        type: Sequelize.UUID
+        type: Sequelize.UUID,
+        references: {
+          model: 'totalemployees',
+          key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
       stakeholder_id: {
         type: Sequelize.UUID
@@ -30,6 +35,9 @@ module.exports = {
         type: Sequelize.STRING
       },
       quantity: {
+        type: Sequelize.INTEGER
+      },
+      revision_no: {
         type: Sequelize.INTEGER
       },
       createdAt: {

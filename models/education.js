@@ -14,13 +14,21 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   education.init({
+    id: {
+      type: DataTypes.UUID,
+      primaryKey: true,
+      defaultValue: DataTypes.UUIDV4
+    },
     parent_id: DataTypes.UUID,
     stakeholder_id: DataTypes.UUID,
     year: DataTypes.INTEGER,
     domain: DataTypes.STRING,
     gender: DataTypes.STRING,
     studylevel_id: DataTypes.UUID,
-    quantity: DataTypes.INTEGER
+    quantity: DataTypes.INTEGER,
+    revision_no: {
+      type: DataTypes.INTEGER
+    }
   }, {
     sequelize,
     modelName: 'education',
