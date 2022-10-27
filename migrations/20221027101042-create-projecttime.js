@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('projectsubcategories', {
+    await queryInterface.createTable('projecttimes', {
       id: {
         allowNull: false,
         primaryKey: true,
@@ -10,26 +10,35 @@ module.exports = {
       parent_id: {
         type: Sequelize.UUID,
         references: {
-          model: 'projectsubcategories',
+          model: 'projecttimes',
           key: 'id'
         },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       },
-      category_id: {
+      project_id: {
         type: Sequelize.UUID,
         references: {
-          model: 'projectcategories',
+          model: 'projects',
           key: 'id'
         },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       },
-      title: {
-        type: Sequelize.STRING
+      contract_signing_date: {
+        type: Sequelize.DATE
       },
-      description: {
-        type: Sequelize.TEXT
+      site_handover_date: {
+        type: Sequelize.DATE
+      },
+      mobilization_days_no: {
+        type: Sequelize.INTEGER
+      },
+      commencement_date: {
+        type: Sequelize.DATE
+      },
+      original_contract_duration: {
+        type: Sequelize.INTEGER
       },
       revision_no: {
         type: Sequelize.INTEGER
@@ -45,6 +54,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('projectsubcategories');
+    await queryInterface.dropTable('projecttimes');
   }
 };

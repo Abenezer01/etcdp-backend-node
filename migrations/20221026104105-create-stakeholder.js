@@ -20,10 +20,22 @@ module.exports = {
         type: Sequelize.UUID
       },
       category_id: {
-        type: Sequelize.UUID
+        type: Sequelize.UUID,
+        references: {
+          model: 'stakecategories',
+          key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
       subcategory_id: {
-        type: Sequelize.UUID
+        type: Sequelize.UUID,
+        references: {
+          model: 'stakesubcategories',
+          key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
       trade_name: {
         type: Sequelize.STRING

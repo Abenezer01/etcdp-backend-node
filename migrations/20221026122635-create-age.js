@@ -17,7 +17,13 @@ module.exports = {
         onDelete: 'CASCADE'
       },
       stakeholder_id: {
-        type: Sequelize.UUID
+        type: Sequelize.UUID,
+        references: {
+          model: 'stakeholders',
+          key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
       year: {
         type: Sequelize.INTEGER

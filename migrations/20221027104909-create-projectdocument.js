@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('projectsubcategories', {
+    await queryInterface.createTable('projectdocuments', {
       id: {
         allowNull: false,
         primaryKey: true,
@@ -10,26 +10,32 @@ module.exports = {
       parent_id: {
         type: Sequelize.UUID,
         references: {
-          model: 'projectsubcategories',
+          model: 'projectdocuments',
           key: 'id'
         },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       },
-      category_id: {
+      project_id: {
         type: Sequelize.UUID,
         references: {
-          model: 'projectcategories',
+          model: 'projects',
           key: 'id'
         },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
+      },
+      type: {
+        type: Sequelize.STRING
       },
       title: {
         type: Sequelize.STRING
       },
       description: {
         type: Sequelize.TEXT
+      },
+      format: {
+        type: Sequelize.STRING
       },
       revision_no: {
         type: Sequelize.INTEGER
@@ -45,6 +51,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('projectsubcategories');
+    await queryInterface.dropTable('projectdocuments');
   }
 };

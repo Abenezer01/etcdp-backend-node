@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('projectsubcategories', {
+    await queryInterface.createTable('buildingdimensiondetails', {
       id: {
         allowNull: false,
         primaryKey: true,
@@ -10,25 +10,46 @@ module.exports = {
       parent_id: {
         type: Sequelize.UUID,
         references: {
-          model: 'projectsubcategories',
+          model: 'buildingdimensiondetails',
           key: 'id'
         },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       },
-      category_id: {
+      project_id: {
         type: Sequelize.UUID,
         references: {
-          model: 'projectcategories',
+          model: 'projects',
           key: 'id'
         },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       },
-      title: {
-        type: Sequelize.STRING
+      site_area: {
+        type: Sequelize.DOUBLE
       },
-      description: {
+      site_above_sea_level: {
+        type: Sequelize.DOUBLE
+      },
+      ground_floor_area: {
+        type: Sequelize.DOUBLE
+      },
+      total_floor_area: {
+        type: Sequelize.DOUBLE
+      },
+      basement_stories_no: {
+        type: Sequelize.INTEGER
+      },
+      above_ground_floor_stories_no: {
+        type: Sequelize.INTEGER
+      },
+      height_above_natural_ground: {
+        type: Sequelize.DOUBLE
+      },
+      depth_below_natural_ground: {
+        type: Sequelize.DOUBLE
+      },
+      remark: {
         type: Sequelize.TEXT
       },
       revision_no: {
@@ -45,6 +66,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('projectsubcategories');
+    await queryInterface.dropTable('buildingdimensiondetails');
   }
 };

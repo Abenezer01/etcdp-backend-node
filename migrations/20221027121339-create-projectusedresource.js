@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('totalemployees', {
+    await queryInterface.createTable('projectusedresources', {
       id: {
         allowNull: false,
         primaryKey: true,
@@ -10,38 +10,56 @@ module.exports = {
       parent_id: {
         type: Sequelize.UUID,
         references: {
-          model: 'totalemployees',
+          model: 'projectusedresources',
           key: 'id'
         },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       },
-      stakeholder_id: {
+      project_id: {
         type: Sequelize.UUID,
         references: {
-          model: 'stakeholders',
+          model: 'projects',
           key: 'id'
         },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       },
-      year: {
-        type: Sequelize.INTEGER
-      },
-      domain: {
+      type: {
         type: Sequelize.STRING
       },
-      department_id: {
+      type: {
+        type: Sequelize.STRING
+      },
+      resourcecategory_id: {
         type: Sequelize.UUID
       },
-      nationality: {
+      resouresubcategory_id: {
+        type: Sequelize.UUID
+      },
+      name: {
         type: Sequelize.STRING
       },
-      gender: {
+      item_specification: {
+        type: Sequelize.STRING
+      },
+      measurement_unit: {
         type: Sequelize.STRING
       },
       quantity: {
-        type: Sequelize.INTEGER
+        type: Sequelize.DOUBLE
+      },
+      unit_price: {
+        type: Sequelize.DOUBLE
+      },
+      period_from: {
+        type: Sequelize.DATE
+      },
+      period_until: {
+        type: Sequelize.DATE
+      },
+      data_source_id: {
+        type: Sequelize.UUID
       },
       revision_no: {
         type: Sequelize.INTEGER
@@ -57,6 +75,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('totalemployees');
+    await queryInterface.dropTable('projectusedresources');
   }
 };

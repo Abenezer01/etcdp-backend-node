@@ -1,8 +1,8 @@
 'use strict';
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('totalemployees', {
-      id: {
+    await queryInterface.createTable('constructionresourcequantityprices', {
+      d: {
         allowNull: false,
         primaryKey: true,
         type: Sequelize.UUID
@@ -10,38 +10,44 @@ module.exports = {
       parent_id: {
         type: Sequelize.UUID,
         references: {
-          model: 'totalemployees',
+          model: 'constructionresourcequantityprices',
           key: 'id'
         },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       },
-      stakeholder_id: {
-        type: Sequelize.UUID,
-        references: {
-          model: 'stakeholders',
-          key: 'id'
-        },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE'
-      },
-      year: {
-        type: Sequelize.INTEGER
-      },
-      domain: {
+      type: {
         type: Sequelize.STRING
       },
-      department_id: {
+      resourcecategory_id: {
         type: Sequelize.UUID
       },
-      nationality: {
+      resourcesubcategory_id: {
+        type: Sequelize.UUID
+      },
+      name: {
         type: Sequelize.STRING
       },
-      gender: {
+      item_specification: {
         type: Sequelize.STRING
       },
-      quantity: {
+      measurement_unit: {
+        type: Sequelize.STRING
+      },
+      stock_quantity: {
         type: Sequelize.INTEGER
+      },
+      unit_price: {
+        type: Sequelize.DOUBLE
+      },
+      data_source_id: {
+        type: Sequelize.UUID
+      },
+      description: {
+        type: Sequelize.TEXT
+      },
+      source_address: {
+        type: Sequelize.STRING
       },
       revision_no: {
         type: Sequelize.INTEGER
@@ -57,6 +63,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('totalemployees');
+    await queryInterface.dropTable('constructionresourcequantityprices');
   }
 };
