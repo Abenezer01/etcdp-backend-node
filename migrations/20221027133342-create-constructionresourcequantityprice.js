@@ -2,7 +2,7 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('constructionresourcequantityprices', {
-      d: {
+      id: {
         allowNull: false,
         primaryKey: true,
         type: Sequelize.UUID
@@ -20,13 +20,27 @@ module.exports = {
         type: Sequelize.STRING
       },
       resourcecategory_id: {
-        type: Sequelize.UUID
+        type: Sequelize.UUID,
+        allowNull: false,
+        references: {
+          model: 'resourcecategories',
+          key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
       resourcesubcategory_id: {
-        type: Sequelize.UUID
+        type: Sequelize.UUID,
+        references: {
+          model: 'resourcesubcategories',
+          key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
       name: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
       },
       item_specification: {
         type: Sequelize.STRING

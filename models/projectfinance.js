@@ -20,7 +20,10 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: DataTypes.UUIDV4
     },
     parent_id: DataTypes.UUID,
-    project_id: DataTypes.UUID,
+    project_id: {
+      type: DataTypes.UUID,
+      allowNull: false
+    },
     main_contract_price_amount: DataTypes.DOUBLE,
     rebate: DataTypes.DOUBLE,
     remark: DataTypes.TEXT,

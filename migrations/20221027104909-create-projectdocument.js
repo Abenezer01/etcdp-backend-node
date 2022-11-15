@@ -18,6 +18,7 @@ module.exports = {
       },
       project_id: {
         type: Sequelize.UUID,
+        allowNull: false,
         references: {
           model: 'projects',
           key: 'id'

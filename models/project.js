@@ -20,16 +20,19 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: DataTypes.UUIDV4
     },
     parent_id: DataTypes.UUID,
-    projectcategory_id: DataTypes.UUID,
+    projectcategory_id: {
+      type: DataTypes.UUID,
+      allowNull: false
+    },
     projectsubcategory_id: DataTypes.UUID,
-    name: DataTypes.STRING,
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
     remark: DataTypes.TEXT,
     contract_no: DataTypes.STRING,
     budget_code: DataTypes.STRING,
     procurement_no: DataTypes.STRING,
-    client_id: DataTypes.UUID,
-    consultant_id: DataTypes.UUID,
-    contractor_id: DataTypes.UUID,
     revision_no: DataTypes.INTEGER
   }, {
     sequelize,

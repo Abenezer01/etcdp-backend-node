@@ -14,9 +14,18 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   regulationdocument.init({
+    id: {
+      type: DataTypes.UUID,
+      primaryKey: true,
+      defaultValue: DataTypes.UUIDV4
+    },
     parent_id: DataTypes.UUID,
-    title: DataTypes.STRING,
-    description: DataTypes.TEXT
+    title: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    description: DataTypes.TEXT,
+    revision_no: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'regulationdocument',

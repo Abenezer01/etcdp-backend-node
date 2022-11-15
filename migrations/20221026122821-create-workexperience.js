@@ -18,6 +18,7 @@ module.exports = {
       },
       stakeholder_id: {
         type: Sequelize.UUID,
+        allowNull: false,
         references: {
           model: 'stakeholders',
           key: 'id'
@@ -26,16 +27,26 @@ module.exports = {
         onDelete: 'CASCADE'
       },
       year: {
-        type: Sequelize.INTEGER
+        type: Sequelize.DATE,
+        allowNull: false
       },
       domain: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
       },
       gender: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
       },
-      experience_id: {
-        type: Sequelize.UUID
+      experiencelevel_id: {
+        type: Sequelize.UUID,
+        allowNull: false,
+        references: {
+          model: 'experiencelevels',
+          key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
       revision_no: {
         type: Sequelize.INTEGER

@@ -20,15 +20,36 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: DataTypes.UUIDV4
     },
     parent_id: DataTypes.UUID,
-    type_id: DataTypes.UUID,
-    category_id: DataTypes.UUID,
-    subcategory_id: DataTypes.UUID,
-    trade_name: DataTypes.STRING,
-    tin: DataTypes.STRING,
-    ownership_id: DataTypes.UUID,
+    stakeholdertype_id: {
+      type: DataTypes.UUID,
+      allowNull: false
+    },
+    stakecategory_id: {
+      type: DataTypes.UUID,
+      allowNull: false
+    },
+    stakesubcategory_id: DataTypes.UUID,
+    trade_name: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    tin: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    ownership_id: {
+      type: DataTypes.UUID,
+      allowNull: false
+    },
     businessfield_id: DataTypes.UUID,
-    origin: DataTypes.STRING,
-    operation_location: DataTypes.STRING,
+    origin: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    operation_location: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
     revision_no: {
       type: DataTypes.INTEGER
     }

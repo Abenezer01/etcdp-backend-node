@@ -20,13 +20,19 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: DataTypes.UUIDV4
     },
     parent_id: DataTypes.UUID,
-    stakeholder_id: DataTypes.UUID,
+    stakeholder_id: {
+      type: DataTypes.UUID,
+      allowNull: false
+    },
     type: DataTypes.STRING,
-    title: DataTypes.STRING,
+    title: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
     description: DataTypes.TEXT,
     certificate_no: DataTypes.STRING,
     date_of_issue: DataTypes.DATE,
-    expiry_date: DataTypes.UUID,
+    expiry_date: DataTypes.DATE,
     initial_certificate_no: DataTypes.STRING,
     initial_certificate_issue_date: DataTypes.DATE,
     revision_no: {

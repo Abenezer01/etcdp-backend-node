@@ -20,12 +20,12 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: DataTypes.UUIDV4
     },
     parent_id: DataTypes.UUID,
-    title: DataTypes.STRING,
+    title: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
     description: DataTypes.TEXT,
-    revision_no: DataTypes.INTEGER,
-    revision_no: {
-      type: DataTypes.INTEGER
-    }
+    revision_no: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'projectcategory',

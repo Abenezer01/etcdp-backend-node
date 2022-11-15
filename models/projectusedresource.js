@@ -20,12 +20,23 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: DataTypes.UUIDV4
     },
     parent_id: DataTypes.UUID,
-    project_id: DataTypes.UUID,
+    project_id: {
+      type: DataTypes.UUID,
+      allowNull: false
+    },
     type: DataTypes.STRING,
-    type: DataTypes.STRING,
-    resourcecategory_id: DataTypes.UUID,
-    resouresubcategory_id: DataTypes.UUID,
-    name: DataTypes.STRING,
+    resourcecategory_id: {
+      type: DataTypes.UUID,
+      allowNull: false
+    },
+    resouresubcategory_id: {
+      type: DataTypes.UUID,
+      allowNull: false
+    },
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
     item_specification: DataTypes.STRING,
     measurement_unit: DataTypes.STRING,
     quantity: DataTypes.DOUBLE,

@@ -16,8 +16,19 @@ module.exports = {
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       },
-      category_id: {
+      resourcetype_id: {
         type: Sequelize.UUID,
+        allowNull: false,
+        references: {
+          model: 'resourcetypes',
+          key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
+      },
+      resourcecategory_id: {
+        type: Sequelize.UUID,
+        allowNull: false,
         references: {
           model: 'resourcecategories',
           key: 'id'
@@ -25,11 +36,9 @@ module.exports = {
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       },
-      type: {
-        type: Sequelize.STRING
-      },
       title: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
       },
       measurement_unit: {
         type: Sequelize.STRING

@@ -16,26 +16,50 @@ module.exports = {
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       },
-      higher_institute: {
-        type: Sequelize.STRING
+      higher_institute_id: {
+        type: Sequelize.UUID,
+        allowNull: false,
+        references: {
+          model: 'stakeholders', //stakeholder registered as higher institute type
+          key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
-      study_field_title: {
-        type: Sequelize.STRING
+      studyfield_id: {
+        type: Sequelize.UUID,
+        allowNull: false,
+        references: {
+          model: 'studyfields',
+          key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
       description: {
         type: Sequelize.TEXT
       },
       study_program: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
       },
-      study_level: {
-        type: Sequelize.STRING
+      studylevel_id: {
+        type: Sequelize.UUID,
+        allowNull: false,
+        references: {
+          model: 'studylevels',
+          key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
       study_period: {
-        type: Sequelize.STRING
+        type: Sequelize.DATE,
+        allowNull: false
       },
       study_cost: {
-        type: Sequelize.DOUBLE
+        type: Sequelize.DOUBLE,
+        allowNull: false
       },
       revision_no: {
         type: Sequelize.INTEGER

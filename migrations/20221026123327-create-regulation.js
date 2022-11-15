@@ -16,20 +16,34 @@ module.exports = {
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       },
+      stakeholder_id: {
+        type: Sequelize.UUID,
+        allowNull: false,
+        references: {
+          model: 'stakeholders',
+          key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
+      },
       title: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
       },
       description: {
         type: Sequelize.TEXT
       },
       prepared_by: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
       },
-      effective_date_from: {
-        type: Sequelize.DATE
+      effective_start_date: {
+        type: Sequelize.DATE,
+        allowNull:false
       },
-      effective_upto: {
-        type: Sequelize.DATE
+      effective_end_date: {
+        type: Sequelize.DATE,
+        allowNull: false
       },
       revision_no: {
         type: Sequelize.INTEGER

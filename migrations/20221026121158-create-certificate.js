@@ -18,6 +18,7 @@ module.exports = {
       },
       stakeholder_id: {
         type: Sequelize.UUID,
+        allowNull: false,
         references: {
           model: 'stakeholders',
           key: 'id'
@@ -29,7 +30,8 @@ module.exports = {
         type: Sequelize.STRING
       },
       title: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
       },
       description: {
         type: Sequelize.TEXT
@@ -38,10 +40,11 @@ module.exports = {
         type: Sequelize.STRING
       },
       date_of_issue: {
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        allowNull: false
       },
       expiry_date: {
-        type: Sequelize.UUID
+        type: Sequelize.DATE
       },
       initial_certificate_no: {
         type: Sequelize.STRING

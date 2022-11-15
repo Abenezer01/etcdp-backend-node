@@ -4,24 +4,26 @@ module.exports = {
     await queryInterface.createTable('files', {
       id: {
         allowNull: false,
-        autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.UUID
       },
       parent_id: {
         type: Sequelize.UUID
       },
       fileable_id: {
-        type: Sequelize.UUID
+        type: Sequelize.UUID,
+        allowNull: false
       },
       fileable_type: {
         type: Sequelize.STRING
       },
       title: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
       },
       name: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
       },
       url: {
         type: Sequelize.TEXT
@@ -34,6 +36,9 @@ module.exports = {
       },
       extension: {
         type: Sequelize.STRING
+      },
+      revision_no: {
+        type: Sequelize.INTEGER
       },
       createdAt: {
         allowNull: false,

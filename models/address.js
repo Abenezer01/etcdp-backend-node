@@ -24,15 +24,24 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.UUID,
       allowNull: false
     },
-    country: DataTypes.STRING,
+    country:{
+      type: DataTypes.STRING,
+      allowNull: false
+    },
     region: DataTypes.STRING,
     city: DataTypes.STRING,
     subcity: DataTypes.STRING,
     street: DataTypes.STRING,
     block_number: DataTypes.STRING,
     house_number: DataTypes.STRING,
-    latitude: DataTypes.DOUBLE,
-    longitude: DataTypes.DOUBLE,
+    northing: {
+      type: DataTypes.DOUBLE,
+      allowNull: false
+    },
+    longitude:{
+      type: DataTypes.DOUBLE,
+      allowNull: false
+    },
     revision_no: {
       type: DataTypes.INTEGER
     }

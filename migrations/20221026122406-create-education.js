@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('education', {
+    await queryInterface.createTable('educations', {
       id: {
         allowNull: false,
         primaryKey: true,
@@ -10,7 +10,7 @@ module.exports = {
       parent_id: {
         type: Sequelize.UUID,
         references: {
-          model: 'education',
+          model: 'educations',
           key: 'id'
         },
         onUpdate: 'CASCADE',
@@ -18,6 +18,7 @@ module.exports = {
       },
       stakeholder_id: {
         type: Sequelize.UUID,
+        allowNull: false,
         references: {
           model: 'stakeholders',
           key: 'id'
@@ -26,19 +27,33 @@ module.exports = {
         onDelete: 'CASCADE'
       },
       year: {
-        type: Sequelize.INTEGER
+        type: Sequelize.DATE,
+        allowNull: false
       },
       domain: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      department_name: {
         type: Sequelize.STRING
       },
       gender: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
       },
       studylevel_id: {
-        type: Sequelize.UUID
+        type: Sequelize.UUID,
+        allowNull: false,
+        references: {
+          model: 'studylevels',
+          key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
       quantity: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        allowNull: false
       },
       revision_no: {
         type: Sequelize.INTEGER

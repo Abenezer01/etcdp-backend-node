@@ -16,11 +16,19 @@ module.exports = {
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       },
-      type_id: {
-        type: Sequelize.UUID
-      },
-      category_id: {
+      stakeholdertype_id: {
         type: Sequelize.UUID,
+        allowNull: false,
+        references: {
+          model: 'stakeholdertypes',
+          key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
+      },
+      stakecategory_id: {
+        type: Sequelize.UUID,
+        allowNull: false,
         references: {
           model: 'stakecategories',
           key: 'id'
@@ -28,7 +36,7 @@ module.exports = {
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       },
-      subcategory_id: {
+      stakesubcategory_id: {
         type: Sequelize.UUID,
         references: {
           model: 'stakesubcategories',
@@ -38,22 +46,39 @@ module.exports = {
         onDelete: 'CASCADE'
       },
       trade_name: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
       },
       tin: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
       },
       ownership_id: {
-        type: Sequelize.UUID
+        type: Sequelize.UUID,
+        allowNull: false,
+        references: {
+          model: 'ownerships',
+          key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
       businessfield_id: {
-        type: Sequelize.UUID
+        type: Sequelize.UUID,
+        references: {
+          model: 'businessfields',
+          key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
       origin: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
       },
       operation_location: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
       },
       revision_no: {
         type: Sequelize.INTEGER

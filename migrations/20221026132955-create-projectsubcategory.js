@@ -18,6 +18,7 @@ module.exports = {
       },
       category_id: {
         type: Sequelize.UUID,
+        allowNull: false,
         references: {
           model: 'projectcategories',
           key: 'id'
@@ -26,7 +27,8 @@ module.exports = {
         onDelete: 'CASCADE'
       },
       title: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
       },
       description: {
         type: Sequelize.TEXT

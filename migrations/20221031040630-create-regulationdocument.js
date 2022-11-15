@@ -4,18 +4,21 @@ module.exports = {
     await queryInterface.createTable('regulationdocuments', {
       id: {
         allowNull: false,
-        autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.UUID
       },
       parent_id: {
         type: Sequelize.UUID
       },
       title: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
       },
       description: {
         type: Sequelize.TEXT
+      },
+      revision_no: {
+        type: Sequelize.INTEGER
       },
       createdAt: {
         allowNull: false,

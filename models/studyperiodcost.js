@@ -20,17 +20,29 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: DataTypes.UUIDV4
     },
     parent_id: DataTypes.UUID,
-    higher_institute: DataTypes.STRING,
-    study_field_title: DataTypes.STRING,
+    higher_institute_id: {
+      type: DataTypes.UUID,
+      allowNull: false
+    },
+    studyfield_id: {
+      type: DataTypes.UUID,
+      allowNull: false
+    },
     description: DataTypes.TEXT,
     study_program: DataTypes.STRING,
-    study_level: DataTypes.STRING,
-    study_period: DataTypes.STRING,
-    study_cost: DataTypes.DOUBLE,
-    revision_no: DataTypes.INTEGER,
-    revision_no: {
-      type: DataTypes.INTEGER
-    }
+    studylevel_id: {
+      type: DataTypes.UUID,
+      allowNull: false
+    },
+    study_period: {
+      type: DataTypes.DATE,
+      allowNull: false
+    },
+    study_cost: {
+      type: DataTypes.DOUBLE,
+      allowNull: false
+    },
+    revision_no: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'studyperiodcost',

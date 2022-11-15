@@ -21,13 +21,15 @@ module.exports = {
         allowNull: false
       },
       country: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
       },
       region: {
         type: Sequelize.STRING
       },
       city: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
       },
       subcity: {
         type: Sequelize.STRING
@@ -41,11 +43,13 @@ module.exports = {
       house_number: {
         type: Sequelize.STRING
       },
-      latitude: {
-        type: Sequelize.DOUBLE
+      northing: {
+        type: Sequelize.DOUBLE,
+        allowNull: false
       },
-      longitude: {
-        type: Sequelize.DOUBLE
+      easting: {
+        type: Sequelize.DOUBLE,
+        allowNull: false
       },
       revision_no: {
         type: Sequelize.INTEGER

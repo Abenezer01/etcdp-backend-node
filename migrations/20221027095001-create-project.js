@@ -35,7 +35,8 @@ module.exports = {
         onDelete: 'CASCADE'
       },
       name: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
       },
       remark: {
         type: Sequelize.TEXT
@@ -49,15 +50,7 @@ module.exports = {
       procurement_no: {
         type: Sequelize.STRING
       },
-      client_id: {
-        type: Sequelize.UUID
-      },
-      consultant_id: {
-        type: Sequelize.UUID
-      },
-      contractor_id: {
-        type: Sequelize.UUID
-      },
+      
       revision_no: {
         type: Sequelize.INTEGER
       },

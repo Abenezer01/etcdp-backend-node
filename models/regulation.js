@@ -20,15 +20,28 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: DataTypes.UUIDV4
     },
     parent_id: DataTypes.UUID,
-    title: DataTypes.STRING,
+    stakeholder_id: {
+      type: DataTypes.UUID,
+      allowNull: false
+    },
+    title: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
     description: DataTypes.TEXT,
-    prepared_by: DataTypes.STRING,
-    effective_date_from: DataTypes.DATE,
-    effective_upto: DataTypes.DATE,
+    prepared_by: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    effective_start_date: {
+      type: DataTypes.DATE,
+      allowNull: false
+    },
+    effective_end_date: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
     revision_no: DataTypes.INTEGER,
-    revision_no: {
-      type: DataTypes.INTEGER
-    }
   }, {
     sequelize,
     modelName: 'regulation',

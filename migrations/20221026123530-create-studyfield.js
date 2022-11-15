@@ -17,16 +17,25 @@ module.exports = {
         onDelete: 'CASCADE'
       },
       title: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
       },
       description: {
         type: Sequelize.TEXT
       },
       study_program: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
       },
-      study_level: {
-        type: Sequelize.STRING
+      studylevel_id: {
+        type: Sequelize.UUID,
+        allowNull: false,
+        references: {
+          model: 'studylevels',
+          key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
       revision_no: {
         type: Sequelize.INTEGER

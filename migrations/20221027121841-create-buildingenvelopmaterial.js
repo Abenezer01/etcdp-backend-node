@@ -18,6 +18,7 @@ module.exports = {
       },
       project_id: {
         type: Sequelize.UUID,
+        allowNull: false,
         references: {
           model: 'projects',
           key: 'id'
@@ -45,7 +46,7 @@ module.exports = {
       },
       revision_no: {
         type: Sequelize.INTEGER
-      },
+      }, 
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

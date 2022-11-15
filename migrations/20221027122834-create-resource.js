@@ -16,8 +16,15 @@ module.exports = {
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       },
-      type: {
-        type: Sequelize.STRING
+      resourcetype_id: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        references: {
+          model: 'resources',
+          key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
       description: {
         type: Sequelize.TEXT

@@ -14,15 +14,35 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   file.init({
+    id: {
+      type: DataTypes.UUID,
+      primaryKey: true,
+      defaultValue: DataTypes.UUIDV4
+    },
     parent_id: DataTypes.UUID,
-    fileable_id: DataTypes.UUID,
-    fileable_type: DataTypes.STRING,
-    title: DataTypes.STRING,
-    name: DataTypes.STRING,
+    fileable_id: {
+      type: DataTypes.UUID,
+      allowNull: false
+    },
+    fileable_type: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    title: {
+      type: DataTypes.STRING,
+       allowNull: false
+    },
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
     url: DataTypes.TEXT,
     type: DataTypes.STRING,
     description: DataTypes.TEXT,
-    extension: DataTypes.STRING
+    extension: DataTypes.STRING,
+    revision_no: {
+      type: DataTypes.INTEGER
+    }
   }, {
     sequelize,
     modelName: 'file',

@@ -35,10 +35,11 @@ module.exports = {
         onDelete: 'CASCADE'
       },
       name: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
       },
       item_specification: {
-        type: Sequelize.STRING
+        type: Sequelize.TEXT
       },
       measurement_unit: {
         type: Sequelize.STRING

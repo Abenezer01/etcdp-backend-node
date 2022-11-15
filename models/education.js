@@ -20,12 +20,31 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: DataTypes.UUIDV4
     },
     parent_id: DataTypes.UUID,
-    stakeholder_id: DataTypes.UUID,
-    year: DataTypes.INTEGER,
-    domain: DataTypes.STRING,
-    gender: DataTypes.STRING,
-    studylevel_id: DataTypes.UUID,
-    quantity: DataTypes.INTEGER,
+    stakeholder_id: {
+      type: DataTypes.UUID,
+      allowNull: false
+    },
+    year: {
+      type: DataTypes.DATE,
+      allowNull: false
+    },
+    domain: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    department_name: DataTypes.STRING,
+    gender: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    studylevel_id: {
+      type: DataTypes.UUID,
+      allowNull: false
+    },
+    quantity: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
     revision_no: {
       type: DataTypes.INTEGER
     }

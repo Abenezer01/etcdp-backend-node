@@ -20,8 +20,14 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: DataTypes.UUIDV4
     },
     parent_id: DataTypes.UUID,
-    project_id: DataTypes.UUID,
-    status_id: DataTypes.UUID,
+    project_id: {
+      type: DataTypes.UUID,
+      allowNull: false
+    },
+    status_id: {
+      type: DataTypes.UUID,
+      allowNull: false
+    },
     description: DataTypes.TEXT,
     revision_no: DataTypes.INTEGER
   }, {

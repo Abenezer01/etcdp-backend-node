@@ -21,9 +21,15 @@ module.exports = (sequelize, DataTypes) => {
     },
     parent_id: DataTypes.UUID,
     type: DataTypes.STRING,
-    resourcecategory_id: DataTypes.UUID,
+    resourcecategory_id: {
+      type: DataTypes.UUID,
+      allowNull: false
+    },
     resourcesubcategory_id: DataTypes.UUID,
-    name: DataTypes.STRING,
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
     item_specification: DataTypes.STRING,
     measurement_unit: DataTypes.STRING,
     stock_quantity: DataTypes.INTEGER,

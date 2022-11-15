@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('projectusedresources', {
+    await queryInterface.createTable('electrictowers', {
       id: {
         allowNull: false,
         primaryKey: true,
@@ -10,7 +10,7 @@ module.exports = {
       parent_id: {
         type: Sequelize.UUID,
         references: {
-          model: 'projectusedresources',
+          model: 'electrictowers',
           key: 'id'
         },
         onUpdate: 'CASCADE',
@@ -18,6 +18,7 @@ module.exports = {
       },
       project_id: {
         type: Sequelize.UUID,
+        allowNull: false,
         references: {
           model: 'projects',
           key: 'id'
@@ -25,41 +26,38 @@ module.exports = {
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       },
-      type: {
-        type: Sequelize.STRING
+      transmissionline_id: {
+        type: Sequelize.UUID,
+        references: {
+          model: 'transmissionlines',
+          key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
-      type: {
-        type: Sequelize.STRING
-      },
-      resourcecategory_id: {
-        type: Sequelize.UUID
-      },
-      resouresubcategory_id: {
-        type: Sequelize.UUID
-      },
-      name: {
-        type: Sequelize.STRING
-      },
-      item_specification: {
-        type: Sequelize.STRING
-      },
-      measurement_unit: {
-        type: Sequelize.STRING
-      },
-      quantity: {
+      overall_length: {
         type: Sequelize.DOUBLE
       },
-      unit_price: {
+      embedded_length: {
         type: Sequelize.DOUBLE
       },
-      period_from: {
-        type: Sequelize.DATE
+      columns: {
+        type: Sequelize.INTEGER
       },
-      period_until: {
-        type: Sequelize.DATE
+      braces: {
+        type: Sequelize.INTEGER
       },
-      data_source_id: {
-        type: Sequelize.UUID
+      beam_cross_arms: {
+        type: Sequelize.INTEGER
+      },
+      brace_cross_arm: {
+        type: Sequelize.INTEGER
+      },
+      elasticity_modulus: {
+        type: Sequelize.INTEGER
+      },
+      poission_ratio: {
+        type: Sequelize.DOUBLE
       },
       revision_no: {
         type: Sequelize.INTEGER
@@ -75,6 +73,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('projectusedresources');
+    await queryInterface.dropTable('electrictowers');
   }
 };

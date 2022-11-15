@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('ages', {
+    await queryInterface.createTable('generatingcapacities', {
       id: {
         allowNull: false,
         primaryKey: true,
@@ -10,32 +10,42 @@ module.exports = {
       parent_id: {
         type: Sequelize.UUID,
         references: {
-          model: 'ages',
+          model: 'generatingcapacities',
           key: 'id'
         },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       },
-      stakeholder_id: {
+      operator: {
+        type: Sequelize.STRING
+      },
+      project_id: {
         type: Sequelize.UUID,
+        allowNull: false,
         references: {
-          model: 'stakeholders',
+          model: 'projects',
           key: 'id'
         },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       },
-      year: {
+      commission_date: {
+        type: Sequelize.DATE
+      },
+      turbine_type_number: {
         type: Sequelize.INTEGER
       },
-      domain: {
+      designed_capacity: {
         type: Sequelize.STRING
       },
-      gender: {
+      installed_capacity: {
         type: Sequelize.STRING
       },
-      age_id: {
-        type: Sequelize.UUID
+      capacity_factor: {
+        type: Sequelize.STRING
+      },
+      annual_generation: {
+        type: Sequelize.STRING
       },
       revision_no: {
         type: Sequelize.INTEGER
@@ -51,6 +61,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('ages');
+    await queryInterface.dropTable('generatingcapacities');
   }
 };
