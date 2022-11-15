@@ -17,10 +17,10 @@ module.exports = {
         onDelete: 'CASCADE'
       },
       resourcetype_id: {
-        type: Sequelize.STRING,
+        type: Sequelize.UUID,
         allowNull: false,
         references: {
-          model: 'resources',
+          model: 'resourcetypes',
           key: 'id'
         },
         onUpdate: 'CASCADE',
