@@ -1,5 +1,5 @@
 const {
-    stakecategory,
+    position,
     Sequelize
 } = require("./../../models");
 
@@ -9,21 +9,27 @@ let self = {};
 
 self.getAll = async(req, res) => {
     try {
-        let data = await stakecategory.findAll();
-        return res.json(data)
+        let data = await position.findAll();
+        return res.status(200).json({
+            data
+        })
 
     } catch (error) {
+        // if (err.message === 'Error') {
+        //     res.status(500).json({
+        //         message: error.message
+        //     })
+        // }
         res.status(500).json({
             message: error.message
         })
     }
 }
 
-
 self.get = async(req, res) => {
     try {
         let id = req.params.id;
-        let data = await stakecategory.findOne({
+        let data = await position.findOne({
             where: {
                 id: id
             }
@@ -41,7 +47,7 @@ self.get = async(req, res) => {
 self.search = async(req, res) => {
     try {
         let text = req.query.text;
-        let data = await stakecategory.findAll({
+        let data = await position.findAll({
             where: {
                 name: {
                     [Op.like]: "%" + text + "%"
@@ -59,7 +65,7 @@ self.search = async(req, res) => {
 self.save = async(req, res) => {
     try {
         let body = req.body;
-        let data = await stakecategory.create(body);
+        let data = await position.create(body);
         return res.json(data)
     } catch (error) {
         res.status(500).json({
@@ -72,14 +78,12 @@ self.update = async(req, res) => {
     try {
         let id = req.params.id;
         let body = req.body;
-        let data = await stakecategory.update(body, {
+        let data = await position.update(body, {
             where: {
                 id: id
             }
         });
-        return res.status(200).json({
-            message: "Stakeholder category has been updated successfully"
-        })
+        return res.json(data)
     } catch (error) {
         res.status(500).json({
             message: error.message
@@ -90,7 +94,7 @@ self.update = async(req, res) => {
 self.delete = async(req, res) => {
     try {
         let id = req.params.id;
-        let data = await stakecategory.destroy({
+        let data = await position.destroy({
             where: {
                 id: id
             }
