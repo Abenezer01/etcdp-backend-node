@@ -1,7 +1,7 @@
 const {
-    stakecategory,
+    address,
     Sequelize
-} = require("./../../models");
+} = require("../../models");
 
 const Op = Sequelize.Op;
 
@@ -9,8 +9,8 @@ let self = {};
 
 self.getAll = async(req, res) => {
     try {
-        let data = await stakecategory.findAll();
-        return res.json(data)
+        let data = await address.findAll();
+        return res.status(200).json(data)
 
     } catch (error) {
         res.status(500).json({
@@ -19,17 +19,40 @@ self.getAll = async(req, res) => {
     }
 }
 
+self.getWithItems = async(req, res) => {
+    try {
+        let data = await address.findAll({
+            attributes: ["id", "name"],
+            // include:[
+            // 	{
+            // 		model:item,
+            // 		as:'items',
+            // 		attributes:["id","name","price","stock"]
+            // 	}
+            // ]
+        });
+        return res.json({
+            status: "ok",
+            data: data
+        })
+    } catch (error) {
+        res.status(500).json({
+            status: "error",
+            data: error
+        })
+    }
+}
 
 self.get = async(req, res) => {
     try {
         let id = req.params.id;
-        let data = await stakecategory.findOne({
+        let data = await address.findOne({
             where: {
                 id: id
             }
         });
         return res.status(200).json({
-            data: data
+            message: data
         })
     } catch (error) {
         res.status(500).json({
@@ -41,7 +64,7 @@ self.get = async(req, res) => {
 self.search = async(req, res) => {
     try {
         let text = req.query.text;
-        let data = await stakecategory.findAll({
+        let data = await address.findAll({
             where: {
                 name: {
                     [Op.like]: "%" + text + "%"
@@ -59,7 +82,7 @@ self.search = async(req, res) => {
 self.save = async(req, res) => {
     try {
         let body = req.body;
-        let data = await stakecategory.create(body);
+        let data = await address.create(body);
         return res.json(data)
     } catch (error) {
         res.status(500).json({
@@ -72,14 +95,12 @@ self.update = async(req, res) => {
     try {
         let id = req.params.id;
         let body = req.body;
-        let data = await stakecategory.update(body, {
+        let data = await address.update(body, {
             where: {
                 id: id
             }
         });
-        return res.status(200).json({
-            message: "Stakeholder category has been updated successfully"
-        })
+        return res.status(200).json({ message: "Address updated successfully" })
     } catch (error) {
         res.status(500).json({
             message: error.message
@@ -90,7 +111,7 @@ self.update = async(req, res) => {
 self.delete = async(req, res) => {
     try {
         let id = req.params.id;
-        let data = await stakecategory.destroy({
+        let data = await address.destroy({
             where: {
                 id: id
             }
