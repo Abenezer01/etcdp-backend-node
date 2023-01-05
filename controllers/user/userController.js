@@ -2,24 +2,30 @@ const {
     user,
     address,
     position,
+    photo,
     Sequelize
 } = require("./../../models");
 const bcrypt = require('bcrypt');
-
+let validator = require("../../utils/validator");
 const Op = Sequelize.Op;
 
 let self = {};
 
 self.getAll = async(req, res) => {
     try {
-        let data = await user.findAll({
+        let data = await user.findAndCountAll({
             include: [{
                 model: address,
                 as: "address"
             }, {
                 model: position,
-                as: "position"
+                as: "position",
+            }, {
+                model: photo,
+                as: "photo"
             }],
+            // LIMIT: 10,
+            // OFFSET: 1,
 
         });
         return res.status(200).json({
@@ -91,7 +97,27 @@ self.search = async(req, res) => {
 }
 
 self.save = async(req, res) => {
+
+
+    // let validationRule = {
+    //     first_name: 'required',
+    //     email: 'required|email',
+    // };
     try {
+        // await validator(usr, validationRule, {}, (error, status) => {
+
+        //     if (!status) {
+        //         return res.status(412)
+        //             .send({
+        //                 success: false,
+        //                 message: 'Validation failed',
+        //                 data: error
+        //             });
+        //     }
+
+
+        // }).catch(error => console.log("Hi",
+        //     error))
         const salt = await bcrypt.genSalt(10);
         var usr = {
             first_name: req.body.first_name,
@@ -112,11 +138,43 @@ self.save = async(req, res) => {
 
 
         return res.json(created_user)
-    } catch (error) {
+    } catch (err) {
+        let er = err.errors[0].message
+        console.log("The error is ", er)
+
         res.status(500).json({
-            message: error.message
+            success: false,
+            error: er
         })
+
+
     }
+    // try {
+
+
+    //     // let validation = new Validator(usr, rules);
+    //     // validation.passes(); // true
+    //     // if (validation.fails()) {
+    //     //     return res.status(400).json({
+    //     //         message: validation.errors.get('email')
+    //     //     })
+    //     // } // false
+    //     console.log("Hey Kal")
+    //     created_user = await user.create(usr);
+
+
+    //     return res.json(created_user)
+    // } catch (error) {
+    //     let er = error.errors
+    //     console.log("The error is ", er)
+
+    //     res.status(500).json({
+
+    //         message: er
+    //     })
+
+
+    // }
 }
 
 self.update = async(req, res) => {

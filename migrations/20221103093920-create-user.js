@@ -58,6 +58,15 @@ module.exports = {
                 onUpdate: 'CASCADE',
                 onDelete: 'CASCADE'
             },
+            photo_id: {
+                type: Sequelize.UUID,
+                references: {
+                    model: 'photos',
+                    key: 'id'
+                },
+                onUpdate: 'CASCADE',
+                onDelete: 'CASCADE'
+            },
             refresh_token: Sequelize.TEXT,
             revision_no: Sequelize.INTEGER,
             createdAt: {

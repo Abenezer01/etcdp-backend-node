@@ -5,8 +5,8 @@ const middleware = require("../../../middleware/middleware")
 module.exports = function(express) {
     const route = express.Router();
 
-    route.get("/login", authController.loginUser);
+    route.post("/login", authController.loginUser);
     route.get("/refresh/token", refreshController.refreshToken);
-    route.get("/logout", logoutController.logout);
+    route.post("/logout", logoutController.logout);
     return route;
 };
