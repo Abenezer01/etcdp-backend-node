@@ -11,7 +11,7 @@ self.logout = async(request, response) => {
     decoded = jwt.verify(refTokenn, REFRESH_TOKEN_KEY);
     // const claims = atob(tokenn.split('.')[1])
     // response.status(200).json(decoded)
-    usrID = decoded.user_id
+    usrID = decoded.id
     user.update({
             refresh_token: ''
         }, {

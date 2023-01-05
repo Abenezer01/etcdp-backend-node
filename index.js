@@ -6,9 +6,11 @@ const stakeCategory = require('./routes/module/stakeholder/route')
 const route_view = require('./routes/route_view');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
+const fileUpload = require('express-fileupload');
 
 
 let app = express();
+app.use(fileUpload())
 app.use(cookieParser());
 app.use(cors({
     origin: '*'

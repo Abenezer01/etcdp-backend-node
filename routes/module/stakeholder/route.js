@@ -3,16 +3,31 @@ const stakeholderSubCategoryController = require("../../../controllers/stakehold
 const stakeholderTypeController = require("../../../controllers/stakeholder/StakeholderTypeController.js")
 const stakeholderInfoController = require("../../../controllers/stakeholder/StakeholderInfoController.js")
 const stakeholderController = require("../../../controllers/stakeholder/StakeholderController.js")
-
+const ownershiptypeController = require("../../../controllers/stakeholder/OwnershiptypeController")
+const BusinessfieldController = require("../../../controllers/stakeholder/BusinessfieldController")
 const middleware = require("../../../middleware/middleware")
+const stakeCategoryValidate = require("../../../middleware/validate")
 module.exports = function(express) {
     const route = express.Router();
-
+    //stakeholder route
+    route.get("/ownership/", ownershiptypeController.getAll);
+    route.get("/ownership/:id", ownershiptypeController.get);
+    route.get("/ownership_search", ownershiptypeController.search);
+    route.post("/ownership", ownershiptypeController.save);
+    route.put("/ownership/:id", ownershiptypeController.update);
+    route.delete("/ownership/:id", ownershiptypeController.delete);
+    //business field route
+    route.get("/businessfield/", BusinessfieldController.getAll);
+    route.get("/businessfield/:id", BusinessfieldController.get);
+    route.get("/businessfield_search", BusinessfieldController.search);
+    route.post("/businessfield", BusinessfieldController.save);
+    route.put("/businessfield/:id", BusinessfieldController.update);
+    route.delete("/businessfield/:id", BusinessfieldController.delete);
     //stakeholder category route
     route.get("/stakeholder_category/", stakeholderCategoryController.getAll);
     route.get("/stakeholder_category/:id", stakeholderCategoryController.get);
     route.get("/stakeholder_category_search", stakeholderCategoryController.search);
-    route.post("/stakeholder_category", stakeholderCategoryController.save);
+    route.post("/stakeholder_category", stakeCategoryValidate.stakeholderCategoryValidate, stakeholderCategoryController.save);
     route.put("/stakeholder_category/:id", stakeholderCategoryController.update);
     route.delete("/stakeholder_category/:id", stakeholderCategoryController.delete);
     //stakeholder subcategory route

@@ -1,5 +1,9 @@
 const {
     user,
+    position,
+    role,
+    department,
+    photo,
     Sequelize
 } = require("../../models");
 
@@ -16,11 +20,48 @@ self.loginUser = async(request, response) => {
     let accessToken
     let refreshToken
     let userr
+    let usrRole
     userr = await user.findOne({
+            include: [{
+                    model: position,
+                    as: "position"
+                },
+                {
+                    model: photo,
+                    as: "photo"
+                }
+            ],
+
+            where: {
+                email: email
+            }
+        })
+        //console.log("The position user", userr)
+    usrRole = await role.findOne({
         where: {
-            email: email
+            id: userr.position.role_id
         }
     })
+    usrDepartment = await department.findOne({
+        where: {
+            id: userr.position.department_id
+        }
+    })
+
+    ur = { id: usrRole.id, name: usrRole.name }
+    dep = { id: usrDepartment.id, name: usrDepartment.name }
+    replyUser = {
+            first_name: userr.first_name,
+            middle_name: userr.middle_name,
+            last_name: userr.last_name,
+            email: userr.email,
+            phone: userr.phone,
+            gender: userr.gender,
+            position_id: userr.position_id,
+            role_name: ur.name,
+            avatar: userr.photo.avatar
+        }
+        //console.log("Authenticated user role is", usrDepartment.dataValues)
     if (!userr) {
         return response.status(401).json({
             message: "Email address doesn't exit"
@@ -34,7 +75,7 @@ self.loginUser = async(request, response) => {
 
     bcrypt.compare(password, usrPass, function(err, result) {  
         if (result) { 
-            usr = { user_id: id, email, user_positionID: usrPositionID }
+            usr = { id: id }
             accessToken = jwt.sign(usr,
                 TOKEN_KEY, {
                     expiresIn: "2h",
@@ -50,10 +91,11 @@ self.loginUser = async(request, response) => {
                 })
                 .then(result => {
 
-                    console.log('success', result);
+                    //console.log('success', result);
                     response.cookie('accessToken', accessToken);
                     response.cookie('refreshToken', refreshToken);
                     return response.status(200).json({
+                            userData: replyUser,
                             accessToken: accessToken,
                             refreshToken: refreshToken
                         })
