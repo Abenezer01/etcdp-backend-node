@@ -1,4 +1,4 @@
 /node_modules
 /file.log
 .env
-/config/config.json
+# /config/config.json

@@ -1,0 +1,38 @@
+{
+    "development": {
+        "dialect": "mysql",
+        "username": "root",
+        "password": "password",
+        "host": "localhost",
+        "database": "etcdp_database",
+        "logging": true,
+        "port": "3306",
+        "dialectOptions": {
+            "ssl": false
+        }
+    },
+    "test": {
+        "dialect": "mysql",
+        "username": "root",
+        "password": "password",
+        "host": "localhost",
+        "database": "etcdp_database",
+        "logging": true,
+        "port": "3306",
+        "dialectOptions": {
+            "ssl": false
+        }
+    },
+    "production": {
+        "dialect": "mysql",
+        "username": "root",
+        "password": "password",
+        "host": "localhost",
+        "database": "etcdp_database",
+        "logging": true,
+        "port": "3306",
+        "dialectOptions": {
+            "ssl": false
+        }
+    }
+}

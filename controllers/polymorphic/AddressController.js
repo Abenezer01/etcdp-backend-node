@@ -1,7 +1,7 @@
 const {
     address,
     Sequelize
-} = require("../../models");
+} = require('../../models')
 
 const Op = Sequelize.Op;
 
