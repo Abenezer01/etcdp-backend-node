@@ -41,7 +41,30 @@ const stakeholderCategoryValidate = async(req, res, next) => {
         }
     }).catch(err => console.log(err))
 }
+const userPhotoValidate = async(req, res, next) => {
+    if (!req.files) {
+        return res.status(412).json({
+            message: "File is empty"
+        })
+    }
+    const array_of_allowed_files = ['png', 'jpeg', 'jpg', 'gif'];
+    const ext = req.files.upload.mimetype.split("/")[1];
+
+    // Check if the uploaded file is allowed
+    if (!array_of_allowed_files.includes(ext)) {
+        // throw Error('Invalid file');
+        res.status(412)
+            .send({
+                success: false,
+                message: 'File must be png,jpeg,jpg or gif',
+                data: "Invalid file"
+            });
+    } else {
+        next();
+    }
+}
 module.exports = {
     createUser,
-    stakeholderCategoryValidate
+    stakeholderCategoryValidate,
+    userPhotoValidate
 };

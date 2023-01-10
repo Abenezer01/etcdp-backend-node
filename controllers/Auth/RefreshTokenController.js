@@ -5,13 +5,16 @@ const {
     department,
     Sequelize
 } = require("../../models");
+const dotenv = require('dotenv');
+dotenv.config();
+
 const { response } = require("express");
 const Op = Sequelize.Op;
 const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
 let self = {};
-let ACCESS_TOKEN_KEY = "Secret";
-let REFRESH_TOKEN_KEY = "Refreshsecret";
+let ACCESS_TOKEN_KEY = process.env.ACCESS_TOKEN_KEY;
+let REFRESH_TOKEN_KEY = process.env.REFRESH_TOKEN_KEY;
 
 self.refreshToken = async(request, response) => {
     const refTokenn = request.cookies.refreshToken

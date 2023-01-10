@@ -45,7 +45,7 @@ module.exports = {
             `SELECT id from roles;`
         );
 
-        const roleRows = roles[0];
+        const roleRows = roles[1];
         //Department seed
         await queryInterface.bulkInsert('departments', [{
             name: 'Software',
@@ -71,7 +71,7 @@ module.exports = {
             description: 'admin position description',
             is_head: false,
             department_id: departmentRows[0].id,
-            role_id: roleRows[0].id,
+            role_id: roleRows[1].id,
             quantity_needed: 1,
             id: uuid.v4(),
             createdAt: new Date(),

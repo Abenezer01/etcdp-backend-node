@@ -3,7 +3,7 @@ const {
     Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-    class stakesubcategory extends Model {
+    class referencedocument extends Model {
         /**
          * Helper method for defining associations.
          * This method is not a part of Sequelize lifecycle.
@@ -13,33 +13,27 @@ module.exports = (sequelize, DataTypes) => {
             // define association here
         }
     }
-    stakesubcategory.init({
+    referencedocument.init({
         id: {
             type: DataTypes.UUID,
             primaryKey: true,
             defaultValue: DataTypes.UUIDV4
         },
         parent_id: DataTypes.UUID,
-        stakecategoryId: {
-            type: DataTypes.UUID,
-            allowNull: false
+        type: {
+            type: DataTypes.STRING,
         },
         title: {
             type: DataTypes.STRING,
             allowNull: false
         },
         description: DataTypes.TEXT,
-        referencedocumentId: DataTypes.UUID,
-        revision_no: {
-            type: DataTypes.INTEGER
-        }
+        file: DataTypes.TEXT,
+        format: DataTypes.TEXT,
+        revision_no: DataTypes.INTEGER
     }, {
         sequelize,
-        modelName: 'stakesubcategory',
+        modelName: 'referencedocument',
     });
-    stakesubcategory.associate = function(models) {
-
-        stakesubcategory.belongsTo(models.stakecategory)
-    };
-    return stakesubcategory;
+    return referencedocument;
 };

@@ -6,12 +6,14 @@ const {
     photo,
     Sequelize
 } = require("../../models");
+const dotenv = require('dotenv');
+dotenv.config();
 
 const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
 let self = {};
-let TOKEN_KEY = "Secret"
-let REFRESH_TOKEN_KEY = "Refreshsecret"
+let TOKEN_KEY = process.env.ACCESS_TOKEN_KEY
+let REFRESH_TOKEN_KEY = process.env.REFRESH_TOKEN_KEY
 self.loginUser = async(request, response) => {
     const { email, password } = request.body
     let id

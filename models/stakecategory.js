@@ -22,6 +22,8 @@ module.exports = (sequelize, DataTypes) => {
         parent_id: DataTypes.UUID,
         title: DataTypes.STRING,
         description: DataTypes.TEXT,
+        referencedocumentId: DataTypes.UUID,
+        stakeholdertypeId: DataTypes.UUID,
         revision_no: {
             type: DataTypes.INTEGER
         }
@@ -29,5 +31,12 @@ module.exports = (sequelize, DataTypes) => {
         sequelize,
         modelName: 'stakecategory',
     });
+    stakecategory.associate = function(models) {
+        // associations can be defined here
+        stakecategory.hasMany(models.stakesubcategory, {
+            foreignKey: 'stakecategoryId',
+            as: 'stakesubcategories',
+        });
+    }
     return stakecategory;
 };

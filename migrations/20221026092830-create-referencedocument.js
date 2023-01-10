@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
     async up(queryInterface, Sequelize) {
-        await queryInterface.createTable('stakesubcategories', {
+        await queryInterface.createTable('referencedocuments', {
             id: {
                 allowNull: false,
                 primaryKey: true,
@@ -10,38 +10,26 @@ module.exports = {
             parent_id: {
                 type: Sequelize.UUID,
                 references: {
-                    model: 'stakesubcategories',
-                    key: 'id'
-                },
-                onUpdate: 'CASCADE',
-                onDelete: 'CASCADE'
-            },
-            stakecategoryId: {
-                type: Sequelize.UUID,
-                allowNull: false,
-                references: {
-                    model: 'stakecategories',
-                    key: 'id'
-                },
-                onUpdate: 'CASCADE',
-                onDelete: 'CASCADE'
-            },
-            title: {
-                type: Sequelize.STRING,
-                allowNull: false
-            },
-            description: {
-                type: Sequelize.TEXT
-            },
-            referencedocumentId: {
-                type: Sequelize.UUID,
-                references: {
                     model: 'referencedocuments',
                     key: 'id'
                 },
                 onUpdate: 'CASCADE',
                 onDelete: 'CASCADE'
-
+            },
+            type: {
+                type: Sequelize.STRING
+            },
+            title: {
+                type: Sequelize.STRING
+            },
+            description: {
+                type: Sequelize.TEXT
+            },
+            format: {
+                type: Sequelize.STRING
+            },
+            file: {
+                type: Sequelize.TEXT
             },
             revision_no: {
                 type: Sequelize.INTEGER
@@ -57,6 +45,6 @@ module.exports = {
         });
     },
     async down(queryInterface, Sequelize) {
-        await queryInterface.dropTable('stakesubcategories');
+        await queryInterface.dropTable('referencedocuments');
     }
 };

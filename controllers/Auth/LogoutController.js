@@ -5,7 +5,7 @@ const {
 
 const jwt = require("jsonwebtoken");
 let self = {};
-let REFRESH_TOKEN_KEY = "Refreshsecret"
+let REFRESH_TOKEN_KEY = process.env.REFRESH_TOKEN_KEY;
 self.logout = async(request, response) => {
     const refTokenn = request.cookies.refreshToken
     decoded = jwt.verify(refTokenn, REFRESH_TOKEN_KEY);

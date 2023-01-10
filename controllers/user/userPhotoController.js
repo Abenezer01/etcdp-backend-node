@@ -4,7 +4,7 @@ const {
     Sequelize
 } = require("../../models");
 const path = require('path');
-
+const fs = require('fs');
 const Op = Sequelize.Op;
 
 let self = {};
@@ -82,12 +82,14 @@ self.save = async(req, res) => {
 
             })
         }
+        const ext = req.files.upload.mimetype.split("/")[1];
         let rand = Math.floor(100000 + Math.random() * 900000)
-        const filePath = path.join(__dirname, '../../public', 'images/user photo', rand + `${file.name}`)
-        console.log("The file path is ", filePath)
+        const filePath = path.join(__dirname, '../../public', 'images/user photo', rand + '.' +
+                `${ext}`)
+            //console.log("The file path is ", filePath)
 
         photoo = { avatar: filePath }
-        console.log("The rand is: ", rand)
+            //console.log("The rand is: ", rand)
         let ll
         try {
             ll = await photo.create(photoo)
@@ -124,15 +126,56 @@ self.save = async(req, res) => {
 }
 
 self.update = async(req, res) => {
+    let id = req.params.id;
+    const file = req.files.upload
+    if (!id) {
+        return res.status(412).json({
+            message: "Can't get user id"
+
+        })
+    }
     try {
-        let id = req.params.id;
-        let body = req.body;
-        let data = await photo.update(body, {
+        let userData = await user.findOne({
+            attributes: ['photo_id'],
+            include: [{
+                model: photo,
+                as: "photo"
+            }],
             where: {
                 id: id
             }
         });
-        return res.json(data)
+        if (userData.photo.avatar) {
+            if (fs.existsSync(userData.photo.avatar)) {
+                fs.unlink(userData.photo.avatar, (err) => {
+                    if (err) {
+                        throw err;
+                    }
+
+                    console.log("Delete File successfully.");
+                });
+            }
+
+
+        }
+        const ext = req.files.upload.mimetype.split("/")[1];
+        let rand = Math.floor(100000 + Math.random() * 900000)
+        const filePath = path.join(__dirname, '../../public', 'images/user photo', rand + '.' +
+                `${ext}`)
+            //console.log("The file path is ", filePath)
+
+        file.mv(filePath, err => {
+            if (err) return res.status(500).send(err)
+                // res.redirect('/')
+        })
+        await photo.update({
+            avatar: filePath
+        }, {
+            where: { id: userData.photo_id },
+        })
+        return res.status(200).json({
+            message: "Success"
+        })
     } catch (error) {
         res.status(500).json({
             message: error.message

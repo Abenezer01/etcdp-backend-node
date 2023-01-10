@@ -1,9 +1,7 @@
 const {
-    stakecategory,
-    stakesubcategory,
-    stakeholdertype,
+    certificate,
     Sequelize
-} = require("./../../models");
+} = require("../../models");
 
 const Op = Sequelize.Op;
 
@@ -11,37 +9,7 @@ let self = {};
 
 self.getAll = async(req, res) => {
     try {
-        let data = await stakecategory.findAll({
-            include: [{
-                model: stakesubcategory,
-                as: 'stakesubcategories',
-                required: false,
-            }, ],
-
-        });
-
-        return res.json(data)
-
-    } catch (error) {
-        res.status(500).json({
-            message: error.message
-        })
-    }
-}
-self.getAllCatByTypeId = async(req, res) => {
-    let id = req.params.id;
-    try {
-        let data = await stakecategory.findAll({
-            include: [{
-                model: stakesubcategory,
-                as: 'stakesubcategories',
-                required: false,
-            }, ],
-            where: {
-                stakeholdertypeId: id
-            }
-        });
-
+        let data = await certificate.findAll();
         return res.json(data)
 
     } catch (error) {
@@ -55,7 +23,7 @@ self.getAllCatByTypeId = async(req, res) => {
 self.get = async(req, res) => {
     try {
         let id = req.params.id;
-        let data = await stakecategory.findOne({
+        let data = await certificate.findOne({
             where: {
                 id: id
             }
@@ -73,7 +41,7 @@ self.get = async(req, res) => {
 self.search = async(req, res) => {
     try {
         let text = req.query.text;
-        let data = await stakecategory.findAll({
+        let data = await certificate.findAll({
             where: {
                 name: {
                     [Op.like]: "%" + text + "%"
@@ -91,7 +59,7 @@ self.search = async(req, res) => {
 self.save = async(req, res) => {
     try {
         let body = req.body;
-        let data = await stakecategory.create(body);
+        let data = await certificate.create(body);
         return res.json(data)
     } catch (error) {
         res.status(500).json({
@@ -104,13 +72,13 @@ self.update = async(req, res) => {
     try {
         let id = req.params.id;
         let body = req.body;
-        let data = await stakecategory.update(body, {
+        let data = await certificate.update(body, {
             where: {
                 id: id
             }
         });
         return res.status(200).json({
-            message: "Stakeholder category has been updated successfully"
+            message: "Buisness field has been updated successfully"
         })
     } catch (error) {
         res.status(500).json({
@@ -122,7 +90,7 @@ self.update = async(req, res) => {
 self.delete = async(req, res) => {
     try {
         let id = req.params.id;
-        let data = await stakecategory.destroy({
+        let data = await certificate.destroy({
             where: {
                 id: id
             }

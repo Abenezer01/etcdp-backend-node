@@ -25,6 +25,7 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false
         },
         description: DataTypes.TEXT,
+        referencedocumentId: DataTypes.UUID,
         revision_no: {
             type: DataTypes.INTEGER
         }
@@ -32,5 +33,12 @@ module.exports = (sequelize, DataTypes) => {
         sequelize,
         modelName: 'stakeholdertype',
     });
+    stakeholdertype.associate = function(models) {
+        // associations can be defined here
+        stakeholdertype.hasMany(models.stakecategory, {
+            foreignKey: 'stakeholdertypeId',
+            as: 'stakecategories',
+        });
+    }
     return stakeholdertype;
 };
