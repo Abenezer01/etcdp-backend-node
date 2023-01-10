@@ -10,8 +10,8 @@ const {
 const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
 let self = {};
-let TOKEN_KEY = "Secret"
-let REFRESH_TOKEN_KEY = "Refreshsecret"
+require('dotenv').config();
+
 self.loginUser = async(request, response) => {
     const { email, password } = request.body
     let id
@@ -77,11 +77,11 @@ self.loginUser = async(request, response) => {
         if (result) { 
             usr = { id: id }
             accessToken = jwt.sign(usr,
-                TOKEN_KEY, {
+            process.env.TOKEN_KEY, {
                     expiresIn: "2h",
                 }
             );
-            refreshToken = jwt.sign(usr, REFRESH_TOKEN_KEY, { expiresIn: "3h" })
+            refreshToken = jwt.sign(usr, process.env.REFRESH_TOKEN_KEY, { expiresIn: "3h" })
                 // save user token
 
             user.update({
