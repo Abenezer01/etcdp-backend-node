@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "Basic simple example sequelize orm with expressjs",
   "main": "index.js",
+  "engines": {
+    "node": "18.x"
+  },
   "scripts": {
     "dev": "nodemon index",
     "start": "node index"
