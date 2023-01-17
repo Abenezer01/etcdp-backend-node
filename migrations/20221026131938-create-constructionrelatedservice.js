@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
     async up(queryInterface, Sequelize) {
-        await queryInterface.createTable('stakeholderinfos', {
+        await queryInterface.createTable('constructionrelatedservices', {
             id: {
                 allowNull: false,
                 primaryKey: true,
@@ -10,7 +10,7 @@ module.exports = {
             parent_id: {
                 type: Sequelize.UUID,
                 references: {
-                    model: 'stakeholderinfos',
+                    model: 'constructionrelatedservices',
                     key: 'id'
                 },
                 onUpdate: 'CASCADE',
@@ -20,39 +20,22 @@ module.exports = {
                 type: Sequelize.UUID,
                 allowNull: false,
                 references: {
-                    model: 'stakeholders',
+                    model: 'stakeholders', //stakeholder registered as higher institute type
                     key: 'id'
                 },
                 onUpdate: 'CASCADE',
                 onDelete: 'CASCADE'
             },
-            name: {
-                type: Sequelize.STRING,
-                allowNull: true
-            },
-            license_issued_date: {
-                type: Sequelize.DATE
-            },
-            capital: {
+            type_of_service: {
                 type: Sequelize.STRING
             },
-            general_manager: {
+            specification_detail: {
                 type: Sequelize.STRING
             },
-            description: {
-                type: Sequelize.TEXT
+            unit_of_measurenment: {
+                type: Sequelize.STRING
             },
-            file_id: {
-                type: Sequelize.UUID,
-                references: {
-                    model: 'files',
-                    key: 'id'
-                },
-                onUpdate: 'CASCADE',
-                onDelete: 'CASCADE'
-
-            },
-            revision_no: {
+            unit_price: {
                 type: Sequelize.INTEGER
             },
             createdAt: {
@@ -66,6 +49,6 @@ module.exports = {
         });
     },
     async down(queryInterface, Sequelize) {
-        await queryInterface.dropTable('stakeholderinfos');
+        await queryInterface.dropTable('constructionrelatedservices');
     }
 };

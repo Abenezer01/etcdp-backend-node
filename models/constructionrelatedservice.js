@@ -3,7 +3,7 @@ const {
     Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-    class certificate extends Model {
+    class constructionrelatedservice extends Model {
         /**
          * Helper method for defining associations.
          * This method is not a part of Sequelize lifecycle.
@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
             // define association here
         }
     }
-    certificate.init({
+    constructionrelatedservice.init({
         id: {
             type: DataTypes.UUID,
             primaryKey: true,
@@ -24,25 +24,13 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.UUID,
             allowNull: false
         },
-        type: DataTypes.STRING,
-        title: {
-            type: DataTypes.STRING,
-            allowNull: false
-        },
-        description: DataTypes.TEXT,
-        certificate_no: DataTypes.STRING,
-        date_of_issue: DataTypes.DATE,
-        expiry_date: DataTypes.DATE,
-        initial_certificate_no: DataTypes.STRING,
-        initial_certificate_issue_date: DataTypes.DATE,
-
-        file_id: DataTypes.UUID,
-        revision_no: {
-            type: DataTypes.INTEGER
-        }
+        type_of_service: DataTypes.STRING,
+        specification_detail: DataTypes.STRING,
+        unit_of_measurenment: DataTypes.STRING,
+        unit_price: DataTypes.INTEGER,
     }, {
         sequelize,
-        modelName: 'certificate',
+        modelName: 'constructionrelatedservice',
     });
-    return certificate;
+    return constructionrelatedservice;
 };

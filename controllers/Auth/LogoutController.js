@@ -23,7 +23,7 @@ self.logout = async(request, response) => {
             response.clearCookie("accessToken");
             response.clearCookie("refreshToken");
             return response.status(200).json({
-                    message: "User successfully logout!"
+                    message: "User successfully logged out!"
                 })
                 // return result;
         }).catch(error => {

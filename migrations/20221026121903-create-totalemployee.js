@@ -34,7 +34,7 @@ module.exports = {
                 type: Sequelize.STRING,
                 allowNull: false
             },
-            department_id: {
+            department_name: {
                 type: Sequelize.UUID
             },
             nationality: {
@@ -48,6 +48,16 @@ module.exports = {
             quantity: {
                 type: Sequelize.INTEGER,
                 allowNull: false
+            },
+            file_id: {
+                type: Sequelize.UUID,
+                references: {
+                    model: 'files',
+                    key: 'id'
+                },
+                onUpdate: 'CASCADE',
+                onDelete: 'CASCADE'
+
             },
             revision_no: {
                 type: Sequelize.INTEGER

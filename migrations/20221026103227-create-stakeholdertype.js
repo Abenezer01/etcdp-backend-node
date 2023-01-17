@@ -16,17 +16,17 @@ module.exports = {
                 onUpdate: 'CASCADE',
                 onDelete: 'CASCADE'
             },
-            name: {
+            title: {
                 type: Sequelize.STRING,
                 allowNull: false
             },
             description: {
                 type: Sequelize.TEXT
             },
-            referencedocumentId: {
+            file_id: {
                 type: Sequelize.UUID,
                 references: {
-                    model: 'referencedocuments',
+                    model: 'files',
                     key: 'id'
                 },
                 onUpdate: 'CASCADE',

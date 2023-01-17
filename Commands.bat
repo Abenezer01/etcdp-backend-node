@@ -44,3 +44,8 @@ To kill the port:-
              sudo kill -9 $(sudo lsof -t -i:9001)
 To stop mysql startup on ubuntu:-
              sudo systemctl disable mysql
+
+Mysqlconf:
+Dbname:- etcdpdb
+Dbuser:- kalebt
+Dbpass:- pg@Pass1

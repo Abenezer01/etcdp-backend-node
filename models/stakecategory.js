@@ -22,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
         parent_id: DataTypes.UUID,
         title: DataTypes.STRING,
         description: DataTypes.TEXT,
-        referencedocumentId: DataTypes.UUID,
+        file_id: DataTypes.UUID,
         stakeholdertypeId: DataTypes.UUID,
         revision_no: {
             type: DataTypes.INTEGER

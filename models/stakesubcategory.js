@@ -24,12 +24,16 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.UUID,
             allowNull: false
         },
+        stakeholdertypeId: {
+            type: DataTypes.UUID,
+            allowNull: false,
+        },
         title: {
             type: DataTypes.STRING,
             allowNull: false
         },
         description: DataTypes.TEXT,
-        referencedocumentId: DataTypes.UUID,
+        file_id: DataTypes.UUID,
         revision_no: {
             type: DataTypes.INTEGER
         }

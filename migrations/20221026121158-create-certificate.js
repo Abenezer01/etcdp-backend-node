@@ -52,6 +52,16 @@ module.exports = {
             initial_certificate_issue_date: {
                 type: Sequelize.DATE
             },
+            file_id: {
+                type: Sequelize.UUID,
+                references: {
+                    model: 'files',
+                    key: 'id'
+                },
+                onUpdate: 'CASCADE',
+                onDelete: 'CASCADE'
+
+            },
             revision_no: {
                 type: Sequelize.INTEGER
             },

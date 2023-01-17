@@ -26,6 +26,16 @@ module.exports = {
                 onUpdate: 'CASCADE',
                 onDelete: 'CASCADE'
             },
+            stakeholdertypeId: {
+                type: Sequelize.UUID,
+                allowNull: false,
+                references: {
+                    model: 'stakeholdertypes',
+                    key: 'id'
+                },
+                onUpdate: 'CASCADE',
+                onDelete: 'CASCADE'
+            },
             title: {
                 type: Sequelize.STRING,
                 allowNull: false
@@ -33,10 +43,10 @@ module.exports = {
             description: {
                 type: Sequelize.TEXT
             },
-            referencedocumentId: {
+            file_id: {
                 type: Sequelize.UUID,
                 references: {
-                    model: 'referencedocuments',
+                    model: 'files',
                     key: 'id'
                 },
                 onUpdate: 'CASCADE',

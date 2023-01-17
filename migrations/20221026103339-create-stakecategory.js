@@ -33,10 +33,10 @@ module.exports = {
             description: {
                 type: Sequelize.TEXT
             },
-            referencedocumentId: {
+            file_id: {
                 type: Sequelize.UUID,
                 references: {
-                    model: 'referencedocuments',
+                    model: 'files',
                     key: 'id'
                 },
                 onUpdate: 'CASCADE',

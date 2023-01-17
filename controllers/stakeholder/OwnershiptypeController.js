@@ -29,7 +29,7 @@ self.get = async(req, res) => {
             }
         });
         return res.status(200).json({
-            data: data
+            data: (data) ? data : {}
         })
     } catch (error) {
         res.status(500).json({
@@ -78,7 +78,7 @@ self.update = async(req, res) => {
             }
         });
         return res.status(200).json({
-            message: "Ownership has been updated successfully"
+            message: "Success"
         })
     } catch (error) {
         res.status(500).json({

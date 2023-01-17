@@ -1,4 +1,5 @@
 const {
+    stakecategory,
     stakesubcategory,
     Sequelize
 } = require("./../../models");
@@ -29,7 +30,7 @@ self.get = async(req, res) => {
             }
         });
         return res.status(200).json({
-            data: data
+            data: (data) ? data : {}
         })
     } catch (error) {
         res.status(500).json({
@@ -59,6 +60,12 @@ self.search = async(req, res) => {
 self.save = async(req, res) => {
     try {
         let body = req.body;
+        let dataOne = await stakecategory.findOne({
+            where: {
+                id: req.body.stakecategoryId
+            }
+        });
+        console.log("The data", dataOne)
         let data = await stakesubcategory.create(body);
         return res.json(data)
     } catch (error) {
@@ -78,7 +85,7 @@ self.update = async(req, res) => {
             }
         });
         return res.status(200).json({
-            message: "Stakeholder subcategory has been updated successfully"
+            message: "Success"
         })
     } catch (error) {
         res.status(500).json({

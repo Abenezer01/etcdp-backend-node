@@ -32,7 +32,7 @@ module.exports = (sequelize, DataTypes) => {
         capital: DataTypes.STRING,
         general_manager: DataTypes.STRING,
         description: DataTypes.TEXT,
-        referencedocumentId: DataTypes.UUID,
+        file_id: DataTypes.UUID,
         revision_no: {
             type: DataTypes.INTEGER
         }
