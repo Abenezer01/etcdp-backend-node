@@ -60,7 +60,7 @@ self.loginUser = async(request, response) => {
             phone: userr.phone,
             gender: userr.gender,
             position_id: userr.position_id,
-            role_name: ur.name,
+            role: ur.name,
             avatar: userr.photo.avatar
         }
         //console.log("Authenticated user role is", usrDepartment.dataValues)

@@ -60,12 +60,12 @@ self.search = async(req, res) => {
 self.save = async(req, res) => {
     try {
         let body = req.body;
-        let dataOne = await stakecategory.findOne({
-            where: {
-                id: req.body.stakecategoryId
-            }
-        });
-        console.log("The data", dataOne)
+        // let dataOne = await stakecategory.findOne({
+        //     where: {
+        //         id: req.body.stakecategoryId
+        //     }
+        // });
+        //console.log("The data", dataOne)
         let data = await stakesubcategory.create(body);
         return res.json(data)
     } catch (error) {

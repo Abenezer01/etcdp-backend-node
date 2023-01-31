@@ -86,7 +86,24 @@ self.update = async(req, res) => {
         })
     }
 }
-
+self.savefile = async(req, res) => {
+    try {
+        let id = req.params.id;
+        let body = req.body;
+        let data = await stakeholdertype.update({
+            file_id: body.file_id
+        }, {
+            where: { id: id },
+        });
+        return res.status(200).json({
+            message: data
+        })
+    } catch (error) {
+        res.status(500).json({
+            message: error.message
+        })
+    }
+}
 self.delete = async(req, res) => {
     try {
         let id = req.params.id;

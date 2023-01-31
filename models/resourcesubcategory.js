@@ -32,9 +32,6 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false
         },
-        measurement_unit: {
-            type: DataTypes.STRING
-        },
         description: DataTypes.TEXT,
         revision_no: DataTypes.INTEGER
     }, {

@@ -1,40 +1,41 @@
 'use strict';
 const {
-  Model
+    Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class generatingcapacity extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
-    static associate(models) {
-      // define association here
+    class generatingcapacity extends Model {
+        /**
+         * Helper method for defining associations.
+         * This method is not a part of Sequelize lifecycle.
+         * The `models/index` file will call this method automatically.
+         */
+        static associate(models) {
+            // define association here
+        }
     }
-  }
-  generatingcapacity.init({
-    id: {
-      type: DataTypes.UUID,
-      primaryKey: true,
-      defaultValue: DataTypes.UUIDV4
-    },
-    parent_id: DataTypes.UUID,
-    operator: DataTypes.STRING,
-    project_id: {
-      type: DataTypes.UUID,
-      allowNull: false
-    },
-    commission_date: DataTypes.DATE,
-    turbine_type_number: DataTypes.INTEGER,
-    designed_capacity: DataTypes.STRING,
-    installed_capacity: DataTypes.STRING,
-    capacity_factor: DataTypes.STRING,
-    annual_generation: DataTypes.STRING,
-    revision_no: DataTypes.INTEGER
-  }, {
-    sequelize,
-    modelName: 'generatingcapacity',
-  });
-  return generatingcapacity;
+    generatingcapacity.init({
+        id: {
+            type: DataTypes.UUID,
+            primaryKey: true,
+            defaultValue: DataTypes.UUIDV4
+        },
+        parent_id: DataTypes.UUID,
+        operator: DataTypes.STRING,
+        project_id: {
+            type: DataTypes.UUID,
+            allowNull: false
+        },
+        commission_date: DataTypes.DATE,
+        turbine_type_number: DataTypes.INTEGER,
+        designed_capacity: DataTypes.STRING,
+        generating_capacity: DataTypes.STRING,
+        installed_capacity: DataTypes.STRING,
+        capacity_factor: DataTypes.STRING,
+        annual_generation: DataTypes.STRING,
+        revision_no: DataTypes.INTEGER
+    }, {
+        sequelize,
+        modelName: 'generatingcapacity',
+    });
+    return generatingcapacity;
 };

@@ -3,7 +3,7 @@ const roleController = require("../../../controllers/user/roleController.js")
 const userPhotoController = require("../../../controllers/user/userPhotoController.js")
 const positionController = require("../../../controllers/user/positionController.js")
 const departmentController = require("../../../controllers/user/departmentController.js")
-const validateInput = require("../../../middleware/validate.js")
+const validateInput = require("../../../middleware/validate/module/user/validate")
 module.exports = function(express) {
     const route = express.Router();
 
@@ -12,7 +12,7 @@ module.exports = function(express) {
     route.get("/user/:id", userController.get);
     route.get("/user_search/:key", userController.search);
     route.post("/user", validateInput.createUser, userController.save);
-    route.put("/user/:id", userController.update);
+    route.put("/user/:id", validateInput.createUser, userController.update);
     route.delete("/user/:id", userController.delete);
     //position route
     route.get("/position", positionController.getAll);

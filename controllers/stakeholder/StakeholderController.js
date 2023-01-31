@@ -37,6 +37,23 @@ self.get = async(req, res) => {
         })
     }
 }
+self.getStakeHolderByTypeId = async(req, res) => {
+    try {
+        let id = req.params.id;
+        let data = await stakeholder.findAll({
+            where: {
+                stakeholdertype_id: id
+            }
+        });
+        return res.status(200).json({
+            data: (data) ? data : {}
+        })
+    } catch (error) {
+        res.status(500).json({
+            message: error.message
+        })
+    }
+}
 
 self.search = async(req, res) => {
     try {

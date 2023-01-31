@@ -1,7 +1,7 @@
 const {
-    clientcategory,
+    constructionresourcequantityprice,
     Sequelize
-} = require("./../../models");
+} = require("../../models");
 
 const Op = Sequelize.Op;
 
@@ -9,7 +9,7 @@ let self = {};
 
 self.getAll = async(req, res) => {
     try {
-        let data = await clientcategory.findAll();
+        let data = await constructionresourcequantityprice.findAll();
         return res.json(data)
 
     } catch (error) {
@@ -23,7 +23,7 @@ self.getAll = async(req, res) => {
 self.get = async(req, res) => {
     try {
         let id = req.params.id;
-        let data = await clientcategory.findOne({
+        let data = await constructionresourcequantityprice.findOne({
             where: {
                 id: id
             }
@@ -41,7 +41,7 @@ self.get = async(req, res) => {
 self.search = async(req, res) => {
     try {
         let text = req.query.text;
-        let data = await clientcategory.findAll({
+        let data = await constructionresourcequantityprice.findAll({
             where: {
                 name: {
                     [Op.like]: "%" + text + "%"
@@ -59,7 +59,7 @@ self.search = async(req, res) => {
 self.save = async(req, res) => {
     try {
         let body = req.body;
-        let data = await clientcategory.create(body);
+        let data = await constructionresourcequantityprice.create(body);
         return res.json(data)
     } catch (error) {
         res.status(500).json({
@@ -72,7 +72,7 @@ self.update = async(req, res) => {
     try {
         let id = req.params.id;
         let body = req.body;
-        let data = await clientcategory.update(body, {
+        let data = await constructionresourcequantityprice.update(body, {
             where: {
                 id: id
             }
@@ -90,7 +90,7 @@ self.update = async(req, res) => {
 self.delete = async(req, res) => {
     try {
         let id = req.params.id;
-        let data = await clientcategory.destroy({
+        let data = await constructionresourcequantityprice.destroy({
             where: {
                 id: id
             }

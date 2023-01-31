@@ -3,6 +3,9 @@ const polymorphicRoute = require('./routes/module/polymorphic/route');
 const userRoute = require('./routes/module/user/route');
 const loginRoute = require('./routes/module/auth/route');
 const stakeCategory = require('./routes/module/stakeholder/route')
+const project = require('./routes/module/project/route')
+const constructionresource = require('./routes/module/construction resource/route')
+const document = require('./routes/module/document/route')
 const route_view = require('./routes/route_view');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
@@ -18,7 +21,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/public', express.static('public'))
 app.set('view engine', 'ejs');
-app.use("/api", userRoute(express), polymorphicRoute(express), loginRoute(express), stakeCategory(express));
+app.use("/api", userRoute(express), polymorphicRoute(express), loginRoute(express), stakeCategory(express), project(express), constructionresource(express), document(express));
 app.use("/", route_view(express));
 app.listen(3000, () => {
     console.log('Success running 3000');

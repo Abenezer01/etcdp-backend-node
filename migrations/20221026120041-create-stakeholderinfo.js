@@ -26,10 +26,6 @@ module.exports = {
                 onUpdate: 'CASCADE',
                 onDelete: 'CASCADE'
             },
-            name: {
-                type: Sequelize.STRING,
-                allowNull: true
-            },
             license_issued_date: {
                 type: Sequelize.DATE
             },
