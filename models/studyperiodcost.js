@@ -30,7 +30,10 @@ module.exports = (sequelize, DataTypes) => {
         },
         title: DataTypes.STRING,
         description: DataTypes.TEXT,
-        study_program: DataTypes.STRING,
+        study_program_id: {
+            type: DataTypes.UUID,
+            allowNull: false
+        },
         studylevel_id: {
             type: DataTypes.UUID,
             allowNull: false

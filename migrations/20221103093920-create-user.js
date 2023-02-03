@@ -49,15 +49,6 @@ module.exports = {
                 onUpdate: 'CASCADE',
                 onDelete: 'CASCADE',
             },
-            address_id: {
-                type: Sequelize.UUID,
-                references: {
-                    model: 'addresses',
-                    key: 'id'
-                },
-                onUpdate: 'CASCADE',
-                onDelete: 'CASCADE'
-            },
             photo_id: {
                 type: Sequelize.UUID,
                 references: {

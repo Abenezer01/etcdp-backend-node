@@ -9,45 +9,105 @@ const {
 const Op = Sequelize.Op;
 
 let self = {};
-
+const paginate = require("../../utils/pagination");
+const dotenv = require('dotenv');
+dotenv.config();
 self.getAll = async(req, res) => {
-    try {
-        let data = await projectcategory.findAll({
-                include: [
-
-                    "Projectsubcategories"
-
-
-
-                ],
-            }
-
-        );
-        return res.json(data)
-
-    } catch (error) {
-        res.status(500).json({
-            message: error.message
-        })
+    let { page, size, order } = req.query;
+    //console.log("The page", page, size)
+    if (page == null && size == null) {
+        page = process.env.page,
+            size = process.env.size
     }
+    if (order == null) {
+        order = process.env.order
+    }
+    const { limit, offset } = paginate.getPagination(page, size);
+    projectcategory.findAndCountAll({
+            limit,
+            offset,
+            include: [
+
+                "Projectsubcategories"
+
+
+
+            ],
+            order: [
+                ['createdAt', order]
+            ],
+        })
+        .then(data => {
+            const response = paginate.getPagingData(data, page, limit);
+            res.send(response);
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: err.message || "Some error occurred while retrieving data."
+            });
+        });
+    // try {
+    //     let data = await projectcategory.findAll({
+    //             include: [
+
+    //                 "Projectsubcategories"
+
+
+
+    //             ],
+    //         }
+
+    //     );
+    //     return res.json(data)
+
+    // } catch (error) {
+    //     res.status(500).json({
+    //         message: error.message
+    //     })
+    // }
 }
 self.getAllProCatByTypeId = async(req, res) => {
     let id = req.params.id;
-    try {
-        let data = await projectcategory.findAll({
+    let { page, size } = req.query;
+    //console.log("The page", page, size)
+    if (page == null && size == null) {
+        page = process.env.page,
+            size = process.env.size
+    }
+    const { limit, offset } = paginate.getPagination(page, size);
+    projectcategory.findAndCountAll({
+            limit,
+            offset,
+
             include: ["Projectsubcategories"],
             where: {
                 projecttype_id: id
             }
-        });
-
-        return res.json(data ? data : [])
-
-    } catch (error) {
-        res.status(500).json({
-            message: error.message
         })
-    }
+        .then(data => {
+            const response = paginate.getPagingData(data, page, limit);
+            res.send(response);
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: err.message || "Some error occurred while retrieving data."
+            });
+        });
+    // try {
+    //     let data = await projectcategory.findAll({
+    //         include: ["Projectsubcategories"],
+    //         where: {
+    //             projecttype_id: id
+    //         }
+    //     });
+
+    //     return res.json(data ? data : [])
+
+    // } catch (error) {
+    //     res.status(500).json({
+    //         message: error.message
+    //     })
+    // }
 }
 
 self.get = async(req, res) => {

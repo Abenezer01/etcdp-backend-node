@@ -1,29 +1,57 @@
 const {
-    education,
+    employeeeducation,
     Sequelize
 } = require("../../models");
-
+const paginate = require("../../utils/pagination");
+const dotenv = require('dotenv');
+dotenv.config();
 const Op = Sequelize.Op;
 
 let self = {};
 
 self.getAll = async(req, res) => {
-    try {
-        let data = await education.findAll();
-        return res.json(data)
-
-    } catch (error) {
-        res.status(500).json({
-            message: error.message
-        })
+    let { page, size, order } = req.query;
+    //console.log("The page", page, size)
+    if (page == null && size == null) {
+        page = process.env.page,
+            size = process.env.size
     }
+    if (order == null) {
+        order = process.env.order
+    }
+    const { limit, offset } = paginate.getPagination(page, size);
+    employeeeducation.findAndCountAll({
+            limit,
+            offset,
+            order: [
+                ['createdAt', order]
+            ],
+        })
+        .then(data => {
+            const response = paginate.getPagingData(data, page, limit);
+            res.send(response);
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: err.message || "Some error occurred while retrieving data."
+            });
+        });
+    // try {
+    //     let data = await employeeeducation.findAll();
+    //     return res.json(data)
+
+    // } catch (error) {
+    //     res.status(500).json({
+    //         message: error.message
+    //     })
+    // }
 }
 
 
 self.get = async(req, res) => {
     try {
         let id = req.params.id;
-        let data = await education.findOne({
+        let data = await employeeeducation.findOne({
             where: {
                 id: id
             }
@@ -37,11 +65,59 @@ self.get = async(req, res) => {
         })
     }
 }
+self.getEmployeeEducationByStakeholderId = async(req, res) => {
+    let { page, size, order } = req.query;
+    let id = req.params.id;
+    //console.log("The page", page, size)
+    if (page == null && size == null) {
+        page = process.env.page,
+            size = process.env.size
+    }
+    if (order == null) {
+        order = process.env.order
+    }
+    const { limit, offset } = paginate.getPagination(page, size);
+    employeeeducation.findAndCountAll({
+            limit,
+            offset,
+            where: {
+                stakeholder_id: id
+            },
+            order: [
+                ['createdAt', order]
+            ],
+            include: ["studylevel"],
+        })
+        .then(data => {
+            const response = paginate.getPagingData(data, page, limit);
+            res.send(response);
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: err.message || "Some error occurred while retrieving data."
+            });
+        });
+    // try {
+    //     let id = req.params.id;
+    //     let data = await employeeeducation.findAll({
+    //         where: {
+    //             stakeholder_id: id
+    //         }
+    //     });
+    //     return res.status(200).json({
+    //         data: (data) ? data : {}
+    //     })
+    // } catch (error) {
+    //     res.status(500).json({
+    //         message: error.message
+    //     })
+    // }
+}
 
 self.search = async(req, res) => {
     try {
         let text = req.query.text;
-        let data = await education.findAll({
+        let data = await employeeeducation.findAll({
             where: {
                 name: {
                     [Op.like]: "%" + text + "%"
@@ -59,7 +135,7 @@ self.search = async(req, res) => {
 self.save = async(req, res) => {
     try {
         let body = req.body;
-        let data = await education.create(body);
+        let data = await employeeeducation.create(body);
         return res.json(data)
     } catch (error) {
         res.status(500).json({
@@ -72,7 +148,7 @@ self.update = async(req, res) => {
     try {
         let id = req.params.id;
         let body = req.body;
-        let data = await education.update(body, {
+        let data = await employeeeducation.update(body, {
             where: {
                 id: id
             }
@@ -90,7 +166,7 @@ self.update = async(req, res) => {
 self.delete = async(req, res) => {
     try {
         let id = req.params.id;
-        let data = await education.destroy({
+        let data = await employeeeducation.destroy({
             where: {
                 id: id
             }

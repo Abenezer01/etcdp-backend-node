@@ -34,7 +34,30 @@ const createUser = async(req, res, next) => {
 
     await validateReply(req.body, validationRule, res, next)
 }
+const positionValidate = async(req, res, next) => {
+    const validationRule = {
+        "department_id": "required|string",
+        "name": "required|string",
+        "is_head": "required|boolean",
+        "role_id": "required|string"
+    };
 
+    await validateReply(req.body, validationRule, res, next)
+}
+const departmentValidate = async(req, res, next) => {
+    const validationRule = {
+        "name": "required|string"
+    };
+
+    await validateReply(req.body, validationRule, res, next)
+}
+const roleValidate = async(req, res, next) => {
+    const validationRule = {
+        "name": "required|string"
+    };
+
+    await validateReply(req.body, validationRule, res, next)
+}
 const userPhotoValidate = async(req, res, next) => {
     if (!req.files) {
         return res.status(412).json({
@@ -59,5 +82,8 @@ const userPhotoValidate = async(req, res, next) => {
 }
 module.exports = {
     createUser,
-    userPhotoValidate
+    userPhotoValidate,
+    positionValidate,
+    departmentValidate,
+    roleValidate
 };

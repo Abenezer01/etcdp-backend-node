@@ -89,7 +89,7 @@ module.exports = {
         //Photo seed
         await queryInterface.bulkInsert('photos', [{
             id: uuid.v4(),
-            avatar: 'https://pixinvent.com/demo/vuexy-react-admin-dashboard-template/demo-1/assets/avatar-s-11.9d32c98c.jpg',
+            avatar: '',
             createdAt: new Date(),
             updatedAt: new Date()
         }]);
@@ -98,29 +98,8 @@ module.exports = {
             `SELECT id from photos;`
         );
         const photoRows = photos[0];
-        //Address seed
-        await queryInterface.bulkInsert('addresses', [{
-            model_id: 'f368f1fc-86da-11ed-a1eb-0242ac120002',
-            country: 'Ethiopia',
-            region: 'Addis Ababa',
-            city: 'Addis Ababa',
-            subcity: 'Arada',
-            street: 'St13',
-            block_number: 'Sr1212',
-            house_number: 'Sr1313',
-            easting: 12.2,
-            northing: 12.3,
-            longitude: 12,
-            id: uuid.v4(),
-            createdAt: new Date(),
-            updatedAt: new Date()
-        }]);
 
-        const addresses = await queryInterface.sequelize.query(
-            `SELECT id from addresses;`
-        );
 
-        const addressRows = addresses[0];
         await queryInterface.bulkInsert('users', [{
             id: uuid.v4(),
             first_name: 'Abebe',
@@ -134,10 +113,31 @@ module.exports = {
             password: hash,
             birth_date: '12-12-12',
             position_id: positionRows[0].id,
-            address_id: addressRows[0].id,
             photo_id: photoRows[0].id,
             revision_no: 0,
             createdAt: "12-12-12",
+            updatedAt: new Date()
+        }]);
+        const users = await queryInterface.sequelize.query(
+            `SELECT id from users;`
+        );
+
+        const userRows = users[0];
+        //Address seed
+        await queryInterface.bulkInsert('addresses', [{
+            model_id: userRows[0].id,
+            country: 'Ethiopia',
+            region: 'Addis Ababa',
+            city: 'Addis Ababa',
+            subcity: 'Arada',
+            street: 'St13',
+            block_number: 'Sr1212',
+            house_number: 'Sr1313',
+            easting: 12.2,
+            northing: 12.3,
+            longitude: 12,
+            id: uuid.v4(),
+            createdAt: new Date(),
             updatedAt: new Date()
         }]);
     },

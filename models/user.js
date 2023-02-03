@@ -48,7 +48,6 @@ module.exports = (sequelize, DataTypes) => {
                 allowNull: false
             },
             refresh_token: DataTypes.STRING,
-            address_id: DataTypes.UUID,
             photo_id: DataTypes.UUID,
             revision_no: DataTypes.INTEGER,
 
@@ -91,10 +90,10 @@ module.exports = (sequelize, DataTypes) => {
         //         as: "department",
         //             foreignKey: "department_id"
         //     });
-        user.belongsTo(models.address, {
-            as: "address",
-            foreignKey: "address_id"
-        })
+        // user.belongsTo(models.address, {
+        //     as: "address",
+        //     foreignKey: "address_id"
+        // })
         user.belongsTo(models.position, {
             as: "position",
             foreignKey: "position_id"

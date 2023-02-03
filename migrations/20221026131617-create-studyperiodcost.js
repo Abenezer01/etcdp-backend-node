@@ -42,9 +42,16 @@ module.exports = {
             description: {
                 type: Sequelize.TEXT
             },
-            study_program: {
-                type: Sequelize.STRING,
-                allowNull: false
+            study_program_id: {
+                type: Sequelize.UUID,
+                allowNull: false,
+                references: {
+                    model: 'studyprograms',
+                    key: 'id'
+                },
+                onUpdate: 'CASCADE',
+                onDelete: 'CASCADE'
+
             },
             studylevel_id: {
                 type: Sequelize.UUID,

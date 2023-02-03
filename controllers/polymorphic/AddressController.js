@@ -52,7 +52,7 @@ self.get = async(req, res) => {
             }
         });
         return res.status(200).json({
-            message: data
+            data: data
         })
     } catch (error) {
         res.status(500).json({
@@ -60,7 +60,24 @@ self.get = async(req, res) => {
         })
     }
 }
+self.getAddressByModelId = async(req, res) => {
+    try {
+        let id = req.params.id;
+        let data = await address.findOne({
 
+            where: {
+                model_id: id
+            }
+        });
+        return res.status(200).json({
+            data: data
+        })
+    } catch (error) {
+        res.status(500).json({
+            message: error.message
+        })
+    }
+}
 self.search = async(req, res) => {
     try {
         let text = req.query.text;

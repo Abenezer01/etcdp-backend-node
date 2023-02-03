@@ -3,7 +3,7 @@ const {
     Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-    class education extends Model {
+    class employeeeducation extends Model {
         /**
          * Helper method for defining associations.
          * This method is not a part of Sequelize lifecycle.
@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
             // define association here
         }
     }
-    education.init({
+    employeeeducation.init({
         id: {
             type: DataTypes.UUID,
             primaryKey: true,
@@ -41,10 +41,6 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.UUID,
             allowNull: false
         },
-        file_id: {
-            type: DataTypes.UUID,
-            allowNull: true
-        },
         quantity: {
             type: DataTypes.INTEGER,
             allowNull: false
@@ -57,7 +53,14 @@ module.exports = (sequelize, DataTypes) => {
         }
     }, {
         sequelize,
-        modelName: 'education',
+        modelName: 'employeeeducation',
     });
-    return education;
+    employeeeducation.associate = function(models) {
+        employeeeducation.belongsTo(models.studylevel, {
+            as: "studylevel",
+            foreignKey: "studylevel_id"
+        })
+
+    };
+    return employeeeducation;
 };

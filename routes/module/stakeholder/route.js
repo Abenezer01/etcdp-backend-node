@@ -19,6 +19,7 @@ const StudyFieldController = require("../../../controllers/stakeholder/StudyFiel
 const StudyPeriodCostController = require("../../../controllers/stakeholder/StudyPeriodCostController")
 const GraduateController = require("../../../controllers/stakeholder/GraduateController")
 const ConstructionRelatedServiceController = require("../../../controllers/stakeholder/ConstructionRelatedServiceController")
+const StudyProgramController = require("../../../controllers/stakeholder/StudyProgramController")
 const middleware = require("../../../middleware/middleware")
 const validateData = require("../../../middleware/validate/module/stakeholder/validate")
 module.exports = function(express) {
@@ -41,6 +42,7 @@ module.exports = function(express) {
     route.get("/stakeholder-category/", stakeholderCategoryController.getAll);
     route.get("/stakeholder-category/:id", stakeholderCategoryController.get);
     route.get("/stakeholder-category/stakeholder-type/:id", stakeholderCategoryController.getAllCatByTypeId);
+    route.get("/stakeholder-category/staketype/:id", stakeholderCategoryController.getCatByTypeId);
     route.get("/stakeholder-category-search", stakeholderCategoryController.search);
     route.post("/stakeholder-category", validateData.stakeholderCategoryValidate, stakeholderCategoryController.save);
     route.put("/stakeholder-category/:id", validateData.stakeholderCategoryValidate, stakeholderCategoryController.update);
@@ -53,7 +55,7 @@ module.exports = function(express) {
     route.put("/stakeholder-sub-category/:id", validateData.stakeholderSubCategoryValidate, stakeholderSubCategoryController.update);
     route.delete("/stakeholder-sub-category/:id", stakeholderSubCategoryController.delete);
     //stakeholder type route
-    route.get("/stakeholder-type/", stakeholderTypeController.getAll);
+    route.get("/stakeholder-type", stakeholderTypeController.getAll);
     route.get("/stakeholder-type/:id", stakeholderTypeController.get);
     route.get("/stakeholder-type-search", stakeholderTypeController.search);
     route.post("/stakeholder-type", validateData.stakeholderTypeValidate, stakeholderTypeController.save);
@@ -78,6 +80,7 @@ module.exports = function(express) {
     //certificate route
     route.get("/certificate/", CertificateController.getAll);
     route.get("/certificate/:id", CertificateController.get);
+    route.get("/certificate/stakeholder/:id", CertificateController.getCertificateWithStakeholderId);
     route.get("/certificate-search", CertificateController.search);
     route.post("/certificate", validateData.certificateValidate, CertificateController.save);
     route.put("/certificate/:id", validateData.certificateValidate, CertificateController.update);
@@ -85,6 +88,7 @@ module.exports = function(express) {
     //total employee route
     route.get("/total-employee/", TotalEmployeeController.getAll);
     route.get("/total-employee/:id", TotalEmployeeController.get);
+    route.get("/total-employee/stakeholder/:id", TotalEmployeeController.getTotalEmployeeWithStakeholderId);
     route.get("/total-employee-search", TotalEmployeeController.search);
     route.post("/total-employee", validateData.totalEmployeeValidate, TotalEmployeeController.save);
     route.put("/total-employee/:id", validateData.totalEmployeeValidate, TotalEmployeeController.update);
@@ -99,6 +103,7 @@ module.exports = function(express) {
     //employee age route
     route.get("/employee-age/", EmployeeAgeController.getAll);
     route.get("/employee-age/:id", EmployeeAgeController.get);
+    route.get("/employee-age/stakeholder/:id", EmployeeAgeController.getEmployeeAgeByStakeholderId);
     route.get("/employee-age-search", EmployeeAgeController.search);
     route.post("/employee-age", validateData.employeeAgeValidate, EmployeeAgeController.save);
     route.put("/employee-age/:id", validateData.employeeAgeValidate, EmployeeAgeController.update);
@@ -113,6 +118,7 @@ module.exports = function(express) {
     //employee education route
     route.get("/employee-education/", EmployeeEducationController.getAll);
     route.get("/employee-education/:id", EmployeeEducationController.get);
+    route.get("/employee-education/stakeholder/:id", EmployeeEducationController.getEmployeeEducationByStakeholderId);
     route.get("/employee-education-search", EmployeeEducationController.search);
     route.post("/employee-education", validateData.educationValidate, EmployeeEducationController.save);
     route.put("/employee-education/:id", validateData.educationValidate, EmployeeEducationController.update);
@@ -127,6 +133,7 @@ module.exports = function(express) {
     //work experience
     route.get("/work-experience/", WorkExperienceController.getAll);
     route.get("/work-experience/:id", WorkExperienceController.get);
+    route.get("/work-experience/stakeholder/:id", WorkExperienceController.getWorkExperienceByStakeholderId);
     route.get("/work-experience-search", WorkExperienceController.search);
     route.post("/work-experience", validateData.workExperienceValidate, WorkExperienceController.save);
     route.put("/work-experience/:id", validateData.workExperienceValidate, WorkExperienceController.update);
@@ -134,6 +141,7 @@ module.exports = function(express) {
     //stakeholder training/ support
     route.get("/training/", StakeHolderTrainingController.getAll);
     route.get("/training/:id", StakeHolderTrainingController.get);
+    route.get("/training/stakeholder/:id", StakeHolderTrainingController.getTrainingByStakeholderId);
     route.get("/training-search", StakeHolderTrainingController.search);
     route.post("/training", validateData.trainingValidate, StakeHolderTrainingController.save);
     route.put("/training/:id", validateData.trainingValidate, StakeHolderTrainingController.update);
@@ -141,6 +149,7 @@ module.exports = function(express) {
     //stakeholder regulation
     route.get("/regulation/", RegulationController.getAll);
     route.get("/regulation/:id", RegulationController.get);
+    route.get("/regulation/stakeholder/:id", RegulationController.getRegulationByStakeholderId);
     route.get("/regulation-search", RegulationController.search);
     route.post("/regulation", validateData.regulationValidate, RegulationController.save);
     route.put("/regulation/:id", validateData.regulationValidate, RegulationController.update);
@@ -152,9 +161,17 @@ module.exports = function(express) {
     route.post("/study-field", validateData.studyFieldValidate, StudyFieldController.save);
     route.put("/study-field/:id", validateData.studyFieldValidate, StudyFieldController.update);
     route.delete("/study-field/:id", StudyFieldController.delete);
+    //study program
+    route.get("/study-program/", StudyProgramController.getAll);
+    route.get("/study-program/:id", StudyProgramController.get);
+    route.get("/study-program-search", StudyProgramController.search);
+    route.post("/study-program", validateData.studyProgramValidate, StudyProgramController.save);
+    route.put("/study-program/:id", validateData.studyProgramValidate, StudyProgramController.update);
+    route.delete("/study-program/:id", StudyProgramController.delete);
     //study period cost
     route.get("/study-period-cost/", StudyPeriodCostController.getAll);
     route.get("/study-period-cost/:id", StudyPeriodCostController.get);
+    route.get("/study-period-cost/higher_institute/:id", StudyPeriodCostController.getByHigherInstituteId);
     route.get("/study-period-cost-search", StudyPeriodCostController.search);
     route.post("/study-period-cost", validateData.studyPeriodCostValidate, StudyPeriodCostController.save);
     route.put("/study-period-cost/:id", validateData.studyPeriodCostValidate, StudyPeriodCostController.update);
@@ -169,6 +186,7 @@ module.exports = function(express) {
     //Construction related service
     route.get("/construction-related-service/", ConstructionRelatedServiceController.getAll);
     route.get("/construction-related-service/:id", ConstructionRelatedServiceController.get);
+    route.get("/construction-related-service/stakeholder/:id", ConstructionRelatedServiceController.getConstructionRelatedServiceByStakeholderId);
     route.get("/construction-related-service-search", ConstructionRelatedServiceController.search);
     route.post("/construction-related-service", validateData.constructionRelatedServiceValidate, ConstructionRelatedServiceController.save);
     route.put("/construction-related-service/:id", validateData.constructionRelatedServiceValidate, ConstructionRelatedServiceController.update);

@@ -42,6 +42,13 @@ const buisnessFieldValidate = async(req, res, next) => {
 
     await validateReply(req.body, validationRule, res, next)
 }
+const studyProgramValidate = async(req, res, next) => {
+    const validationRule = {
+        "title": "required|string"
+    };
+
+    await validateReply(req.body, validationRule, res, next)
+}
 const stakeHolderValidate = async(req, res, next) => {
     const validationRule = {
         "stakecategory_id": "required|string",
@@ -49,7 +56,7 @@ const stakeHolderValidate = async(req, res, next) => {
         "trade_name": "required|string",
         "tin": "required|string",
         "ownership_id": "required|string",
-        "buisnessfield_id": "required|string",
+        "businessfield_id": "required|string",
         "origin": "required|string",
         "operation_location": "required|string",
     };
@@ -182,7 +189,7 @@ const regulationValidate = async(req, res, next) => {
 const studyFieldValidate = async(req, res, next) => {
     const validationRule = {
         "title": "required|string",
-        "study_program": "required|string",
+        "study_program_id": "required|string",
         "studylevel_id": "required|string"
     };
 
@@ -192,10 +199,10 @@ const studyPeriodCostValidate = async(req, res, next) => {
     const validationRule = {
         "higher_institute_id": "required|string",
         "studyfield_id": "required|string",
-        "study_program": "required|string",
+        "study_program_id": "required|string",
         "studylevel_id": "required|string",
         "study_period": "required|date",
-        "study_cost": "required|integer",
+        "study_cost": "required",
     };
 
     await validateReply(req.body, validationRule, res, next)
@@ -204,7 +211,7 @@ const graduateValidate = async(req, res, next) => {
     const validationRule = {
         "higher_institute_id": "required|string",
         "studyfield_id": "required|string",
-        "study_program": "required|string",
+        "study_program_id": "required|string",
         "studylevel_id": "required|string",
         "study_period": "required|date",
         "gender": "required|string",
@@ -246,5 +253,6 @@ module.exports = {
     studyPeriodCostValidate,
     constructionRelatedServiceValidate,
     graduateValidate,
-    workExperienceLevelValidate
+    workExperienceLevelValidate,
+    studyProgramValidate
 };

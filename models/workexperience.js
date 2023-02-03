@@ -49,5 +49,11 @@ module.exports = (sequelize, DataTypes) => {
         sequelize,
         modelName: 'workexperience',
     });
+    workexperience.associate = function(models) {
+        workexperience.belongsTo(models.experiencelevel, {
+            as: "experiencelevel",
+            foreignKey: "experiencelevel_id"
+        })
+    };
     return workexperience;
 };

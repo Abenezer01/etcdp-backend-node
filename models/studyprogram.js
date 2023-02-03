@@ -3,7 +3,7 @@ const {
     Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-    class studyfield extends Model {
+    class studyprogram extends Model {
         /**
          * Helper method for defining associations.
          * This method is not a part of Sequelize lifecycle.
@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
             // define association here
         }
     }
-    studyfield.init({
+    studyprogram.init({
         id: {
             type: DataTypes.UUID,
             primaryKey: true,
@@ -25,33 +25,10 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false
         },
         description: DataTypes.TEXT,
-        study_program_id: {
-            type: DataTypes.UUID,
-            allowNull: false
-        },
-        studylevel_id: {
-            type: DataTypes.UUID,
-            allowNull: false
-        },
         revision_no: DataTypes.INTEGER
     }, {
         sequelize,
-        modelName: 'studyfield',
+        modelName: 'studyprogram',
     });
-    studyfield.associate = function(models) {
-        // studyfield.belongsTo(models.address, {
-        //     as: "address",
-        //     foreignKey: "address_id"
-        // })
-        studyfield.belongsTo(models.studyprogram, {
-            as: "studyprogram",
-            foreignKey: "study_program_id"
-        })
-        studyfield.belongsTo(models.studylevel, {
-            as: "studylevel",
-            foreignKey: "studylevel_id"
-        })
-    };
-
-    return studyfield;
+    return studyprogram;
 };

@@ -101,7 +101,7 @@ const projectDocumentValidate = async(req, res, next) => {
 
     await validateReply(req.body, validationRule, res, next)
 }
-const constructionResource = async(req, res, next) => {
+const constructionResourceValidate = async(req, res, next) => {
     const validationRule = {
         "project_id": "required|string",
         "resourcecategory_id": "required|string",
@@ -176,7 +176,7 @@ const turbineInfoValidate = async(req, res, next) => {
 
     await validateReply(req.body, validationRule, res, next)
 }
-const hydroElectricianValidate = async(req, res, next) => {
+const hydroElectricDamValidate = async(req, res, next) => {
     const validationRule = {
         "project_id": "required|string",
         "river_name": "required|string"
@@ -268,7 +268,7 @@ const railWayStationValidate = async(req, res, next) => {
     await validateReply(req.body, validationRule, res, next)
 
 }
-const waterIrrigationDamValidate = async(req, res, next) => {
+const reserviorDetailValidate = async(req, res, next) => {
     const validationRule = {
         "project_id": "required|string"
     };
@@ -305,7 +305,7 @@ module.exports = {
     projectTypeValidate,
     projectValidate,
     projectVariationValidate,
-    constructionResource,
+    constructionResourceValidate,
     buildingEnvelopMaterialValidate,
     buildingDimensionDetailValidate,
     roadDetailValidate,
@@ -315,7 +315,7 @@ module.exports = {
     telecomValidate,
     generatingCapacityValidate,
     turbineInfoValidate,
-    hydroElectricianValidate,
+    hydroElectricDamValidate,
     solarEnergyValidate,
     windEnergyValidate,
     transformerTypeValidate,
@@ -324,7 +324,7 @@ module.exports = {
     electricTowerValidate,
     railWayStationValidate,
     railWayValidate,
-    waterIrrigationDamValidate,
+    reserviorDetailValidate,
     irrigationCapacityValidate,
     portValidate,
     spillWayInfoValidate,

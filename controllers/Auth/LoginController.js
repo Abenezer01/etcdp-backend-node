@@ -21,9 +21,13 @@ self.loginUser = async(request, response) => {
     let usrPositionID
     let accessToken
     let refreshToken
-    let userr
+    let userData
     let usrRole
-    userr = await user.findOne({
+    try {
+        userData = await user.findOne({
+            where: {
+                email: email
+            },
             include: [{
                     model: position,
                     as: "position"
@@ -33,89 +37,84 @@ self.loginUser = async(request, response) => {
                     as: "photo"
                 }
             ],
-
+        })
+        if (!userData) {
+            return response.status(401).json({
+                message: "Email address doesn't exit"
+            })
+        } else {
+            usr = userData
+            id = usr.id
+            usrPass = usr.password
+            usrPositionID = usr.position_id
+        }
+        //console.log("The position user", userData)
+        usrRole = await role.findOne({
             where: {
-                email: email
+                id: userData.position.role_id
             }
         })
-        //console.log("The position user", userr)
-    usrRole = await role.findOne({
-        where: {
-            id: userr.position.role_id
-        }
-    })
-    usrDepartment = await department.findOne({
-        where: {
-            id: userr.position.department_id
-        }
-    })
 
-    ur = { id: usrRole.id, name: usrRole.name }
-    dep = { id: usrDepartment.id, name: usrDepartment.name }
-    replyUser = {
-            first_name: userr.first_name,
-            middle_name: userr.middle_name,
-            last_name: userr.last_name,
-            email: userr.email,
-            phone: userr.phone,
-            gender: userr.gender,
-            position_id: userr.position_id,
-            role: ur.name,
-            avatar: userr.photo.avatar
-        }
-        //console.log("Authenticated user role is", usrDepartment.dataValues)
-    if (!userr) {
-        return response.status(401).json({
-            message: "Email address doesn't exit"
-        })
-    } else {
-        usr = userr
-        id = usr.id
-        usrPass = usr.password
-        usrPositionID = usr.position_id
-    }
+        ur = { id: usrRole.id, name: usrRole.name }
+            //dep = { id: usrDepartment.id, name: usrDepartment.name }
+        replyUser = {
+                first_name: userData.first_name,
+                middle_name: userData.middle_name,
+                last_name: userData.last_name,
+                email: userData.email,
+                phone: userData.phone,
+                gender: userData.gender,
+                position_id: userData.position_id,
+                role: ur.name,
+                avatar: userData.photo.avatar
+            }
+            //console.log("Authenticated user role is", usrDepartment.dataValues)
 
-    bcrypt.compare(password, usrPass, function(err, result) {  
-        if (result) { 
-            usr = { id: id }
-            accessToken = jwt.sign(usr,
-                TOKEN_KEY, {
-                    expiresIn: "2h",
-                }
-            );
-            refreshToken = jwt.sign(usr, REFRESH_TOKEN_KEY, { expiresIn: "3h" })
-                // save user token
 
-            user.update({
-                    refresh_token: refreshToken
-                }, {
-                    where: { id: id },
-                })
-                .then(result => {
+        bcrypt.compare(password, usrPass, function(err, result) {  
+            if (result) { 
+                usr = { id: id }
+                accessToken = jwt.sign(usr,
+                    TOKEN_KEY, {
+                        expiresIn: "2h",
+                    }
+                );
+                refreshToken = jwt.sign(usr, REFRESH_TOKEN_KEY, { expiresIn: "3h" })
+                    // save user token
 
-                    //console.log('success', result);
-                    response.cookie('accessToken', accessToken);
-                    response.cookie('refreshToken', refreshToken);
-                    return response.status(200).json({
-                            userData: replyUser,
-                            accessToken: accessToken,
-                            refreshToken: refreshToken
-                        })
-                        // return result;
-                }).catch(error => {
-                    return response.status(500).json({
-                        message: error
+                user.update({
+                        refresh_token: refreshToken
+                    }, {
+                        where: { id: id },
                     })
+                    .then(result => {
+                        return response.status(200).json({
+                                userData: replyUser,
+                                accessToken: accessToken,
+                                refreshToken: refreshToken
+                            })
+                            // return result;
+                    }).catch(error => {
+                        return response.status(500).json({
+                            message: error
+                        })
+                    })
+
+
+
+            } else {
+                return response.status(401).json({
+                    message: "The password is incorrect"
                 })
+            }
+        })
+    } catch (error) {
+        console.log("The error is", error)
 
-
-
-        } else {
-            return response.status(401).json({
-                message: "The password is incorrect"
-            })
-        }
-    })
+        return response.status(401).json({
+            message: error == "TypeError: Cannot read properties of null (reading 'position')" ? "Unauthorized! please check your email and password" : error.message
+        })
+    }
 
 
 

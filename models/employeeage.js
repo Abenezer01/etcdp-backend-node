@@ -58,5 +58,12 @@ module.exports = (sequelize, DataTypes) => {
         sequelize,
         modelName: 'employeeage',
     });
+    employeeage.associate = function(models) {
+        employeeage.belongsTo(models.agelevel, {
+            as: "agelevel",
+            foreignKey: "agelevel_id"
+        })
+
+    };
     return employeeage;
 };

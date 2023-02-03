@@ -18,22 +18,22 @@ module.exports = function(express) {
     route.get("/position", positionController.getAll);
     route.get("/position/:id", positionController.get);
     route.get("/position_search", positionController.search);
-    route.post("/position", positionController.save);
-    route.put("/position/:id", positionController.update);
+    route.post("/position", validateInput.positionValidate, positionController.save);
+    route.put("/position/:id", validateInput.positionValidate, positionController.update);
     route.delete("/position/:id", positionController.delete);
-    //brands route
+    //department route
     route.get("/department", departmentController.getAll);
     route.get("/department/:id", departmentController.get);
     route.get("/department_search", departmentController.search);
-    route.post("/department", departmentController.save);
-    route.put("/department/:id", departmentController.update);
+    route.post("/department", validateInput.departmentValidate, departmentController.save);
+    route.put("/department/:id", validateInput.departmentValidate, departmentController.update);
     route.delete("/department/:id", departmentController.delete);
     //Role route
     route.get("/role", roleController.getAll);
     route.get("/role/:id", roleController.get);
     route.get("/role_search", roleController.search);
-    route.post("/role", roleController.save);
-    route.put("/role/:id", roleController.update);
+    route.post("/role", validateInput.roleValidate, roleController.save);
+    route.put("/role/:id", validateInput.roleValidate, roleController.update);
     route.delete("/role/:id", roleController.delete);
     //Photo route
     route.get("/photo", userPhotoController.getAll);

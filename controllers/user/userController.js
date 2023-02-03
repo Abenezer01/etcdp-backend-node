@@ -7,41 +7,109 @@ const {
 } = require("./../../models");
 const bcrypt = require('bcrypt');
 let validator = require("../../utils/validator");
+const paginate = require("../../utils/pagination");
 const Op = Sequelize.Op;
-
+const dotenv = require('dotenv');
+dotenv.config();
 let self = {};
 
+
 self.getAll = async(req, res) => {
-    try {
-        let data = await user.findAndCountAll({
+
+    let { page, size, order } = req.query;
+    // var condition = title ? { title: { [Op.like]: `%${title}%` } } : null;
+    //console.log("The page", page, size)
+    if (page == null && size == null) {
+        page = process.env.page,
+            size = process.env.size,
+            console.log("The page", page, size)
+    }
+    if (order == null) {
+        order = process.env.order
+    }
+    const { limit, offset } = paginate.getPagination(page, size);
+    console.log("The limit and offset", limit, offset)
+
+    user.findAndCountAll({
+            limit,
+            offset,
+            order: [
+                ['createdAt', order]
+            ],
             include: [{
-                model: address,
-                as: "address"
-            }, {
                 model: position,
                 as: "position",
             }, {
                 model: photo,
                 as: "photo"
             }],
-            // LIMIT: 10,
-            // OFFSET: 1,
-
+        })
+        .then(data => {
+            const response = paginate.getPagingData(data, page, limit);
+            res.send(response);
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: err.message || "Some error occurred while retrieving data."
+            });
         });
-        return res.status(200).json({
-            data: data
-        })
+    //     let size = Number(req.query.page)
+    //     let page = Number(req.query.size)
+    //     let limit = getPagination(size, page).limit
+    //     let offset = getPagination(size, page).offset
+    //     console.log("The limit is: ", limit, page)
 
-    } catch (error) {
-        // if (err.message === 'Error') {
-        //     res.status(500).json({
-        //         message: error.message
-        //     })
-        // }
-        res.status(500).json({
-            message: error.message
-        })
-    }
+    //     try {
+    //         exports.findAll = (req, res) => {
+    //   const { page, size, title } = req.query;
+    //   var condition = title ? { title: { [Op.like]: `%${title}%` } } : null;
+
+    //   const { limit, offset } = getPagination(page, size);
+
+    //   Tutorial.findAndCountAll({ where: condition, limit, offset })
+    //     .then(data => {
+    //       const response = getPagingData(data, page, limit);
+    //       res.send(response);
+    //     })
+    //     .catch(err => {
+    //       res.status(500).send({
+    //         message:
+    //           err.message || "Some error occurred while retrieving tutorials."
+    //       });
+    //     });
+    // };
+
+    //         let data = await user.findAll({
+    //             limit: limit,
+    //             offset: offset,
+    //             include: [{
+    //                 model: address,
+    //                 as: "address"
+    //             }, {
+    //                 model: position,
+    //                 as: "position",
+    //             }, {
+    //                 model: photo,
+    //                 as: "photo"
+    //             }],
+
+
+    //         })
+
+    //         return res.status(200).json({
+    //             data: data
+    //         })
+
+    //     } catch (error) {
+    //         // if (err.message === 'Error') {
+    //         //     res.status(500).json({
+    //         //         message: error.message
+    //         //     })
+    //         // }
+    //         res.status(500).json({
+    //             message: error.message
+    //         })
+    //     }
 }
 
 self.get = async(req, res) => {
@@ -130,7 +198,6 @@ self.save = async(req, res) => {
             partner_name: req.body.partner_name,
             birth_date: req.body.birth_date,
             position_id: req.body.position_id,
-            address_id: req.body.address_id,
             revision_no: req.body.revision_no,
             password: await bcrypt.hash(req.body.password, salt)
         };
@@ -139,7 +206,7 @@ self.save = async(req, res) => {
 
         return res.json(created_user)
     } catch (err) {
-        let er = err.errors[0].message
+        let er = err.message
         console.log("The error is ", er)
 
         res.status(500).json({

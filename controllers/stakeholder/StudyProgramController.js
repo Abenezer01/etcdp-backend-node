@@ -1,7 +1,7 @@
 const {
-    stakeholdertype,
+    studyprogram,
     Sequelize
-} = require("./../../models");
+} = require("../../models");
 const paginate = require("../../utils/pagination");
 const dotenv = require('dotenv');
 dotenv.config();
@@ -11,17 +11,16 @@ let self = {};
 
 self.getAll = async(req, res) => {
     let { page, size, order } = req.query;
-    console.log("The page", page, size)
+    //console.log("The page", page, size)
     if (page == null && size == null) {
         page = process.env.page,
             size = process.env.size
-        console.log("The page here", page, size)
     }
     if (order == null) {
         order = process.env.order
     }
-    const { limit, offset } = paginate.getPagination(Number(page), Number(size));
-    stakeholdertype.findAndCountAll({
+    const { limit, offset } = paginate.getPagination(page, size);
+    studyprogram.findAndCountAll({
             limit,
             offset,
             order: [
@@ -38,7 +37,7 @@ self.getAll = async(req, res) => {
             });
         });
     // try {
-    //     let data = await stakeholdertype.findAll();
+    //     let data = await studyprogram.findAll();
     //     return res.json(data)
 
     // } catch (error) {
@@ -52,7 +51,7 @@ self.getAll = async(req, res) => {
 self.get = async(req, res) => {
     try {
         let id = req.params.id;
-        let data = await stakeholdertype.findOne({
+        let data = await studyprogram.findOne({
             where: {
                 id: id
             }
@@ -70,7 +69,7 @@ self.get = async(req, res) => {
 self.search = async(req, res) => {
     try {
         let text = req.query.text;
-        let data = await stakeholdertype.findAll({
+        let data = await studyprogram.findAll({
             where: {
                 name: {
                     [Op.like]: "%" + text + "%"
@@ -88,7 +87,7 @@ self.search = async(req, res) => {
 self.save = async(req, res) => {
     try {
         let body = req.body;
-        let data = await stakeholdertype.create(body);
+        let data = await studyprogram.create(body);
         return res.json(data)
     } catch (error) {
         res.status(500).json({
@@ -101,7 +100,7 @@ self.update = async(req, res) => {
     try {
         let id = req.params.id;
         let body = req.body;
-        let data = await stakeholdertype.update(body, {
+        let data = await studyprogram.update(body, {
             where: {
                 id: id
             }
@@ -115,28 +114,11 @@ self.update = async(req, res) => {
         })
     }
 }
-self.savefile = async(req, res) => {
-    try {
-        let id = req.params.id;
-        let body = req.body;
-        let data = await stakeholdertype.update({
-            file_id: body.file_id
-        }, {
-            where: { id: id },
-        });
-        return res.status(200).json({
-            message: data
-        })
-    } catch (error) {
-        res.status(500).json({
-            message: error.message
-        })
-    }
-}
+
 self.delete = async(req, res) => {
     try {
         let id = req.params.id;
-        let data = await stakeholdertype.destroy({
+        let data = await studyprogram.destroy({
             where: {
                 id: id
             }

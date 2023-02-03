@@ -1,37 +1,27 @@
 'use strict';
 module.exports = {
     async up(queryInterface, Sequelize) {
-        await queryInterface.createTable('files', {
+        await queryInterface.createTable('studyprograms', {
             id: {
                 allowNull: false,
                 primaryKey: true,
                 type: Sequelize.UUID
             },
             parent_id: {
-                type: Sequelize.UUID
-            },
-            fileable_type: {
-                type: Sequelize.STRING
+                type: Sequelize.UUID,
+                references: {
+                    model: 'studyprograms',
+                    key: 'id'
+                },
+                onUpdate: 'CASCADE',
+                onDelete: 'CASCADE'
             },
             title: {
                 type: Sequelize.STRING,
                 allowNull: false
             },
-            url: {
-                type: Sequelize.TEXT
-            },
-            type: {
-                type: Sequelize.STRING,
-                allowNull: false
-            },
             description: {
                 type: Sequelize.TEXT
-            },
-            extension: {
-                type: Sequelize.STRING
-            },
-            reference_id: {
-                type: Sequelize.UUID
             },
             revision_no: {
                 type: Sequelize.INTEGER
@@ -47,6 +37,6 @@ module.exports = {
         });
     },
     async down(queryInterface, Sequelize) {
-        await queryInterface.dropTable('files');
+        await queryInterface.dropTable('studyprograms');
     }
 };
