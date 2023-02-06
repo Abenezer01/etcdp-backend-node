@@ -1,5 +1,7 @@
+const { saveActionState } = require("../../utils/helper");
 const {
     stakeholdertype,
+    actionstate,
     Sequelize
 } = require("./../../models");
 
@@ -60,6 +62,10 @@ self.save = async(req, res) => {
     try {
         let body = req.body;
         let data = await stakeholdertype.create(body);
+        if(data) {
+            let us = "e1594d67-3aa2-429b-bb77-2e4ecc2124f8"
+            saveActionState(data.id, "stakeholdertype", "REGISTER", us)
+        }
         return res.json(data)
     } catch (error) {
         res.status(500).json({

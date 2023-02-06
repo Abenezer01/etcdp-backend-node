@@ -4,6 +4,7 @@ const {
     Sequelize
 } = require("../../models");
 const path = require('path');
+const { saveActionState } = require("../../utils/helper");
 
 const Op = Sequelize.Op;
 
@@ -91,6 +92,10 @@ self.save = async(req, res) => {
         let ll
         try {
             ll = await photo.create(photoo)
+            if(ll){
+                let us = "e1594d67-3aa2-429b-bb77-2e4ecc2124f8"
+                saveActionState(data.id, "photo", "REGISTER", us)
+            }
             file.mv(filePath, err => {
                 if (err) return res.status(500).send(err)
                     // res.redirect('/')

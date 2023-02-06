@@ -1,8 +1,8 @@
 const { saveActionState } = require("../../utils/helper");
 const {
-    position,
+    projectcategory,
     Sequelize
-} = require("./../../models");
+} = require("../../models");
 
 const Op = Sequelize.Op;
 
@@ -10,17 +10,10 @@ let self = {};
 
 self.getAll = async(req, res) => {
     try {
-        let data = await position.findAll();
-        return res.status(200).json({
-            data
-        })
+        let data = await projectcategory.findAll();
+        return res.json(data)
 
     } catch (error) {
-        // if (err.message === 'Error') {
-        //     res.status(500).json({
-        //         message: error.message
-        //     })
-        // }
         res.status(500).json({
             message: error.message
         })
@@ -30,7 +23,7 @@ self.getAll = async(req, res) => {
 self.get = async(req, res) => {
     try {
         let id = req.params.id;
-        let data = await position.findOne({
+        let data = await projectcategory.findOne({
             where: {
                 id: id
             }
@@ -48,7 +41,7 @@ self.get = async(req, res) => {
 self.search = async(req, res) => {
     try {
         let text = req.query.text;
-        let data = await position.findAll({
+        let data = await projectcategory.findAll({
             where: {
                 name: {
                     [Op.like]: "%" + text + "%"
@@ -66,10 +59,10 @@ self.search = async(req, res) => {
 self.save = async(req, res) => {
     try {
         let body = req.body;
-        let data = await position.create(body);
+        let data = await projectcategory.create(body);
         if(data){
             let us = "e1594d67-3aa2-429b-bb77-2e4ecc2124f8"
-            saveActionState(data.id, "position", "REGISTER", us)
+            saveActionState(data.id, "projectcategory", "REGISTER", us)
         }
         return res.json(data)
     } catch (error) {
@@ -83,12 +76,14 @@ self.update = async(req, res) => {
     try {
         let id = req.params.id;
         let body = req.body;
-        let data = await position.update(body, {
+        let data = await projectcategory.update(body, {
             where: {
                 id: id
             }
         });
-        return res.json(data)
+        return res.status(200).json({
+            message: "ProjectCategory updated successfully"
+        })
     } catch (error) {
         res.status(500).json({
             message: error.message
@@ -99,7 +94,7 @@ self.update = async(req, res) => {
 self.delete = async(req, res) => {
     try {
         let id = req.params.id;
-        let data = await position.destroy({
+        let data = await projectcategory.destroy({
             where: {
                 id: id
             }

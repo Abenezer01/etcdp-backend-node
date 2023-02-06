@@ -14,7 +14,6 @@ require('dotenv').config();
 
 self.loginUser = async(request, response) => {
     const { email, password } = request.body
-    let id
     let usrPass
     let usrPositionID
     let accessToken
@@ -75,7 +74,10 @@ self.loginUser = async(request, response) => {
 
     bcrypt.compare(password, usrPass, function(err, result) {  
         if (result) { 
-            usr = { id: id }
+            usr = { 
+                id: id,
+                department_id: userr.position.department_id
+            }
             accessToken = jwt.sign(usr,
             process.env.TOKEN_KEY, {
                     expiresIn: "2h",

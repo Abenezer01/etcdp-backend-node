@@ -2,6 +2,7 @@ const {
     permission,
     Sequelize
 } = require("../../models");
+const { saveActionState } = require("../../utils/helper");
 
 const Op = Sequelize.Op;
 
@@ -33,6 +34,10 @@ self.get = async(req, res) => {
                 id: id
             }
         });
+        if(data){
+            let us = "e1594d67-3aa2-429b-bb77-2e4ecc2124f8"
+            saveActionState(data.id, "permission", "REGISTER", us)
+        }
         return res.status(200).json({
             data: data
         })

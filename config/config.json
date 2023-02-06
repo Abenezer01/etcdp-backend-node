@@ -1,36 +1,35 @@
 {
     "development": {
-        "dialect": "mysql",
         "username": "root",
-        "password": "password",
-        "host": "localhost",
+        "password": "onespace@database",
         "database": "etcdp_database",
-        "logging": true,
+        "host": "127.0.0.1",
         "port": "3306",
+        "dialect": "mariadb",
         "dialectOptions": {
             "ssl": false
         }
     },
     "test": {
-        "dialect": "mysql",
         "username": "root",
-        "password": "password",
-        "host": "localhost",
+        "password": "onespace@database",
         "database": "etcdp_database",
-        "logging": true,
+        "host": "127.0.0.1",
         "port": "3306",
+        "dialect": "mariadb",
+        "logging": true,
         "dialectOptions": {
             "ssl": false
         }
     },
     "production": {
-        "dialect": "mysql",
         "username": "root",
-        "password": "password",
-        "host": "localhost",
+        "password": "onespace@database",
         "database": "etcdp_database",
-        "logging": true,
+        "host": "127.0.0.1",
         "port": "3306",
+        "dialect": "mariadb",
+        "logging": true,
         "dialectOptions": {
             "ssl": false
         }

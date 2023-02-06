@@ -7,6 +7,7 @@ const {
 } = require("./../../models");
 const bcrypt = require('bcrypt');
 let validator = require("../../utils/validator");
+const { saveActionState } = require("../../utils/helper");
 const Op = Sequelize.Op;
 
 let self = {};
@@ -28,6 +29,18 @@ self.getAll = async(req, res) => {
             // OFFSET: 1,
 
         });
+
+        // let limit = req.params.limit
+		// let page_no = req.params.page_no		
+		// let data = await activitylog.findAll({
+		// 	order: [['createdAt', 'DESC']],
+		// 	where: {
+		// 		user_id: id
+		// 	},
+		// 	limit:Number(limit),
+		// 	offset: Number(--page_no),
+		// })
+        
         return res.status(200).json({
             data: data
         })
@@ -135,16 +148,16 @@ self.save = async(req, res) => {
             password: await bcrypt.hash(req.body.password, salt)
         };
         created_user = await user.create(usr);
+        if(created_user){
+            let us = "e1594d67-3aa2-429b-bb77-2e4ecc2124f8"
+            saveActionState(created_user.id, "user", "REGISTER", us)
+        }
 
 
         return res.json(created_user)
     } catch (err) {
-        let er = err.errors[0].message
-        console.log("The error is ", er)
-
         res.status(500).json({
-            success: false,
-            error: er
+            message: err.message
         })
 
 

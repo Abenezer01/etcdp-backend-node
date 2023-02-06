@@ -1,3 +1,4 @@
+const { saveActionState } = require("../../utils/helper");
 const {
     stakesubcategory,
     Sequelize
@@ -60,6 +61,10 @@ self.save = async(req, res) => {
     try {
         let body = req.body;
         let data = await stakesubcategory.create(body);
+        if(data){
+            let us = "e1594d67-3aa2-429b-bb77-2e4ecc2124f8"
+            saveActionState(data.id, "stakesubcategory", "REGISTER", us)
+        }
         return res.json(data)
     } catch (error) {
         res.status(500).json({
