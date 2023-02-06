@@ -111,8 +111,8 @@ self.refreshToken = async(request, response, next) => {
 
 
                 //console.log('success', result);
-                response.cookie('accessToken', access_tokener);
-                response.cookie('refreshToken', refreshtokener);
+                // response.cookie('accessToken', access_tokener);
+                // response.cookie('refreshToken', refreshtokener);
                 return response.status(200).json({
                         userData: replyUser,
                         accessToken: access_tokener,

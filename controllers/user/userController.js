@@ -27,9 +27,12 @@ self.getAll = async(req, res) => {
     if (order == null) {
         order = process.env.order
     }
-    const { limit, offset } = paginate.getPagination(page, size);
+    let { limit, offset } = paginate.getPagination(page, size);
     console.log("The limit and offset", limit, offset)
-
+    if (page == 0 && limit == 0) {
+        limit = null
+        offset = null
+    }
     user.findAndCountAll({
             limit,
             offset,
