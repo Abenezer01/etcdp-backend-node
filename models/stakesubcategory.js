@@ -41,9 +41,9 @@ module.exports = (sequelize, DataTypes) => {
         sequelize,
         modelName: 'stakesubcategory',
     });
-    stakesubcategory.associate = function(models) {
+    // stakesubcategory.associate = function(models) {
 
-        stakesubcategory.belongsTo(models.stakecategory)
-    };
+    //     stakesubcategory.belongsTo(models.stakecategory)
+    // };
     return stakesubcategory;
 };

@@ -73,7 +73,7 @@ self.loginUser = async(request, response) => {
 
         bcrypt.compare(password, usrPass, function(err, result) {  
             if (result) { 
-                usr = { id: id }
+                usr = { id: id, department_id: userData.position.department_id }
                 accessToken = jwt.sign(usr,
                     TOKEN_KEY, {
                         expiresIn: "2h",

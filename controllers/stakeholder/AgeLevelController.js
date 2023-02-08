@@ -7,7 +7,8 @@ const paginate = require("../../utils/pagination");
 const dotenv = require('dotenv');
 dotenv.config();
 let self = {};
-
+const usrData = require("../../utils/userDataFromToken");
+const { saveActionState } = require("../../utils/helper");
 self.getAll = async(req, res) => {
     let { page, size, order } = req.query;
     //console.log("The page", page, size)
@@ -86,17 +87,26 @@ self.search = async(req, res) => {
 }
 
 self.save = async(req, res) => {
+
+
     try {
+        let usr = await usrData.userData(req, res)
         let body = req.body;
-        let data = await agelevel.create(body);
-        return res.json(data)
+        if (usr) {
+            let data = await agelevel.create(body);
+            if (data) {
+
+                let us = usr.usrID
+                await saveActionState(data.id, "agelevel", "REGISTER", us)
+            }
+            return res.json(data)
+        }
     } catch (error) {
         res.status(500).json({
             message: error.message
         })
     }
 }
-
 self.update = async(req, res) => {
     try {
         let id = req.params.id;

@@ -1,3 +1,4 @@
+const { saveActionState } = require("../../utils/helper");
 const {
     ownership,
     Sequelize
@@ -6,6 +7,7 @@ const paginate = require("../../utils/pagination");
 const dotenv = require('dotenv');
 dotenv.config();
 const Op = Sequelize.Op;
+const usrData = require("../../utils/userDataFromToken");
 
 let self = {};
 
@@ -86,9 +88,17 @@ self.search = async(req, res) => {
 
 self.save = async(req, res) => {
     try {
+        let usr = await usrData.userData(req, res)
         let body = req.body;
-        let data = await ownership.create(body);
-        return res.json(data)
+        if (usr) {
+            let data = await ownership.create(body);
+            if (data) {
+                let us = usr.usrID
+                    // let us = "e1594d67-3aa2-429b-bb77-2e4ecc2124f8"
+                saveActionState(data.id, "ownership", "REGISTER", us)
+            }
+            return res.json(data)
+        }
     } catch (error) {
         res.status(500).json({
             message: error.message

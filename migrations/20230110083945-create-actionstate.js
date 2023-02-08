@@ -1,30 +1,37 @@
 'use strict';
+/** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('departments', {
+    await queryInterface.createTable('actionstates', {
       id: {
         allowNull: false,
         primaryKey: true,
         type: Sequelize.UUID
       },
-      parent_id: {
+      model_id: {
         type: Sequelize.UUID,
+        allowNull: false
+      },
+      model: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      action: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      user_id: {
+        type: Sequelize.UUID,
+        allowNull: false,
         references: {
-          model: 'departments',
+          model: 'users',
           key: 'id'
         },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       },
-      name: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
-      description: {
-        type: Sequelize.TEXT
-      },
-      revision_no: {
-        type: Sequelize.INTEGER
+      time: {
+        type: Sequelize.DATE
       },
       createdAt: {
         allowNull: false,
@@ -37,6 +44,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('departments');
+    await queryInterface.dropTable('actionstates');
   }
 };

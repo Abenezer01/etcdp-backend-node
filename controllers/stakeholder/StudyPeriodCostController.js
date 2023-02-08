@@ -1,12 +1,14 @@
 const {
-    studyperiod,
+    studyperiodcost,
+    studyfield,
     Sequelize
 } = require("../../models");
 const paginate = require("../../utils/pagination");
 const dotenv = require('dotenv');
 dotenv.config();
 const Op = Sequelize.Op;
-
+const usrData = require("../../utils/userDataFromToken");
+const { saveActionState, getChildren } = require('../../utils/helper');
 let self = {};
 
 self.getAll = async(req, res) => {
@@ -20,11 +22,11 @@ self.getAll = async(req, res) => {
         order = process.env.order
     }
     const { limit, offset } = paginate.getPagination(page, size);
-    studyperiod.findAndCountAll({
+    studyperiodcost.findAndCountAll({
             limit,
             offset,
             order: [
-                ['createdAt', order]
+                ['createdAt', 'ASC']
             ],
         })
         .then(data => {
@@ -37,7 +39,7 @@ self.getAll = async(req, res) => {
             });
         });
     // try {
-    //     let data = await studyperiod.findAll();
+    //     let data = await studyperiodcost.findAll();
     //     return res.json(data)
 
     // } catch (error) {
@@ -51,7 +53,7 @@ self.getAll = async(req, res) => {
 self.get = async(req, res) => {
     try {
         let id = req.params.id;
-        let data = await studyperiod.findOne({
+        let data = await studyperiodcost.findOne({
             where: {
                 id: id
             }
@@ -68,10 +70,14 @@ self.get = async(req, res) => {
 self.getByHigherInstituteId = async(req, res) => {
     try {
         let id = req.params.id;
-        let data = await studyperiod.findAll({
+        let data = await studyperiodcost.findAll({
             where: {
                 higher_institute_id: id
-            }
+            },
+
+            include: ["studyfield", "studyprogram", "studylevel"],
+
+            //include: ["studyfield", "studyprogram", "studylevel"],
         });
         return res.status(200).json({
             data: (data) ? data : {}
@@ -85,7 +91,7 @@ self.getByHigherInstituteId = async(req, res) => {
 self.search = async(req, res) => {
     try {
         let text = req.query.text;
-        let data = await studyperiod.findAll({
+        let data = await studyperiodcost.findAll({
             where: {
                 name: {
                     [Op.like]: "%" + text + "%"
@@ -102,9 +108,17 @@ self.search = async(req, res) => {
 
 self.save = async(req, res) => {
     try {
+        let usr = await usrData.userData(req, res)
         let body = req.body;
-        let data = await studyperiod.create(body);
-        return res.json(data)
+        if (usr) {
+            let data = await studyperiodcost.create(body);
+            if (data) {
+                let us = usr.usrID
+                    // let us = "e1594d67-3aa2-429b-bb77-2e4ecc2124f8"
+                saveActionState(data.id, "studyperiodcost", "REGISTER", us)
+            }
+            return res.json(data)
+        }
     } catch (error) {
         res.status(500).json({
             message: error.message
@@ -116,7 +130,7 @@ self.update = async(req, res) => {
     try {
         let id = req.params.id;
         let body = req.body;
-        let data = await studyperiod.update(body, {
+        let data = await studyperiodcost.update(body, {
             where: {
                 id: id
             }
@@ -134,7 +148,7 @@ self.update = async(req, res) => {
 self.delete = async(req, res) => {
     try {
         let id = req.params.id;
-        let data = await studyperiod.destroy({
+        let data = await studyperiodcost.destroy({
             where: {
                 id: id
             }

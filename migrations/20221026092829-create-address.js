@@ -43,10 +43,7 @@ module.exports = {
             house_number: {
                 type: Sequelize.STRING
             },
-            longitude: {
-                type: Sequelize.DOUBLE,
-                allowNull: false
-            },
+
             northing: {
                 type: Sequelize.DOUBLE,
                 allowNull: false

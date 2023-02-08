@@ -3,6 +3,8 @@ const {
     stakesubcategory,
     Sequelize
 } = require("./../../models");
+const { saveActionState } = require("../../utils/helper");
+const usrData = require("../../utils/userDataFromToken");
 const paginate = require("../../utils/pagination");
 const dotenv = require('dotenv');
 dotenv.config();
@@ -24,6 +26,9 @@ self.getAll = async(req, res) => {
     stakesubcategory.findAndCountAll({
             limit,
             offset,
+            order: [
+                ['createdAt', order]
+            ],
         })
         .then(data => {
             const response = paginate.getPagingData(data, page, limit);
@@ -84,15 +89,22 @@ self.search = async(req, res) => {
 
 self.save = async(req, res) => {
     try {
+
+        // const claims = atob(tokenn.split('.')[1])
+        // response.status(200).json(decodetoken)
+
+        let usr = await usrData.userData(req, res)
         let body = req.body;
-        // let dataOne = await stakecategory.findOne({
-        //     where: {
-        //         id: req.body.stakecategoryId
-        //     }
-        // });
-        //console.log("The data", dataOne)
-        let data = await stakesubcategory.create(body);
-        return res.json(data)
+        if (usr) {
+            req.body.department_id = usr.departmentID
+            let data = await stakesubcategory.create(body);
+            if (data) {
+
+                let us = usr.usrID
+                await saveActionState(data.id, "stakeholdersubcategory", "REGISTER", us)
+            }
+            return res.json(data)
+        }
     } catch (error) {
         res.status(500).json({
             message: error.message

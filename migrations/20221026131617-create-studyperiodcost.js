@@ -63,7 +63,11 @@ module.exports = {
                 onUpdate: 'CASCADE',
                 onDelete: 'CASCADE'
             },
-            study_period: {
+            study_period_from: {
+                type: Sequelize.DATE,
+                allowNull: false
+            },
+            study_period_to: {
                 type: Sequelize.DATE,
                 allowNull: false
             },

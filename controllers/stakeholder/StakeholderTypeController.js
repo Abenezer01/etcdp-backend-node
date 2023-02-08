@@ -1,12 +1,14 @@
 const {
     stakeholdertype,
+    actionstate,
     Sequelize
 } = require("./../../models");
 const paginate = require("../../utils/pagination");
 const dotenv = require('dotenv');
 dotenv.config();
+const { saveActionState } = require("../../utils/helper");
 const Op = Sequelize.Op;
-
+const usrData = require("../../utils/userDataFromToken");
 let self = {};
 
 self.getAll = async(req, res) => {
@@ -86,10 +88,21 @@ self.search = async(req, res) => {
 }
 
 self.save = async(req, res) => {
+
+
     try {
+
+        let usr = await usrData.userData(req, res)
         let body = req.body;
-        let data = await stakeholdertype.create(body);
-        return res.json(data)
+        if (usr) {
+
+            let data = await stakeholdertype.create(body);
+            if (data) {
+                let us = usr.usrID
+                await saveActionState(data.id, "stakeholdertype", "REGISTER", us)
+            }
+            return res.json(data)
+        }
     } catch (error) {
         res.status(500).json({
             message: error.message

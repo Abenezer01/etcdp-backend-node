@@ -8,7 +8,8 @@ const paginate = require("../../utils/pagination");
 const dotenv = require('dotenv');
 dotenv.config();
 let self = {};
-
+const usrData = require("../../utils/userDataFromToken");
+const { saveActionState, getChildren } = require('../../utils/helper');
 self.getAll = async(req, res) => {
     let { page, size, order } = req.query;
     //console.log("The page", page, size)
@@ -65,7 +66,24 @@ self.get = async(req, res) => {
         })
     }
 }
-
+self.getByHigherInstituteId = async(req, res) => {
+    try {
+        let id = req.params.id;
+        let data = await graduate.findAll({
+            where: {
+                higher_institute_id: id
+            }
+        });
+        return res.status(200).json({
+            data: (data) ? data : {}
+        })
+    } catch (error) {
+        console.log("The error is", error)
+        res.status(500).json({
+            message: error.message
+        })
+    }
+}
 self.search = async(req, res) => {
     try {
         let text = req.query.text;
@@ -86,9 +104,17 @@ self.search = async(req, res) => {
 
 self.save = async(req, res) => {
     try {
+        let usr = await usrData.userData(req, res)
         let body = req.body;
-        let data = await graduate.create(body);
-        return res.json(data)
+        if (usr) {
+            let data = await graduate.create(body);
+            if (data) {
+                let us = usr.usrID
+                    // let us = "e1594d67-3aa2-429b-bb77-2e4ecc2124f8"
+                saveActionState(data.id, "graduate", "REGISTER", us)
+            }
+            return res.json(data)
+        }
     } catch (error) {
         res.status(500).json({
             message: error.message

@@ -38,9 +38,18 @@ module.exports = {
             },
             stakesubcategory_id: {
                 type: Sequelize.UUID,
-                allowNull: false,
                 references: {
                     model: 'stakesubcategories',
+                    key: 'id'
+                },
+                onUpdate: 'CASCADE',
+                onDelete: 'CASCADE'
+            },
+
+            department_id: {
+                type: Sequelize.UUID,
+                references: {
+                    model: 'departments',
                     key: 'id'
                 },
                 onUpdate: 'CASCADE',

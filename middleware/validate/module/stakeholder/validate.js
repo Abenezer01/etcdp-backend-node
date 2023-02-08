@@ -7,6 +7,7 @@ const validateReply = require('../../../../utils/validateerror');
 
 const stakeholderCategoryValidate = async(req, res, next) => {
     const validationRule = {
+        "stakeholdertypeId": "required|string",
         "title": "required|string"
     };
 
@@ -201,7 +202,8 @@ const studyPeriodCostValidate = async(req, res, next) => {
         "studyfield_id": "required|string",
         "study_program_id": "required|string",
         "studylevel_id": "required|string",
-        "study_period": "required|date",
+        "study_period_from": "required|date",
+        "study_period_to": "required|date",
         "study_cost": "required",
     };
 

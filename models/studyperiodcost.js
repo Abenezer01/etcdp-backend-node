@@ -38,7 +38,11 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.UUID,
             allowNull: false
         },
-        study_period: {
+        study_period_from: {
+            type: DataTypes.DATE,
+            allowNull: false
+        },
+        study_period_to: {
             type: DataTypes.DATE,
             allowNull: false
         },
@@ -51,5 +55,23 @@ module.exports = (sequelize, DataTypes) => {
         sequelize,
         modelName: 'studyperiodcost',
     });
+    studyperiodcost.associate = function(models) {
+
+        studyperiodcost.belongsTo(models.studyfield, {
+
+            as: "studyfield",
+            foreignKey: "studyfield_id",
+            constraints: false,
+            attribute: ['description', 'title']
+        })
+        studyperiodcost.belongsTo(models.studyprogram, {
+            as: "studyprogram",
+            foreignKey: "study_program_id"
+        })
+        studyperiodcost.belongsTo(models.studylevel, {
+            as: "studylevel",
+            foreignKey: "studylevel_id"
+        })
+    }
     return studyperiodcost;
 };

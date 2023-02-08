@@ -1,61 +1,178 @@
 const {
     user,
     address,
+    actionstate,
     position,
     photo,
     Sequelize
 } = require("./../../models");
 const bcrypt = require('bcrypt');
 let validator = require("../../utils/validator");
-const paginate = require("../../utils/pagination");
 const Op = Sequelize.Op;
 const dotenv = require('dotenv');
 dotenv.config();
+const usrData = require("../../utils/userDataFromToken");
+const { saveActionState, getChildren } = require('../../utils/helper');
+const paginate = require("../../utils/pagination");
 let self = {};
-
-
 self.getAll = async(req, res) => {
+    let userData = await user.findAll()
 
+    console.log("The datas are", userData[0].id)
+    let otherArr = []
+    let dd
+    var arr = [];
+    //console.log("The other is", other)
+    for (let act of userData) {
+        dd = await actionstate.findOne({
+
+            where: {
+                model_id: act.id,
+                action: 'REGISTER',
+                model: 'user'
+            }
+        })
+        if (dd) {
+            arr.push(act);
+        }
+
+    }
     let { page, size, order } = req.query;
-    // var condition = title ? { title: { [Op.like]: `%${title}%` } } : null;
     //console.log("The page", page, size)
     if (page == null && size == null) {
         page = process.env.page,
-            size = process.env.size,
-            console.log("The page", page, size)
+            size = process.env.size
     }
     if (order == null) {
         order = process.env.order
     }
-    let { limit, offset } = paginate.getPagination(page, size);
-    console.log("The limit and offset", limit, offset)
-    if (page == 0 && limit == 0) {
-        limit = null
-        offset = null
+    const { limit, offset } = paginate.getPagination(Number(page), Number(size));
+    let usr = [];
+    for (let ar of arr) {
+        let ll = await user.findAndCountAll({
+            attributes: ["id"],
+            where: {
+                id: ar.id
+            }
+        })
+        if (ll) {
+            usr.push(ar);
+        }
+
     }
-    user.findAndCountAll({
-            limit,
-            offset,
-            order: [
-                ['createdAt', order]
-            ],
-            include: [{
-                model: position,
-                as: "position",
-            }, {
-                model: photo,
-                as: "photo"
-            }],
-        })
-        .then(data => {
-            const response = paginate.getPagingData(data, page, limit);
-            res.send(response);
-        })
-        .catch(err => {
-            res.status(500).send({
-                message: err.message || "Some error occurred while retrieving data."
-            });
-        });
+    let uf = []
+    for (let i = 0; i < usr.length; i++) {
+        let usrID = usr[i].id;
+        if (usrID) {
+            uf.push(usrID);
+        }
+
+    }
+    console.log("Hey", uf)
+    let dat = await user.findAndCountAll({
+        limit: limit,
+        offset: offset,
+        order: [
+            ['createdAt', order]
+        ],
+        where: {
+            id: {
+                [Sequelize.Op.in]: uf
+            }
+        }
+    });
+    const response = paginate.getPagingData(dat, page, limit);
+    //console.log("Other array", usr[0].first_name)
+
+    res.send(response)
+
+
+
+
+
+
+
+    // self.getAll = async(req, res) => {
+
+    //     let { page, size, order } = req.query;
+    //     // var condition = title ? { title: { [Op.like]: `%${title}%` } } : null;
+    //     //console.log("The page", page, size)
+    //     if (page == null && size == null) {
+    //         page = process.env.page,
+    //             size = process.env.size,
+    //             console.log("The page", page, size)
+    //     }
+    //     if (order == null) {
+    //         order = process.env.order
+    //     }
+    //     let { limit, offset } = paginate.getPagination(page, size);
+    //     console.log("The limit and offset", limit, offset)
+    //     if (page == 0 && limit == 0) {
+    //         limit = null
+    //         offset = null
+    //     }
+    //     userr = await user.findAndCountAll({
+    //             limit,
+    //             offset,
+    //             order: [
+    //                 ['createdAt', order]
+    //             ],
+    //             include: [{
+    //                 model: position,
+    //                 as: "position",
+    //             }, {
+    //                 model: photo,
+    //                 as: "photo"
+    //             }],
+    //             // LIMIT: 10,
+    //             // OFFSET: 1,
+
+    //         }).then(data => {
+    //             console.log("The datas are", data.rows.length)
+    //             let otherArr = []
+    //                 //console.log("The other is", other)
+    //             for (let i = 0; i < data.rows.length; i++) {
+    //                 let action = actionstate.findOne({
+    //                     where: {
+    //                         model_id: data.rows[i].id,
+    //                         action: "APPROVE"
+    //                     }
+    //                 })
+    //                 if (action) {
+    //                     otherArr.push(data)
+    //                     console.log("Other array", data.rows)
+    //                 }
+    //             }
+
+    //             //let dataa = mine.concat(otherArr)
+
+    //             //const response = paginate.getPagingData(data, page, limit);
+    //             res.send(data);
+
+    //         })
+    //         .catch(err => {
+    //             res.status(500).send({
+    //                 message: err.message || "Some error occurred while retrieving data."
+    //             });
+    //         });;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //console.log("The user", userr)
+    // 
+
     //     let size = Number(req.query.page)
     //     let page = Number(req.query.size)
     //     let limit = getPagination(size, page).limit
@@ -205,16 +322,21 @@ self.save = async(req, res) => {
             password: await bcrypt.hash(req.body.password, salt)
         };
         created_user = await user.create(usr);
+        if (created_user) {
+            let usr = await usrData.userData(req, res)
+            let us = usr.usrID
+                // let us = "e1594d67-3aa2-429b-bb77-2e4ecc2124f8"
+            saveActionState(created_user.id, "user", "REGISTER", us)
+        }
 
 
         return res.json(created_user)
     } catch (err) {
-        let er = err.message
+        let er = err.errors
         console.log("The error is ", er)
 
         res.status(500).json({
-            success: false,
-            error: er
+            message: err.message
         })
 
 

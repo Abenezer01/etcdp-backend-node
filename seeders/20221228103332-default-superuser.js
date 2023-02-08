@@ -135,7 +135,6 @@ module.exports = {
             house_number: 'Sr1313',
             easting: 12.2,
             northing: 12.3,
-            longitude: 12,
             id: uuid.v4(),
             createdAt: new Date(),
             updatedAt: new Date()

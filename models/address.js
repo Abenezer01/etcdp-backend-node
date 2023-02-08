@@ -42,9 +42,6 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.DOUBLE,
             allowNull: false
         },
-        longitude: {
-            type: DataTypes.DOUBLE,
-        },
         revision_no: {
             type: DataTypes.INTEGER
         }

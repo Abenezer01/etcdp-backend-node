@@ -8,6 +8,7 @@ const Op = Sequelize.Op;
 let self = {};
 
 self.getAll = async(req, res) => {
+
     try {
         let data = await status.findAll();
         return res.json(data)
@@ -57,9 +58,18 @@ self.search = async(req, res) => {
 }
 
 self.save = async(req, res) => {
+
+
     try {
+
         let body = req.body;
+
         let data = await status.create(body);
+        if (data) {
+            let usr = await usrData.userData(req, res)
+            let us = usr.usrID
+            await saveActionState(data.id, "status", "REGISTER", us)
+        }
         return res.json(data)
     } catch (error) {
         res.status(500).json({

@@ -6,7 +6,8 @@ const paginate = require("../../utils/pagination");
 const dotenv = require('dotenv');
 dotenv.config();
 const Op = Sequelize.Op;
-
+const usrData = require("../../utils/userDataFromToken");
+const { saveActionState, getChildren } = require('../../utils/helper');
 let self = {};
 
 self.getAll = async(req, res) => {
@@ -134,15 +135,25 @@ self.search = async(req, res) => {
 
 self.save = async(req, res) => {
     try {
+
+        let usr = await usrData.userData(req, res)
         let body = req.body;
-        let data = await employeeeducation.create(body);
-        return res.json(data)
+        if (usr) {
+            let data = await employeeeducation.create(body);
+            if (data) {
+
+                let us = usr.usrID
+                await saveActionState(data.id, "employeeeducation", "REGISTER", us)
+            }
+            return res.json(data)
+        }
     } catch (error) {
         res.status(500).json({
             message: error.message
         })
     }
 }
+
 
 self.update = async(req, res) => {
     try {

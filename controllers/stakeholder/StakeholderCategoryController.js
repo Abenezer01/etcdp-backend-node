@@ -1,9 +1,11 @@
+const { saveActionState } = require("../../utils/helper");
 const {
     stakecategory,
     stakesubcategory,
     stakeholdertype,
     Sequelize
 } = require("./../../models");
+const usrData = require("../../utils/userDataFromToken");
 const paginate = require("../../utils/pagination");
 const dotenv = require('dotenv');
 dotenv.config();
@@ -34,6 +36,7 @@ self.getAll = async(req, res) => {
             include: [{
                 model: stakesubcategory,
                 as: 'stakesubcategories',
+                attributes: ['title'],
                 required: false,
             }, ],
         })
@@ -211,9 +214,16 @@ self.search = async(req, res) => {
 
 self.save = async(req, res) => {
     try {
+        let usr = await usrData.userData(req, res)
         let body = req.body;
-        let data = await stakecategory.create(body);
-        return res.json(data)
+        if (usr) {
+            let data = await stakecategory.create(body);
+            if (data) {
+                let us = usr.usrID
+                await saveActionState(data.id, "stakecategory", "REGISTER", us)
+            }
+            return res.json(data)
+        }
     } catch (error) {
         res.status(500).json({
             message: error.message

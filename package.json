@@ -1,13 +1,15 @@
 {
+
     "name": "crud_express_sequelize",
     "version": "1.0.0",
     "description": "Basic simple example sequelize orm with expressjs",
-    "main": "index.js",
+    "main": "server.js",
     "scripts": {
-        "dev": "nodemon index",
-        "start": "node index"
+        "dev": "nodemon host 0.0.0.0 server",
+        "start": "node server",
+        "build": "nexe server"
     },
-    "author": "herudi",
+    "author": "Kaleab, Habtamu",
     "license": "ISC",
     "dependencies": {
         "bcrypt": "^5.1.0",

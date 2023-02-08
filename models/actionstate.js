@@ -3,7 +3,7 @@ const {
     Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-    class graduates extends Model {
+    class actionstate extends Model {
         /**
          * Helper method for defining associations.
          * This method is not a part of Sequelize lifecycle.
@@ -13,46 +13,34 @@ module.exports = (sequelize, DataTypes) => {
             // define association here
         }
     }
-    graduates.init({
+    actionstate.init({
         id: {
             type: DataTypes.UUID,
             primaryKey: true,
             defaultValue: DataTypes.UUIDV4
         },
-        parent_id: DataTypes.UUID,
-        higher_institute_id: {
+        model_id: {
             type: DataTypes.UUID,
             allowNull: false
         },
-        studyfield_id: {
-            type: DataTypes.UUID,
-            allowNull: false
-        },
-        description: DataTypes.TEXT,
-        study_program_id: {
-            type: DataTypes.UUID,
-            allowNull: false
-        },
-        studylevel_id: {
-            type: DataTypes.UUID,
-            allowNull: false
-        },
-        study_period: {
-            type: DataTypes.DATE,
-            allowNull: false
-        },
-        gender: {
+        model: {
             type: DataTypes.STRING,
             allowNull: false
         },
-        agelevel_id: {
+        action: {
             type: DataTypes.STRING,
             allowNull: false
         },
-        revision_no: DataTypes.INTEGER
+        user_id: {
+            type: DataTypes.UUID,
+            allowNull: false
+        },
+        time: {
+            type: DataTypes.DATE
+        }
     }, {
         sequelize,
-        modelName: 'graduates',
+        modelName: 'actionstate',
     });
-    return graduates;
+    return actionstate;
 };

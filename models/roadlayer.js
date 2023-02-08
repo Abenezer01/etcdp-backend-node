@@ -32,7 +32,7 @@ module.exports = (sequelize, DataTypes) => {
     number: DataTypes.INTEGER,
     thickeness: DataTypes.DOUBLE,
     material: DataTypes.STRING,
-    specification: DataTypes.STRING,
+    specifications: DataTypes.STRING,
     description: DataTypes.TEXT,
     revision_no: DataTypes.INTEGER
   }, {

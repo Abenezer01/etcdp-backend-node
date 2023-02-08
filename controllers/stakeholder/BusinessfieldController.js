@@ -2,7 +2,12 @@ const {
     businessfield,
     Sequelize
 } = require("../../models");
+
 const paginate = require("../../utils/pagination");
+const usrData = require("../../utils/userDataFromToken");
+const { saveActionState } = require("../../utils/helper");
+
+
 const Op = Sequelize.Op;
 const dotenv = require('dotenv');
 dotenv.config();
@@ -86,9 +91,16 @@ self.search = async(req, res) => {
 
 self.save = async(req, res) => {
     try {
+        let usr = await usrData.userData(req, res)
         let body = req.body;
-        let data = await businessfield.create(body);
-        return res.json(data)
+        if (usr) {
+            let data = await businessfield.create(body);
+            if (data) {
+                let us = usr.usrID
+                await saveActionState(data.id, "businessfield", "REGISTER", us)
+            }
+            return res.json(data)
+        }
     } catch (error) {
         res.status(500).json({
             message: error.message

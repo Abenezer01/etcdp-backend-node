@@ -23,6 +23,9 @@ self.getAll = async(req, res) => {
     projectsubcategory.findAndCountAll({
             limit,
             offset,
+            order: [
+                ['createdAt', order]
+            ],
         })
         .then(data => {
             const response = paginate.getPagingData(data, page, limit);

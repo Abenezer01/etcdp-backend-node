@@ -31,7 +31,6 @@ module.exports = {
                     model: 'projectsubcategories',
                     key: 'id'
                 },
-                allowNull: false,
                 onUpdate: 'CASCADE',
                 onDelete: 'CASCADE'
             },

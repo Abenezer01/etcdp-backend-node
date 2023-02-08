@@ -29,7 +29,7 @@ module.exports = (sequelize, DataTypes) => {
     system_length: DataTypes.DOUBLE,
     total_station_no: DataTypes.INTEGER,
     fright_cargo_no: DataTypes.INTEGER,
-    transpport_cargo_no: DataTypes.INTEGER,
+    transport_cargo_no: DataTypes.INTEGER,
     revision_no: DataTypes.INTEGER
   }, {
     sequelize,

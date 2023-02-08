@@ -6,9 +6,13 @@ const {
 } = require("../../models");
 //const projecttype = require("../../models/projecttype");
 
+const { saveActionState } = require("../../utils/helper");
+
+
 const Op = Sequelize.Op;
 
 let self = {};
+
 const paginate = require("../../utils/pagination");
 const dotenv = require('dotenv');
 dotenv.config();
@@ -110,6 +114,19 @@ self.getAllProCatByTypeId = async(req, res) => {
     // }
 }
 
+self.getAll = async(req, res) => {
+    try {
+        let data = await projectcategory.findAll();
+        return res.json(data)
+
+    } catch (error) {
+        res.status(500).json({
+            message: error.message
+        })
+    }
+
+}
+
 self.get = async(req, res) => {
     try {
         let id = req.params.id;
@@ -119,7 +136,10 @@ self.get = async(req, res) => {
             }
         });
         return res.status(200).json({
+
             data: (data) ? data : {}
+
+
         })
     } catch (error) {
         res.status(500).json({
@@ -150,6 +170,13 @@ self.save = async(req, res) => {
     try {
         let body = req.body;
         let data = await projectcategory.create(body);
+
+
+        if (data) {
+            let us = "e1594d67-3aa2-429b-bb77-2e4ecc2124f8"
+            saveActionState(data.id, "projectcategory", "REGISTER", us)
+        }
+
         return res.json(data)
     } catch (error) {
         res.status(500).json({
@@ -168,7 +195,10 @@ self.update = async(req, res) => {
             }
         });
         return res.status(200).json({
+
             message: "Success"
+
+
         })
     } catch (error) {
         res.status(500).json({
