@@ -25,12 +25,12 @@
 
     },
     "production": {
-        "username": "root",
-        "password": "onespace@database",
+        "username": "kalebt",
+        "password": "b255711c",
         "database": "etcdp_database",
-        "host": "127.0.0.1",
+        "host": "db4free.net",
         "port": "3306",
-        "dialect": "mariadb",
+        "dialect": "mysql",
         "logging": true,
         "dialectOptions": {
             "ssl": false
