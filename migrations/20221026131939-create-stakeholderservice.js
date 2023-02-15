@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
     async up(queryInterface, Sequelize) {
-        await queryInterface.createTable('irrigationcapacities', {
+        await queryInterface.createTable('stakeholderservices', {
             id: {
                 allowNull: false,
                 primaryKey: true,
@@ -10,29 +10,33 @@ module.exports = {
             parent_id: {
                 type: Sequelize.UUID,
                 references: {
-                    model: 'irrigationcapacities',
+                    model: 'stakeholderservices',
                     key: 'id'
                 },
                 onUpdate: 'CASCADE',
                 onDelete: 'CASCADE'
             },
-            project_id: {
+            stakeholder_id: {
                 type: Sequelize.UUID,
                 allowNull: false,
                 references: {
-                    model: 'projects',
+                    model: 'stakeholders', //stakeholder registered as higher institute type
                     key: 'id'
                 },
                 onUpdate: 'CASCADE',
                 onDelete: 'CASCADE'
             },
-            designed_irrigation_capacity: {
-                type: Sequelize.DOUBLE
+            construction_related_service_id: {
+                type: Sequelize.UUID,
+                allowNull: false,
+                references: {
+                    model: 'constructionrelatedservices', //stakeholder registered as higher institute type
+                    key: 'id'
+                },
+                onUpdate: 'CASCADE',
+                onDelete: 'CASCADE'
             },
-            actual_irrigation_capacity: {
-                type: Sequelize.DOUBLE
-            },
-            revision_no: {
+            unit_price: {
                 type: Sequelize.INTEGER
             },
             createdAt: {
@@ -46,6 +50,6 @@ module.exports = {
         });
     },
     async down(queryInterface, Sequelize) {
-        await queryInterface.dropTable('irrigationcapacities');
+        await queryInterface.dropTable('stakeholderservices');
     }
 };

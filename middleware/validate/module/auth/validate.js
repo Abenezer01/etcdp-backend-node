@@ -6,7 +6,7 @@ const loginValidate = async(req, res, next) => {
         "password": "required|string|min:6"
     };
 
-    await validateReply(req.body, validationRule, res, next)
+    await validateReply.validateReply(req.body, validationRule, res, next)
 
 
 }

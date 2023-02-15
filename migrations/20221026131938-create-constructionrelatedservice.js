@@ -16,16 +16,6 @@ module.exports = {
                 onUpdate: 'CASCADE',
                 onDelete: 'CASCADE'
             },
-            stakeholder_id: {
-                type: Sequelize.UUID,
-                allowNull: false,
-                references: {
-                    model: 'stakeholders', //stakeholder registered as higher institute type
-                    key: 'id'
-                },
-                onUpdate: 'CASCADE',
-                onDelete: 'CASCADE'
-            },
             type_of_service: {
                 type: Sequelize.STRING
             },
@@ -34,9 +24,6 @@ module.exports = {
             },
             unit_of_measurenment: {
                 type: Sequelize.STRING
-            },
-            unit_price: {
-                type: Sequelize.INTEGER
             },
             createdAt: {
                 allowNull: false,

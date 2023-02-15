@@ -2,9 +2,11 @@ const {
     status,
     Sequelize
 } = require("../../models");
-
+const dotenv = require('dotenv');
+dotenv.config();
 const Op = Sequelize.Op;
-
+const usrData = require("../../utils/userDataFromToken");
+const { saveActionState, getChildren } = require('../../utils/helper');
 let self = {};
 
 self.getAll = async(req, res) => {
@@ -62,15 +64,17 @@ self.save = async(req, res) => {
 
     try {
 
+        let usr = await usrData.userData(req, res)
         let body = req.body;
-
-        let data = await status.create(body);
-        if (data) {
-            let usr = await usrData.userData(req, res)
-            let us = usr.usrID
-            await saveActionState(data.id, "status", "REGISTER", us)
+        if (usr) {
+            let data = await status.create(body);
+            if (data) {
+                let usrID = usr.usrID
+                    // let us = "e1594d67-3aa2-429b-bb77-2e4ecc2124f8"
+                saveActionState(data.id, "status", "REGISTER", usrID)
+            }
+            return res.json(data)
         }
-        return res.json(data)
     } catch (error) {
         res.status(500).json({
             message: error.message

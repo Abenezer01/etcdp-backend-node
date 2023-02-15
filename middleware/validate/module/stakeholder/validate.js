@@ -6,51 +6,93 @@ const validateReply = require('../../../../utils/validateerror');
 // } = require("../models");
 
 const stakeholderCategoryValidate = async(req, res, next) => {
+    let param = await validateReply.checkParam(req, res, next)
+    if (param == "failed") {
+        return res.status(400).json({
+            message: "Invalid id"
+        })
+    }
     const validationRule = {
         "stakeholdertypeId": "required|string",
         "title": "required|string"
     };
 
-    await validateReply(req.body, validationRule, res, next)
+    await validateReply.validateReply(req.body, validationRule, res, next)
 }
 const stakeholderSubCategoryValidate = async(req, res, next) => {
+    let param = await validateReply.checkParam(req, res, next)
+    if (param == "failed") {
+        return res.status(400).json({
+            message: "Invalid id"
+        })
+    }
     const validationRule = {
         "title": "required|string",
         "stakecategoryId": "required|string",
         "stakeholdertypeId": "required|string",
     };
 
-    await validateReply(req.body, validationRule, res, next)
+    await validateReply.validateReply(req.body, validationRule, res, next)
 }
 const stakeholderTypeValidate = async(req, res, next) => {
+    let param = await validateReply.checkParam(req, res, next)
+    if (param == "failed") {
+        return res.status(400).json({
+            message: "Invalid id"
+        })
+    }
     const validationRule = {
         "title": "required|string"
     };
 
-    await validateReply(req.body, validationRule, res, next)
+    await validateReply.validateReply(req.body, validationRule, res, next)
 }
 const ownerShipValidate = async(req, res, next) => {
+    let param = await validateReply.checkParam(req, res, next)
+    if (param == "failed") {
+        return res.status(400).json({
+            message: "Invalid id"
+        })
+    }
     const validationRule = {
         "title": "required|string"
     };
 
-    await validateReply(req.body, validationRule, res, next)
+    await validateReply.validateReply(req.body, validationRule, res, next)
 }
 const buisnessFieldValidate = async(req, res, next) => {
+    let param = await validateReply.checkParam(req, res, next)
+    if (param == "failed") {
+        return res.status(400).json({
+            message: "Invalid id"
+        })
+    }
     const validationRule = {
         "title": "required|string"
     };
 
-    await validateReply(req.body, validationRule, res, next)
+    await validateReply.validateReply(req.body, validationRule, res, next)
 }
 const studyProgramValidate = async(req, res, next) => {
+    let param = await validateReply.checkParam(req, res, next)
+    if (param == "failed") {
+        return res.status(400).json({
+            message: "Invalid id"
+        })
+    }
     const validationRule = {
         "title": "required|string"
     };
 
-    await validateReply(req.body, validationRule, res, next)
+    await validateReply.validateReply(req.body, validationRule, res, next)
 }
 const stakeHolderValidate = async(req, res, next) => {
+    let param = await validateReply.checkParam(req, res, next)
+    if (param == "failed") {
+        return res.status(400).json({
+            message: "Invalid id"
+        })
+    }
     const validationRule = {
         "stakecategory_id": "required|string",
         "stakesubcategory_id": "required|string",
@@ -62,25 +104,43 @@ const stakeHolderValidate = async(req, res, next) => {
         "operation_location": "required|string",
     };
 
-    await validateReply(req.body, validationRule, res, next)
+    await validateReply.validateReply(req.body, validationRule, res, next)
 }
 const stakeHolderInfo = async(req, res, next) => {
+    let param = await validateReply.checkParam(req, res, next)
+    if (param == "failed") {
+        return res.status(400).json({
+            message: "Invalid id"
+        })
+    }
     const validationRule = {
         "stakeholder_id": "required|string"
     };
 
-    await validateReply(req.body, validationRule, res, next)
+    await validateReply.validateReply(req.body, validationRule, res, next)
 }
 const certificateValidate = async(req, res, next) => {
+    let param = await validateReply.checkParam(req, res, next)
+    if (param == "failed") {
+        return res.status(400).json({
+            message: "Invalid id"
+        })
+    }
     const validationRule = {
         "stakeholder_id": "required|string",
         "title": "required|string",
         "date_of_issue": "required|date"
     };
 
-    await validateReply(req.body, validationRule, res, next)
+    await validateReply.validateReply(req.body, validationRule, res, next)
 }
 const totalEmployeeValidate = async(req, res, next) => {
+    let param = await validateReply.checkParam(req, res, next)
+    if (param == "failed") {
+        return res.status(400).json({
+            message: "Invalid id"
+        })
+    }
     const validationRule = {
         "stakeholder_id": "required|string",
         "year": "required|date",
@@ -90,23 +150,41 @@ const totalEmployeeValidate = async(req, res, next) => {
         "quantity": "required|integer"
     };
 
-    await validateReply(req.body, validationRule, res, next)
+    await validateReply.validateReply(req.body, validationRule, res, next)
 }
 const studyLevelValidate = async(req, res, next) => {
+    let param = await validateReply.checkParam(req, res, next)
+    if (param == "failed") {
+        return res.status(400).json({
+            message: "Invalid id"
+        })
+    }
     const validationRule = {
         "title": "required|string",
     };
 
-    await validateReply(req.body, validationRule, res, next)
+    await validateReply.validateReply(req.body, validationRule, res, next)
 }
 const departmentValidate = async(req, res, next) => {
+    let param = await validateReply.checkParam(req, res, next)
+    if (param == "failed") {
+        return res.status(400).json({
+            message: "Invalid id"
+        })
+    }
     const validationRule = {
         "name": "required|string",
     };
 
-    await validateReply(req.body, validationRule, res, next)
+    await validateReply.validateReply(req.body, validationRule, res, next)
 }
 const educationValidate = async(req, res, next) => {
+    let param = await validateReply.checkParam(req, res, next)
+    if (param == "failed") {
+        return res.status(400).json({
+            message: "Invalid id"
+        })
+    }
     const validationRule = {
         "stakeholder_id": "required|string",
         "year": "required|date",
@@ -117,17 +195,29 @@ const educationValidate = async(req, res, next) => {
 
     };
 
-    await validateReply(req.body, validationRule, res, next)
+    await validateReply.validateReply(req.body, validationRule, res, next)
 }
 const ageLevelValidate = async(req, res, next) => {
+    let param = await validateReply.checkParam(req, res, next)
+    if (param == "failed") {
+        return res.status(400).json({
+            message: "Invalid id"
+        })
+    }
     const validationRule = {
         "title": "required|string",
 
     };
 
-    await validateReply(req.body, validationRule, res, next)
+    await validateReply.validateReply(req.body, validationRule, res, next)
 }
 const employeeAgeValidate = async(req, res, next) => {
+    let param = await validateReply.checkParam(req, res, next)
+    if (param == "failed") {
+        return res.status(400).json({
+            message: "Invalid id"
+        })
+    }
     const validationRule = {
         "stakeholder_id": "required|string",
         "year": "required|date",
@@ -137,16 +227,28 @@ const employeeAgeValidate = async(req, res, next) => {
         "quantity": "required|integer"
     };
 
-    await validateReply(req.body, validationRule, res, next)
+    await validateReply.validateReply(req.body, validationRule, res, next)
 }
 const experienceLevelValidate = async(req, res, next) => {
+    let param = await validateReply.checkParam(req, res, next)
+    if (param == "failed") {
+        return res.status(400).json({
+            message: "Invalid id"
+        })
+    }
     const validationRule = {
         "title": "required|string"
     };
 
-    await validateReply(req.body, validationRule, res, next)
+    await validateReply.validateReply(req.body, validationRule, res, next)
 }
 const workExperienceValidate = async(req, res, next) => {
+    let param = await validateReply.checkParam(req, res, next)
+    if (param == "failed") {
+        return res.status(400).json({
+            message: "Invalid id"
+        })
+    }
     const validationRule = {
         "stakeholder_id": "required|string",
         "year": "required|date",
@@ -156,16 +258,28 @@ const workExperienceValidate = async(req, res, next) => {
         "quantity": "required|integer"
     };
 
-    await validateReply(req.body, validationRule, res, next)
+    await validateReply.validateReply(req.body, validationRule, res, next)
 }
 const workExperienceLevelValidate = async(req, res, next) => {
+    let param = await validateReply.checkParam(req, res, next)
+    if (param == "failed") {
+        return res.status(400).json({
+            message: "Invalid id"
+        })
+    }
     const validationRule = {
         "title": "required|string"
     };
 
-    await validateReply(req.body, validationRule, res, next)
+    await validateReply.validateReply(req.body, validationRule, res, next)
 }
 const trainingValidate = async(req, res, next) => {
+    let param = await validateReply.checkParam(req, res, next)
+    if (param == "failed") {
+        return res.status(400).json({
+            message: "Invalid id"
+        })
+    }
     const validationRule = {
         "stakeholder_id": "required|string",
         "title": "required|string",
@@ -174,9 +288,15 @@ const trainingValidate = async(req, res, next) => {
         "provision_date": "required|date"
     };
 
-    await validateReply(req.body, validationRule, res, next)
+    await validateReply.validateReply(req.body, validationRule, res, next)
 }
 const regulationValidate = async(req, res, next) => {
+    let param = await validateReply.checkParam(req, res, next)
+    if (param == "failed") {
+        return res.status(400).json({
+            message: "Invalid id"
+        })
+    }
     const validationRule = {
         "stakeholder_id": "required|string",
         "title": "required|string",
@@ -185,51 +305,101 @@ const regulationValidate = async(req, res, next) => {
         "effective_end_date": "required|date"
     };
 
-    await validateReply(req.body, validationRule, res, next)
+    await validateReply.validateReply(req.body, validationRule, res, next)
 }
 const studyFieldValidate = async(req, res, next) => {
+    let param = await validateReply.checkParam(req, res, next)
+    if (param == "failed") {
+        return res.status(400).json({
+            message: "Invalid id"
+        })
+    }
     const validationRule = {
         "title": "required|string",
         "study_program_id": "required|string",
         "studylevel_id": "required|string"
     };
 
-    await validateReply(req.body, validationRule, res, next)
+    await validateReply.validateReply(req.body, validationRule, res, next)
+}
+
+const stakeholderStudyFieldValidate = async(req, res, next) => {
+    let param = await validateReply.checkParam(req, res, next)
+    if (param == "failed") {
+        return res.status(400).json({
+            message: "Invalid id"
+        })
+    }
+    const validationRule = {
+        "stakeholder_id": "required|string",
+        "studyfield_id": "required|string"
+    };
+
+    await validateReply.validateReply(req.body, validationRule, res, next)
 }
 const studyPeriodCostValidate = async(req, res, next) => {
+    let param = await validateReply.checkParam(req, res, next)
+    if (param == "failed") {
+        return res.status(400).json({
+            message: "Invalid id"
+        })
+    }
     const validationRule = {
         "higher_institute_id": "required|string",
-        "studyfield_id": "required|string",
+        "stake_study_field_id": "required|string",
         "study_program_id": "required|string",
         "studylevel_id": "required|string",
-        "study_period_from": "required|date",
-        "study_period_to": "required|date",
+        "total_month": "required|date",
         "study_cost": "required",
     };
 
-    await validateReply(req.body, validationRule, res, next)
+    await validateReply.validateReply(req.body, validationRule, res, next)
 }
 const graduateValidate = async(req, res, next) => {
+    let param = await validateReply.checkParam(req, res, next)
+    if (param == "failed") {
+        return res.status(400).json({
+            message: "Invalid id"
+        })
+    }
     const validationRule = {
         "higher_institute_id": "required|string",
-        "studyfield_id": "required|string",
+        "stake_study_field_id": "required|string",
         "study_program_id": "required|string",
         "studylevel_id": "required|string",
-        "study_period": "required|date",
+        "study_period_id": "required|string",
         "gender": "required|string",
         "agelevel_id": "required|string",
     };
 
-    await validateReply(req.body, validationRule, res, next)
+    await validateReply.validateReply(req.body, validationRule, res, next)
 }
 const constructionRelatedServiceValidate = async(req, res, next) => {
+    let param = await validateReply.checkParam(req, res, next)
+    if (param == "failed") {
+        return res.status(400).json({
+            message: "Invalid id"
+        })
+    }
+    const validationRule = {
+        "type_of_service": "required|string",
+    };
+
+    await validateReply.validateReply(req.body, validationRule, res, next)
+}
+const StakeholderServiceValidate = async(req, res, next) => {
+    let param = await validateReply.checkParam(req, res, next)
+    if (param == "failed") {
+        return res.status(400).json({
+            message: "Invalid id"
+        })
+    }
     const validationRule = {
         "stakeholder_id": "required|string",
     };
 
-    await validateReply(req.body, validationRule, res, next)
+    await validateReply.validateReply(req.body, validationRule, res, next)
 }
-
 module.exports = {
     stakeholderCategoryValidate,
     stakeholderSubCategoryValidate,
@@ -252,9 +422,11 @@ module.exports = {
     trainingValidate,
     regulationValidate,
     studyFieldValidate,
+    stakeholderStudyFieldValidate,
     studyPeriodCostValidate,
     constructionRelatedServiceValidate,
     graduateValidate,
     workExperienceLevelValidate,
-    studyProgramValidate
+    studyProgramValidate,
+    StakeholderServiceValidate
 };

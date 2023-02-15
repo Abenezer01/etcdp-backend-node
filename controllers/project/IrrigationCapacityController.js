@@ -1,5 +1,5 @@
 const {
-    projectstatus,
+    irrigationcapacity,
     Sequelize
 } = require("../../models");
 const usrData = require("../../utils/userDataFromToken");
@@ -21,7 +21,7 @@ self.getAll = async(req, res) => {
         order = process.env.order
     }
     const { limit, offset } = paginate.getPagination(page, size);
-    projectstatus.findAndCountAll({
+    irrigationcapacity.findAndCountAll({
             limit,
             offset,
             order: [
@@ -38,7 +38,7 @@ self.getAll = async(req, res) => {
             });
         });
     // try {
-    //     let data = await projectstatus.findAll();
+    //     let data = await irrigationcapacity.findAll();
     //     return res.json(data)
 
     // } catch (error) {
@@ -52,7 +52,7 @@ self.getAll = async(req, res) => {
 self.get = async(req, res) => {
     try {
         let id = req.params.id;
-        let data = await projectstatus.findOne({
+        let data = await irrigationcapacity.findOne({
             where: {
                 id: id
             }
@@ -70,7 +70,7 @@ self.get = async(req, res) => {
 self.search = async(req, res) => {
     try {
         let text = req.query.text;
-        let data = await projectstatus.findAll({
+        let data = await irrigationcapacity.findAll({
             where: {
                 name: {
                     [Op.like]: "%" + text + "%"
@@ -90,10 +90,10 @@ self.save = async(req, res) => {
         let usr = await usrData.userData(req, res)
         let body = req.body;
         if (usr) {
-            let data = await projectstatus.create(body);
+            let data = await irrigationcapacity.create(body);
             if (data) {
                 let usrID = usr.usrID
-                await saveActionState(data.id, "projectstatus", "REGISTER", usrID)
+                await saveActionState(data.id, "irrigationcapacity", "REGISTER", usrID)
             }
             return res.json(data)
         }
@@ -108,7 +108,7 @@ self.update = async(req, res) => {
     try {
         let id = req.params.id;
         let body = req.body;
-        let data = await projectstatus.update(body, {
+        let data = await irrigationcapacity.update(body, {
             where: {
                 id: id
             }
@@ -126,7 +126,7 @@ self.update = async(req, res) => {
 self.delete = async(req, res) => {
     try {
         let id = req.params.id;
-        let data = await projectstatus.destroy({
+        let data = await irrigationcapacity.destroy({
             where: {
                 id: id
             }

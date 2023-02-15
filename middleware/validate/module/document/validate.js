@@ -1,6 +1,12 @@
 const validateReply = require('../../../../utils/validateerror');
 
 const documentValidate = async(req, res, next) => {
+    let param = await validateReply.checkParam(req, res, next)
+    if (param == "failed") {
+        return res.status(400).json({
+            message: "Invalid id"
+        })
+    }
     if (!req.files) {
         return res.status(412).json({
             message: "File is empty"
@@ -24,7 +30,7 @@ const documentValidate = async(req, res, next) => {
         "type": "required|string"
     };
 
-    await validateReply(req.body, validationRule, res, next)
+    await validateReply.validateReply(req.body, validationRule, res, next)
 
 
 }

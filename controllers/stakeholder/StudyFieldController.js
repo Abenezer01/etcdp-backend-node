@@ -49,7 +49,23 @@ self.getAll = async(req, res) => {
     // }
 }
 
-
+self.getStudyFieldById = async(req, res) => {
+    let id = req.params.id;
+    studyfield.findOne({
+            where: {
+                id: id
+            },
+            include: ["studylevel", "studyprogram"],
+        })
+        .then(data => {
+            res.send(data);
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: err.message || "Some error occurred while retrieving data."
+            });
+        });
+}
 self.get = async(req, res) => {
     try {
         let id = req.params.id;
@@ -97,6 +113,7 @@ self.save = async(req, res) => {
                     // let us = "e1594d67-3aa2-429b-bb77-2e4ecc2124f8"
                 saveActionState(data.id, "studyfield", "REGISTER", usrID)
             }
+            return res.json(data)
         }
     } catch (error) {
         res.status(500).json({

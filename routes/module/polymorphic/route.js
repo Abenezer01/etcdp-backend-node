@@ -11,24 +11,18 @@ module.exports = function(express) {
     //address route
     route.get("/address", AddressController.getAll);
     route.get("/address/:id", AddressController.get);
-
     route.get("/address/model/:id", AddressController.getAddressByModelId);
     route.get("/address_search", AddressController.search);
     route.post("/address", validateData.addressValidate, AddressController.save);
     route.put("/address/:id", validateData.addressValidate, AddressController.update);
-
-    route.get("/address-search", AddressController.search);
-    route.post("/address", AddressController.save);
-    route.put("/address/:id", AddressController.update);
-
     route.delete("/address/:id", AddressController.delete);
 
-    //address route
+    //action state route
     route.get("/action-state", ActionStateController.getAll);
-    route.get("/check/:model/:id", ActionStateController.check);
-    route.get("/approve/:model/:id", ActionStateController.approve);
-    route.get("/authorize/:model/:id", ActionStateController.authorize);
-    route.get("/reject/:model/:id", ActionStateController.reject);
+    route.post("/check/:model/:id", validateData.actionStateValidate, ActionStateController.check);
+    route.post("/approve/:model/:id", validateData.actionStateValidate, ActionStateController.approve);
+    route.post("/authorize/:model/:id", validateData.actionStateValidate, ActionStateController.authorize);
+    route.post("/reject/:model/:id", validateData.actionStateValidate, ActionStateController.reject);
 
     // route.get("/address/:id", AddressController.get);
     // route.get("/address-search", AddressController.search);

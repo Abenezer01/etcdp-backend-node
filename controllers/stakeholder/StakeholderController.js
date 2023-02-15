@@ -151,8 +151,9 @@ self.get = async(req, res) => {
 }
 self.getStakeHolderByTypeId = async(req, res) => {
     let { page, size, order } = req.query;
-    let id = req.params.id;
-    //console.log("The page", page, size)
+    const { typeId, categoryId, subcategoryId } = req.body
+    console.log("The body", req.body)
+        //console.log("The page", page, size)
     if (page == null && size == null) {
         page = process.env.page,
             size = process.env.size
@@ -160,6 +161,23 @@ self.getStakeHolderByTypeId = async(req, res) => {
     if (order == null) {
         order = process.env.order
     }
+    const filter = () => {
+        if (subcategoryId) {
+            return [{ stakeholdertype_id: typeId },
+                { stakecategory_id: categoryId },
+                { stakesubcategory_id: subcategoryId }
+            ]
+        }
+
+        if (categoryId) {
+            return [{ stakeholdertype_id: typeId },
+                { stakecategory_id: categoryId },
+            ]
+
+        }
+        return [{ stakeholdertype_id: typeId }]
+    }
+    console.log("The filter", filter())
     const { limit, offset } = paginate.getPagination(page, size);
     stakeholder.findAndCountAll({
             limit,
@@ -168,8 +186,9 @@ self.getStakeHolderByTypeId = async(req, res) => {
                 ['createdAt', order]
             ],
             where: {
-                stakeholdertype_id: id
+                [Op.and]: filter()
             }
+
         })
         .then(data => {
             const response = paginate.getPagingData(data, page, limit);

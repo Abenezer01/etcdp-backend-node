@@ -20,14 +20,9 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue: DataTypes.UUIDV4
         },
         parent_id: DataTypes.UUID,
-        stakeholder_id: {
-            type: DataTypes.UUID,
-            allowNull: false
-        },
         type_of_service: DataTypes.STRING,
         specification_detail: DataTypes.STRING,
-        unit_of_measurenment: DataTypes.STRING,
-        unit_price: DataTypes.INTEGER,
+        unit_of_measurenment: DataTypes.STRING
     }, {
         sequelize,
         modelName: 'constructionrelatedservice',

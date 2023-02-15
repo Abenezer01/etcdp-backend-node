@@ -16,7 +16,7 @@ module.exports = {
             createdAt: new Date(),
             updatedAt: new Date()
         }, {
-            name: 'authorize',
+            name: 'admin',
             description: 'authorize description',
             id: uuid.v4(),
             createdAt: new Date(),
@@ -47,7 +47,7 @@ module.exports = {
 
         const roleRows = roles[0];
         // const roleRowss = roles[0];
-        console.log("The roles", roleRows[0].id)
+        console.log("The roles", roleRows[0].name)
 
         //Department seed
         await queryInterface.bulkInsert('departments', [{
@@ -135,6 +135,41 @@ module.exports = {
             house_number: 'Sr1313',
             easting: 12.2,
             northing: 12.3,
+            id: uuid.v4(),
+            createdAt: new Date(),
+            updatedAt: new Date()
+        }]);
+        await queryInterface.bulkInsert('stakeholdertypes', [{
+            title: "Consultant",
+            description: "",
+            id: uuid.v4(),
+            createdAt: new Date(),
+            updatedAt: new Date()
+        }]);
+        await queryInterface.bulkInsert('ownerships', [{
+            title: "Gov",
+            description: "This is gov description",
+            id: uuid.v4(),
+            createdAt: new Date(),
+            updatedAt: new Date()
+        }]);
+        await queryInterface.bulkInsert('businessfields', [{
+            title: "Business1",
+            description: "This is business1",
+            id: uuid.v4(),
+            createdAt: new Date(),
+            updatedAt: new Date()
+        }]);
+        await queryInterface.bulkInsert('studylevels', [{
+            title: "Study level1",
+            description: "Study level1 description",
+            id: uuid.v4(),
+            createdAt: new Date(),
+            updatedAt: new Date()
+        }]);
+        await queryInterface.bulkInsert('studyprograms', [{
+            title: "Study program1",
+            description: "Study program1 description",
             id: uuid.v4(),
             createdAt: new Date(),
             updatedAt: new Date()

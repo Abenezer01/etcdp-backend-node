@@ -1,5 +1,17 @@
 {
     "development": {
+        "username": "kalebt",
+        "password": "b255711c",
+        "database": "etcdp_database",
+        "host": "db4free.net",
+        "port": "3306",
+        "dialect": "mysql",
+        "logging": true,
+        "dialectOptions": {
+            "ssl": false
+        }
+    },
+    "test": {
         "dialect": "mysql",
         "username": "kaleb",
         "password": "pgpass",
@@ -10,18 +22,7 @@
         "dialectOptions": {
             "ssl": false
         }
-    },
-    "test": {
-        "username": "root",
-        "password": "onespace@database",
-        "database": "etcdp_database",
-        "host": "127.0.0.1",
-        "port": "3306",
-        "dialect": "mariadb",
-        "logging": true,
-        "dialectOptions": {
-            "ssl": false
-        }
+
     },
     "production": {
         "username": "root",

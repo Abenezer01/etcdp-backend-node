@@ -21,6 +21,12 @@ const validateReply = require('../../../../utils/validateerror');
 //     }).catch(err => console.log(err))
 // }
 const createUser = async(req, res, next) => {
+    let param = await validateReply.checkParam(req, res, next)
+    if (param == "failed") {
+        return res.status(400).json({
+            message: "Invalid id"
+        })
+    }
     const validationRule = {
         // "email": "required|email|exist:User,email",
         "email": "required|email",
@@ -32,9 +38,15 @@ const createUser = async(req, res, next) => {
         "gender": "string"
     };
 
-    await validateReply(req.body, validationRule, res, next)
+    await validateReply.validateReply(req.body, validationRule, res, next)
 }
 const positionValidate = async(req, res, next) => {
+    let param = await validateReply.checkParam(req, res, next)
+    if (param == "failed") {
+        return res.status(400).json({
+            message: "Invalid id"
+        })
+    }
     const validationRule = {
         "department_id": "required|string",
         "name": "required|string",
@@ -42,21 +54,33 @@ const positionValidate = async(req, res, next) => {
         "role_id": "required|string"
     };
 
-    await validateReply(req.body, validationRule, res, next)
+    await validateReply.validateReply(req.body, validationRule, res, next)
 }
 const departmentValidate = async(req, res, next) => {
+    let param = await validateReply.checkParam(req, res, next)
+    if (param == "failed") {
+        return res.status(400).json({
+            message: "Invalid id"
+        })
+    }
     const validationRule = {
         "name": "required|string"
     };
 
-    await validateReply(req.body, validationRule, res, next)
+    await validateReply.validateReply(req.body, validationRule, res, next)
 }
 const roleValidate = async(req, res, next) => {
+    let param = await validateReply.checkParam(req, res, next)
+    if (param == "failed") {
+        return res.status(400).json({
+            message: "Invalid id"
+        })
+    }
     const validationRule = {
         "name": "required|string"
     };
 
-    await validateReply(req.body, validationRule, res, next)
+    await validateReply.validateReply(req.body, validationRule, res, next)
 }
 const userPhotoValidate = async(req, res, next) => {
     if (!req.files) {
