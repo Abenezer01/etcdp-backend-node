@@ -89,6 +89,7 @@ self.save = async(req, res) => {
     try {
         let usr = await usrData.userData(req, res)
         let body = req.body;
+        console.log("The user is", usr.usrID)
         if (usr) {
             let data = await projecttype.create(body);
             if (data) {

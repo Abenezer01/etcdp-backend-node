@@ -1,6 +1,7 @@
 const {
     project,
     actionstate,
+    projectstakeholder,
     Sequelize
 } = require("./../../models");
 
@@ -53,7 +54,7 @@ self.getAll = async(req, res) => {
 
 self.getProjectByTypeId = async(req, res) => {
     let { page, size, order } = req.query;
-    const { typeId, categoryId, subcategoryId } = req.body
+    const { projecttype_id, projectcategory_id, projectsubcategory_id } = req.body
     console.log("The body", req.body)
         //console.log("The page", page, size)
     if (page == null && size == null) {
@@ -64,24 +65,24 @@ self.getProjectByTypeId = async(req, res) => {
         order = process.env.order
     }
     const filter = () => {
-        if (subcategoryId) {
-            return [{ stakeholdertype_id: typeId },
-                { stakecategory_id: categoryId },
-                { stakesubcategory_id: subcategoryId }
+        if (projectsubcategory_id) {
+            return [{ projecttype_id: projecttype_id },
+                { projectcategory_id: projectcategory_id },
+                { projectsubcategory_id: projectsubcategory_id }
             ]
         }
 
-        if (categoryId) {
-            return [{ stakeholdertype_id: typeId },
-                { stakecategory_id: categoryId },
+        if (projectcategory_id) {
+            return [{ projecttype_id: projecttype_id },
+                { projectcategory_id: projectcategory_id },
             ]
 
         }
-        return [{ stakeholdertype_id: typeId }]
+        return [{ projecttype_id: projecttype_id }]
     }
     console.log("The filter", filter())
     const { limit, offset } = paginate.getPagination(page, size);
-    stakeholder.findAndCountAll({
+    project.findAndCountAll({
             limit,
             offset,
             order: [
@@ -119,13 +120,13 @@ self.getProjectByTypeId = async(req, res) => {
 }
 
 
-self.getAll = async(req, res) => {
+self.getAlll = async(req, res) => {
     try {
-
-        //test
+        let usr = await usrData.userData(req, res)
+            //test
         let us = {
-            id: "e1594d67-3aa2-429b-bb77-2e4ecc2124f8",
-            department_id: "5ba1e51c-469f-4487-bc44-e9c986aded73"
+            id: usr.usrID,
+            department_id: usr.departmentID
         }
         let department_id = us.department_id
 
@@ -243,7 +244,12 @@ self.save = async(req, res) => {
                 let usrID = usr.usrID
                 await saveActionState(data.id, "project", "REGISTER", usrID)
             }
-            let arr = [{ name: "Client", id: body.clientId }, { name: "Consultant", id: body.consultatntId }, { name: "Contractor", id: body.contractorId }]
+            let arr = [{ name: "Client", id: body.clientId }, { name: "Consultant", id: body.consultantId }, { name: "Contractor", id: body.contractorId }]
+            for (let i = 0; i < arr.length; i++) {
+                let body = { project_id: data.id, stakeholder_id: arr[i].id, title: arr[i].name }
+                projectstakeholder.create(body)
+
+            }
             return res.json(data)
         }
     } catch (error) {

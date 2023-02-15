@@ -25,6 +25,15 @@ module.exports = {
                 onUpdate: 'CASCADE',
                 onDelete: 'CASCADE'
             },
+            projecttype_id: {
+                type: Sequelize.UUID,
+                references: {
+                    model: 'projecttypes',
+                    key: 'id'
+                },
+                onUpdate: 'CASCADE',
+                onDelete: 'CASCADE'
+            },
             projectsubcategory_id: {
                 type: Sequelize.UUID,
                 references: {

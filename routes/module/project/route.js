@@ -189,6 +189,7 @@ module.exports = function(express) {
     route.get("/project/", ProjectController.getAll);
     route.get("/project/:id", ProjectController.get);
     route.get("/project-search", ProjectController.search);
+    route.post("/project/filter/", ProjectController.getProjectByTypeId);
     route.post("/project", validateData.projectValidate, ProjectController.save);
     route.put("/project/:id", validateData.projectValidate, ProjectController.update);
     route.delete("/project/:id", ProjectController.delete);

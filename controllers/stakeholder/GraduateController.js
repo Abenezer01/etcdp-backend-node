@@ -131,21 +131,25 @@ self.save = async(req, res) => {
             },
             include: ["studyfield"]
         });
-        //console.log("Study data", studyData.studyfield_id)
-        //body.study_field_id = studyData.studyfield_id
+        console.log("Study data", studyData.studyfield_id)
+        let ii = studyData.studyfield_id
+            //body.study_field_id = studyData.studyfield_id
         let da = {
-            higher_institute_id: body.higher_institute_id,
-            stake_study_field_id: body.stake_study_field_id,
-            description: body.description,
-            study_program_id: body.study_program_id,
-            studylevel_id: body.studylevel_id,
-            studyfield_id: studyData.studyfield_id,
-            study_period_id: body.studylevel_id,
-            male: body.male,
-            female: body.female,
-            year: body.year,
-            agelevel_id: body.agelevel_id,
-        }
+                higher_institute_id: body.higher_institute_id,
+                stake_study_field_id: body.stake_study_field_id,
+                description: body.description,
+                study_program_id: body.study_program_id,
+                studylevel_id: body.studylevel_id,
+                studyfield_id: ii,
+                study_period_id: body.study_period_id,
+                male: body.male,
+                female: body.female,
+                year: body.year,
+                nationality: body.nationality,
+                agelevel_id: body.agelevel_id,
+            }
+            //console.log("The final data", da)
+
         if (usr) {
             let data = await graduate.create(da);
             if (data) {
