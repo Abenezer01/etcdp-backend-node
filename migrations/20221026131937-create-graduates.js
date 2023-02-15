@@ -93,6 +93,10 @@ module.exports = {
                 type: Sequelize.INTEGER,
                 allowNull: false
             },
+            year: {
+                type: Sequelize.DATE,
+                allowNull: false
+            },
             agelevel_id: {
                 type: Sequelize.UUID,
                 allowNull: false,

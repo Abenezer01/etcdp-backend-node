@@ -368,7 +368,9 @@ const graduateValidate = async(req, res, next) => {
         "study_program_id": "required|string",
         "studylevel_id": "required|string",
         "study_period_id": "required|string",
-        "gender": "required|string",
+        "male": "required|integer",
+        "female": "required|integer",
+        "year": "required|date",
         "agelevel_id": "required|string",
     };
 
