@@ -141,8 +141,10 @@ self.save = async(req, res) => {
             studylevel_id: body.studylevel_id,
             studyfield_id: studyData.studyfield_id,
             study_period_id: body.studylevel_id,
-            gender: body.gender,
-            agelevel_id: body.agelevel_id
+            male: body.male,
+            female: body.female,
+            year: body.year,
+            agelevel_id: body.agelevel_id,
         }
         if (usr) {
             let data = await graduate.create(da);

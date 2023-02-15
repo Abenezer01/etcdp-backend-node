@@ -51,7 +51,72 @@ self.getAll = async(req, res) => {
 }
 
 
+self.getProjectByTypeId = async(req, res) => {
+    let { page, size, order } = req.query;
+    const { typeId, categoryId, subcategoryId } = req.body
+    console.log("The body", req.body)
+        //console.log("The page", page, size)
+    if (page == null && size == null) {
+        page = process.env.page,
+            size = process.env.size
+    }
+    if (order == null) {
+        order = process.env.order
+    }
+    const filter = () => {
+        if (subcategoryId) {
+            return [{ stakeholdertype_id: typeId },
+                { stakecategory_id: categoryId },
+                { stakesubcategory_id: subcategoryId }
+            ]
+        }
 
+        if (categoryId) {
+            return [{ stakeholdertype_id: typeId },
+                { stakecategory_id: categoryId },
+            ]
+
+        }
+        return [{ stakeholdertype_id: typeId }]
+    }
+    console.log("The filter", filter())
+    const { limit, offset } = paginate.getPagination(page, size);
+    stakeholder.findAndCountAll({
+            limit,
+            offset,
+            order: [
+                ['createdAt', order]
+            ],
+            where: {
+                [Op.and]: filter()
+            }
+
+        })
+        .then(data => {
+            const response = paginate.getPagingData(data, page, limit);
+            res.send(response);
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: err.message || "Some error occurred while retrieving data."
+            });
+        });
+    // try {
+    //     let id = req.params.id;
+    //     let data = await stakeholder.findAll({
+    //         where: {
+    //             stakeholdertype_id: id
+    //         }
+    //     });
+    //     return res.status(200).json({
+    //         data: (data) ? data : {}
+    //     })
+    // } catch (error) {
+    //     res.status(500).json({
+    //         message: error.message
+    //     })
+    // }
+}
 
 
 self.getAll = async(req, res) => {
@@ -178,6 +243,7 @@ self.save = async(req, res) => {
                 let usrID = usr.usrID
                 await saveActionState(data.id, "project", "REGISTER", usrID)
             }
+            let arr = [{ name: "Client", id: body.clientId }, { name: "Consultant", id: body.consultatntId }, { name: "Contractor", id: body.contractorId }]
             return res.json(data)
         }
     } catch (error) {
