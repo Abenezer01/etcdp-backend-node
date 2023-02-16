@@ -3,6 +3,9 @@ const {
     address,
     actionstate,
     position,
+    userposition,
+    useremail,
+    userphone,
     photo,
     sequelize
 } = require("./../../models");
@@ -163,92 +166,61 @@ self.search = async(req, res) => {
 }
 
 self.save = async(req, res) => {
-
-
-    // let validationRule = {
-    //     first_name: 'required',
-    //     email: 'required|email',
-    // };
     try {
-        // await validator(usr, validationRule, {}, (error, status) => {
+        const salt = await bcrypt.genSalt(10);
+        var usr = {
+            first_name: req.body.first_name,
+            last_name: req.body.last_name,
+            middle_name: req.body.middle_name,
+            
+            gender: req.body.gender,
+            marital_status: req.body.marital_status,
+            partner_name: req.body.partner_name,
+            birth_date: req.body.birth_date,
+            revision_no: req.body.revision_no,
+            password: await bcrypt.hash(req.body.password, salt)
+        };
+        created_user = await user.create(usr);
+        
+        if (created_user) {
+            //create position
+            let usemail = await useremail.create({
+                user_id: created_user.id,
+                email: req.body.email
+            })
+            saveActionState(usemail.id, "useremail", "REGISTER", created_user.id)
 
-        //     if (!status) {
-        //         return res.status(412)
-        //             .send({
-        //                 success: false,
-        //                 message: 'Validation failed',
-        //                 data: error
-        //             });
-        //     }
+            let usphone = await userphone.create({
+                user_id: created_user.id,
+                phone: req.body.phone
+            })
+            saveActionState(usphone.id, "userphone", "REGISTER", created_user.id)
 
+            let uspos = await userposition.create({
+                user_id: created_user.id,
+                department_id: req.body.department_id,
+                position_id: req.body.position_id
+            })
+            saveActionState(uspos.id, "userposition", "REGISTER", created_user.id)
 
-        // }).catch(error => console.log("Hi",
-        //     error))
-        let usrr = await usrData.userData(req, res)
-        let body = req.body;
-        if (usrr) {
-            const salt = await bcrypt.genSalt(10);
-            var usr = {
-                first_name: req.body.first_name,
-                last_name: req.body.last_name,
-                middle_name: req.body.middle_name,
-                email: (req.body.email).toLowerCase(),
-                phone: req.body.phone,
-                gender: req.body.gender,
-                marital_status: req.body.marital_status,
-                partner_name: req.body.partner_name,
-                birth_date: req.body.birth_date,
-                position_id: req.body.position_id,
-                revision_no: req.body.revision_no,
-                password: await bcrypt.hash(req.body.password, salt)
-            };
-            created_user = await user.create(usr);
-            if (created_user) {
-                let us = usrr.usrID
-                    // let us = "e1594d67-3aa2-429b-bb77-2e4ecc2124f8"
-                saveActionState(created_user.id, "user", "REGISTER", us)
-            }
-
-
-            return res.json(created_user)
+            let usr = await usrData.userData(req, res)
+            let us = usr.usrID
+                // let us = "e1594d67-3aa2-429b-bb77-2e4ecc2124f8"
+            saveActionState(created_user.id, "user", "REGISTER", us)
         }
-    } catch (err) {
-        let er = err.errors
-        console.log("The error is ", er)
 
-        res.status(500).json({
+
+        return res.json(created_user)
+        
+    
+    } catch (err) {
+        return res.status(500).json({
             message: err.message
         })
-
-
     }
-    // try {
-
-
-    //     // let validation = new Validator(usr, rules);
-    //     // validation.passes(); // true
-    //     // if (validation.fails()) {
-    //     //     return res.status(400).json({
-    //     //         message: validation.errors.get('email')
-    //     //     })
-    //     // } // false
-    //     console.log("Hey Kal")
-    //     created_user = await user.create(usr);
-
-
-    //     return res.json(created_user)
-    // } catch (error) {
-    //     let er = error.errors
-    //     console.log("The error is ", er)
-
-    //     res.status(500).json({
-
-    //         message: er
-    //     })
-
-
-    // }
+   
 }
+
 
 self.update = async(req, res) => {
     try {
@@ -284,4 +256,4 @@ self.delete = async(req, res) => {
 }
 
 
-module.exports = self;
+module.exports = self
