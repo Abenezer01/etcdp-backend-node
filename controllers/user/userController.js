@@ -166,28 +166,7 @@ self.search = async(req, res) => {
 }
 
 self.save = async(req, res) => {
-
-
-    // let validationRule = {
-    //     first_name: 'required',
-    //     email: 'required|email',
-    // };
     try {
-        // await validator(usr, validationRule, {}, (error, status) => {
-
-        //     if (!status) {
-        //         return res.status(412)
-        //             .send({
-        //                 success: false,
-        //                 message: 'Validation failed',
-        //                 data: error
-        //             });
-        //     }
-
-
-        // }).catch(error => console.log("Hi",
-        //     error))
-
         const salt = await bcrypt.genSalt(10);
         var usr = {
             first_name: req.body.first_name,
@@ -231,45 +210,17 @@ self.save = async(req, res) => {
         }
 
 
-            return res.json(created_user)
-        }
+        return res.json(created_user)
+        
+    
     } catch (err) {
-        let er = err.errors
-        console.log("The error is ", er)
-
-        res.status(500).json({
+        return res.status(500).json({
             message: err.message
         })
-
-
     }
-    // try {
-
-
-    //     // let validation = new Validator(usr, rules);
-    //     // validation.passes(); // true
-    //     // if (validation.fails()) {
-    //     //     return res.status(400).json({
-    //     //         message: validation.errors.get('email')
-    //     //     })
-    //     // } // false
-    //     console.log("Hey Kal")
-    //     created_user = await user.create(usr);
-
-
-    //     return res.json(created_user)
-    // } catch (error) {
-    //     let er = error.errors
-    //     console.log("The error is ", er)
-
-    //     res.status(500).json({
-
-    //         message: er
-    //     })
-
-
-    // }
+   
 }
+
 
 self.update = async(req, res) => {
     try {
@@ -305,4 +256,4 @@ self.delete = async(req, res) => {
 }
 
 
-module.exports = self;
+module.exports = self
