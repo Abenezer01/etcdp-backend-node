@@ -3,6 +3,9 @@ const {
     address,
     actionstate,
     position,
+    userposition,
+    useremail,
+    userphone,
     photo,
     Sequelize
 } = require("./../../models");
@@ -311,18 +314,37 @@ self.save = async(req, res) => {
             first_name: req.body.first_name,
             last_name: req.body.last_name,
             middle_name: req.body.middle_name,
-            email: (req.body.email).toLowerCase(),
-            phone: req.body.phone,
+            
             gender: req.body.gender,
             marital_status: req.body.marital_status,
             partner_name: req.body.partner_name,
             birth_date: req.body.birth_date,
-            position_id: req.body.position_id,
             revision_no: req.body.revision_no,
             password: await bcrypt.hash(req.body.password, salt)
         };
         created_user = await user.create(usr);
+        
         if (created_user) {
+            //create position
+            let usemail = await useremail.create({
+                user_id: created_user.id,
+                email: req.body.email
+            })
+            saveActionState(usemail.id, "useremail", "REGISTER", created_user.id)
+
+            let usphone = await userphone.create({
+                user_id: created_user.id,
+                phone: req.body.phone
+            })
+            saveActionState(usphone.id, "userphone", "REGISTER", created_user.id)
+
+            let uspos = await userposition.create({
+                user_id: created_user.id,
+                department_id: req.body.department_id,
+                position_id: req.body.position_id
+            })
+            saveActionState(uspos.id, "userposition", "REGISTER", created_user.id)
+
             let usr = await usrData.userData(req, res)
             let us = usr.usrID
                 // let us = "e1594d67-3aa2-429b-bb77-2e4ecc2124f8"

@@ -111,6 +111,21 @@ self.delete = async(req, res) => {
         })
     }
 }
+self.getSubDepartments = async(req, res) => {
+	try {
+		let id = req.params.id 
+		let data = await department.findAll({
+			where: {
+				parent_department_id: id
+			}
+		})
+		return res.json(data)
+	} catch (error) {
+		return res.status(500).json({
+			message: error.message
+		})
+	}
+}
 
 
 module.exports = self;

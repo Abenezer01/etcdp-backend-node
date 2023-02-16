@@ -28,6 +28,7 @@ module.exports = function(express) {
     route.post("/department", validateInput.departmentValidate, departmentController.save);
     route.put("/department/:id", validateInput.departmentValidate, departmentController.update);
     route.delete("/department/:id", departmentController.delete);
+    route.get("/sub-departments/:id", departmentController.getSubDepartments);
     //Role route
     route.get("/role", roleController.getAll);
     route.get("/role/:id", roleController.get);
