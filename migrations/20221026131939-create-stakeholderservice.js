@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
     async up(queryInterface, Sequelize) {
-        await queryInterface.createTable('projects', {
+        await queryInterface.createTable('stakeholderservices', {
             id: {
                 allowNull: false,
                 primaryKey: true,
@@ -10,57 +10,33 @@ module.exports = {
             parent_id: {
                 type: Sequelize.UUID,
                 references: {
-                    model: 'projects',
+                    model: 'stakeholderservices',
                     key: 'id'
                 },
                 onUpdate: 'CASCADE',
                 onDelete: 'CASCADE'
             },
-            projectcategory_id: {
+            stakeholder_id: {
                 type: Sequelize.UUID,
+                allowNull: false,
                 references: {
-                    model: 'projectcategories',
+                    model: 'stakeholders', //stakeholder registered as higher institute type
                     key: 'id'
                 },
                 onUpdate: 'CASCADE',
                 onDelete: 'CASCADE'
             },
-            projecttype_id: {
+            construction_related_service_id: {
                 type: Sequelize.UUID,
+                allowNull: false,
                 references: {
-                    model: 'projecttypes',
+                    model: 'constructionrelatedservices', //stakeholder registered as higher institute type
                     key: 'id'
                 },
                 onUpdate: 'CASCADE',
                 onDelete: 'CASCADE'
             },
-            projectsubcategory_id: {
-                type: Sequelize.UUID,
-                references: {
-                    model: 'projectsubcategories',
-                    key: 'id'
-                },
-                onUpdate: 'CASCADE',
-                onDelete: 'CASCADE'
-            },
-            name: {
-                type: Sequelize.STRING,
-                allowNull: false
-            },
-            remark: {
-                type: Sequelize.TEXT
-            },
-            contract_no: {
-                type: Sequelize.STRING
-            },
-            budget_code: {
-                type: Sequelize.STRING
-            },
-            procurement_no: {
-                type: Sequelize.STRING
-            },
-
-            revision_no: {
+            unit_price: {
                 type: Sequelize.INTEGER
             },
             createdAt: {
@@ -74,6 +50,6 @@ module.exports = {
         });
     },
     async down(queryInterface, Sequelize) {
-        await queryInterface.dropTable('projects');
+        await queryInterface.dropTable('stakeholderservices');
     }
 };

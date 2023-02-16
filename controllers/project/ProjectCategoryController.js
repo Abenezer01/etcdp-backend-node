@@ -6,6 +6,7 @@ const {
 } = require("../../models");
 //const projecttype = require("../../models/projecttype");
 
+const usrData = require("../../utils/userDataFromToken");
 const { saveActionState } = require("../../utils/helper");
 
 
@@ -114,18 +115,6 @@ self.getAllProCatByTypeId = async(req, res) => {
     // }
 }
 
-self.getAll = async(req, res) => {
-    try {
-        let data = await projectcategory.findAll();
-        return res.json(data)
-
-    } catch (error) {
-        res.status(500).json({
-            message: error.message
-        })
-    }
-
-}
 
 self.get = async(req, res) => {
     try {
@@ -168,16 +157,16 @@ self.search = async(req, res) => {
 
 self.save = async(req, res) => {
     try {
+        let usr = await usrData.userData(req, res)
         let body = req.body;
-        let data = await projectcategory.create(body);
-
-
-        if (data) {
-            let us = "e1594d67-3aa2-429b-bb77-2e4ecc2124f8"
-            saveActionState(data.id, "projectcategory", "REGISTER", us)
+        if (usr) {
+            let data = await projectcategory.create(body);
+            if (data) {
+                let usrID = usr.usrID
+                await saveActionState(data.id, "projectcategory", "REGISTER", usrID)
+            }
+            return res.json(data)
         }
-
-        return res.json(data)
     } catch (error) {
         res.status(500).json({
             message: error.message

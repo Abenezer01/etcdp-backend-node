@@ -24,7 +24,7 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.UUID,
             allowNull: false
         },
-        studyfield_id: {
+        stake_study_field_id: {
             type: DataTypes.UUID,
             allowNull: false
         },
@@ -37,11 +37,27 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.UUID,
             allowNull: false
         },
-        study_period: {
+        study_period_id: {
+            type: DataTypes.UUID,
+            allowNull: false
+        },
+        studyfield_id: {
+            type: DataTypes.UUID,
+            allowNull: false
+        },
+        male: {
+            type: DataTypes.INTEGER,
+            allowNull: false
+        },
+        female: {
+            type: DataTypes.INTEGER,
+            allowNull: false
+        },
+        year: {
             type: DataTypes.DATE,
             allowNull: false
         },
-        gender: {
+        nationality: {
             type: DataTypes.STRING,
             allowNull: false
         },
@@ -54,5 +70,27 @@ module.exports = (sequelize, DataTypes) => {
         sequelize,
         modelName: 'graduate',
     });
+    graduate.associate = function(models) {
+        graduate.belongsTo(models.studyfield, {
+            as: "studyfield",
+            foreignKey: "studyfield_id"
+        })
+        graduate.belongsTo(models.studyprogram, {
+            as: "studyprogram",
+            foreignKey: "study_program_id"
+        })
+        graduate.belongsTo(models.studylevel, {
+            as: "studylevel",
+            foreignKey: "studylevel_id"
+        })
+        graduate.belongsTo(models.studyperiodcost, {
+            as: "studyperiod",
+            foreignKey: "study_period_id"
+        })
+        graduate.belongsTo(models.agelevel, {
+            as: "agelevel",
+            foreignKey: "agelevel_id"
+        })
+    };
     return graduate;
 };

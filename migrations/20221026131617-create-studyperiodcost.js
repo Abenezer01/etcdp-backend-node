@@ -26,11 +26,11 @@ module.exports = {
                 onUpdate: 'CASCADE',
                 onDelete: 'CASCADE'
             },
-            studyfield_id: {
+            stake_study_field_id: {
                 type: Sequelize.UUID,
                 allowNull: false,
                 references: {
-                    model: 'studyfields',
+                    model: 'stakeholderstudyfields',
                     key: 'id'
                 },
                 onUpdate: 'CASCADE',
@@ -53,6 +53,17 @@ module.exports = {
                 onDelete: 'CASCADE'
 
             },
+            studyfield_id: {
+                type: Sequelize.UUID,
+                allowNull: false,
+                references: {
+                    model: 'studyfields',
+                    key: 'id'
+                },
+                onUpdate: 'CASCADE',
+                onDelete: 'CASCADE'
+
+            },
             studylevel_id: {
                 type: Sequelize.UUID,
                 allowNull: false,
@@ -63,12 +74,8 @@ module.exports = {
                 onUpdate: 'CASCADE',
                 onDelete: 'CASCADE'
             },
-            study_period_from: {
-                type: Sequelize.DATE,
-                allowNull: false
-            },
-            study_period_to: {
-                type: Sequelize.DATE,
+            total_month: {
+                type: Sequelize.INTEGER,
                 allowNull: false
             },
             study_cost: {

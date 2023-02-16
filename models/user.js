@@ -16,84 +16,53 @@ module.exports = (sequelize, DataTypes) => {
         }
     }
     user.init({
-            id: {
-                type: DataTypes.UUID,
-                primaryKey: true,
-                defaultValue: DataTypes.UUIDV4
-            },
-            parent_id: DataTypes.UUID,
-            first_name: {
-                type: DataTypes.STRING,
-                allowNull: false
-            },
-            middle_name: DataTypes.STRING,
-            last_name: DataTypes.STRING,
-            email: {
-                type: DataTypes.STRING,
-                unique: true,
-                allowNull: false
-            },
-            password: DataTypes.STRING,
-            phone: {
-                type: DataTypes.STRING,
-                unique: true,
-                allow: false
-            },
-            gender: DataTypes.STRING,
-            marital_status: DataTypes.BOOLEAN,
-            partner_name: DataTypes.STRING,
-            birth_date: DataTypes.DATE,
-            position_id: {
-                type: DataTypes.UUID,
-                allowNull: false
-            },
-            refresh_token: DataTypes.STRING,
-            photo_id: DataTypes.UUID,
-            revision_no: DataTypes.INTEGER,
-
+        id: {
+            type: DataTypes.UUID,
+            primaryKey: true,
+            defaultValue: DataTypes.UUIDV4
         },
-
-
-        {
-
-            beforeCreate: async(user, options) => {
-                if (user.password) {
-                    const salt = await bcrypt.genSaltSync(10, 'a');
-                    user.password = bcrypt.hashSync(user.password, salt);
-                }
-            },
-            sequelize,
-            modelName: 'user',
-            // hooks: {
-            //     beforeCreate(user, options) {
-            //         if (user.password) {
-            //             const salt = bcrypt.genSaltSync(10, 'a');
-            //             user.password = bcrypt.hashSync(user.password, salt);
-            //         }
-            //     },
-            // }
-        }, {
-
+        parent_id: DataTypes.UUID,
+        first_name: {
+            type: DataTypes.STRING,
+            allowNull: false
         },
+        middle_name: DataTypes.STRING,
+        last_name: DataTypes.STRING,
+        email: {
+            type: DataTypes.STRING,
+            unique: true,
+            allowNull: false
+        },
+        password: DataTypes.STRING,
+        phone: {
+            type: DataTypes.STRING,
+            unique: true,
+            allow: false
+        },
+        gender: DataTypes.STRING,
+        marital_status: DataTypes.BOOLEAN,
+        partner_name: DataTypes.STRING,
+        birth_date: DataTypes.DATE,
+        position_id: {
+            type: DataTypes.UUID,
+            allowNull: false
+        },
+        refresh_token: DataTypes.STRING,
+        photo_id: DataTypes.UUID,
+        revision_no: DataTypes.INTEGER,
 
-
-    );
+    }, {
+        sequelize,
+        modelName: 'user',
+    }, );
 
     user.associate = function(models) {
 
-        //     user.hasMany(models.workexperience, {
-        //         as: 'workexperiences',
-        //         foreignKey: "user_id",
-        //         onDelete: "CASCADE"
-        //     })
-        //         "user.belongsTo(models.department, {
-        //         as: "department",
-        //             foreignKey: "department_id"
-        //     });
-        // user.belongsTo(models.address, {
-        //     as: "address",
-        //     foreignKey: "address_id"
-        // })
+        // associations can be defined here
+        user.hasMany(models.actionstate, {
+            foreignKey: 'model_id',
+            as: 'users',
+        });
         user.belongsTo(models.position, {
             as: "position",
             foreignKey: "position_id"
@@ -104,28 +73,6 @@ module.exports = (sequelize, DataTypes) => {
         })
 
 
-        //     user.hasMany(models.file, {
-        //         as: 'files',
-        //         foreignKey: "fileable_id",
-        //     })
-
-        //  }
-        // {
-        //     hooks: {
-        //         beforeCreate: async(user) => {
-        //             if (user.password) {
-        //                 const salt = await bcrypt.genSaltSync(10, 'a');
-        //                 user.password = bcrypt.hashSync(user.password, salt);
-        //             }
-        //         },
-        //         //  beforeUpdate:async (user) => {
-        //         //   if (user.password) {
-        //         //    const salt = await bcrypt.genSaltSync(10, 'a');
-        //         //    user.password = bcrypt.hashSync(user.password, salt);
-        //         //   }
-        //         //  }
-        //         // },
-        //     }
     };
 
     return user;

@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
     async up(queryInterface, Sequelize) {
-        await queryInterface.createTable('graduates', {
+        await queryInterface.createTable('stakeholderstudyfields', {
             id: {
                 allowNull: false,
                 primaryKey: true,
@@ -10,31 +10,25 @@ module.exports = {
             parent_id: {
                 type: Sequelize.UUID,
                 references: {
-                    model: 'graduates',
-                    key: 'id'
-                },
-                onUpdate: 'CASCADE',
-                onDelete: 'CASCADE'
-            },
-            higher_institute_id: {
-                type: Sequelize.UUID,
-                allowNull: false,
-                references: {
-                    model: 'stakeholders', //stakeholder registered as higher institute type
-                    key: 'id'
-                },
-                onUpdate: 'CASCADE',
-                onDelete: 'CASCADE'
-            },
-            stake_study_field_id: {
-                type: Sequelize.UUID,
-                allowNull: false,
-                references: {
                     model: 'stakeholderstudyfields',
                     key: 'id'
                 },
                 onUpdate: 'CASCADE',
                 onDelete: 'CASCADE'
+            },
+            description: {
+                type: Sequelize.TEXT
+            },
+            stakeholder_id: {
+                type: Sequelize.UUID,
+                allowNull: false,
+                references: {
+                    model: 'stakeholders',
+                    key: 'id'
+                },
+                onUpdate: 'CASCADE',
+                onDelete: 'CASCADE'
+
             },
             studyfield_id: {
                 type: Sequelize.UUID,
@@ -47,10 +41,7 @@ module.exports = {
                 onDelete: 'CASCADE'
 
             },
-            description: {
-                type: Sequelize.TEXT
-            },
-            study_program_id: {
+            studyprogram_id: {
                 type: Sequelize.UUID,
                 allowNull: false,
                 references: {
@@ -70,42 +61,7 @@ module.exports = {
                 },
                 onUpdate: 'CASCADE',
                 onDelete: 'CASCADE'
-            },
-            study_period_id: {
-                type: Sequelize.UUID,
-                allowNull: false,
-                references: {
-                    model: 'studyperiodcosts',
-                    key: 'id'
-                },
-                onUpdate: 'CASCADE',
-                onDelete: 'CASCADE'
-            },
-            nationality: {
-                type: Sequelize.STRING,
-                allowNull: false
-            },
-            male: {
-                type: Sequelize.INTEGER,
-                allowNull: false
-            },
-            female: {
-                type: Sequelize.INTEGER,
-                allowNull: false
-            },
-            year: {
-                type: Sequelize.DATE,
-                allowNull: false
-            },
-            agelevel_id: {
-                type: Sequelize.UUID,
-                allowNull: false,
-                references: {
-                    model: 'agelevels',
-                    key: 'id'
-                },
-                onUpdate: 'CASCADE',
-                onDelete: 'CASCADE'
+
             },
             revision_no: {
                 type: Sequelize.INTEGER
@@ -121,6 +77,6 @@ module.exports = {
         });
     },
     async down(queryInterface, Sequelize) {
-        await queryInterface.dropTable('graduates');
+        await queryInterface.dropTable('stakeholderstudyfields');
     }
 };

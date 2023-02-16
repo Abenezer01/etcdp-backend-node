@@ -6,7 +6,8 @@ const {
 const path = require('path');
 const fs = require('fs');
 const Op = Sequelize.Op;
-
+const usrData = require("../../utils/userDataFromToken");
+const { saveActionState } = require("../../utils/helper");
 let self = {};
 
 self.getAll = async(req, res) => {
@@ -109,14 +110,22 @@ self.save = async(req, res) => {
 
 
     try {
-        doc = await file.create(document)
-        filer.mv(filePath, err => {
-            if (err) return res.status(500).send(err)
-                // res.redirect('/')
-        })
-        return res.status(200).send({
-            data: doc
-        })
+        let usr = await usrData.userData(req, res)
+        let body = req.body;
+        if (usr) {
+            doc = await file.create(document)
+            filer.mv(filePath, err => {
+                if (err) return res.status(500).send(err)
+                    // res.redirect('/')
+            })
+            if (doc) {
+                let usrID = usr.usrID
+                await saveActionState(doc.id, "document", "REGISTER", usrID)
+            }
+            return res.status(200).send({
+                data: doc
+            })
+        }
     } catch (error) {
         console.log("The error", error)
         return res.status(500).send({

@@ -24,7 +24,7 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.UUID,
             allowNull: false
         },
-        studyfield_id: {
+        stake_study_field_id: {
             type: DataTypes.UUID,
             allowNull: false
         },
@@ -38,12 +38,12 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.UUID,
             allowNull: false
         },
-        study_period_from: {
-            type: DataTypes.DATE,
+        studyfield_id: {
+            type: DataTypes.UUID,
             allowNull: false
         },
-        study_period_to: {
-            type: DataTypes.DATE,
+        total_month: {
+            type: DataTypes.INTEGER,
             allowNull: false
         },
         study_cost: {
@@ -57,10 +57,10 @@ module.exports = (sequelize, DataTypes) => {
     });
     studyperiodcost.associate = function(models) {
 
-        studyperiodcost.belongsTo(models.studyfield, {
+        studyperiodcost.belongsTo(models.stakeholderstudyfield, {
 
-            as: "studyfield",
-            foreignKey: "studyfield_id",
+            as: "stakestudyfield",
+            foreignKey: "stake_study_field_id",
             constraints: false,
             attribute: ['description', 'title']
         })
@@ -71,6 +71,10 @@ module.exports = (sequelize, DataTypes) => {
         studyperiodcost.belongsTo(models.studylevel, {
             as: "studylevel",
             foreignKey: "studylevel_id"
+        })
+        studyperiodcost.belongsTo(models.studyfield, {
+            as: "studyfield",
+            foreignKey: "studyfield_id"
         })
     }
     return studyperiodcost;

@@ -6,7 +6,7 @@ const {
 const Op = Sequelize.Op;
 
 let self = {};
-
+const usrData = require("../../utils/userDataFromToken");
 self.getAll = async(req, res) => {
     try {
         let data = await actionstate.findAll();
@@ -25,47 +25,49 @@ self.check = async(req, res) => {
     try {
         let id = req.params.id
         let model = req.params.model
-        // let us = req.decoded
+        let usr = await usrData.userData(req, res)
         let us = {
-            id: "01983e21-f9cc-450a-986c-bb5fc910532b"
+            id: usr.usrId
         }
-        let data = await actionstate.findOne({
-            where: {
-                model_id: id,
-                model:model,
-                action: "CHECK"
-            }
-        })
-
-        if(data){
-            return res.status(400).json({
-                message: 'already checked!'
-            })
-        }else{
-            let action = await actionstate.findOne({
+        if (usr) {
+            let data = await actionstate.findOne({
                 where: {
                     model_id: id,
-                    action: "REGISTER",
-                    user_id: us.id
+                    model: model,
+                    action: "CHECK"
                 }
             })
 
-            if(action){
-                return res.status(422).json({
-                    message: 'You are not allowed to check the data as you are the register'
+            if (data) {
+                return res.status(400).json({
+                    message: 'already checked!'
                 })
-            }else{
-                await actionstate.create({
-                    model_id:id,
-                    model: model,
-                    action: "CHECK",
-                    user_id: us.id,
-                    time: new Date()
+            } else {
+                let action = await actionstate.findOne({
+                    where: {
+                        model_id: id,
+                        action: "REGISTER",
+                        user_id: us.id
+                    }
                 })
-    
-                return res.json({
-                    message: "Data checked successfully"
-                })
+
+                if (action) {
+                    return res.status(422).json({
+                        message: 'You are not allowed to check the data as you are the register'
+                    })
+                } else {
+                    await actionstate.create({
+                        model_id: id,
+                        model: model,
+                        action: "CHECK",
+                        user_id: us.id,
+                        time: new Date()
+                    })
+
+                    return res.json({
+                        message: "Data checked successfully"
+                    })
+                }
             }
         }
 
@@ -77,52 +79,53 @@ self.check = async(req, res) => {
 }
 self.approve = async(req, res) => {
     try {
-        let id = req.params.id 
+        let id = req.params.id
         let model = req.params.model
+        let usr = await usrData.userData(req, res)
         let us = {
-            id: "f92e0cb7-9fe5-45f6-8efd-51462fe92d7a"
+            id: usr.usrId
         }
+        if (usr) {
 
-
-        let data = await actionstate.findOne({
-            where: {
-                model_id: id,
-                model:model,
-                action: "APPROVE"
-            }
-        })
-        if(data) {
-            return res.status(400).json({
-                message: "Already Approve!"
-            })
-        }else{
-            let action = await actionstate.findAll({
+            let data = await actionstate.findOne({
                 where: {
                     model_id: id,
-                    action: {
-                        [Op.in]: ['REGISTSER', 'CHECK']
-                    },
-                    user_id:us.id
+                    model: model,
+                    action: "APPROVE"
                 }
             })
+            if (data) {
+                return res.status(400).json({
+                    message: "Already Approve!"
+                })
+            } else {
+                let action = await actionstate.findAll({
+                    where: {
+                        model_id: id,
+                        action: {
+                            [Op.in]: ['REGISTSER', 'CHECK']
+                        },
+                        user_id: us.id
+                    }
+                })
 
-            if(action.length != 0){
-                return res.status(422).json({
-                    message: 'You can not approve as you either register or check the data'
-                })
-            }else{
-                actionstate.create({
-                    model: (model).toLowerCase(),
-                    model_id: id,
-                    action: "APPROVE",
-                    user_id: us.id,
-                    time: new Date()
-                })
+                if (action.length != 0) {
+                    return res.status(422).json({
+                        message: 'You can not approve as you either register or check the data'
+                    })
+                } else {
+                    actionstate.create({
+                        model: (model).toLowerCase(),
+                        model_id: id,
+                        action: "APPROVE",
+                        user_id: us.id,
+                        time: new Date()
+                    })
 
-                return res.status(200).json({
-                    message: "Date approved successfully!"
-                })
-    
+                    return res.status(200).json({
+                        message: "Data approved successfully!"
+                    })
+                }
             }
         }
     } catch (error) {
@@ -134,50 +137,53 @@ self.approve = async(req, res) => {
 
 self.reject = async(req, res) => {
     try {
-        
-        let id = req.params.id 
-        let model = req.params.model 
+        let usr = await usrData.userData(req, res)
+        let id = req.params.id
+        let model = req.params.model
 
-
-        let data = await actionstate.findOne({
-            where: {
-                id:id,
-                action: "REJECT"
-            }
-        })
-        if(data){
-            return res.status(400).json({
-                message: "Already Rejected"
-            })
-        }else{ 
-            let action = await actionstate.findAll({
+        let us = {
+            id: usr.usrId
+        }
+        if (usr) {
+            let data = await actionstate.findOne({
                 where: {
-                    model_id: id,
-                    action: {
-                        [Op.in]: ['REGISTSER', 'CHECK', "APPROVE"]
-                    },
-                    user_id: us
+                    id: id,
+                    action: "REJECT"
                 }
-               
             })
+            if (data) {
+                return res.status(400).json({
+                    message: "Already Rejected"
+                })
+            } else {
+                let action = await actionstate.findAll({
+                    where: {
+                        model_id: id,
+                        action: {
+                            [Op.in]: ['REGISTER', 'CHECK', "APPROVE"]
+                        },
+                        user_id: us.id
+                    }
 
-            if(action.length != 0){
-                return res.status(422).json({
-                    message: 'You can not approve as you either register or check or approver the data'
-                })
-            }else{
-                actionstate.create({
-                    model: (model).toLowerCase(),
-                    model_id: id,
-                    action: "REJECT",
-                    user_id: users.id,
-                    time: new Date()
                 })
 
-                return res.status(200).json({
-                    message: "Date rejected successfully!"
-                })
-    
+                if (action.length != 0) {
+                    return res.status(422).json({
+                        message: 'You can not approve as you either register or check or approver the data'
+                    })
+                } else {
+                    actionstate.create({
+                        model: (model).toLowerCase(),
+                        model_id: id,
+                        action: "REJECT",
+                        user_id: us.id,
+                        time: new Date()
+                    })
+
+                    return res.status(200).json({
+                        message: "Date rejected successfully!"
+                    })
+                }
             }
         }
     } catch (error) {
@@ -192,45 +198,48 @@ self.authorize = async(req, res) => {
     try {
         let id = req.params.id
         let model = req.params.model
-        let us = req.decoded 
-
-        let data = await actionstate.findOne({
-            where: {
-                model_id: id,
-                action: "AUTHORIZE"
-            }
-        })
-
-        if(data){
-            return res.status(400).json({
-                message: "Already Authorized"
-            })
-        }else{
-
-            let action = await actionstate.findAll({
-                model_id: id,
-                action: {
-                    [Op.in]: ['REGISTSER', 'CHECK', "APPROVE"]
+        let usr = await usrData.userData(req, res)
+        if (usr) {
+            let data = await actionstate.findOne({
+                where: {
+                    model_id: id,
+                    action: "AUTHORIZE"
                 }
             })
 
-            if(action.length != 0){
-                return res.status(422).json({
-                    message: 'You can not approve as you either register or check or approver the data'
+            if (data) {
+                return res.status(400).json({
+                    message: "Already Authorized"
                 })
-            }else{
-                actionstate.create({
-                    model: (model).toLowerCase(),
+            } else {
+
+                let action = await actionstate.findAll({
                     model_id: id,
-                    action: "AUTHORIZE",
-                    user_id: users.id,
-                    time: new Date()
+                    action: {
+                        [Op.in]: ['REGISTSER', 'CHECK', "APPROVE"]
+                    },
+                    user_id: us.id
+
                 })
 
-                return res.status(200).json({
-                    message: "Date authorized successfully!"
-                })
-    
+                if (action.length != 0) {
+                    return res.status(422).json({
+                        message: 'You can not approve as you either register or check or approver the data'
+                    })
+                } else {
+                    actionstate.create({
+                        model: (model).toLowerCase(),
+                        model_id: id,
+                        action: "AUTHORIZE",
+                        user_id: usr.id,
+                        time: new Date()
+                    })
+
+                    return res.status(200).json({
+                        message: "Date authorized successfully!"
+                    })
+                }
+
             }
         }
     } catch (error) {

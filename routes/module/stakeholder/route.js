@@ -16,10 +16,12 @@ const WorkExperienceController = require("../../../controllers/stakeholder/WorkE
 const StakeHolderTrainingController = require("../../../controllers/stakeholder/StakeHolderTrainingController")
 const RegulationController = require("../../../controllers/stakeholder/RegulationController")
 const StudyFieldController = require("../../../controllers/stakeholder/StudyFieldController")
+const StakeholderStudyFieldController = require("../../../controllers/stakeholder/StakeholderStudyFieldController")
 const StudyPeriodCostController = require("../../../controllers/stakeholder/StudyPeriodCostController")
 const GraduateController = require("../../../controllers/stakeholder/GraduateController")
 const ConstructionRelatedServiceController = require("../../../controllers/stakeholder/ConstructionRelatedServiceController")
 const StudyProgramController = require("../../../controllers/stakeholder/StudyProgramController")
+const StakeholderServiceController = require("../../../controllers/stakeholder/StakeholderServiceController")
 const middleware = require("../../../middleware/middleware")
 const validateData = require("../../../middleware/validate/module/stakeholder/validate")
 
@@ -90,7 +92,7 @@ module.exports = function(express) {
     //stakeholder route
     route.get("/stakeholder", stakeholderController.getAll);
     route.get("/stakeholder/:id", stakeholderController.get);
-    route.get("/stakeholder/stakeholder-type/:id", stakeholderController.getStakeHolderByTypeId);
+    route.post("/stakeholder/filter/stakeholder-type/", stakeholderController.getStakeHolderByTypeId);
     route.get("/stakeholder-search", stakeholderController.search);
     route.post("/stakeholder", validateData.stakeHolderValidate, stakeholderController.save);
     route.put("/stakeholder/:id", validateData.stakeHolderValidate, stakeholderController.update);
@@ -174,11 +176,19 @@ module.exports = function(express) {
     route.delete("/regulation/:id", RegulationController.delete);
     //study field
     route.get("/study-field/", StudyFieldController.getAll);
-    route.get("/study-field/:id", StudyFieldController.get);
+    route.get("/study-field/:id", StudyFieldController.getStudyFieldById);
     route.get("/study-field-search", StudyFieldController.search);
     route.post("/study-field", validateData.studyFieldValidate, StudyFieldController.save);
     route.put("/study-field/:id", validateData.studyFieldValidate, StudyFieldController.update);
     route.delete("/study-field/:id", StudyFieldController.delete);
+    //stakeholder study field
+    route.get("/stake-holder/study-field/", StakeholderStudyFieldController.getAll);
+    route.get("/stake-holder/study-field/:id", StakeholderStudyFieldController.get);
+    route.get("/stake-holder/study-field/stake-holder/:id", StakeholderStudyFieldController.getStakeholderStudyFieldByStakeholderId);
+    route.get("/stake-holder/study-field-search", StakeholderStudyFieldController.search);
+    route.post("/stake-holder/study-field", validateData.stakeholderStudyFieldValidate, StakeholderStudyFieldController.save);
+    route.put("/stake-holder/study-field/:id", validateData.stakeholderStudyFieldValidate, StakeholderStudyFieldController.update);
+    route.delete("/stake-holder/study-field/:id", StakeholderStudyFieldController.delete);
     //study program
     route.get("/study-program/", StudyProgramController.getAll);
     route.get("/study-program/:id", StudyProgramController.get);
@@ -189,7 +199,8 @@ module.exports = function(express) {
     //study period cost
     route.get("/study-period-cost/", StudyPeriodCostController.getAll);
     route.get("/study-period-cost/:id", StudyPeriodCostController.get);
-    route.get("/study-period-cost/higher_institute/:id", StudyPeriodCostController.getByHigherInstituteId);
+    route.get("/study-period-cost/higher-institute/:id", StudyPeriodCostController.getByHigherInstituteId);
+    route.get("/study-period-cost/study-field/:id", StudyPeriodCostController.getByStudyFieldId);
     route.get("/study-period-cost-search", StudyPeriodCostController.search);
     route.post("/study-period-cost", validateData.studyPeriodCostValidate, StudyPeriodCostController.save);
     route.put("/study-period-cost/:id", validateData.studyPeriodCostValidate, StudyPeriodCostController.update);
@@ -197,7 +208,7 @@ module.exports = function(express) {
     //Graduate
     route.get("/graduate/", GraduateController.getAll);
     route.get("/graduate/:id", GraduateController.get);
-    route.get("/graduate/higher_institute/:id", GraduateController.getByHigherInstituteId);
+    route.get("/graduate/higher-institute/:id", GraduateController.getByHigherInstituteId);
     route.get("/graduate-search", GraduateController.search);
     route.post("/graduate", validateData.graduateValidate, GraduateController.save);
     route.put("/graduate/:id", validateData.graduateValidate, GraduateController.update);
@@ -210,6 +221,14 @@ module.exports = function(express) {
     route.post("/construction-related-service", validateData.constructionRelatedServiceValidate, ConstructionRelatedServiceController.save);
     route.put("/construction-related-service/:id", validateData.constructionRelatedServiceValidate, ConstructionRelatedServiceController.update);
     route.delete("/construction-related-service/:id", ConstructionRelatedServiceController.delete);
+    //Stakeholder service
+    route.get("/stakeholder-service/", StakeholderServiceController.getAll);
+    route.get("/stakeholder-service/:id", StakeholderServiceController.get);
+    route.get("/stakeholder-service/stakeholder/:id", StakeholderServiceController.getStakeServiceByStakeHolderId);
+    route.get("/stakeholder-service-search", StakeholderServiceController.search);
+    route.post("/stakeholder-service", validateData.StakeholderServiceValidate, StakeholderServiceController.save);
+    route.put("/stakeholder-service/:id", validateData.StakeholderServiceValidate, StakeholderServiceController.update);
+    route.delete("/stakeholder-service/:id", StakeholderServiceController.delete);
 
 
     return route;

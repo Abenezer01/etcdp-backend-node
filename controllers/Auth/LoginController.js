@@ -54,7 +54,7 @@ self.loginUser = async(request, response) => {
                 id: userData.position.role_id
             }
         })
-
+        console.log("The user role is", usrRole)
         ur = { id: usrRole.id, name: usrRole.name }
             //dep = { id: usrDepartment.id, name: usrDepartment.name }
         replyUser = {
