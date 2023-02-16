@@ -188,7 +188,7 @@ self.update = async(req, res) => {
 self.delete = async(req, res) => {
     try {
         let id = req.params.id;
-        let data = await agelevel.destroy({
+        let data = await graduate.destroy({
             where: {
                 id: id
             }
