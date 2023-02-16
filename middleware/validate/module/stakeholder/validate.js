@@ -194,8 +194,13 @@ const educationValidate = async(req, res, next) => {
         "quantity": "required|integer"
 
     };
+    let bodyArr = req.body.arr
+    for (i = 0; i < bodyArr.length; i++) {
+        await validateReply.validateReply(bodyArr[i], validationRule, res, next)
+    }
 
-    await validateReply.validateReply(req.body, validationRule, res, next)
+
+
 }
 const ageLevelValidate = async(req, res, next) => {
     let param = await validateReply.checkParam(req, res, next)

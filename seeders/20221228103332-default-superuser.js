@@ -167,9 +167,56 @@ module.exports = {
             createdAt: new Date(),
             updatedAt: new Date()
         }]);
-        await queryInterface.bulkInsert('studyprograms', [{
-            title: "Study program1",
-            description: "Study program1 description",
+        await queryInterface.bulkInsert('studyfields', [{
+            title: "Science",
+            description: "Study field description",
+            id: uuid.v4(),
+            createdAt: new Date(),
+            updatedAt: new Date()
+        }]);
+        await queryInterface.bulkInsert('agelevels', [{
+                title: "< 25",
+                description: "",
+                id: uuid.v4(),
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                title: "25-35",
+                description: "",
+                id: uuid.v4(),
+                createdAt: new Date(),
+                updatedAt: new Date()
+            },
+            {
+                title: "35-45",
+                description: "",
+                id: uuid.v4(),
+                createdAt: new Date(),
+                updatedAt: new Date()
+            }, {
+                title: "45-55",
+                description: "",
+                id: uuid.v4(),
+                createdAt: new Date(),
+                updatedAt: new Date()
+            }, {
+                title: "55-65",
+                description: "",
+                id: uuid.v4(),
+                createdAt: new Date(),
+                updatedAt: new Date()
+            }, {
+                title: "> 65",
+                description: "",
+                id: uuid.v4(),
+                createdAt: new Date(),
+                updatedAt: new Date()
+            }
+        ]);
+        await queryInterface.bulkInsert('experiencelevels', [{
+            title: "Work experience 1",
+            description: "Work experience 1 description",
             id: uuid.v4(),
             createdAt: new Date(),
             updatedAt: new Date()

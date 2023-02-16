@@ -33,8 +33,16 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false
         },
         department_name: DataTypes.STRING,
-        gender: {
+        nationality: {
             type: DataTypes.STRING,
+            allowNull: false
+        },
+        male: {
+            type: DataTypes.INTEGER,
+            allowNull: false
+        },
+        female: {
+            type: DataTypes.INTEGER,
             allowNull: false
         },
         studylevel_id: {

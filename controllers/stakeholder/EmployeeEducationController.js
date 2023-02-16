@@ -1,5 +1,6 @@
 const {
     employeeeducation,
+    totalemployee,
     Sequelize
 } = require("../../models");
 const paginate = require("../../utils/pagination");
@@ -138,7 +139,20 @@ self.save = async(req, res) => {
 
         let usr = await usrData.userData(req, res)
         let body = req.body;
+        let arr = body.arr
+
+
+
+        let stakeHolderId = body.stakeholder_id
+
         if (usr) {
+            let totalEmployee = await totalemployee.findOne({
+                where: {
+                    stakeholder_id: stakeHolderId
+                }
+            })
+            console.log("The total employee", totalEmployee)
+
             let data = await employeeeducation.create(body);
             if (data) {
 

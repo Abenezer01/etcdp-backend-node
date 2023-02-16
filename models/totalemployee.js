@@ -37,8 +37,12 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false
         },
-        gender: {
-            type: DataTypes.STRING,
+        male: {
+            type: DataTypes.INTEGER,
+            allowNull: false
+        },
+        female: {
+            type: DataTypes.INTEGER,
             allowNull: false
         },
         quantity: {

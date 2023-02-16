@@ -37,8 +37,16 @@ module.exports = {
             department_name: {
                 type: Sequelize.STRING
             },
-            gender: {
+            nationality: {
                 type: Sequelize.STRING,
+                allowNull: false
+            },
+            male: {
+                type: Sequelize.INTEGER,
+                allowNull: false
+            },
+            female: {
+                type: Sequelize.INTEGER,
                 allowNull: false
             },
             studylevel_id: {
