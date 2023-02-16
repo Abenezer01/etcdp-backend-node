@@ -38,7 +38,6 @@ self.getAlll = async(req, res) => {
 
         }
         let { page, size, order } = req.query;
-        //console.log("The page", page, size)
         if (page == null && size == null) {
             page = process.env.page,
                 size = process.env.size
