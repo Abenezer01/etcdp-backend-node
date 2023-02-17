@@ -33,9 +33,10 @@ app.use("/api", userRoute(express), polymorphicRoute(express), loginRoute(expres
 
 //app.use("/api", userRoute(express), polymorphicRoute(express), loginRoute(express), stakeCategory(express), ProjectRoute(express));
 
-app.use("/", route_view(express));
-app.listen(3000, () => {
-    console.log('Success running 3000');
+app.use("/",route_view(express));
+
+app.listen(7500, () => {
+    console.log('Success running on  7500');
 });
 
 module.exports = app;

@@ -63,6 +63,10 @@ module.exports = (sequelize, DataTypes) => {
             foreignKey: 'model_id',
             as: 'users',
         });
+        user.hasMany(models.userposition, {
+            foreignKey: 'user_id',
+            as: 'positions',
+        });
         user.belongsTo(models.position, {
             as: "position",
             foreignKey: "position_id"

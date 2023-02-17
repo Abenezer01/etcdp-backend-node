@@ -14,6 +14,14 @@ module.exports = function(express) {
     route.post("/user", validateInput.createUser, userController.save);
     route.put("/user/:id", validateInput.createUser, userController.update);
     route.delete("/user/:id", userController.delete);
+    route.get("/department-users/:id", userController.getDepartmentUsers);
+
+    route.post("/assign-user-position", userController.assignPosition);
+    route.get("/disable-user-position/:id", userController.dePosition);
+
+	route.get("/switch-account/:position_id", userController.switchAccount);
+
+    
     //position route
     route.get("/position", positionController.getAll);
     route.get("/position/:id", positionController.get);
@@ -21,6 +29,9 @@ module.exports = function(express) {
     route.post("/position", validateInput.positionValidate, positionController.save);
     route.put("/position/:id", validateInput.positionValidate, positionController.update);
     route.delete("/position/:id", positionController.delete);
+    route.get("/department-positions/:id", positionController.getDepartmentPositions);
+
+    
     //department route
     route.get("/department", departmentController.getAll);
     route.get("/department/:id", departmentController.get);
@@ -29,6 +40,13 @@ module.exports = function(express) {
     route.put("/department/:id", validateInput.departmentValidate, departmentController.update);
     route.delete("/department/:id", departmentController.delete);
     route.get("/sub-departments/:id", departmentController.getSubDepartments);
+    route.get("/parent-department", departmentController.getParentDepartment);
+
+    route.get("/search-department/:id?", departmentController.getParentOrGivenId);
+	route.get("/office-structure", departmentController.getStructure);
+
+
+
     //Role route
     route.get("/role", roleController.getAll);
     route.get("/role/:id", roleController.get);

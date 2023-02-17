@@ -7,16 +7,25 @@ const {
     useremail,
     userphone,
     photo,
-    sequelize
+    role,
+    sequelize,
+    Sequelize
 } = require("./../../models");
 const bcrypt = require('bcrypt');
 let validator = require("../../utils/validator");
-const Op = sequelize.Op;
+const Op = Sequelize.Op;
 const dotenv = require('dotenv');
 dotenv.config();
 const usrData = require("../../utils/userDataFromToken");
 const { saveActionState, getChildren } = require('../../utils/helper');
 const paginate = require("../../utils/pagination");
+
+const jwt = require("jsonwebtoken");
+
+let TOKEN_KEY = process.env.ACCESS_TOKEN_KEY
+let REFRESH_TOKEN_KEY = process.env.REFRESH_TOKEN_KEY
+
+
 let self = {};
 self.getAlll = async(req, res) => {
         let userData = await user.findAll()
@@ -255,5 +264,192 @@ self.delete = async(req, res) => {
     }
 }
 
+self.getDepartmentUsers = async(req, res) => {
+    try {
+        let id = req.params.id 
+        //demo
+
+        // let data = await user.findAll({
+        //     where: {
+        //         department_id: 
+        //     }
+        // })
+        //correct one
+
+        let pos = await userposition.findAll({
+            attributes: ["user_id"],
+            where: {
+                department_id: id
+            }
+        })
+
+		let userId = [ ...new Set(pos.map((item)=> item.user_id))].filter(n=>n)
+        
+        let users = await user.findAll({
+            where: {
+                id: {
+                    [Op.in]: userId
+                }
+            }
+        })
+
+        return res.json(users)
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message
+        })
+    }
+}
+
+self.assignPosition = async(req, res) => {
+    try {
+        let body = req.body
+        let existing = await userposition.findOne({
+			where: {
+				user_id: body.user_id,
+				department_id: body.department_id,
+				position_id: body.position_id,
+			}
+		})	
+		
+		if(existing){
+			return res.status(302).json({
+				message: "User Already assigned this position"
+			})
+		}else{
+			let data = await userposition.create(body)
+			return res.status(200).json(data)
+		}
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message
+        })
+    }
+}
+
+
+self.dePosition = async(req, res) =>  {
+	try {
+		let id = req.params.id 
+		let data = await userposition.findOne({
+			where: {
+				id: id
+			}
+		})
+
+		if(data){
+			if(data.status) {
+				let updated = await userposition.update({status:false},{
+					where:{
+						id:id
+					}
+				});
+				if(updated){
+					return res.json({
+						message: "User Position is Disable"
+					})
+				}
+
+			}else{
+				return res.status(302).json({
+					message: "Already Disabled!"
+				})
+			}
+		}else{
+			return res.status(404).json({
+				message: "User Position is not Found!"
+			})
+		}
+	} catch (error) {
+		return res.status(500).json({
+			message: error.message
+		})
+	}
+}
+
+
+self.switchAccount = async(req, res) => {
+
+    let id = req.params.position_id 
+    let accessToken
+    let refreshToken
+
+   
+    try {
+
+        let userpos = await userposition.findOne({
+            where:{ 
+                id: id
+            }
+        })
+
+        let user_id = userpos.user_id 
+
+        let account = await user.findOne({
+            where: {
+                id: user_id
+            },
+            include: [{
+                model: position,
+                as: "position"
+            },
+            {
+                model: photo,
+                as: "photo"
+            },{
+                model: userposition,
+                as: "positions"
+            }]
+        })
+        usrRole = await role.findOne({
+            where: {
+                id: account.position.role_id
+            }
+        })
+       
+        replyUser = {
+            first_name: account.first_name,
+            middle_name: account.middle_name,
+            last_name: account.last_name,
+            email: account.email,
+            phone: account.phone,
+            gender: account.gender,
+            position_id: account.position_id,
+            role: usrRole.name,
+            avatar: account.photo.avatar
+        }
+
+        let usr = { id: account.id, department_id: account.position.department_id }
+        accessToken = jwt.sign(usr,
+            TOKEN_KEY, {
+                expiresIn: "2h",
+            }
+        );
+        refreshToken = jwt.sign(usr, REFRESH_TOKEN_KEY, { expiresIn: "3h" })
+            // save user token
+        user.update({
+                refresh_token: refreshToken
+            }, {
+                where: { id: id },
+            })
+            .then(result => {
+                return res.status(200).json({
+                        userData: replyUser,
+                        accessToken: accessToken,
+                        refreshToken: refreshToken
+                    })
+            }).catch(error => {
+                return res.status(500).json({
+                    message: error
+                })
+            })
+
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message
+        })
+    }
+    
+}
 
 module.exports = self

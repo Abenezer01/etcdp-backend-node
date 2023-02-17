@@ -112,5 +112,39 @@ self.delete = async(req, res) => {
     }
 }
 
+self.getParentDepartment = async(req, res) => {
+    try {
+        let data = await department.findOne({
+            where: {
+                parent_department_id: null
+            }
+        })
+
+        if(data){
+           return res.json(data)
+        }
+    } catch (error) {
+        return res.json({
+            message: error.message
+        })
+    }
+}
+
+self.getDepartmentPositions = async(req, res) => {
+    try {
+        let id = req.params.id 
+
+        let positions = await position.findAll({
+            where: {
+                department_id: id
+            }
+        })
+        return res.json(positions)
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message
+        })
+    }
+}
 
 module.exports = self;
