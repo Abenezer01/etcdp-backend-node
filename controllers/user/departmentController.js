@@ -71,6 +71,15 @@ self.save = async(req, res) => {
         if(data){
             let us = "e1594d67-3aa2-429b-bb77-2e4ecc2124f8"
             saveActionState(data.id, "department", "REGISTER", us)
+            
+            let pos = await position.create({
+                department_id: data.id,
+                name: `Head of ${data.name}`,
+                description: "discr",
+                is_head: true,
+                role_id:"03963640-6675-4c68-a073-25ac309abd74"
+            })
+            saveActionState(pos.id, "position", "REGISTER", us)
         }
         return res.json(data)
     } catch (error) {
@@ -239,6 +248,93 @@ self.getStructure = async(req, res) => {
 	}
 }
 
+self.getDepartmentHead = async(req, res) => {
+    let id = req.params.id 
+    try {
+        let data = await department.findOne({
+            where: {
+                id: id
+            }
+        })
+        if(data) {
+            let pos = await position.findOne({
+                where: {
+                    department_id: data.id,
+                    is_head: true
+                }
+            })
+            if(pos){
+                let userpos = await userposition.findOne({
+                    where: {
+                        position_id: pos.id
+                    }
+                })
 
+                if(userpos){
+                    let usr = await user.findOne({
+                        where: {
+                            id: userpos.user_id
+                        }
+                    })
+
+                    return res.json(usr)
+                }else{
+                    return res.status(404).json({
+                        message: "User Position not found!"
+                    })
+                }
+            }else{
+                return res.status(404).json({
+                    message: "Position not found!"
+                })
+            }
+        }else{
+            return res.status(404).json({
+                message: "Department not found!"
+            })
+        }
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message
+        })
+    }
+}
+
+//to routing and bread crump
+
+let all = []
+self.getToRoot = async(req, res) => {
+	try {
+		let id = req.params.id 
+		let data = await department.findAll()
+		await self.getPath(data, id)
+		return res.json(all)
+	} catch (error) {
+		return res.status(500).json({
+			message: error.message
+		})
+	}
+}
+
+self.getPath = async (arr, x) => {
+	all = []
+    for(var i=0; i<arr.length; i++){
+        if(arr[i].id== x){
+            self.getPath(arr, arr[i].parent_department_id);
+            if(arr[i].parent_department_id !== null){
+					let child = await department.findOne({
+						where: {
+							id: arr[i].parent_department_id
+						}
+					})
+			        all.push(child);
+			        // all.push(arr[i].parent_department_id);
+            }
+            
+
+        }
+    }
+
+}
 
 module.exports = self;

@@ -50,6 +50,13 @@ module.exports = (sequelize, DataTypes) => {
         refresh_token: DataTypes.STRING,
         photo_id: DataTypes.UUID,
         revision_no: DataTypes.INTEGER,
+        full_name: {
+            type: DataTypes.VIRTUAL,
+            get() {
+              return this.first_name +" " + this.middle_name;
+            },
+            
+        },
 
     }, {
         sequelize,

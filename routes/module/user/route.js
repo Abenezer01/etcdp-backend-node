@@ -18,7 +18,6 @@ module.exports = function(express) {
 
     route.post("/assign-user-position", userController.assignPosition);
     route.get("/disable-user-position/:id", userController.dePosition);
-
 	route.get("/switch-account/:position_id", userController.switchAccount);
 
     
@@ -27,7 +26,7 @@ module.exports = function(express) {
     route.get("/position/:id", positionController.get);
     route.get("/position_search", positionController.search);
     route.post("/position", validateInput.positionValidate, positionController.save);
-    route.put("/position/:id", validateInput.positionValidate, positionController.update);
+    route.put("/position/:id", positionController.update);
     route.delete("/position/:id", positionController.delete);
     route.get("/department-positions/:id", positionController.getDepartmentPositions);
 
@@ -44,6 +43,10 @@ module.exports = function(express) {
 
     route.get("/search-department/:id?", departmentController.getParentOrGivenId);
 	route.get("/office-structure", departmentController.getStructure);
+	route.get("/department-head/:id", departmentController.getDepartmentHead);
+	route.get("/all-parents/:id", departmentController.getToRoot);
+
+    
 
 
 

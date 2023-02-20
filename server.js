@@ -1,14 +1,20 @@
 const express = require('express');
 const polymorphicRoute = require('./routes/module/polymorphic/route');
-const userRoute = require('./routes/module/user/route');
-const loginRoute = require('./routes/module/auth/route');
-const stakeCategory = require('./routes/module/stakeholder/route')
+
 
 const project = require('./routes/module/project/route')
 const constructionresource = require('./routes/module/construction resource/route')
 const document = require('./routes/module/document/route')
 
-const ProjectRoute = require('./routes/module/project/route')
+const projectRoute = require('./routes/module/project/route')
+const userRoute = require('./routes/module/user/route');
+const departmentRoute = require('./routes/module/user/route');
+const loginRoute = require('./routes/module/auth/route');
+const stakeholderRoute = require('./routes/module/stakeholder/route')
+
+const resourceRoute = require('./routes/module/construction resource/route')
+const documentRoute = require('./routes/module/document/route')
+
 
 const route_view = require('./routes/route_view');
 const cors = require('cors');
@@ -29,9 +35,16 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/public', express.static('public'))
 app.set('view engine', 'ejs');
 
-app.use("/api", userRoute(express), polymorphicRoute(express), loginRoute(express), stakeCategory(express), project(express), constructionresource(express), document(express));
+app.use("/api", userRoute(express), polymorphicRoute(express), loginRoute(express), stakeholderRoute(express), project(express), constructionresource(express), document(express));
 
 //app.use("/api", userRoute(express), polymorphicRoute(express), loginRoute(express), stakeCategory(express), ProjectRoute(express));
+app.use('/api/departments', departmentRoute(express))
+app.use('/api/accounts', loginRoute(express))
+app.use('/api/projects', projectRoute(express))
+app.use('/api/stakeholders', stakeholderRoute(express))
+app.use('/api/resources', resourceRoute(express))
+app.use('/api/document', documentRoute(express))
+
 
 app.use("/",route_view(express));
 

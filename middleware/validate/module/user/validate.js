@@ -34,7 +34,7 @@ const createUser = async(req, res, next) => {
         "middle_name": "required|string",
         "last_name": "required|string",
         "phone": "required|string",
-        "password": "required|string|min:6",
+        "password": "string|min:6",
         "gender": "string"
     };
 
@@ -50,7 +50,7 @@ const positionValidate = async(req, res, next) => {
     const validationRule = {
         "department_id": "required|string",
         "name": "required|string",
-        "is_head": "required|boolean",
+        "is_head": "boolean",
         "role_id": "required|string"
     };
 
