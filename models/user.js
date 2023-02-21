@@ -74,10 +74,10 @@ module.exports = (sequelize, DataTypes) => {
             foreignKey: 'user_id',
             as: 'positions',
         });
-        user.belongsTo(models.position, {
-            as: "position",
-            foreignKey: "position_id"
-        })
+        // user.belongsTo(models.position, {
+        //     as: "position",
+        //     foreignKey: "position_id"
+        // })
         user.belongsTo(models.photo, {
             as: "photo",
             foreignKey: "photo_id"

@@ -190,7 +190,7 @@ self.getStructure = async(req, res) => {
         //     department_id: 
         // }
 		let departments = await department.findAll()
-        
+
 		let arr = []
 		for(let dept of departments){
             let posi = await userposition.findAll({
@@ -269,12 +269,15 @@ self.getDepartmentHead = async(req, res) => {
 
                 if(userpos){
                     let usr = await user.findOne({
+                        attributes:['full_name', 'first_name', 'middle_name', 'last_name'],
                         where: {
                             id: userpos.user_id
                         }
                     })
+                    let temp = usr.toJSON()
+                    temp.position_name = pos.name
 
-                    return res.json(usr)
+                    return res.json(temp)
                 }else{
                     return res.status(404).json({
                         message: "User Position not found!"

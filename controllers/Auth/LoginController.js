@@ -4,6 +4,9 @@ const {
     role,
     department,
     photo,
+    useremail,
+    userposition,
+    userphone,
     Sequelize
 } = require("../../models");
 const dotenv = require('dotenv');
@@ -24,13 +27,44 @@ self.loginUser = async(request, response) => {
     let userData
     let usrRole
     try {
+        let usEmail = await useremail.findOne({
+            where:{
+                email: email,
+                is_primary: true
+            }
+        })
+
+        if(!usEmail){
+            return response.status(404).json({
+                message: "User not found!"
+            })
+        }
+
+        let usPos = await userposition.findOne({
+            where:{
+                user_id: usEmail.user_id,
+                is_primary: true
+            }
+        })
+        if(!usEmail){
+            return response.status(404).json({
+                message: "User has no primary position!"
+            })
+        }
+
+        let usPhone = await userphone.findOne({
+            where:{
+                user_id: usEmail.user_id,
+                is_primary: true
+            }
+        })
         userData = await user.findOne({
             where: {
-                email: email
+                id: usEmail.user_id
             },
             include: [{
-                    model: position,
-                    as: "position"
+                    model: userposition,
+                    as: "positions"
                 },
                 {
                     model: photo,
@@ -43,28 +77,37 @@ self.loginUser = async(request, response) => {
                 message: "Email address doesn't exit"
             })
         } else {
+            
+
             usr = userData
             id = usr.id
             usrPass = usr.password
-            usrPositionID = usr.position_id
+            usrPositionID = usPos.position_id
         }
         //console.log("The position user", userData)
+
+        let pos = await position.findOne({
+            where: {
+                id: usPos.position_id
+            }
+        })
         usrRole = await role.findOne({
             where: {
-                id: userData.position.role_id
+                id: pos.role_id
             }
         })
         console.log("The user role is", usrRole)
         ur = { id: usrRole.id, name: usrRole.name }
             //dep = { id: usrDepartment.id, name: usrDepartment.name }
+
         replyUser = {
                 first_name: userData.first_name,
                 middle_name: userData.middle_name,
                 last_name: userData.last_name,
-                email: userData.email,
-                phone: userData.phone,
+                email: usEmail.email,
+                phone: usPhone? null:usPhone.phone,
                 gender: userData.gender,
-                position_id: userData.position_id,
+                position_id: usPos.position_id,
                 role: ur.name,
                 avatar: userData.photo.avatar
             }
@@ -73,7 +116,8 @@ self.loginUser = async(request, response) => {
 
         bcrypt.compare(password, usrPass, function(err, result) {  
             if (result) { 
-                usr = { id: id, department_id: userData.position.department_id }
+                usr = { id: id, department_id: pos.department_id }
+
                 accessToken = jwt.sign(usr,
                     TOKEN_KEY, {
                         expiresIn: "2h",
