@@ -19,19 +19,19 @@ module.exports = {
             last_name: {
                 type: Sequelize.STRING
             },
-            email: {
-                type: Sequelize.STRING,
-                unique: true,
-                allowNull: false
-            },
+            // email: {
+            //     type: Sequelize.STRING,
+            //     unique: true,
+            //     allowNull: false
+            // },
             password: {
                 type: Sequelize.STRING
             },
-            phone: {
-                type: Sequelize.STRING,
-                allowNull: false,
-                unique: true
-            },
+            // phone: {
+            //     type: Sequelize.STRING,
+            //     allowNull: false,
+            //     unique: true
+            // },
             gender: Sequelize.STRING,
             marital_status: Sequelize.BOOLEAN,
             partner_name: Sequelize.STRING,
@@ -39,16 +39,16 @@ module.exports = {
                 type: Sequelize.DATE,
                 allowNull: false
             },
-            position_id: {
-                type: Sequelize.UUID,
-                allowNull: false,
-                references: {
-                    model: 'positions',
-                    key: 'id'
-                },
-                onUpdate: 'CASCADE',
-                onDelete: 'CASCADE',
-            },
+            // position_id: {
+            //     type: Sequelize.UUID,
+            //     allowNull: false,
+            //     references: {
+            //         model: 'positions',
+            //         key: 'id'
+            //     },
+            //     onUpdate: 'CASCADE',
+            //     onDelete: 'CASCADE',
+            // },
             photo_id: {
                 type: Sequelize.UUID,
                 references: {

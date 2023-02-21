@@ -176,45 +176,59 @@ self.search = async(req, res) => {
 
 self.save = async(req, res) => {
     try {
+        let body = req.body
         const salt = await bcrypt.genSalt(10);
         var usr = {
-            first_name: req.body.first_name,
-            last_name: req.body.last_name,
-            middle_name: req.body.middle_name,
+            first_name: body.first_name,
+            last_name: body.last_name,
+            middle_name: body.middle_name,
             
-            gender: req.body.gender,
-            marital_status: req.body.marital_status,
-            partner_name: req.body.partner_name,
-            birth_date: req.body.birth_date,
-            revision_no: req.body.revision_no,
-            password: await bcrypt.hash(req.body.password, salt)
+            gender: body.gender,
+            marital_status: body.marital_status,
+            partner_name: body.partner_name,
+            birth_date: body.birth_date,
+            revision_no: body.revision_no,
+            // password: await bcrypt.hash(body.password, salt)
         };
         created_user = await user.create(usr);
+        let us = "e1594d67-3aa2-429b-bb77-2e4ecc2124f8"
         
         if (created_user) {
             //create position
             let usemail = await useremail.create({
                 user_id: created_user.id,
-                email: req.body.email
+                email: body.email,
+                is_primary:true
             })
-            saveActionState(usemail.id, "useremail", "REGISTER", created_user.id)
+            if(usemail) {
+                saveActionState(usemail.id, "useremail", "REGISTER", us)
+            }
 
             let usphone = await userphone.create({
                 user_id: created_user.id,
-                phone: req.body.phone
+                phone: body.phone,
+                is_primary:true
             })
-            saveActionState(usphone.id, "userphone", "REGISTER", created_user.id)
+            if(usphone) {
+                saveActionState(usphone.id, "userphone", "REGISTER", us)
+            }
 
-            let uspos = await userposition.create({
-                user_id: created_user.id,
-                department_id: req.body.department_id,
-                position_id: req.body.position_id
+            let pos = await position.findOne({
+                where: {
+                    id: body.position_id
+                }
             })
-            saveActionState(uspos.id, "userposition", "REGISTER", created_user.id)
-
-            let usr = await usrData.userData(req, res)
-            let us = usr.usrID
-                // let us = "e1594d67-3aa2-429b-bb77-2e4ecc2124f8"
+            if(pos){
+                let uspos = await userposition.create({
+                    user_id: created_user.id,
+                    department_id: pos.department_id,
+                    position_id: body.position_id,
+                    is_primary:true
+                })
+                if(uspos) {
+                    saveActionState(uspos.id, "userposition", "REGISTER", us)
+                }
+            }
             saveActionState(created_user.id, "user", "REGISTER", us)
         }
 
@@ -307,7 +321,6 @@ self.assignPosition = async(req, res) => {
         let existing = await userposition.findOne({
 			where: {
 				user_id: body.user_id,
-				department_id: body.department_id,
 				position_id: body.position_id,
 			}
 		})	
@@ -317,7 +330,15 @@ self.assignPosition = async(req, res) => {
 				message: "User Already assigned this position"
 			})
 		}else{
+            let pos = await position.findOne({
+                where: {
+                    id: body.position_id
+                }
+            })
 			let data = await userposition.create(body)
+            data.department_id = pos.department_id 
+            await data.save()
+
 			return res.status(200).json(data)
 		}
     } catch (error) {

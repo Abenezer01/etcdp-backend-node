@@ -29,7 +29,6 @@ module.exports = {
       },
       department_id: {
         type: Sequelize.UUID,
-        allowNull: false,
         references: {
           model: 'departments',
           key: 'id'
@@ -50,6 +49,10 @@ module.exports = {
       status: {
         type: Sequelize.BOOLEAN,
         defaultValue: true,
+      },
+      is_primary: {
+        type: Sequelize.BOOLEAN, 
+        allowNull: false
       },
       createdAt: {
         allowNull: false,

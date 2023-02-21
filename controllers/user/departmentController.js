@@ -189,11 +189,8 @@ self.getStructure = async(req, res) => {
         //     id: "",
         //     department_id: 
         // }
-		let departments = await department.findAll({
-			// where: {
-			// 	company_id: us.company_id 
-			// }
-		})
+		let departments = await department.findAll()
+        
 		let arr = []
 		for(let dept of departments){
             let posi = await userposition.findAll({

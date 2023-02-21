@@ -3,6 +3,7 @@ const roleController = require("../../../controllers/user/roleController.js")
 const userPhotoController = require("../../../controllers/user/userPhotoController.js")
 const positionController = require("../../../controllers/user/positionController.js")
 const departmentController = require("../../../controllers/user/departmentController.js")
+const TestController = require("../../../controllers/TestController.js")
 const validateInput = require("../../../middleware/validate/module/user/validate")
 module.exports = function(express) {
     const route = express.Router();
@@ -63,5 +64,9 @@ module.exports = function(express) {
     route.post("/photo/:id", userPhotoController.save);
     route.put("/photo/:id", validateInput.userPhotoValidate, userPhotoController.update);
     route.delete("/photo/:id", validateInput.userPhotoValidate, userPhotoController.delete);
+
+    //test
+    route.get("/test", TestController.getAll);
+
     return route;
 };

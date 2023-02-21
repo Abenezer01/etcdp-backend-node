@@ -27,12 +27,15 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     department_id: {
-      type: DataTypes.UUID,
-      allowNull: false
+      type: DataTypes.UUID
     },
     position_id: {
       type: DataTypes.UUID,
       allowNull: false
+    },
+    is_primary: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
     },
     status: {
       type: DataTypes.BOOLEAN,
