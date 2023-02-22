@@ -5,12 +5,53 @@ module.exports = {
     await queryInterface.createTable('educationstatuses', {
       id: {
         allowNull: false,
-        autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.UUID
       },
       parent_id: {
         type: Sequelize.UUID
+      },
+      education_level: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      field_of_study: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      school_name: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      start_date: {
+        type: Sequelize.DATE,
+        allowNull: false
+      },
+      end_date: Sequelize.DATE,
+      user_id: {
+        type: Sequelize.UUID,
+        allowNull: false,
+        references: {
+          model: 'users',
+          key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
+      },
+      address_id: {
+        type: Sequelize.UUID,
+        references: {
+          model: 'addresses',
+          key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
+      },
+      gpa: {
+        type: Sequelize.DOUBLE
+      },
+      description: {
+        type: Sequelize.TEXT
       },
       createdAt: {
         allowNull: false,

@@ -54,7 +54,7 @@ self.loginUser = async(request, response) => {
 
         let usPhone = await userphone.findOne({
             where:{
-                user_id: usEmail.user_id,
+            user_id: usEmail.user_id,
                 is_primary: true
             }
         })
@@ -116,7 +116,7 @@ self.loginUser = async(request, response) => {
 
         bcrypt.compare(password, usrPass, function(err, result) {  
             if (result) { 
-                usr = { id: id, department_id: pos.department_id }
+                usr = { id: id, department_id: pos.department_id, position_id: pos.id}
 
                 accessToken = jwt.sign(usr,
                     TOKEN_KEY, {

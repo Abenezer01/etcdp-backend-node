@@ -183,12 +183,8 @@ self.getParentOrGivenId = async(req, res) => {
 
 self.getStructure = async(req, res) => {
 	try {
-		// let us = req.decoded 
-
-        // let us = {
-        //     id: "",
-        //     department_id: 
-        // }
+		let id = req.params.id 
+        
 		let departments = await department.findAll()
 
 		let arr = []
@@ -335,6 +331,87 @@ self.getPath = async (arr, x) => {
         }
     }
 
+}
+
+let children = []
+self.getAllChildren = async(arr) => {
+
+	for(var i=0; i<arr.length; i++){
+		let dd = await department.findAll({
+			where: {
+				parent_department_id: arr[i].id
+			}
+		})
+		if(dd.length > 0){
+			children.concat(dd)
+			self.getChildren(dd)
+		}
+	}
+	return children;
+}
+
+self.getChildren = async(req, res) => {
+	let id = req.params.id
+	try {
+		let data = await department.findAll({
+			where: {
+				parent_department_id: id
+			}
+		})
+		let all = await self.getAllChildren(data)
+		Array.prototype.push.apply(all,data);
+        let arr = []
+        for(let dept of all){
+            let posi = await userposition.findAll({
+                attributes: ["user_id"],
+                where: {
+                    department_id: dept.id
+                }
+            })
+    
+            let userId = [ ...new Set(posi.map((item)=> item.user_id))].filter(n=>n)
+            
+            let staffs = await user.findAndCountAll({
+                where: {
+                    id: {
+                        [Op.in]: userId
+                    }
+                }
+            })
+
+
+            let pos = await position.findOne({
+				where: {
+					department_id: dept.id,
+					is_head: true
+				}
+			})
+
+			
+			let head = null 
+			if(pos){
+				head = await user.findOne({
+					where: {
+						position_id: pos.id
+					}
+				})
+			}
+			arr.push({
+				id: dept.id,
+				parentNodeId: dept.parent_department_id,
+				name: dept.name,
+				head: head? head: null,
+				staff_no: staffs.count
+			})
+        }
+        
+		return res.json(arr)
+
+	} catch (error) {
+		return res.status(500).json({
+			message: error.message
+		})
+	}
 }
 
 module.exports = self;
