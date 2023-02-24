@@ -31,7 +31,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DATE,
       allowNull: false
     },
-    family_status_id: DataTypes.INTEGER
+    family_status_id: DataTypes.UUID
   }, {
     sequelize,
     modelName: 'child',

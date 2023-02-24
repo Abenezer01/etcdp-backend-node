@@ -19,6 +19,7 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       defaultValue: DataTypes.UUIDV4
     },
+
     parent_id: {
       type: DataTypes.UUID
     },
@@ -58,7 +59,13 @@ module.exports = (sequelize, DataTypes) => {
     user_id: {
       type: DataTypes.UUID,
       allowNull: false
-    }
+    },
+    full_name: {
+      type: DataTypes.VIRTUAL,
+      get() {
+        return this.first_name +" " + this.middle_name;
+      },
+    },
   }, {
     sequelize,
     modelName: 'contactperson',

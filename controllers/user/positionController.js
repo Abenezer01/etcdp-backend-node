@@ -16,11 +16,6 @@ self.getAll = async(req, res) => {
         })
 
     } catch (error) {
-        // if (err.message === 'Error') {
-        //     res.status(500).json({
-        //         message: error.message
-        //     })
-        // }
         res.status(500).json({
             message: error.message
         })
@@ -70,6 +65,7 @@ self.save = async(req, res) => {
         if(data){
             let us = "e1594d67-3aa2-429b-bb77-2e4ecc2124f8"
             saveActionState(data.id, "position", "REGISTER", us)
+            
         }
         return res.json(data)
     } catch (error) {

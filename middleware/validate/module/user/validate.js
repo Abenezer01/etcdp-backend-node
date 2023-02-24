@@ -56,6 +56,27 @@ const positionValidate = async(req, res, next) => {
 
     await validateReply.validateReply(req.body, validationRule, res, next)
 }
+
+const educationStatusValidate = async(req, res, next) => {
+    let param = await validateReply.checkParam(req, res, next)
+    if (param == "failed") {
+        return res.status(400).json({
+            message: "Invalid id"
+        })
+    }
+    const validationRule = {
+        "education_level": "required|string",
+        "field_of_study": "required|string",
+        "school_name": "required|string",
+        "start_date": "required|date",
+        "end_date": "required|date",
+        "user_id": "required|string",
+        "address_id": "required|string",
+        "gpa": "required|string"
+    };
+
+    await validateReply.validateReply(req.body, validationRule, res, next)
+}
 const departmentValidate = async(req, res, next) => {
     let param = await validateReply.checkParam(req, res, next)
     if (param == "failed") {
@@ -109,5 +130,6 @@ module.exports = {
     userPhotoValidate,
     positionValidate,
     departmentValidate,
-    roleValidate
+    roleValidate,
+    educationStatusValidate
 };

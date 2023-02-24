@@ -104,6 +104,21 @@ self.delete = async(req, res) => {
         })
     }
 }
+self.getByUserId = async(req, res) => {
+    try {
+        let id = req.params.id
+        let data = await educationstatus.findAll({
+            where: {
+                user_id: id
+            }
+        })
 
+        return res.json(data)
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message
+        })
+    }
+}
 
 module.exports = self;

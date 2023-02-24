@@ -353,6 +353,11 @@ self.getAllChildren = async(arr) => {
 self.getChildren = async(req, res) => {
 	let id = req.params.id
 	try {
+        let parent = await department.findOne({
+            where: {
+                id: id
+            }
+        })
 		let data = await department.findAll({
 			where: {
 				parent_department_id: id
@@ -360,6 +365,7 @@ self.getChildren = async(req, res) => {
 		})
 		let all = await self.getAllChildren(data)
 		Array.prototype.push.apply(all,data);
+        all.unshift(parent)
         let arr = []
         for(let dept of all){
             let posi = await userposition.findAll({
@@ -404,8 +410,13 @@ self.getChildren = async(req, res) => {
 				staff_no: staffs.count
 			})
         }
-        
-		return res.json(arr)
+
+        // arr.find(department => department.id==id).parentNodeId=null
+        // return res.json(arr)
+        const container = arr.map(department =>
+            department.id === id ? { ...department, parentNodeId: null } : department
+        );
+		return res.json(container)
 
 	} catch (error) {
 		return res.status(500).json({

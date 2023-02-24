@@ -6,6 +6,7 @@ const {
     userposition,
     useremail,
     userphone,
+    department,
     photo,
     role,
     sequelize,
@@ -107,6 +108,10 @@ self.getAlll = async(req, res) => {
     // let one = "Ss"
     // let queryString = `SELECT * FROM users as U WHERE U.id=${one};`
 self.getAll = async(req, res) => {
+
+    let data = await user.findAll()
+
+    return res.json(data)
     // let one = "12c85269-9dc5-4e89-8d47-62719baea7ed"
     // let queryString = `SELECT first_name FROM users as U WHERE U.id='${one}';`
     let queryString = "SELECT *  FROM users as U JOIN actionstates as A WHERE U.id=A.model_id AND A.action='REGISTER';"
@@ -130,9 +135,30 @@ self.get = async(req, res) => {
                 id: id
             }
         });
-        return res.status(200).json({
-            data: data
-        })
+
+        if(data){
+            let usEmail = await useremail.findOne({
+                where: {
+                    user_id: data.id,
+                    is_primary: true
+                }
+            })
+
+            let usPhone = await userphone.findOne({
+                where: {
+                    user_id: data.id,
+                    is_primary: true
+                }
+            })
+
+            let temp = data.toJSON()
+            temp.email = usEmail ? usEmail.email  : null
+            temp.phone = usPhone ? usPhone.phone  : null
+            return res.json(temp)
+
+        }
+        
+       
     } catch (error) {
         res.status(500).json({
             message: error.message
@@ -321,14 +347,26 @@ self.assignPosition = async(req, res) => {
         let existing = await userposition.findOne({
 			where: {
 				user_id: body.user_id,
-				position_id: body.position_id,
+				position_id: body.position_id
 			}
 		})	
 		
 		if(existing){
-			return res.status(302).json({
-				message: "User Already assigned this position"
-			})
+            if(existing.status){
+                return res.status(302).json({
+                    message: "User Already assigned this position"
+                })
+            }else{
+
+                await userposition.update({status: true}, {
+                    where: {
+                        id: existing.id
+                    }
+                })
+                return res.status(200).json({
+                    message: "Position enabled!"
+                })
+            }
 		}else{
             let pos = await position.findOne({
                 where: {
@@ -336,6 +374,7 @@ self.assignPosition = async(req, res) => {
                 }
             })
 			let data = await userposition.create(body)
+            data.status = true
             data.department_id = pos.department_id 
             await data.save()
 
@@ -347,7 +386,6 @@ self.assignPosition = async(req, res) => {
         })
     }
 }
-
 
 self.dePosition = async(req, res) =>  {
 	try {
@@ -471,6 +509,44 @@ self.switchAccount = async(req, res) => {
         })
     }
     
+}
+
+self.getAllUserPositions = async(req, res) => {
+    try {
+        let id = req.params.id 
+
+        let data = await userposition.findAll({
+            where: {
+                user_id: id
+            }
+        })
+        
+        let arr = [] 
+
+        for(let usrpos of data) {
+            let pos = await position.findOne({
+                where: {
+                    id: usrpos.position_id
+                }
+            })
+            let dept = await department.findOne({
+                where: {
+                    id: usrpos.department_id
+                }
+            })
+
+            let temp = usrpos.toJSON() 
+            temp.position_name = pos?pos.name: null
+            temp.department_name = dept?dept.name: null
+            arr.push(temp)
+        }
+
+        return res.json(arr)
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message
+        })
+    }
 }
 
 module.exports = self

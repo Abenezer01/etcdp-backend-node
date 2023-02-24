@@ -1,8 +1,10 @@
 const {
     permission,
+    rolepermission,
     Sequelize
 } = require("../../models");
 const { saveActionState } = require("../../utils/helper");
+const master = require("./../../config/master")
 
 const Op = Sequelize.Op;
 
@@ -111,5 +113,178 @@ self.delete = async(req, res) => {
     }
 }
 
+self.initPermission = async(req, res) => {
+    try {
+        let permissions = master.models 
 
+        for(let per of permissions){
+
+            await permission.create({
+                name: per,
+                model: per,
+                module: "project"
+            })
+        }
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message
+        })
+    }
+}
+
+self.getModels = async (req, res) => {
+	try {
+        let models = master.models
+        return res.json(models)
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message
+        })
+    }
+}
+
+self.getPermissionsByModule = async(req, res) => {
+    try {
+        let module = req.params.module
+        let data = await permission.findAll({
+            where: {
+                module: module
+            }
+        })
+        return res.json(data)
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message
+        })
+    }
+}
+self.getGroupedPermissions = async (req, res) => {
+	
+	let id = req.params.id
+	let module = req.params.module
+
+	try {
+		
+		let rolePos = await rolepermission.findAll({
+            where: {
+                role_id: id 
+            }
+        })
+		
+        return res.json(rolePos)
+		let ePermissions = await permission.findAll({
+			where: {
+				module:module
+			}
+		})
+
+
+		if(ePermissions.length == 0){
+			//if no permission under this module doesnt exist
+			//return empty array []
+			return res.json([])
+		}
+
+		let permissions = []
+        
+		for(let pos of rolePos){
+			let per = await permission.findOne({
+				where: {
+					id:pos.permission_id,
+					module:module
+				}
+			})
+
+			if(per != null){
+				permissions.push(per.name)
+			}
+			
+		}
+	
+		let newArray = []
+		for(let per of ePermissions){
+			if(permissions.includes(per.name)){
+				newArray.push({
+					id: per.id,
+				    name: per.name,
+					model: per.model,
+					module: per.module,
+					is_selected: true,
+					createdAt: per.createdAt,
+					updatedAt: per.updatedAt
+				})
+			}else{
+				newArray.push({
+					id: per.id,
+				    name: per.name,
+					model: per.model,
+					module: per.module,
+					is_selected: false,
+					createdAt: per.createdAt,
+					updatedAt: per.updatedAt
+				})
+
+			}
+		}
+
+
+			let arr = []
+		
+			let pers = await permission.findAll({
+				where: {
+					module: module
+				}
+			})
+			
+			let model = models.models
+
+			for(let mod of model){
+				let x = pers.filter((item)=> item.model==mod)
+				if(x.length != 0){
+
+					let newArray = []
+					for(let per of x){
+						if(permissions.includes(per.name)){
+							newArray.push({
+								id: per.id,
+								name: per.name,
+								model: per.model,
+								module: per.module,
+								is_selected: true,
+								createdAt: per.createdAt,
+								updatedAt: per.updatedAt
+							})
+						}else{
+							newArray.push({
+								id: per.id,
+								name: per.name,
+								model: per.model,
+								module: per.module,
+								is_selected: false,
+								createdAt: per.createdAt,
+								updatedAt: per.updatedAt
+							})
+
+						}
+					}
+					
+					// return res.json(newArray)
+					if(newArray.length !=0){
+						let ele = {
+							model: mod,
+							permissions: newArray
+						}
+						// ele[mod] =newArray 
+						arr.push(ele)
+					}
+				}	
+			}
+			
+		return res.json(arr)
+
+	} catch (error) {
+		
+	}
+	
+}
 module.exports = self;

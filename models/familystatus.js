@@ -24,7 +24,10 @@ module.exports = (sequelize, DataTypes) => {
     },
     status: DataTypes.STRING,
     partner_name: DataTypes.STRING,
-    user_id: DataTypes.UUID
+    user_id: {
+      type: DataTypes.UUID,
+      allowNull: false
+    }
   }, {
     sequelize,
     modelName: 'familystatus',

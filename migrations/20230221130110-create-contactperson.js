@@ -11,23 +11,39 @@ module.exports = {
       parent_id: {
         type: Sequelize.UUID
       },
-      education_level: {
+      first_name: {
         type: Sequelize.STRING,
         allowNull: false
       },
-      field_of_study: {
+      middle_name: {
         type: Sequelize.STRING,
         allowNull: false
       },
-      school_name: {
+      last_name: {
         type: Sequelize.STRING,
         allowNull: false
       },
-      start_date: {
-        type: Sequelize.DATE,
+      gender: {
+        type: Sequelize.STRING,
         allowNull: false
       },
-      end_date: Sequelize.DATE,
+      email: {
+        type: Sequelize.STRING,
+        unique: true,
+        allowNull: false
+      },
+      phone_number: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      employer_company: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      type: {
+        type: Sequelize.STRING,
+        default: "Emergency Contact"
+      },
       user_id: {
         type: Sequelize.UUID,
         allowNull: false,
@@ -37,18 +53,7 @@ module.exports = {
         },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
-      },
-      address_id: {
-        type: Sequelize.UUID,
-        references: {
-          model: 'addresses',
-          key: 'id'
-        },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE',
-      },
-      gpa: {
-        type: Sequelize.DOUBLE
+      
       },
       createdAt: {
         allowNull: false,
