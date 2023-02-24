@@ -19,6 +19,7 @@ const jwt = require("jsonwebtoken");
 let self = {};
 let ACCESS_TOKEN_KEY = process.env.ACCESS_TOKEN_KEY;
 let REFRESH_TOKEN_KEY = process.env.REFRESH_TOKEN_KEY;
+let TOKEN_MAX_AGE = process.env.TOKEN_MAX_AGE
 
 self.refreshToken = async(request, response, next) => {
     //console.log("The header", request.headers.authorization);
@@ -80,6 +81,7 @@ self.refreshToken = async(request, response, next) => {
         })
 
         replyUser = {
+            id: usr.id,
             first_name: usr.first_name,
             middle_name: usr.middle_name,
             last_name: usr.last_name,
@@ -87,6 +89,7 @@ self.refreshToken = async(request, response, next) => {
             phone: usPhone ? usPhone.phone:null,
             gender: usr.gender,
             position_id: positionId,
+            position_name: pos.name,
             role: rol.name,
             avatar: usr.photo.avatar
         }
@@ -100,11 +103,11 @@ self.refreshToken = async(request, response, next) => {
             // console.log("The position id is", positionID)
         payload = {  id: userId, department_id: departmentId, position_id: positionId }
         const access_tokener = jwt.sign(payload, ACCESS_TOKEN_KEY, {
-            expiresIn: "2h",
+            expiresIn: TOKEN_MAX_AGE,
         });
 
         const refreshtokener = jwt.sign(payload, REFRESH_TOKEN_KEY, {
-            expiresIn: "3h"
+            expiresIn: TOKEN_MAX_AGE
         })
         await user.update({
                 refresh_token: refreshtokener
@@ -112,18 +115,11 @@ self.refreshToken = async(request, response, next) => {
                 where: { id: userId },
             })
             .then(result => {
-
-
-                //console.log('success', result);
-                // response.cookie('accessToken', access_tokener);
-                // response.cookie('refreshToken', refreshtokener);
                 return response.status(200).json({
                         userData: replyUser,
                         accessToken: access_tokener,
                         refreshToken: refreshtokener
                     })
-                    // return result;
-
 
             }).catch(error => {
                 return response.status(500).json({

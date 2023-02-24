@@ -61,7 +61,7 @@ self.search = async(req, res) => {
 self.save = async(req, res) => {
     try {
         let body = req.body;
-        let data = await position.create(body);
+        let data = await position.create(body); 
         if(data){
             let us = "e1594d67-3aa2-429b-bb77-2e4ecc2124f8"
             saveActionState(data.id, "position", "REGISTER", us)

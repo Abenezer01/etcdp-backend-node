@@ -429,12 +429,13 @@ self.dePosition = async(req, res) =>  {
 
 self.switchAccount = async(req, res) => {
 
-    let id = req.params.position_id 
     let accessToken
     let refreshToken
-
    
     try {
+
+        let body = req.body
+        let id = body.position_id 
 
         let userpos = await userposition.findOne({
             where:{ 
@@ -449,10 +450,6 @@ self.switchAccount = async(req, res) => {
                 id: user_id
             },
             include: [{
-                model: position,
-                as: "position"
-            },
-            {
                 model: photo,
                 as: "photo"
             },{
@@ -460,25 +457,46 @@ self.switchAccount = async(req, res) => {
                 as: "positions"
             }]
         })
+
+        let pos = await position.findOne({
+            where: {
+                id: userpos.position_id
+            }
+        })
         usrRole = await role.findOne({
             where: {
-                id: account.position.role_id
+                id: pos.role_id
+            }
+        })
+
+        let usEmail = await useremail.findOne({
+            where: {
+                user_id: account.id,
+                is_primary: true
+            }
+        })
+        let usPhone = await userphone.findOne({
+            where: {
+                user_id: account.id,
+                is_primary: true
             }
         })
        
         replyUser = {
+            id: account.id,
             first_name: account.first_name,
             middle_name: account.middle_name,
             last_name: account.last_name,
-            email: account.email,
-            phone: account.phone,
+            email: usEmail ? usEmail.email: null,
+            phone:  usPhone ? usPhone.phone: null,
             gender: account.gender,
-            position_id: account.position_id,
+            position_id: userpos.position_id,
+            position_name: pos.name,
             role: usrRole.name,
             avatar: account.photo.avatar
         }
 
-        let usr = { id: account.id, department_id: account.position.department_id }
+        let usr = { id: account.id, department_id: pos.department_id, position_id: pos.id }
         accessToken = jwt.sign(usr,
             TOKEN_KEY, {
                 expiresIn: "2h",

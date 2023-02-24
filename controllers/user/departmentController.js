@@ -9,6 +9,8 @@ const {
 
 const Op = Sequelize.Op;
 
+let master = require("../../config/master")
+
 let self = {};
 
 self.getAll = async(req, res) => {
@@ -80,6 +82,28 @@ self.save = async(req, res) => {
                 role_id:"03963640-6675-4c68-a073-25ac309abd74"
             })
             saveActionState(pos.id, "position", "REGISTER", us)
+
+            //default role and position
+            let allRoles = master.roleName
+
+            for(let ro of allRoles) {
+                let createdRole = await role.create({
+                    name: ro,
+                    department_id: data.id
+                })
+                if(createdRole){
+                    let createdPos = await position.create({
+                        name: ro,
+                        department_id: data.od,
+                        role_id: createdRole.id
+                    })
+                    if(createdPos) {
+                        saveActionState(createdPos.id, "position","REGISTER", us)
+                    }
+                    saveActionState(createdRole.id, "role","REGISTER", us)
+                }
+            }
+            
         }
         return res.json(data)
     } catch (error) {

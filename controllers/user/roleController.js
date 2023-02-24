@@ -1,5 +1,7 @@
 const {
     role,
+    rolepermission,
+    permission,
     Sequelize
 } = require("../../models");
 const { saveActionState } = require("../../utils/helper");
@@ -109,6 +111,50 @@ self.delete = async(req, res) => {
         })
     }
 }
+self.givePermission = async(req, res) => {
 
+	let id = req.params.id
+	
+	try {
+		let body = req.body	
+		let permissions = body.permissions
+		let rol = await role.findOne({
+			where: {
+				id:id
+			}
+		})
+
+
+		for(let per of permissions){
+			if(per.is_selected){
+				await rolepermission.findOrCreate({
+					where: {
+						permission_id: per.id,
+						role_id: rol.id
+					}	
+				})
+
+			}else{
+
+				await rolepermission.destroy({
+					where: {
+						permission_id:per.id
+					}
+				})
+
+			}
+				
+		}
+
+		return res.json({
+			message: "permissions are given to a role "
+		})
+		
+	} catch (error) {
+		return res.status(500).json({
+			message: error.message
+		})
+	}
+}
 
 module.exports = self;

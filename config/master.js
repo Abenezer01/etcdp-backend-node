@@ -90,6 +90,24 @@ let models = [
 
 ]
 
+let modules = [
+    "project",
+    "master",
+    "stakeholder",
+    "resource",
+    "document",
+    "analysis" // analysis can be further classified as project, stakeholder...
+]
+let roleName = [
+    "Admin", 
+    "Register", 
+    "Checker", 
+    "Approver", 
+    "Authorizer", 
+    "Viewer"
+]
+
 module.exports = {
-    models
+    models,
+    roleName
 }

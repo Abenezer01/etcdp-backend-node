@@ -27,7 +27,7 @@ module.exports = function(express) {
 
     route.post("/assign-user-position", userController.assignPosition);
     route.get("/disable-user-position/:id", userController.dePosition);
-	route.get("/switch-account/:position_id", userController.switchAccount);
+	route.post("/switch-account", userController.switchAccount);
     route.get("/user-positions/:id", userController.getAllUserPositions);
 
     
@@ -101,8 +101,8 @@ module.exports = function(express) {
     route.get("/education-status", EducationStatusController.getAll);
     route.get("/education-status/:id", EducationStatusController.get);
     route.get("/education-status-search", EducationStatusController.search);
-    route.post("/education-status", EducationStatusController.save);
-    route.put("/education-status/:id", EducationStatusController.update);
+    route.post("/education-status", validateInput.educationStatusValidate,  EducationStatusController.save);
+    route.put("/education-status/:id", validateInput.educationStatusValidate,  EducationStatusController.update);
     route.delete("/education-status/:id", roleController.delete);
 
     //child
@@ -110,24 +110,24 @@ module.exports = function(express) {
     route.get("/child", ChildController.getAll);
     route.get("/child/:id", ChildController.get);
     route.get("/child_search", ChildController.search);
-    route.post("/child", ChildController.save);
-    route.put("/child/:id", ChildController.update);
+    route.post("/child", validateInput.childValidate, ChildController.save);
+    route.put("/child/:id", validateInput.childValidate, ChildController.update);
     route.delete("/child/:id", ChildController.delete);
 
     //family status
     route.get("/family-status", FamilyStatusController.getAll);
     route.get("/family-status/:id", FamilyStatusController.get);
     route.get("/familyt-status-search", FamilyStatusController.search);
-    route.post("/family-status", FamilyStatusController.save);
-    route.put("/family-status/:id", FamilyStatusController.update);
+    route.post("/family-status", validateInput.familyStatusValidate, FamilyStatusController.save);
+    route.put("/family-status/:id", validateInput.familyStatusValidate, FamilyStatusController.update);
     route.delete("/family-status/:id", FamilyStatusController.delete);
 
       //Role route
     route.get("/contact-person", ContactPersonController.getAll);
     route.get("/contact-person/:id", ContactPersonController.get);
     route.get("/contact-person-search", ContactPersonController.search);
-    route.post("/contact-person", ContactPersonController.save);
-    route.put("/contact-person/:id", ContactPersonController.update);
+    route.post("/contact-person", validateInput.contactPersonValidate, ContactPersonController.save);
+    route.put("/contact-person/:id", validateInput.contactPersonValidate, ContactPersonController.update);
     route.delete("/contact-person/:id", ContactPersonController.delete);
     //job experience
 
@@ -135,8 +135,8 @@ module.exports = function(express) {
      route.get("/job-experience", JobExperienceController.getAll);
      route.get("/job-experience/:id", JobExperienceController.get);
      route.get("/job-experience-search", JobExperienceController.search);
-     route.post("/job-experience", JobExperienceController.save);
-     route.put("/job-experience/:id", JobExperienceController.update);
+     route.post("/job-experience", validateInput.jobExperienceValidate, JobExperienceController.save);
+     route.put("/job-experience/:id", validateInput.jobExperienceValidate, JobExperienceController.update);
      route.delete("/job-experience/:id", JobExperienceController.delete);
     
      //user hr routing

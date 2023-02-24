@@ -65,14 +65,91 @@ const educationStatusValidate = async(req, res, next) => {
         })
     }
     const validationRule = {
-        "education_level": "required|string",
+        "education_level": "string",
         "field_of_study": "required|string",
         "school_name": "required|string",
         "start_date": "required|date",
-        "end_date": "required|date",
+        "end_date": "date",
         "user_id": "required|string",
-        "address_id": "required|string",
-        "gpa": "required|string"
+        "address_id": "string",
+        "gpa": "numeric"
+    };
+
+    await validateReply.validateReply(req.body, validationRule, res, next)
+}
+
+const familyStatusValidate = async(req, res, next) => {
+    let param = await validateReply.checkParam(req, res, next)
+    if (param == "failed") {
+        return res.status(400).json({
+            message: "Invalid id"
+        })
+    }
+    const validationRule = {
+        "parent_id": "string",
+        "status": "string",
+        "partner_name": "string",
+        "user_id": "required|string"
+    };
+
+    await validateReply.validateReply(req.body, validationRule, res, next)
+}
+const contactPersonValidate = async(req, res, next) => {
+    let param = await validateReply.checkParam(req, res, next)
+    if (param == "failed") {
+        return res.status(400).json({
+            message: "Invalid id"
+        })
+    }
+    const validationRule = {
+        "parent_id": "string",
+        "first_name": "requried|string",
+        "middle_name": "required|string",
+        "last_name": "required|string",
+        "gender": "required|string",
+        "email": "required|email|string",
+        "phone_number": "required|string",
+        "employer_company": "required|string",
+        "type": "string",
+        "user_id": "required|string",
+    };
+
+    await validateReply.validateReply(req.body, validationRule, res, next)
+}
+
+const jobExperienceValidate = async(req, res, next) => {
+    let param = await validateReply.checkParam(req, res, next)
+    if (param == "failed") {
+        return res.status(400).json({
+            message: "Invalid id"
+        })
+    }
+    const validationRule = {
+        "parent_id": "string",
+        "company_name": "requried|string",
+        "department": "required|string",
+        "position": "required|string",
+        "role": "required|string",
+        "start_date": "date",
+        "end_date": "date",
+        "user_id": "required|string",
+        "address_id": "string"
+    };
+
+    await validateReply.validateReply(req.body, validationRule, res, next)
+}
+const childValidate = async(req, res, next) => {
+    let param = await validateReply.checkParam(req, res, next)
+    if (param == "failed") {
+        return res.status(400).json({
+            message: "Invalid id"
+        })
+    }
+    const validationRule = {
+        "name": "required|string",
+        "sex": "requried|string",
+        "birth_date": "required|date",
+        "family_status_id": "string"
     };
 
     await validateReply.validateReply(req.body, validationRule, res, next)
@@ -131,5 +208,9 @@ module.exports = {
     positionValidate,
     departmentValidate,
     roleValidate,
-    educationStatusValidate
+    educationStatusValidate,
+    familyStatusValidate,
+    contactPersonValidate,
+    jobExperienceValidate,
+    childValidate
 };
