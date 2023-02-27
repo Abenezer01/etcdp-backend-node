@@ -207,62 +207,48 @@ self.getParentOrGivenId = async(req, res) => {
 
 self.getStructure = async(req, res) => {
 	try {
-		let id = req.params.id 
-        
-		let departments = await department.findAll()
 
-		let arr = []
-		for(let dept of departments){
-            let posi = await userposition.findAll({
-                attributes: ["user_id"],
-                where: {
-                    department_id: dept.id
-                }
+        const departments = await department.findAll();
+
+        const arr = await Promise.all(
+            departments.map(async (dept) => {
+                const userpos = await userposition.findAll({
+                    attributes: ["user_id"],
+                    where: { department_id: dept.id },
+                });
+                const userId = [...new Set(userpos.map((item) => item.user_id))].filter((n) => n);
+
+                const staffs = await user.findAndCountAll({
+                    where: { 
+                        id: { 
+                            [Op.in]: userId 
+                        } 
+                    },
+                });
+
+                const pos = await position.findOne({
+                    where: { department_id: dept.id, is_head: true },
+                });
+
+                const head = pos ? await user.findOne({ where: { position_id: pos.id } }) : null;
+
+                return {
+                    id: dept.id,
+                    parentNodeId: dept.parent_department_id,
+                    name: dept.name,
+                    head: head ? head : null,
+                    staff_no: staffs.count,
+                };
             })
-    
-            let userId = [ ...new Set(posi.map((item)=> item.user_id))].filter(n=>n)
-            
-            let staffs = await user.findAndCountAll({
-                where: {
-                    id: {
-                        [Op.in]: userId
-                    }
-                }
-            })
+        );
 
+        return res.json(arr);
 
-            let pos = await position.findOne({
-				where: {
-					department_id: dept.id,
-					is_head: true
-				}
-			})
-
-			
-			let head = null 
-			if(pos){
-				head = await user.findOne({
-					where: {
-						position_id: pos.id
-					}
-				})
-			}
-			arr.push({
-				id: dept.id,
-				parentNodeId: dept.parent_department_id,
-				name: dept.name,
-				head: head? head: null,
-				staff_no: staffs.count
-			})
-
-		}
-		
-		return res.json(arr)
-	} catch (error) {
-		return res.status(500).json({
-			message: error.message
-		})
-	}
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message
+        })
+    }
 }
 
 self.getDepartmentHead = async(req, res) => {

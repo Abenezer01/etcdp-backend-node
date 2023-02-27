@@ -117,14 +117,13 @@ self.initPermission = async(req, res) => {
     try {
         let permissions = master.models 
 
-        for(let per of permissions){
+        let permissionData = permissions.map((per) => ({
+            name: per,
+            model: per,
+            module: "project"
+        }))
+        await Promise.all(permissionData.map((data)=> permission.create(data)))
 
-            await permission.create({
-                name: per,
-                model: per,
-                module: "project"
-            })
-        }
     } catch (error) {
         return res.status(500).json({
             message: error.message
@@ -164,20 +163,12 @@ self.getGroupedPermissions = async (req, res) => {
 	let module = req.params.module
 
 	try {
-		
-		let rolePos = await rolepermission.findAll({
-            where: {
-                role_id: id 
-            }
-        })
-		
-        return res.json(rolePos)
-		let ePermissions = await permission.findAll({
-			where: {
-				module:module
-			}
-		})
 
+        const [rolePos, ePermissions] = await Promise.all([
+            rolepermission.findAll({ where: { role_id: id } }),
+            permission.findAll({ where: { module: module } })
+        ])
+		
 
 		if(ePermissions.length == 0){
 			//if no permission under this module doesnt exist
@@ -185,21 +176,11 @@ self.getGroupedPermissions = async (req, res) => {
 			return res.json([])
 		}
 
-		let permissions = []
-        
-		for(let pos of rolePos){
-			let per = await permission.findOne({
-				where: {
-					id:pos.permission_id,
-					module:module
-				}
-			})
+		let permissions = rolePos
+        .filter((pos) => pers.some((per) => per.id == pos.permission_id))
+        .map((pos) => pers.find((per) => per.id == pos.permission_id).name)
 
-			if(per != null){
-				permissions.push(per.name)
-			}
-			
-		}
+        
 	
 		let newArray = []
 		for(let per of ePermissions){

@@ -433,93 +433,78 @@ self.switchAccount = async(req, res) => {
     let refreshToken
    
     try {
-
-        let body = req.body
-        let id = body.position_id 
-
-        let userpos = await userposition.findOne({
-            where:{ 
-                id: id
-            }
-        })
-
-        let user_id = userpos.user_id 
-
-        let account = await user.findOne({
-            where: {
-                id: user_id
-            },
-            include: [{
-                model: photo,
-                as: "photo"
-            },{
-                model: userposition,
-                as: "positions"
-            }]
-        })
-
-        let pos = await position.findOne({
-            where: {
-                id: userpos.position_id
-            }
-        })
-        usrRole = await role.findOne({
-            where: {
-                id: pos.role_id
-            }
-        })
-
-        let usEmail = await useremail.findOne({
-            where: {
-                user_id: account.id,
-                is_primary: true
-            }
-        })
-        let usPhone = await userphone.findOne({
-            where: {
-                user_id: account.id,
-                is_primary: true
-            }
-        })
-       
-        replyUser = {
-            id: account.id,
-            first_name: account.first_name,
-            middle_name: account.middle_name,
-            last_name: account.last_name,
-            email: usEmail ? usEmail.email: null,
-            phone:  usPhone ? usPhone.phone: null,
-            gender: account.gender,
-            position_id: userpos.position_id,
-            position_name: pos.name,
-            role: usrRole.name,
-            avatar: account.photo.avatar
-        }
-
-        let usr = { id: account.id, department_id: pos.department_id, position_id: pos.id }
-        accessToken = jwt.sign(usr,
-            TOKEN_KEY, {
-                expiresIn: "2h",
-            }
-        );
-        refreshToken = jwt.sign(usr, REFRESH_TOKEN_KEY, { expiresIn: "3h" })
-            // save user token
-        user.update({
-                refresh_token: refreshToken
-            }, {
-                where: { id: id },
-            })
-            .then(result => {
-                return res.status(200).json({
-                        userData: replyUser,
-                        accessToken: accessToken,
-                        refreshToken: refreshToken
-                    })
-            }).catch(error => {
-                return res.status(500).json({
-                    message: error
+        let [userpos, account, pos, usrRole, usEmail, usPhone] = await Promise.all([
+                userposition.findOne({ where: { id: body.position_id } }),
+                user.findOne({
+                    where: { id: user_id },
+                    include: [
+                        { model: photo, as: "photo" },
+                        { model: userposition, as: "positions" },
+                    ],
+                }),
+                position.findOne({ where: { id: userpos.position_id } }),
+                role.findOne({ where: { id: pos.role_id } }),
+                useremail.findOne({
+                    where: { user_id: account.id, is_primary: true },
+                }),
+                userphone.findOne({
+                    where: { user_id: account.id, is_primary: true },
                 })
-            })
+            ]);
+
+            let { id, first_name, middle_name, last_name, gender } = account;
+            let { email } = usEmail || {};
+            let { phone } = usPhone || {};
+
+            let replyUser = {
+                id,
+                first_name,
+                middle_name,
+                last_name,
+                email,
+                phone,
+                gender,
+                position_id: userpos.position_id,
+                position_name: pos.name,
+                role: usrRole.name,
+                avatar: account.photo.avatar,
+            };
+                
+   
+            try {
+                let usr = { id: account.id, department_id: pos.department_id, position_id: pos.id };
+                accessToken = jwt.sign(
+                  usr,
+                  TOKEN_KEY,
+                  { expiresIn: "2h" },
+                  (err, token) => {
+                    if (err) throw err;
+                    return token;
+                  }
+                );
+                refreshToken = jwt.sign(
+                  usr,
+                  REFRESH_TOKEN_KEY,
+                  { expiresIn: "3h" },
+                  (err, token) => {
+                    if (err) throw err;
+                    return token;
+                  }
+                );
+                // update refresh token
+                await user.update(
+                    { refresh_token: refreshToken },
+                    { where: { id: id } }
+                  );
+                  return res.status(200).json({
+                    userData: replyUser,
+                    accessToken: accessToken,
+                    refreshToken: refreshToken,
+                  });
+              } catch (error) {
+                return res.status(500).json({ message: error.message });
+              }
+    
 
     } catch (error) {
         return res.status(500).json({
@@ -531,35 +516,32 @@ self.switchAccount = async(req, res) => {
 
 self.getAllUserPositions = async(req, res) => {
     try {
-        let id = req.params.id 
+        let { id } = req.params;
 
         let data = await userposition.findAll({
-            where: {
-                user_id: id
-            }
-        })
-        
-        let arr = [] 
-
-        for(let usrpos of data) {
-            let pos = await position.findOne({
-                where: {
-                    id: usrpos.position_id
-                }
-            })
-            let dept = await department.findOne({
-                where: {
-                    id: usrpos.department_id
-                }
-            })
-
-            let temp = usrpos.toJSON() 
-            temp.position_name = pos?pos.name: null
-            temp.department_name = dept?dept.name: null
-            arr.push(temp)
+          where: { user_id: id },
+          include: [
+            { model: position, attributes: ['name'] },
+            { model: department, attributes: ['name'] }
+          ]
+        });
+      
+        if (!data || data.length === 0) {
+          return res.json([]);
         }
-
-        return res.json(arr)
+      
+        let arr = await Promise.all(data.map(async usrpos => {
+          let temp = usrpos.toJSON();
+          let [pos, dept] = await Promise.all([
+            usrpos.getPosition(),
+            usrpos.getDepartment()
+          ]);
+          temp.position_name = pos ? pos.name : null;
+          temp.department_name = dept ? dept.name : null;
+          return temp;
+        }));
+      
+        return res.json(arr);
     } catch (error) {
         return res.status(500).json({
             message: error.message

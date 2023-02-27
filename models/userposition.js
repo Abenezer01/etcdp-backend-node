@@ -45,5 +45,16 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'userposition',
   });
+
+  userposition.associate = function(models) {
+
+    userposition.belongsTo(models.position, {
+        foreignKey: 'position_id'
+    });
+    userposition.belongsTo(models.department, {
+        foreignKey: 'department_id'
+    });
+
+};
   return userposition;
 };
