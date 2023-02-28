@@ -11,9 +11,10 @@ const userData = async(req, res, next) => {
     decodetoken = jwt.verify(userTokenn, ACCESS_TOKEN_KEY)
     usrID = decodetoken.id;
     departmentID = decodetoken.department_id;
+    position_id = decodetoken.position_id;
 
     console.log("This is user id", usrID)
-    return { usrID, departmentID };
+    return { usrID, departmentID, position_id };
 
     // } catch (error) {
     //     //console.log("Here is the error", error)

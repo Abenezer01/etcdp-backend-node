@@ -35,6 +35,10 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.UUID,
             allowNull: false
         },
+        position_id: {
+            type: DataTypes.UUID,
+            allowNull: false
+        },
         time: {
             type: DataTypes.DATE
         }
@@ -42,5 +46,11 @@ module.exports = (sequelize, DataTypes) => {
         sequelize,
         modelName: 'actionstate',
     });
+
+    actionstate.associate = function(models) {
+        actionstate.belongsTo(models.position, {
+            foreignKey: 'position_id'
+        });
+    };
     return actionstate;
 };

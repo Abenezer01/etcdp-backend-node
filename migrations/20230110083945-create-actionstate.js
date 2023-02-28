@@ -30,6 +30,16 @@ module.exports = {
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       },
+      position_id: {
+        type: Sequelize.UUID,
+        allowNull: false,
+        references: {
+          model: 'positions',
+          key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
+      },
       time: {
         type: Sequelize.DATE
       },

@@ -44,6 +44,7 @@ app.use('/api/projects', projectRoute(express))
 app.use('/api/stakeholders', stakeholderRoute(express))
 app.use('/api/resources', resourceRoute(express))
 app.use('/api/document', documentRoute(express))
+app.use('/api/generics', polymorphicRoute(express))
 
 
 app.use("/",route_view(express));

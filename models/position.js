@@ -21,8 +21,8 @@ module.exports = (sequelize, DataTypes) => {
         },
         parent_id: DataTypes.UUID,
         department_id: {
-        type: DataTypes.UUID,
-        allowNull: false
+            type: DataTypes.UUID,
+            allowNull: false
         },
         name: {
             type: DataTypes.STRING,

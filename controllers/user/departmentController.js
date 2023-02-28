@@ -1,15 +1,18 @@
 const { saveActionState } = require("../../utils/helper");
+
+const helper = require("../../utils/helper")
 const {
     department,
     position,
     user,
     userposition,
+    actionstate,
     Sequelize
 } = require("./../../models");
 
 const Op = Sequelize.Op;
 
-let master = require("../../config/master")
+let master = require("../../config/master");
 
 let self = {};
 
@@ -38,6 +41,7 @@ self.get = async(req, res) => {
                 id: id
             }
         });
+        
         return res.status(200).json({
             data: data
         })
@@ -71,8 +75,16 @@ self.save = async(req, res) => {
         let body = req.body;
         let data = await department.create(body);
         if(data){
-            let us = "e1594d67-3aa2-429b-bb77-2e4ecc2124f8"
-            saveActionState(data.id, "department", "REGISTER", us)
+            let us = "f01da526-7f87-40b5-a967-dd711eef0740"
+            // saveActionState(data.id, "department", "REGISTER", us)
+            await actionstate.create({
+                model_id: data.id,
+                model:"department",
+                action: "REGISTER",
+                user_id: us,
+                position_id: "be25a148-c195-498d-95e0-fd4be224959f",
+                time: new Date(),
+            })
             
             let pos = await position.create({
                 department_id: data.id,
@@ -81,28 +93,28 @@ self.save = async(req, res) => {
                 is_head: true,
                 role_id:"03963640-6675-4c68-a073-25ac309abd74"
             })
-            saveActionState(pos.id, "position", "REGISTER", us)
+            await saveActionState(pos.id, "position", "REGISTER", us)
 
             //default role and position
-            let allRoles = master.roleName
+            // let allRoles = master.roleName
 
-            for(let ro of allRoles) {
-                let createdRole = await role.create({
-                    name: ro,
-                    department_id: data.id
-                })
-                if(createdRole){
-                    let createdPos = await position.create({
-                        name: ro,
-                        department_id: data.od,
-                        role_id: createdRole.id
-                    })
-                    if(createdPos) {
-                        saveActionState(createdPos.id, "position","REGISTER", us)
-                    }
-                    saveActionState(createdRole.id, "role","REGISTER", us)
-                }
-            }
+            // for(let ro of allRoles) {
+            //     let createdRole = await role.create({
+            //         name: ro,
+            //         department_id: data.id
+            //     })
+            //     if(createdRole){
+            //         let createdPos = await position.create({
+            //             name: ro,
+            //             department_id: data.od,
+            //             role_id: createdRole.id
+            //         })
+            //         if(createdPos) {
+            //             saveActionState(createdPos.id, "position","REGISTER", us)
+            //         }
+            //         saveActionState(createdRole.id, "role","REGISTER", us)
+            //     }
+            // }
             
         }
         return res.json(data)

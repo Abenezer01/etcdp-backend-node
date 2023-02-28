@@ -6,17 +6,23 @@ const {
 const Op = Sequelize.Op;
 
 const saveActionState = async(model_id, model, action, user_id) => {
-        let test = await actionstate.create({
+    try {
+        await actionstate.create({
             model_id,
             model,
             action,
             user_id,
+            position_id: "be25a148-c195-498d-95e0-fd4be224959f",
             time: new Date(),
         })
 
-        return test
+    } catch (error) {
+        return {
+            message : error.message
+        }
     }
-    // let children = []
+    
+}
 
 
 
