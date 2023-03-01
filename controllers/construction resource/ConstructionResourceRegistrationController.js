@@ -67,6 +67,23 @@ self.get = async(req, res) => {
         })
     }
 }
+self.getByProjectId = async(req, res) => {
+    try {
+        let id = req.params.id;
+        let data = await resource.findAll({
+            where: {
+                id: project_id
+            }
+        });
+        return res.status(200).json({
+            data: (data) ? data : []
+        })
+    } catch (error) {
+        res.status(500).json({
+            message: error.message
+        })
+    }
+}
 self.filter = async(req, res) => {
     let { page, size, order } = req.query;
     const { typeId, categoryId, subcategoryId } = req.query

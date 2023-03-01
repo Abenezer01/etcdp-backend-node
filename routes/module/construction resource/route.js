@@ -91,7 +91,7 @@ module.exports = function(express) {
     route.put("/construction-resource-specification/:id", validateData.resourceSpecificationValidate, ResourceSpecificationController.update);
     route.delete("/construction-resource-specification/:id", ResourceSpecificationController.delete);
     //Resource image
-    route.post("/resource-image", ResourceImageController.save);
+    route.post("/resource-image/:id", ResourceImageController.save);
     route.put("/resource-image/:id", ResourceImageController.update);
     route.delete("/resource-image/:id", ResourceImageController.delete);
     return route;

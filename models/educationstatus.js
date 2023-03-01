@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class userposition extends Model {
+  class educationstatus extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  userposition.init({
+  educationstatus.init({
     id: {
       type: DataTypes.UUID,
       primaryKey: true,
@@ -22,39 +22,31 @@ module.exports = (sequelize, DataTypes) => {
     parent_id: {
       type: DataTypes.UUID
     },
+    education_level: DataTypes.STRING,
+    field_of_study: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    school_name: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    start_date: {
+      type: DataTypes.DATE,
+      allowNull: false
+    },
+    end_date: DataTypes.DATE,
     user_id: {
       type: DataTypes.UUID,
       allowNull: false
     },
-    department_id: {
-      type: DataTypes.UUID
+    address_id: DataTypes.UUID,
+    gpa: {
+      type: DataTypes.DOUBLE
     },
-    position_id: {
-      type: DataTypes.UUID,
-      allowNull: false
-    },
-    is_primary: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false
-    },
-    status: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: true
-    }
   }, {
     sequelize,
-    modelName: 'userposition',
+    modelName: 'educationstatus',
   });
-
-  userposition.associate = function(models) {
-
-    userposition.belongsTo(models.position, {
-        foreignKey: 'position_id'
-    });
-    userposition.belongsTo(models.department, {
-        foreignKey: 'department_id'
-    });
-
-};
-  return userposition;
+  return educationstatus;
 };

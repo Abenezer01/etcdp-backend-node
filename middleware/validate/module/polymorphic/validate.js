@@ -22,7 +22,7 @@ const actionStateValidate = async(req, res, next) => {
             message: "Invalid id"
         })
     }
-    let modelParam = req.params.modelParam
+    let modelParam = req.params.model
     if (!modelParam) {
         return res.status(400).json({
             message: "Empty model"

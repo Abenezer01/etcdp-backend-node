@@ -1,12 +1,12 @@
 {
     "development": {
-        "dialect": "mysql",
         "username": "kaleb",
         "password": "pgpass",
         "host": "localhost",
         "database": "Etcdp",
 
         "port": "3306",
+        "dialect": "mysql",
         "dialectOptions": {
             "ssl": false
         }

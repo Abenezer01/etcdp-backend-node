@@ -14,7 +14,24 @@ module.exports = (sequelize, DataTypes) => {
         }
     }
     permission.init({
-        name: DataTypes.STRING
+        id: {
+            type: DataTypes.UUID,
+            primaryKey: true,
+            defaultValue: DataTypes.UUIDV4
+          },
+          name: {
+            type: DataTypes.STRING,
+            unique: true,
+            allowNull: false
+          },
+          model: {
+            type: DataTypes.STRING,
+            allowNull: false
+          },
+          module: {
+            type: DataTypes.STRING,
+            allowNull: false
+          }
     }, {
         sequelize,
         modelName: 'permission',

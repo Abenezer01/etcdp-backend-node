@@ -1,5 +1,10 @@
 const {
     actionstate,
+    address,
+    user,
+    userposition,
+    position,
+    file,
     Sequelize
 } = require('../../models')
 
@@ -7,6 +12,7 @@ const Op = Sequelize.Op;
 
 let self = {};
 const usrData = require("../../utils/userDataFromToken");
+const { getAllUserPositions } = require('../user/userController');
 self.getAll = async(req, res) => {
     try {
         let data = await actionstate.findAll();
@@ -22,13 +28,14 @@ self.getAll = async(req, res) => {
 
 
 self.check = async(req, res) => {
+
+
     try {
         let id = req.params.id
         let model = req.params.model
+
         let usr = await usrData.userData(req, res)
-        let us = {
-            id: usr.usrId
-        }
+      
         if (usr) {
             let data = await actionstate.findOne({
                 where: {
@@ -43,31 +50,32 @@ self.check = async(req, res) => {
                     message: 'already checked!'
                 })
             } else {
-                let action = await actionstate.findOne({
-                    where: {
-                        model_id: id,
-                        action: "REGISTER",
-                        user_id: us.id
-                    }
-                })
+                // let action = await actionstate.findOne({
+                //     where: {
+                //         model_id: id,
+                //         action: "REGISTER",
+                //         user_id: usr.usrID
+                //     }
+                // })
 
-                if (action) {
-                    return res.status(422).json({
-                        message: 'You are not allowed to check the data as you are the register'
-                    })
-                } else {
+                // if (action) {
+                //     return res.status(422).json({
+                //         message: 'You are not allowed to check the data as you are the register'
+                //     })
+                // } else {
                     await actionstate.create({
                         model_id: id,
                         model: model,
                         action: "CHECK",
-                        user_id: us.id,
+                        user_id: usr.usrID,
+                        position_id: usr.position_id,
                         time: new Date()
                     })
 
                     return res.json({
                         message: "Data checked successfully"
                     })
-                }
+                // }
             }
         }
 
@@ -82,9 +90,7 @@ self.approve = async(req, res) => {
         let id = req.params.id
         let model = req.params.model
         let usr = await usrData.userData(req, res)
-        let us = {
-            id: usr.usrId
-        }
+    
         if (usr) {
 
             let data = await actionstate.findOne({
@@ -99,33 +105,34 @@ self.approve = async(req, res) => {
                     message: "Already Approve!"
                 })
             } else {
-                let action = await actionstate.findAll({
-                    where: {
-                        model_id: id,
-                        action: {
-                            [Op.in]: ['REGISTSER', 'CHECK']
-                        },
-                        user_id: us.id
-                    }
-                })
+                // let action = await actionstate.findAll({
+                //     where: {
+                //         model_id: id,
+                //         action: {
+                //             [Op.in]: ['REGISTSER', 'CHECK']
+                //         },
+                //         user_id: usr.usrID
+                //     }
+                // })
 
-                if (action.length != 0) {
-                    return res.status(422).json({
-                        message: 'You can not approve as you either register or check the data'
-                    })
-                } else {
+                // if (action.length != 0) {
+                //     return res.status(422).json({
+                //         message: 'You can not approve as you either register or check the data'
+                //     })
+                // } else {
                     actionstate.create({
                         model: (model).toLowerCase(),
                         model_id: id,
                         action: "APPROVE",
-                        user_id: us.id,
+                        user_id: usr.usrID,
+                        position_id: usr.position_id,
                         time: new Date()
                     })
 
                     return res.status(200).json({
                         message: "Data approved successfully!"
                     })
-                }
+                // }
             }
         }
     } catch (error) {
@@ -177,6 +184,7 @@ self.reject = async(req, res) => {
                         model_id: id,
                         action: "REJECT",
                         user_id: us.id,
+                        position_id: usr.position_id,
                         time: new Date()
                     })
 
@@ -195,7 +203,9 @@ self.reject = async(req, res) => {
 
 
 self.authorize = async(req, res) => {
+
     try {
+
         let id = req.params.id
         let model = req.params.model
         let usr = await usrData.userData(req, res)
@@ -213,32 +223,33 @@ self.authorize = async(req, res) => {
                 })
             } else {
 
-                let action = await actionstate.findAll({
-                    model_id: id,
-                    action: {
-                        [Op.in]: ['REGISTSER', 'CHECK', "APPROVE"]
-                    },
-                    user_id: us.id
+                // let action = await actionstate.findAll({
+                //     model_id: id,
+                //     action: {
+                //         [Op.in]: ['REGISTSER', 'CHECK', "APPROVE"]
+                //     },
+                //     user_id: us.id
 
-                })
+                // })
 
-                if (action.length != 0) {
-                    return res.status(422).json({
-                        message: 'You can not approve as you either register or check or approver the data'
-                    })
-                } else {
+                // if (action.length != 0) {
+                //     return res.status(422).json({
+                //         message: 'You can not approve as you either register or check or approver the data'
+                //     })
+                // } else {
                     actionstate.create({
                         model: (model).toLowerCase(),
                         model_id: id,
                         action: "AUTHORIZE",
                         user_id: usr.id,
+                        position_id: usr.position_id,
                         time: new Date()
                     })
 
                     return res.status(200).json({
                         message: "Date authorized successfully!"
                     })
-                }
+                // }
 
             }
         }
@@ -248,4 +259,564 @@ self.authorize = async(req, res) => {
         })
     }
 }
+
+// self.getModelAction = async(req, res) => {
+//     let id = req.params.id 
+//     try {
+        
+        
+//         let data = await  actionstate.findAll({
+//             where: {
+//                 model_id: id
+//             }
+//         })
+
+//         if(data){
+
+//             let registerUser = null 
+//             let checkUser = null 
+//             let approveUser = null 
+//             let rejectUser = null 
+//             let authorizeUser = null
+
+//             let element = {}
+//             let register = await actionstate.findOne({
+//                 where: {
+//                    model_id: id,
+//                    action: 'REGISTER' 
+//                 }
+//             })
+
+//             let check = await actionstate.findOne({
+//                 where: {
+//                    model_id: id,
+//                    action: 'CHECK' 
+//                 }
+//             })
+
+//             let approve = await actionstate.findOne({
+//                 where: {
+//                    model_id: id,
+//                    action: 'APPROVE' 
+//                 }
+//             })
+
+//             let reject = await actionstate.findOne({
+//                 where: {
+//                    model_id: id,
+//                    action: 'REJECT' 
+//                 }
+//             })
+
+//             let authorize = await actionstate.findOne({
+//                 where: {
+//                    model_id: id,
+//                    action: 'AUTHORIZE' 
+//                 }
+//             })
+
+//             if(register){
+//                 //user info
+//                 registerUser = await user.findOne({
+//                     attributes: { exclude: ['password', 'refresh_token'] },
+//                     where: {
+//                         id: register.user_id
+//                     }
+//                 }) 
+//                 if(registerUser){
+//                     let userpos = await userposition.findOne({
+
+//                         where: {
+//                             user_id:registerUser.id,
+//                             is_primary: true
+//                         }
+//                     })
+//                     let pos = await position.findOne({
+//                         where: {
+//                             id: userpos.position_id
+//                         }
+//                     })
+//                     if(pos){
+// 			            let temp = registerUser.toJSON()
+//                         temp.position_name = pos.name
+//                         registerUser = temp
+
+//                     }
+//                 }
+
+//                 //notes
+//                 // let registerNote = await note.findAll({
+//                 //     where: {
+//                 //         model_id: register.id
+//                 //     }
+//                 // })
+
+
+//                 // let regReply = await taskchat.findAndCountAll({
+//                 //     where: {
+//                 //         task_id: register.id,
+//                 //         type: "REGISTERED"
+//                 //     }
+//                 // }) 
+
+
+//                 element.registeredData = {
+//                         by:register.user_id,
+//                         user: registerUser,
+//                         time: register.time,
+//                         // notes: registerNote,
+//                         // replies: regReply.rows,
+//                         // replyCount: regReply.count
+//                     }
+//             }
+
+
+//             if(check){
+
+//                 //user info
+//                 checkUser = await user.findOne({
+//                     attributes: { exclude: ['password', 'refresh_token'] },
+//                     where: {
+//                         id: check.user_id
+//                     }
+//                 }) 
+//                 if(checkUser){
+//                     let userpos = await userposition.findOne({
+//                         where: {
+//                             user_id:checkUser.id,
+//                             is_primary: true
+//                         }
+//                     })
+//                     let pos = await position.findOne({
+//                         where: {
+//                             id: userpos.position_id
+//                         }
+//                     })
+//                     if(pos){
+// 			            let temp = checkUser.toJSON()
+//                         temp.position_name = pos.name
+//                         checkUser = temp
+
+//                     }
+//                 }
+
+//                 //notes
+//                 // let checkNote = await note.findAll({
+//                 //     where: {
+//                 //         model_id: check.id
+//                 //     }
+//                 // })
+
+//                 // let chReply = await taskchat.findAndCountAll({
+//                 //     where: {
+//                 //         task_id: check.id,
+//                 //         type: "CHECKED"
+//                 //     }
+//                 // })
+
+//                 let checkedFiles = await file.findAndCountAll({
+//                     where: {
+//                         fileable_id: check.id,
+//                         file_type: "CHECK"
+//                     }
+//                 })
+
+//                 element.checkedData = {
+//                     by:check.user_id,
+//                     user: checkUser,
+//                     time: check.time,
+//                     // notes: checkNote,
+//                     files: checkedFiles.rows,
+//                     fileCount: checkedFiles.count,
+//                     // replies: chReply.rows,
+//                     // replyCount: chReply.count
+//                 }
+//             }
+
+//             if(approve){
+//                 //user info
+//                 approveUser = await user.findOne({
+//                     attributes: { exclude: ['password', 'refresh_token'] },
+//                     where: {
+//                         id: approve.user_id
+//                     }
+//                 }) 
+//                 if(approveUser){
+//                     let userpos = await userposition.findOne({
+//                         where: {
+//                             user_id:approveUser.id,
+//                             is_primary: true
+//                         }
+//                     })
+//                     let pos = await position.findOne({
+//                         where: {
+//                             id: userpos.position_id
+//                         }
+//                     })
+//                     if(pos){
+// 			            let temp = approveUser.toJSON()
+//                         temp.position_name = pos.name
+//                         approveUser = temp
+
+//                     }
+//                 }
+//                 //notes
+//                 // let approveNote = await note.findAll({
+//                 //     where: {
+//                 //         model_id: approve.id
+//                 //     }
+//                 // })
+
+//                 // let apReply = await taskchat.findAndCountAll({
+//                 //     where: {
+//                 //         task_id: approve.id,
+//                 //         type: "APPROVED"
+//                 //     }
+//                 // })
+
+//                 let approvedFiles = await file.findAndCountAll({
+//                     where: {
+//                         fileable_id: approve.id,
+//                         file_type: "APPROVE"
+//                     }
+//                 })
+
+                
+//                 element.approvedData = {
+//                     by:approve.user_id,
+//                     user: approveUser,
+//                     time: approve.time,
+//                     // notes: approveNote,
+//                     files: approvedFiles.rows,
+//                     fileCount: approvedFiles.count,
+//                     // replies: apReply.rows,
+//                     // replyCount: apReply.count
+//                 }
+//             }
+//             //authorize
+//             if(authorize){
+//                 //user info
+//                 authorizeUser = await user.findOne({
+//                     attributes: { exclude: ['password', 'refresh_token'] },
+//                     where: {
+//                         id: authorize.user_id
+//                     }
+//                 }) 
+//                 if(authorizeUser){
+//                     let userpos = await userposition.findOne({
+//                         where: {
+//                             user_id:authorizeUser.id,
+//                             is_primary: true
+//                         }
+//                     })
+//                     let pos = await position.findOne({
+//                         where: {
+//                             id: userpos.position_id
+//                         }
+//                     })
+//                     if(pos){
+// 			            let temp = authorizeUser.toJSON()
+//                         temp.position_name = pos.name
+//                         authorizeUser = temp
+
+//                     }
+//                 }
+
+//                 //notes
+//                 // let authorizeNote = await note.findAll({
+//                 //     where: {
+//                 //         model_id: authorize.id
+//                 //     }
+//                 // })
+
+//                 // let authReply = await taskchat.findAndCountAll({
+//                 //     where: {
+//                 //         task_id: authorize.id,
+//                 //         type: "AUTHORIZED"
+//                 //     }
+//                 // })
+
+//                 let authorizedFiles = await file.findAndCountAll({
+//                     where: {
+//                         fileable_id: authorize.id,
+//                         file_type: "AUTHORIZE"
+//                     }
+//                 })
+
+                
+//                 element.authorizedData = {
+//                     by:authorize.user_id,
+//                     user: authorizeUser,
+//                     time: authorize.time,
+//                     // notes: authorizeNote,
+//                     files: authorizedFiles.rows,
+//                     fileCount: authorizedFiles.count,
+//                     // replies: authReply.rows,
+//                     // replyCount: authReply.count
+//                 }
+//             }
+
+            
+            
+//             if(reject){
+//                 //user info
+//                 rejectUser = await user.findOne({
+//                     attributes: { exclude: ['password', 'refresh_token'] },
+//                     where: {
+//                         id: reject.user_id
+//                     }
+//                 }) 
+//                 if(rejectUser){
+//                     let userpos = await userposition.findOne({
+//                         where: {
+//                             user_id:rejectUser.id,
+//                             is_primary: true
+//                         }
+//                     })
+//                     let pos = await position.findOne({
+//                         where: {
+//                             id: userpos.position_id
+//                         }
+//                     })
+//                     if(pos){
+// 			            let temp = rejectUser.toJSON()
+//                         temp.position_name = pos.name
+//                         rejectUser = temp
+
+//                     }
+//                 }
+
+//                 //notes
+//                 // let rejectNote = await note.findAll({
+//                 //     where: {
+//                 //         model_id: reject.id
+//                 //     }
+//                 // })
+
+//                 // let rejReply = await taskchat.findAndCountAll({
+//                 //     where: {
+//                 //         task_id: reject.id, 
+//                 //         type: "REJECTED"
+//                 //     }
+//                 // })
+                
+//                 let rejectedFiles = await file.findAndCountAll({
+//                     where: {
+//                         fileable_id: reject.id,
+//                         file_type: "REJECT"
+//                     }
+//                 })
+
+//                 element.rejectedData = {
+//                     by:reject.user_id,
+//                     user: rejectUser,
+//                     time: reject.time,
+//                     // notes: rejectNote,
+//                     files: rejectedFiles.rows,
+//                     fileCount: rejectedFiles.count,
+//                     // replies: rejReply.rows,
+//                     // replyCount: rejReply.count
+//                 }
+//             }
+
+
+          
+//             let states = [ ...new Set(data.map((item)=> item.action))].filter(n=>n)
+
+//             let status = null 
+
+
+
+//             if(states.includes('REJECT')){
+//                 status = "REJECTED"
+//             }else if(states.includes("AUTHORIZE")){
+//                 status = "AUTHORIZED"
+//             }else if(states.includes("APPROVE")){
+//                 status = "APPROVED"
+//             }else if(states.includes("CHECK")){
+//                 status = "CHECKED"
+//             }else if(states.includes("REGISTER")){
+//                 status = "REGISTERED"
+//             }
+
+//             element.id = id 
+//             element.status = status 
+//             element.descripton
+            
+//             return res.json(element)
+//         }else{
+//              return res.status(404).json({
+//                  message: "action data not found"
+//              })
+//         }
+//     } catch (error) {
+//         return res.status(500).json({
+//             message: error.message
+//         })
+//     }
+// }
+
+//test 
+
+
+self.getModelAction = async(req, res) => {
+    const id = req.params.id;
+
+    try {
+    const data = await actionstate.findAll({
+        where: {
+        model_id: id
+        }
+    });
+
+    if (data) {
+
+        const register = data.find(item => item.action === 'REGISTER');
+        const check = data.find(item => item.action === 'CHECK');
+        const approve = data.find(item => item.action === 'APPROVE');
+        const reject = data.find(item => item.action === 'REJECT');
+        const authorize = data.find(item => item.action === 'AUTHORIZE');
+
+        const element = {};
+
+        if (register) {
+
+            const registerUser = await self.getUserData(register.user_id, register.id);
+            element.registeredData = {
+                by: register.user_id,
+                user: registerUser,
+                time: register.time,
+            };
+        }
+
+        if (check) {
+            const checkUser = await self.getUserData(check.user_id, check.id);
+            // const checkedFiles = await self.getFileData(check.id, 'CHECK');
+            element.checkedData = {
+                by: check.user_id,
+                user: checkUser,
+                time: check.time,
+                // files: checkedFiles.rows,
+                // fileCount: checkedFiles.count,
+            };
+        }
+
+        if (approve) {
+            const approveUser = await self.getUserData(approve.user_id, approve.id);
+            // const approvedFiles = await self.getFileData(approve.id, 'APPROVE');
+            element.approvedData = {
+                by: approve.user_id,
+                user: approveUser,
+                time: approve.time,
+            //     files: approvedFiles.rows,
+            //     fileCount: approvedFiles.count,
+            };
+        }
+
+        if (authorize) {
+            const authorizeUser = await self.getUserData(authorize.user_id, authorize.id);
+            // const authorizedFiles = await self.getFileData(authorize.id, 'AUTHORIZE');
+            element.authorizedData = {
+                by: authorize.user_id,
+                user: authorizeUser,
+                time: authorize.time,
+                // files: authorizedFiles.rows,
+                // fileCount: authorizedFiles.count,
+            };
+        }
+        
+        if (reject) {
+            const rejectUser = await self.getUserData(reject.user_id, reject.id);
+            // const rejectedFiles = await self.getFileData(reject.id, 'REJECT');
+            element.rejectData = {
+                by: reject.user_id,
+                user: rejectUser,
+                time: reject.time,
+                // files: rejectedFiles.rows,
+                // fileCount: rejectedFiles.count,
+            };
+        }
+
+        // do something with element object
+
+        let states = [ ...new Set(data.map((item)=> item.action))].filter(n=>n)
+
+        let status = null 
+
+
+
+        if(states.includes('REJECT')){
+            status = "REJECTED"
+        }else if(states.includes("AUTHORIZE")){
+            status = "AUTHORIZED"
+        }else if(states.includes("APPROVE")){
+            status = "APPROVED"
+        }else if(states.includes("CHECK")){
+            status = "CHECKED"
+        }else if(states.includes("REGISTER")){
+            status = "REGISTERED"
+        }
+
+        element.id = id 
+        element.status = status 
+        element.descripton
+        
+        return res.json(element)
+    }
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message
+        })
+    }
+
+}
+
+
+self.getUserData = async(userId, actionId) =>{
+
+    const userObj = await user.findOne({
+        attributes: {
+            exclude: ['password', 'refresh_token']
+        },
+        where: {
+            id: userId
+        }
+    });
+  
+    if (!userObj) {
+      return null;
+    }
+  
+    const temp = userObj.toJSON();
+
+    let action = await actionstate.findOne({
+        where: {
+            id: actionId
+        },
+        include: [{
+            model: position,
+            as: "position"
+          }
+        ]
+    })
+
+
+    const primaryPosition = action.position
+    if (primaryPosition) {
+      temp.position_name = primaryPosition.name;
+    }
+  
+    return temp;
+  }
+
+self.getFileData = async(fileableId, fileType) => {
+    const files = await file.findAndCountAll({
+      where: {
+        fileable_id: fileableId,
+        file_type: fileType
+      }
+    });
+  
+    return files;
+  }
 module.exports = self;

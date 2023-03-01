@@ -2,23 +2,20 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('actionstates', {
+    await queryInterface.createTable('familystatuses', {
       id: {
         allowNull: false,
         primaryKey: true,
         type: Sequelize.UUID
       },
-      model_id: {
-        type: Sequelize.UUID,
-        allowNull: false
+      parent_id: {
+        type: Sequelize.UUID
       },
-      model: {
-        type: Sequelize.STRING,
-        allowNull: false
+      status: {
+        type: Sequelize.STRING
       },
-      action: {
-        type: Sequelize.STRING,
-        allowNull: false
+      partner_name: {
+        type: Sequelize.STRING
       },
       user_id: {
         type: Sequelize.UUID,
@@ -29,19 +26,6 @@ module.exports = {
         },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
-      },
-      position_id: {
-        type: Sequelize.UUID,
-        allowNull: false,
-        references: {
-          model: 'positions',
-          key: 'id'
-        },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE'
-      },
-      time: {
-        type: Sequelize.DATE
       },
       createdAt: {
         allowNull: false,
@@ -54,6 +38,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('actionstates');
+    await queryInterface.dropTable('familystatuses');
   }
 };

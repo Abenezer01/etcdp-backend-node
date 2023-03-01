@@ -1,7 +1,5 @@
 const {
-    role,
-    rolepermission,
-    permission,
+    contactperson,
     Sequelize
 } = require("../../models");
 const { saveActionState } = require("../../utils/helper");
@@ -12,15 +10,10 @@ let self = {};
 
 self.getAll = async(req, res) => {
     try {
-        let data = await role.findAll();
+        let data = await contactperson.findAll();
         return res.json(data)
 
     } catch (error) {
-        // if (err.message === 'Error') {
-        //     res.status(500).json({
-        //         message: error.message
-        //     })
-        // }
         res.status(500).json({
             message: error.message
         })
@@ -30,7 +23,7 @@ self.getAll = async(req, res) => {
 self.get = async(req, res) => {
     try {
         let id = req.params.id;
-        let data = await role.findOne({
+        let data = await contactperson.findOne({
             where: {
                 id: id
             }
@@ -48,7 +41,7 @@ self.get = async(req, res) => {
 self.search = async(req, res) => {
     try {
         let text = req.query.text;
-        let data = await role.findAll({
+        let data = await contactperson.findAll({
             where: {
                 name: {
                     [Op.like]: "%" + text + "%"
@@ -66,10 +59,10 @@ self.search = async(req, res) => {
 self.save = async(req, res) => {
     try {
         let body = req.body;
-        let data = await role.create(body);
+        let data = await contactperson.create(body);
         if(data){
             let us = "e1594d67-3aa2-429b-bb77-2e4ecc2124f8"
-            saveActionState(data.id, "role", "REGISTER", us)
+            saveActionState(data.id, "contactperson", "REGISTER", us)
         }
         return res.json(data)
     } catch (error) {
@@ -83,7 +76,7 @@ self.update = async(req, res) => {
     try {
         let id = req.params.id;
         let body = req.body;
-        let data = await role.update(body, {
+        let data = await contactperson.update(body, {
             where: {
                 id: id
             }
@@ -99,7 +92,7 @@ self.update = async(req, res) => {
 self.delete = async(req, res) => {
     try {
         let id = req.params.id;
-        let data = await role.destroy({
+        let data = await contactperson.destroy({
             where: {
                 id: id
             }
@@ -111,50 +104,21 @@ self.delete = async(req, res) => {
         })
     }
 }
-self.givePermission = async(req, res) => {
+self.getByUserId = async(req, res) => {
+    try {
+        let id = req.params.id
+        let data = await contactperson.findAll({
+            where: {
+                user_id: id
+            }
+        })
 
-	let id = req.params.id
-	
-	try {
-		let body = req.body	
-		let permissions = body.permissions
-		let rol = await role.findOne({
-			where: {
-				id:id
-			}
-		})
-
-
-		for(let per of permissions){
-			if(per.is_selected){
-				await rolepermission.findOrCreate({
-					where: {
-						permission_id: per.id,
-						role_id: rol.id
-					}	
-				})
-
-			}else{
-
-				await rolepermission.destroy({
-					where: {
-						permission_id:per.id
-					}
-				})
-
-			}
-				
-		}
-
-		return res.json({
-			message: "permissions are given to a role "
-		})
-		
-	} catch (error) {
-		return res.status(500).json({
-			message: error.message
-		})
-	}
+        return res.json(data)
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message
+        })
+    }
 }
 
 module.exports = self;

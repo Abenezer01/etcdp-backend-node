@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class userposition extends Model {
+  class jobexperience extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  userposition.init({
+  jobexperience.init({
     id: {
       type: DataTypes.UUID,
       primaryKey: true,
@@ -22,39 +22,38 @@ module.exports = (sequelize, DataTypes) => {
     parent_id: {
       type: DataTypes.UUID
     },
+    company_name: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    department: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    position: {
+      type: DataTypes.STRING,
+      allowNull:false
+    },
+    role: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    start_date: {
+      type: DataTypes.DATE
+    },
+    end_date: {
+      type: DataTypes.DATE
+    },
     user_id: {
       type: DataTypes.UUID,
       allowNull: false
     },
-    department_id: {
+    address_id: {
       type: DataTypes.UUID
-    },
-    position_id: {
-      type: DataTypes.UUID,
-      allowNull: false
-    },
-    is_primary: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false
-    },
-    status: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: true
     }
   }, {
     sequelize,
-    modelName: 'userposition',
+    modelName: 'jobexperience',
   });
-
-  userposition.associate = function(models) {
-
-    userposition.belongsTo(models.position, {
-        foreignKey: 'position_id'
-    });
-    userposition.belongsTo(models.department, {
-        foreignKey: 'department_id'
-    });
-
-};
-  return userposition;
+  return jobexperience;
 };

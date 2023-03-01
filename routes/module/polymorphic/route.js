@@ -19,10 +19,15 @@ module.exports = function(express) {
 
     //action state route
     route.get("/action-state", ActionStateController.getAll);
-    route.post("/check/:model/:id", validateData.actionStateValidate, ActionStateController.check);
-    route.post("/approve/:model/:id", validateData.actionStateValidate, ActionStateController.approve);
-    route.post("/authorize/:model/:id", validateData.actionStateValidate, ActionStateController.authorize);
-    route.post("/reject/:model/:id", validateData.actionStateValidate, ActionStateController.reject);
+    route.put("/check/:model/:id", ActionStateController.check);
+    route.put("/approve/:model/:id", ActionStateController.approve);
+    route.put("/authorize/:model/:id", ActionStateController.authorize);
+    route.put("/reject/:model/:id", ActionStateController.reject);
+    // route.put("/reject/:model/:id", validateData.actionStateValidate, ActionStateController.reject);
+    route.get("/model-action-data/:id", ActionStateController.getModelAction);
+    
+
+
 
     // route.get("/address/:id", AddressController.get);
     // route.get("/address-search", AddressController.search);

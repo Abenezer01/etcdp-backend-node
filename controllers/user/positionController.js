@@ -16,11 +16,6 @@ self.getAll = async(req, res) => {
         })
 
     } catch (error) {
-        // if (err.message === 'Error') {
-        //     res.status(500).json({
-        //         message: error.message
-        //     })
-        // }
         res.status(500).json({
             message: error.message
         })
@@ -66,11 +61,12 @@ self.search = async(req, res) => {
 self.save = async(req, res) => {
     try {
         let body = req.body;
-        let data = await position.create(body);
-        if(data){
+        let data = await position.create(body); 
+        // if(data){
             let us = "e1594d67-3aa2-429b-bb77-2e4ecc2124f8"
-            saveActionState(data.id, "position", "REGISTER", us)
-        }
+            await saveActionState(data.id, "position", "REGISTER", us)
+            
+        // }
         return res.json(data)
     } catch (error) {
         res.status(500).json({
@@ -112,5 +108,39 @@ self.delete = async(req, res) => {
     }
 }
 
+self.getParentDepartment = async(req, res) => {
+    try {
+        let data = await department.findOne({
+            where: {
+                parent_department_id: null
+            }
+        })
+
+        if(data){
+           return res.json(data)
+        }
+    } catch (error) {
+        return res.json({
+            message: error.message
+        })
+    }
+}
+
+self.getDepartmentPositions = async(req, res) => {
+    try {
+        let id = req.params.id 
+
+        let positions = await position.findAll({
+            where: {
+                department_id: id
+            }
+        })
+        return res.json(positions)
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message
+        })
+    }
+}
 
 module.exports = self;

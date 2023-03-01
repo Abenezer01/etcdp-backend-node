@@ -79,7 +79,7 @@ self.save = async(req, res) => {
         const file = req.files.upload
         if (id == null) {
             return res.status(400).send({
-                message: "User id is empty"
+                message: "resource id is empty"
 
             })
         } else if (file == null) {
@@ -88,7 +88,7 @@ self.save = async(req, res) => {
 
             })
         }
-        const ext = req.files.image.mimetype.split("/")[1];
+        const ext = req.files.upload.mimetype.split("/")[1];
         let rand = Math.floor(100000 + Math.random() * 900000)
         const filePath = path.join(__dirname, '../../public', 'images/resourceimages', rand + '.' +
             `${ext}`)
@@ -96,17 +96,17 @@ self.save = async(req, res) => {
         var filePathh = filePath.split("public").pop();
         console.log("The file path is ", filePathh)
             //return res.send(filePathh)
-        pat = filePath
+        let pat = filePath
 
-        image = { url: filePathh }
+        let imagee = { url: filePathh }
             //console.log("The rand is: ", rand)
         let ll
         try {
             if (usr) {
-                ll = await image.create(image)
+                ll = await image.create(imagee);
                 if (ll) {
                     if (pat) {
-                        const filee = req.files.image
+                        const filee = req.files.upload
                         filee.mv(pat, err => {
                             if (err) return res.status(500).send(err)
                                 // res.redirect('/')
@@ -127,6 +127,7 @@ self.save = async(req, res) => {
             }
 
         } catch (error) {
+            console.log("The error is", error)
             return res.status(500).send({
                 message: error
             })
@@ -139,6 +140,7 @@ self.save = async(req, res) => {
         return res.json(data)
 
     } catch (error) {
+        console.log("The error is", error)
         res.status(500).json({
             message: error.message
         })

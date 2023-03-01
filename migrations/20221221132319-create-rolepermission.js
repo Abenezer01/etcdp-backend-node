@@ -10,13 +10,17 @@ module.exports = {
                     model: 'roles',
                     key: 'id'
                 },
-            },
+                onUpdate: 'CASCADE',
+                onDelete: 'CASCADE'
+                },
             permission_id: {
                 type: Sequelize.UUID,
                 references: {
                     model: 'permissions',
                     key: 'id'
                 },
+                onUpdate: 'CASCADE',
+                onDelete: 'CASCADE'
             },
             createdAt: {
                 allowNull: false,

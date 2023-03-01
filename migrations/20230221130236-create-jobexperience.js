@@ -2,21 +2,36 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('userpositions', {
+    await queryInterface.createTable('jobexperiences', {
       id: {
         allowNull: false,
         primaryKey: true,
         type: Sequelize.UUID
       },
       parent_id: {
-        type: Sequelize.UUID,
-        references: {
-          model: 'userpositions',
-          key: 'id'
-        },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE'
+        type: Sequelize.UUID
       },
+      company_name: {
+        type: Sequelize.STRING,
+        default: '1Space'
+      },
+      department: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      position: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      role: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      start_date: {
+        type: Sequelize.DATE,
+        allowNull: false
+      },
+      end_date: Sequelize.DATE,
       user_id: {
         type: Sequelize.UUID,
         allowNull: false,
@@ -27,32 +42,17 @@ module.exports = {
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       },
-      department_id: {
+      address_id: {
         type: Sequelize.UUID,
         references: {
-          model: 'departments',
+          model: 'addresses',
           key: 'id'
         },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       },
-      position_id: {
-        type: Sequelize.UUID,
-        allowNull: false,
-        references: {
-          model: 'positions',
-          key: 'id'
-        },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE'
-      },
-      status: {
-        type: Sequelize.BOOLEAN,
-        defaultValue: true,
-      },
-      is_primary: {
-        type: Sequelize.BOOLEAN, 
-        allowNull: false
+      description: {
+        type: Sequelize.TEXT
       },
       createdAt: {
         allowNull: false,
@@ -65,6 +65,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('userpositions');
+    await queryInterface.dropTable('jobexperiences');
   }
 };

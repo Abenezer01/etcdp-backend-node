@@ -8,16 +8,36 @@ module.exports = {
         let pass = 'adminpass';
         let salt = bcrypt.genSalt(10);
         let hash = await bcrypt.hash(pass, parseInt(salt))
-            //Role seed
+        await queryInterface.bulkInsert('departments', [{
+            name: 'Software',
+            description: 'Software test description',
+            id: uuid.v4(),
+            createdAt: new Date(),
+            updatedAt: new Date()
+        }, {
+            name: 'Electrical',
+            description: 'Elec test description',
+            id: uuid.v4(),
+            createdAt: new Date(),
+            updatedAt: new Date()
+        }]);
+
+        const departments = await queryInterface.sequelize.query(
+            `SELECT id from departments;`
+        );
+        const departmentRows = departments[0];
+        //Role seed
         await queryInterface.bulkInsert('roles', [{
             name: 'admin',
             description: 'admin description',
+            department_id: departmentRows[0].id,
             id: uuid.v4(),
             createdAt: new Date(),
             updatedAt: new Date()
         }, {
             name: 'admin',
             description: 'authorize description',
+            department_id: departmentRows[0].id,
             id: uuid.v4(),
             createdAt: new Date(),
             updatedAt: new Date()
@@ -50,24 +70,7 @@ module.exports = {
         console.log("The roles", roleRows[0].name)
 
         //Department seed
-        await queryInterface.bulkInsert('departments', [{
-            name: 'Software',
-            description: 'Software test description',
-            id: uuid.v4(),
-            createdAt: new Date(),
-            updatedAt: new Date()
-        }, {
-            name: 'Electrical',
-            description: 'Elec test description',
-            id: uuid.v4(),
-            createdAt: new Date(),
-            updatedAt: new Date()
-        }]);
 
-        const departments = await queryInterface.sequelize.query(
-            `SELECT id from departments;`
-        );
-        const departmentRows = departments[0];
         //Position seed
         await queryInterface.bulkInsert('positions', [{
             name: 'admin position',
@@ -98,24 +101,19 @@ module.exports = {
             `SELECT id from photos;`
         );
         const photoRows = photos[0];
-
-
         await queryInterface.bulkInsert('users', [{
             id: uuid.v4(),
             first_name: 'Abebe',
             middle_name: 'Birhanu',
             last_name: 'Belete',
-            email: 'abebe@gmail.com',
-            phone: '+25191212122',
             gender: 'male',
             marital_status: 0,
             partner_name: 'Birhanu',
             password: hash,
             birth_date: '12-12-12',
-            position_id: positionRows[0].id,
             photo_id: photoRows[0].id,
             revision_no: 0,
-            createdAt: "12-12-12",
+            createdAt: new Date(),
             updatedAt: new Date()
         }]);
         const users = await queryInterface.sequelize.query(
@@ -123,6 +121,33 @@ module.exports = {
         );
 
         const userRows = users[0];
+        await queryInterface.bulkInsert('useremails', [{
+            id: uuid.v4(),
+            email: 'abebe@gmail.com',
+            user_id: userRows[0].id,
+            is_primary: true,
+            createdAt: new Date(),
+            updatedAt: new Date()
+        }])
+        await queryInterface.bulkInsert('userphones', [{
+            id: uuid.v4(),
+            phone: '+25191212122',
+            user_id: userRows[0].id,
+            is_primary: true,
+            createdAt: new Date(),
+            updatedAt: new Date()
+        }])
+        await queryInterface.bulkInsert('userpositions', [{
+            id: uuid.v4(),
+            position_id: positionRows[0].id,
+            user_id: userRows[0].id,
+            department_id: departmentRows[0].id,
+            is_primary: true,
+            createdAt: new Date(),
+            updatedAt: new Date()
+        }])
+
+
         //Address seed
         await queryInterface.bulkInsert('addresses', [{
             model_id: userRows[0].id,

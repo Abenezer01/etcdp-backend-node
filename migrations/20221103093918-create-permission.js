@@ -6,12 +6,20 @@ module.exports = {
             id: {
                 allowNull: false,
                 primaryKey: true,
-                type: Sequelize.UUID
+                type: Sequelize.UUID,
+                defaultValue: Sequelize.UUIDV4
             },
             name: {
-                allowNull: false,
                 type: Sequelize.STRING,
                 allowNull: false
+            },
+            model: {
+                type: Sequelize.STRING,
+                allowNull: false
+            },
+            module: {
+                type: Sequelize.STRING,
+                allowNul: false
             },
             createdAt: {
                 allowNull: false,

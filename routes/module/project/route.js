@@ -120,6 +120,7 @@ module.exports = function(express) {
     //Construction resource
     route.get("/project/construction-resource", ConstructionResourceController.getAll);
     route.get("/project/construction-resource/:id", ConstructionResourceController.get);
+    route.get("/constructionproject/construction-resource/:id", ConstructionResourceController.getByProjectId);
     route.get("/project/construction-resource-search", ConstructionResourceController.search);
     route.post("/project/construction-resource", validateData.constructionResourceValidate, ConstructionResourceController.save);
     route.put("/project/construction-resource/:id", validateData.constructionResourceValidate, ConstructionResourceController.update);

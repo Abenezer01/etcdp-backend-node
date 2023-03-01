@@ -2,23 +2,47 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('actionstates', {
+    await queryInterface.createTable('contactpeople', {
       id: {
         allowNull: false,
         primaryKey: true,
         type: Sequelize.UUID
       },
-      model_id: {
-        type: Sequelize.UUID,
-        allowNull: false
+      parent_id: {
+        type: Sequelize.UUID
       },
-      model: {
+      first_name: {
         type: Sequelize.STRING,
         allowNull: false
       },
-      action: {
+      middle_name: {
         type: Sequelize.STRING,
         allowNull: false
+      },
+      last_name: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      gender: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      email: {
+        type: Sequelize.STRING,
+        unique: true,
+        allowNull: false
+      },
+      phone_number: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      employer_company: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      type: {
+        type: Sequelize.STRING,
+        default: "Emergency Contact"
       },
       user_id: {
         type: Sequelize.UUID,
@@ -28,20 +52,8 @@ module.exports = {
           key: 'id'
         },
         onUpdate: 'CASCADE',
-        onDelete: 'CASCADE'
-      },
-      position_id: {
-        type: Sequelize.UUID,
-        allowNull: false,
-        references: {
-          model: 'positions',
-          key: 'id'
-        },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE'
-      },
-      time: {
-        type: Sequelize.DATE
+        onDelete: 'CASCADE',
+      
       },
       createdAt: {
         allowNull: false,
@@ -54,6 +66,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('actionstates');
+    await queryInterface.dropTable('contactpeople');
   }
 };
