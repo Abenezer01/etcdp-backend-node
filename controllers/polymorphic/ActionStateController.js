@@ -683,6 +683,7 @@ self.getModelAction = async(req, res) => {
 
             const registerUser = await self.getUserData(register.user_id, register.id);
             element.registeredData = {
+                id: register.id,
                 by: register.user_id,
                 user: registerUser,
                 time: register.time,
@@ -693,6 +694,7 @@ self.getModelAction = async(req, res) => {
             const checkUser = await self.getUserData(check.user_id, check.id);
             // const checkedFiles = await self.getFileData(check.id, 'CHECK');
             element.checkedData = {
+                id: check.id,
                 by: check.user_id,
                 user: checkUser,
                 time: check.time,
@@ -705,6 +707,7 @@ self.getModelAction = async(req, res) => {
             const approveUser = await self.getUserData(approve.user_id, approve.id);
             // const approvedFiles = await self.getFileData(approve.id, 'APPROVE');
             element.approvedData = {
+                id: approve.id,
                 by: approve.user_id,
                 user: approveUser,
                 time: approve.time,
@@ -717,6 +720,7 @@ self.getModelAction = async(req, res) => {
             const authorizeUser = await self.getUserData(authorize.user_id, authorize.id);
             // const authorizedFiles = await self.getFileData(authorize.id, 'AUTHORIZE');
             element.authorizedData = {
+                id: authorize.id,
                 by: authorize.user_id,
                 user: authorizeUser,
                 time: authorize.time,
@@ -729,6 +733,7 @@ self.getModelAction = async(req, res) => {
             const rejectUser = await self.getUserData(reject.user_id, reject.id);
             // const rejectedFiles = await self.getFileData(reject.id, 'REJECT');
             element.rejectData = {
+                id: reject.id,
                 by: reject.user_id,
                 user: rejectUser,
                 time: reject.time,

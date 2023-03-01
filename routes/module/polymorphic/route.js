@@ -3,6 +3,7 @@ const AddressController = require("../../../controllers/polymorphic/AddressContr
 const validateData = require("../../../middleware/validate/module/polymorphic/validate")
 
 const ActionStateController = require("../../../controllers/polymorphic/ActionStateController.js")
+const ReplyController = require("../../../controllers/polymorphic/ReplyController.js")
 const middleware = require("../../../middleware/middleware")
 
 module.exports = function(express) {
@@ -25,6 +26,17 @@ module.exports = function(express) {
     route.put("/reject/:model/:id", ActionStateController.reject);
     // route.put("/reject/:model/:id", validateData.actionStateValidate, ActionStateController.reject);
     route.get("/model-action-data/:id", ActionStateController.getModelAction);
+
+    //reply
+
+    route.get("/reply", ReplyController.getAll);
+    route.get("/reply/:id", ReplyController.get);
+    route.post("/reply", ReplyController.save);
+    route.put("/reply/:id", ReplyController.update);
+    route.delete("/reply/:id", ReplyController.delete);
+    route.get("/action-replies/:id", ReplyController.getActionReplies);
+
+    
     
 
 
