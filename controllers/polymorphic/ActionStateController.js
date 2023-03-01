@@ -184,6 +184,7 @@ self.reject = async(req, res) => {
                         model_id: id,
                         action: "REJECT",
                         user_id: us.id,
+                        position_id: usr.position_id,
                         time: new Date()
                     })
 
@@ -202,7 +203,9 @@ self.reject = async(req, res) => {
 
 
 self.authorize = async(req, res) => {
+
     try {
+
         let id = req.params.id
         let model = req.params.model
         let usr = await usrData.userData(req, res)
@@ -220,32 +223,33 @@ self.authorize = async(req, res) => {
                 })
             } else {
 
-                let action = await actionstate.findAll({
-                    model_id: id,
-                    action: {
-                        [Op.in]: ['REGISTSER', 'CHECK', "APPROVE"]
-                    },
-                    user_id: us.id
+                // let action = await actionstate.findAll({
+                //     model_id: id,
+                //     action: {
+                //         [Op.in]: ['REGISTSER', 'CHECK', "APPROVE"]
+                //     },
+                //     user_id: us.id
 
-                })
+                // })
 
-                if (action.length != 0) {
-                    return res.status(422).json({
-                        message: 'You can not approve as you either register or check or approver the data'
-                    })
-                } else {
+                // if (action.length != 0) {
+                //     return res.status(422).json({
+                //         message: 'You can not approve as you either register or check or approver the data'
+                //     })
+                // } else {
                     actionstate.create({
                         model: (model).toLowerCase(),
                         model_id: id,
                         action: "AUTHORIZE",
                         user_id: usr.id,
+                        position_id: usr.position_id,
                         time: new Date()
                     })
 
                     return res.status(200).json({
                         message: "Date authorized successfully!"
                     })
-                }
+                // }
 
             }
         }
