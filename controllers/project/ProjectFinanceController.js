@@ -4,6 +4,7 @@ const {
     Sequelize
 } = require("./../../models");
 const usrData = require("../../utils/userDataFromToken");
+const paginate = require("../../utils/pagination");
 const Op = Sequelize.Op;
 const dotenv = require('dotenv');
 dotenv.config();
@@ -53,7 +54,21 @@ self.get = async(req, res) => {
         })
     }
 }
-
+self.getByProjectId = async(req, res) => {
+    try {
+        let id = req.params.id;
+        let data = await projectfinance.findOne({
+            where: {
+                project_id: id
+            }
+        });
+        return res.status(200).json(data)
+    } catch (error) {
+        res.status(500).json({
+            message: error.message
+        })
+    }
+}
 self.search = async(req, res) => {
     try {
         let text = req.query.text;

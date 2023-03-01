@@ -34,6 +34,7 @@ module.exports = (sequelize, DataTypes) => {
         street: DataTypes.STRING,
         block_number: DataTypes.STRING,
         house_number: DataTypes.STRING,
+        hq: DataTypes.BOOLEAN,
         northing: {
             type: DataTypes.DOUBLE,
             allowNull: false

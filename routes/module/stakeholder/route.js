@@ -22,6 +22,7 @@ const GraduateController = require("../../../controllers/stakeholder/GraduateCon
 const ConstructionRelatedServiceController = require("../../../controllers/stakeholder/ConstructionRelatedServiceController")
 const StudyProgramController = require("../../../controllers/stakeholder/StudyProgramController")
 const StakeholderServiceController = require("../../../controllers/stakeholder/StakeholderServiceController")
+const OperationlocationController = require("../../../controllers/stakeholder/OperationlocationController")
 const middleware = require("../../../middleware/middleware")
 const validateData = require("../../../middleware/validate/module/stakeholder/validate")
 
@@ -31,25 +32,15 @@ module.exports = function(express) {
     route.get("/ownership/", ownershiptypeController.getAll);
     route.get("/ownership/:id", ownershiptypeController.get);
     route.get("/ownership-search", ownershiptypeController.search);
-
     route.post("/ownership", validateData.ownerShipValidate, ownershiptypeController.save);
     route.put("/ownership/:id", validateData.ownerShipValidate, ownershiptypeController.update);
-
-    route.post("/ownership", ownershiptypeController.save);
-    route.put("/ownership/:id", ownershiptypeController.update);
-
     route.delete("/ownership/:id", ownershiptypeController.delete);
     //business field route
     route.get("/businessfield/", BusinessfieldController.getAll);
     route.get("/businessfield/:id", BusinessfieldController.get);
     route.get("/businessfield-search", BusinessfieldController.search);
-
     route.post("/businessfield", validateData.buisnessFieldValidate, BusinessfieldController.save);
     route.put("/businessfield/:id", validateData.buisnessFieldValidate, BusinessfieldController.update);
-
-    route.post("/businessfield", BusinessfieldController.save);
-    route.put("/businessfield/:id", BusinessfieldController.update);
-
     route.delete("/businessfield/:id", BusinessfieldController.delete);
     //stakeholder category route
     route.get("/stakeholder-category/", stakeholderCategoryController.getAll);
@@ -64,7 +55,6 @@ module.exports = function(express) {
     route.get("/stakeholder-sub-category/", stakeholderSubCategoryController.getAll);
     route.get("/stakeholder-sub-category/:id", stakeholderSubCategoryController.get);
     route.get("/stakeholder-sub-category-search", stakeholderSubCategoryController.search);
-
     route.post("/stakeholder-sub-category", validateData.stakeholderSubCategoryValidate, stakeholderSubCategoryController.save);
     route.put("/stakeholder-sub-category/:id", validateData.stakeholderSubCategoryValidate, stakeholderSubCategoryController.update);
     route.delete("/stakeholder-sub-category/:id", stakeholderSubCategoryController.delete);
@@ -78,19 +68,13 @@ module.exports = function(express) {
     //stakeholder info route
     route.get("/stakeholder-info/", stakeholderInfoController.getAll);
     route.get("/stakeholder-info/:id", stakeholderInfoController.get);
-
     route.get("/stakeholder-info/stakeholder/:id", stakeholderInfoController.getStakeInfoByStakeHolderId);
     route.get("/stakeholder-info-search", stakeholderInfoController.search);
     route.post("/stakeholder-info", validateData.stakeHolderInfo, stakeholderInfoController.save);
     route.put("/stakeholder-info/:id", validateData.stakeHolderInfo, stakeholderInfoController.update);
-
-    route.get("/stakeholder-info-search", stakeholderInfoController.search);
-    route.post("/stakeholder-info", stakeholderInfoController.save);
-    route.put("/stakeholder-info/:id", stakeholderInfoController.update);
-
     route.delete("/stakeholder-info/:id", stakeholderInfoController.delete);
     //stakeholder route
-    route.get("/stakeholder", stakeholderController.getAll);
+    route.get("/stakeholder", stakeholderController.getStakeholders);
     route.get("/stakeholder/:id", stakeholderController.get);
     route.post("/stakeholder/filter/stakeholder-type/", stakeholderController.getStakeHolderByTypeId);
     route.get("/stakeholder-search", stakeholderController.search);
@@ -108,6 +92,7 @@ module.exports = function(express) {
     //total employee route
     route.get("/total-employee/", TotalEmployeeController.getAll);
     route.get("/total-employee/:id", TotalEmployeeController.get);
+    route.get("/employee_years/total-employee", TotalEmployeeController.getTotalEmployeeAllYears);
     route.get("/total-employee/stakeholder/:id", TotalEmployeeController.getTotalEmployeeWithStakeholderId);
     route.get("/total-employee-search", TotalEmployeeController.search);
     route.post("/total-employee", validateData.totalEmployeeValidate, TotalEmployeeController.save);
@@ -141,7 +126,7 @@ module.exports = function(express) {
     route.get("/employee-education/stakeholder/:id", EmployeeEducationController.getEmployeeEducationByStakeholderId);
     route.get("/employee-education-search", EmployeeEducationController.search);
     route.post("/employee-education", validateData.educationValidate, EmployeeEducationController.save);
-    route.put("/employee-education/:id", validateData.educationValidate, EmployeeEducationController.update);
+    route.put("/employee-education/", validateData.educationValidate, EmployeeEducationController.update);
     route.delete("/employee-education/:id", EmployeeEducationController.delete);
     //work experience level route
     route.get("/work-experience-level/", WorkExperienceLevelController.getAll);
@@ -229,7 +214,13 @@ module.exports = function(express) {
     route.post("/stakeholder-service", validateData.StakeholderServiceValidate, StakeholderServiceController.save);
     route.put("/stakeholder-service/:id", validateData.StakeholderServiceValidate, StakeholderServiceController.update);
     route.delete("/stakeholder-service/:id", StakeholderServiceController.delete);
-
+    //Stakeholder operation location
+    route.get("/stakeholder-operation-location/", OperationlocationController.getAll);
+    route.get("/stakeholder-operation-location/:id", OperationlocationController.getByStakeholderId);
+    route.get("/stakeholder-operation-location-search", OperationlocationController.search);
+    route.post("/stakeholder-operation-location", OperationlocationController.save);
+    route.put("/stakeholder-operation-location/:id", OperationlocationController.update);
+    route.delete("/stakeholder-operation-location/:id", OperationlocationController.delete);
 
     return route;
 };

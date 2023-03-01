@@ -45,18 +45,8 @@ module.exports = {
                 onUpdate: 'CASCADE',
                 onDelete: 'CASCADE'
             },
-            name: {
-                type: Sequelize.STRING,
-                allowNull: false
-            },
             type: {
                 type: Sequelize.STRING,
-            },
-            item_specification: {
-                type: Sequelize.TEXT
-            },
-            measurement_unit: {
-                type: Sequelize.STRING
             },
             used_quantity: {
                 type: Sequelize.DOUBLE

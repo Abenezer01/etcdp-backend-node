@@ -48,7 +48,6 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.UUID,
             allowNull: false
         },
-        quantity: DataTypes.INTEGER,
         file_id: DataTypes.UUID,
         revision_no: {
             type: DataTypes.INTEGER

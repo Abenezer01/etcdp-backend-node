@@ -123,7 +123,8 @@ const projectVariationValidate = async(req, res, next) => {
         })
     }
     const validationRule = {
-        "project_id": "required|string"
+        "project_id": "required|string",
+        "amount": "required|integer"
     };
 
     await validateReply.validateReply(req.body, validationRule, res, next)
@@ -149,7 +150,8 @@ const projectBondValidate = async(req, res, next) => {
         })
     }
     const validationRule = {
-        "project_id": "required|string"
+        "project_id": "required|string",
+        "amount": "required|integer"
     };
 
     await validateReply.validateReply(req.body, validationRule, res, next)
@@ -517,6 +519,21 @@ const portValidate = async(req, res, next) => {
     await validateReply.validateReply(req.body, validationRule, res, next)
 
 }
+const paymentValidate = async(req, res, next) => {
+    let param = await validateReply.checkParam(req, res, next)
+    if (param == "failed") {
+        return res.status(400).json({
+            message: "Invalid id"
+        })
+    }
+    const validationRule = {
+        "project_id": "required|string",
+        "amount": "required|string"
+    };
+
+    await validateReply.validateReply(req.body, validationRule, res, next)
+
+}
 module.exports = {
     projectBondValidate,
     projectCategoryValidate,
@@ -554,5 +571,6 @@ module.exports = {
     waterIrrigationValidate,
     portValidate,
     spillWayInfoValidate,
-    statusValidate
+    statusValidate,
+    paymentValidate
 };

@@ -49,11 +49,14 @@ module.exports = {
             title: {
                 type: Sequelize.TEXT
             },
-            item_specification: {
+            description: {
                 type: Sequelize.TEXT
             },
             measurement_unit: {
-                type: Sequelize.DOUBLE
+                type: Sequelize.STRING
+            },
+            image_id: {
+                type: Sequelize.UUID
             },
             revision_no: {
                 type: Sequelize.INTEGER

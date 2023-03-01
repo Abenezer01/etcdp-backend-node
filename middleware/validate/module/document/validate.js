@@ -26,7 +26,6 @@ const documentValidate = async(req, res, next) => {
             });
     }
     const validationRule = {
-        "title": "required|string",
         "type": "required|string"
     };
 
@@ -34,6 +33,31 @@ const documentValidate = async(req, res, next) => {
 
 
 }
+const filterValidate = async(req, res, next) => {
+    // let param = await validateReply.checkParam(req, res, next)
+    // if (param == "failed") {
+    //     return res.status(400).json({
+    //         message: "Invalid id"
+    //     })
+    // }
+    let id = req.query.id
+    let projectType = req.query.project_type
+
+    //console.log("Hey", id, projectType)
+    if (!id) {
+        return res.status(412).json({
+            message: "Validation error, Please put id"
+        })
+    } else if (!projectType) {
+        return res.status(412).json({
+            message: "Validation error, Please put project type"
+        })
+    } else {
+        next();
+    }
+
+}
 module.exports = {
-    documentValidate
+    documentValidate,
+    filterValidate
 };

@@ -24,7 +24,8 @@ const fileUpload = require('express-fileupload');
 let app = express();
 app.use(fileUpload())
 app.use(cookieParser());
-
+app.use(express.static('public'));
+app.use('/images', express.static('images'));
 var corsOptions = {
     origin: "*",
 };
@@ -47,7 +48,7 @@ app.use('/api/document', documentRoute(express))
 app.use('/api/generics', polymorphicRoute(express))
 
 
-app.use("/",route_view(express));
+app.use("/", route_view(express));
 
 app.listen(7500, () => {
     console.log('Success running on  7500');

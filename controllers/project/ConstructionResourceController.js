@@ -103,7 +103,23 @@ self.save = async(req, res) => {
         })
     }
 }
-
+self.getByProjectId = async(req, res) => {
+    try {
+        let id = req.params.id;
+        let data = await constructionresource.findAll({
+            where: {
+                id: project_id
+            }
+        });
+        return res.status(200).json({
+            data: (data) ? data : []
+        })
+    } catch (error) {
+        res.status(500).json({
+            message: error.message
+        })
+    }
+}
 self.update = async(req, res) => {
     try {
         let id = req.params.id;

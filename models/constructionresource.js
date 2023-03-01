@@ -32,16 +32,10 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.UUID,
             allowNull: false
         },
-        name: {
-            type: DataTypes.STRING,
-            allowNull: false
-        },
         type: {
             type: DataTypes.STRING,
             allowNull: false
         },
-        item_specification: DataTypes.TEXT,
-        measurement_unit: DataTypes.STRING,
         used_quantity: DataTypes.DOUBLE,
         unit_price: DataTypes.DOUBLE,
         period_from: DataTypes.DATE,

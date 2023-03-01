@@ -9,7 +9,7 @@ const constructionResourceTypeValidate = async(req, res, next) => {
         })
     }
     const validationRule = {
-        "name": "required|string"
+        "title": "required|string"
     };
 
     await validateReply.validateReply(req.body, validationRule, res, next)
@@ -36,8 +36,7 @@ const constructionResourceSubCategoryValidate = async(req, res, next) => {
         })
     }
     const validationRule = {
-        "resourcetype_id": "required|string",
-        "resourcecategory_id": "required|string"
+        "title": "required|string"
     };
 
     await validateReply.validateReply(req.body, validationRule, res, next)
@@ -73,10 +72,89 @@ const constructionResourceQuantityandPriceValidate = async(req, res, next) => {
 
     await validateReply.validateReply(req.body, validationRule, res, next)
 }
+const detailResourceTypeValidate = async(req, res, next) => {
+    let param = await validateReply.checkParam(req, res, next)
+    if (param == "failed") {
+        return res.status(400).json({
+            message: "Invalid id"
+        })
+    }
+    const validationRule = {
+        "resource_id": "required|string",
+        "title": "required|string"
+    };
+
+    await validateReply.validateReply(req.body, validationRule, res, next)
+}
+const resourceBrandValidate = async(req, res, next) => {
+    let param = await validateReply.checkParam(req, res, next)
+    if (param == "failed") {
+        return res.status(400).json({
+            message: "Invalid id"
+        })
+    }
+    const validationRule = {
+        "resource_id": "required|string",
+        "title": "required|string"
+    };
+
+    await validateReply.validateReply(req.body, validationRule, res, next)
+}
+const resourceSpecificationValidate = async(req, res, next) => {
+    let param = await validateReply.checkParam(req, res, next)
+    if (param == "failed") {
+        return res.status(400).json({
+            message: "Invalid id"
+        })
+    }
+    const validationRule = {
+        "resource_id": "required|string",
+        "title": "required|string"
+    };
+
+    await validateReply.validateReply(req.body, validationRule, res, next)
+}
+const resourcePriceValidate = async(req, res, next) => {
+    let param = await validateReply.checkParam(req, res, next)
+    if (param == "failed") {
+        return res.status(400).json({
+            message: "Invalid id"
+        })
+    }
+    const validationRule = {
+        "resource_id": "required|string",
+        "resourcebrand_id": "required|string",
+        "detailresourcetype_id": "required|string",
+        "unit_price": "required|integer"
+    };
+
+    await validateReply.validateReply(req.body, validationRule, res, next)
+}
+const resourceQuantityValidate = async(req, res, next) => {
+    let param = await validateReply.checkParam(req, res, next)
+    if (param == "failed") {
+        return res.status(400).json({
+            message: "Invalid id"
+        })
+    }
+    const validationRule = {
+        "resource_id": "required|string",
+        "resourcebrand_id": "required|string",
+        "detailresourcetype_id": "required|string",
+        "quantity": "required|integer"
+    };
+
+    await validateReply.validateReply(req.body, validationRule, res, next)
+}
 module.exports = {
     constructionResourceCategoryValidate,
     constructionResourceQuantityandPriceValidate,
     constructionResourceSubCategoryValidate,
     constructionResourceTypeValidate,
-    constructionResourceValidate
+    constructionResourceValidate,
+    detailResourceTypeValidate,
+    resourceBrandValidate,
+    resourcePriceValidate,
+    resourceQuantityValidate,
+    resourceSpecificationValidate
 };

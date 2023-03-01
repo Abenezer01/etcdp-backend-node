@@ -6,6 +6,7 @@ const {
 const usrData = require("../../utils/userDataFromToken");
 const dotenv = require('dotenv');
 dotenv.config();
+const paginate = require("../../utils/pagination");
 const Op = Sequelize.Op;
 
 let self = {};

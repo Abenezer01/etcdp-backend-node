@@ -1,11 +1,12 @@
 {
     "development": {
-        "username": "root",
-        "password": "onespace@database",
-        "database": "etcdp_database",
-        "host": "127.0.0.1",
+        "username": "kaleb",
+        "password": "pgpass",
+        "host": "localhost",
+        "database": "Etcdp",
+
         "port": "3306",
-        "dialect": "mariadb",
+        "dialect": "mysql",
         "dialectOptions": {
             "ssl": false
         }

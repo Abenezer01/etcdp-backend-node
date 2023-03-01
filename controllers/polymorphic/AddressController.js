@@ -64,15 +64,25 @@ self.get = async(req, res) => {
 self.getAddressByModelId = async(req, res) => {
     try {
         let id = req.params.id;
-        let data = await address.findOne({
+        let data = await address.findAll({
 
             where: {
                 model_id: id
-            }
+            },
+            order: [
+                ['hq', 'DESC'],
+            ]
         });
-        return res.status(200).json({
-            data: data
-        })
+        let arr = []
+        for (i = 0; i < data.length; i++) {
+            if (data[i].hq == true) {
+                data[0] = data[i]
+            }
+
+        }
+        return res.status(200).json(
+            data ? data : []
+        )
     } catch (error) {
         res.status(500).json({
             message: error.message
@@ -101,13 +111,34 @@ self.save = async(req, res) => {
     try {
         let usr = await usrData.userData(req, res)
         let body = req.body;
+        let model_id = body.model_id
         if (usr) {
+            let usrID = usr.usrID
+            let hqData = await address.findAll({
+                where: {
+                    model_id: model_id,
+                    hq: true
+                }
+            })
+            console.log("The hq data", hqData)
+            if (!hqData.length) {
+                body.hq = true
+                let hqBod = await address.create(body)
+                if (hqBod) {
+                    await saveActionState(hqBod.id, "address", "REGISTER", usrID)
+                    return res.status(200).json({
+                        data: hqBod
+                    })
+                }
+            }
+            body.hq = false
             let data = await address.create(body);
             if (data) {
                 let usrID = usr.usrID
                 await saveActionState(data.id, "address", "REGISTER", usrID)
+                return res.json(data)
             }
-            return res.json(data)
+
         }
     } catch (error) {
         res.status(500).json({

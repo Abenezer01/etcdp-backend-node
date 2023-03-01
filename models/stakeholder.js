@@ -50,10 +50,6 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false
         },
-        operation_location: {
-            type: DataTypes.STRING,
-            allowNull: false
-        },
         revision_no: {
             type: DataTypes.INTEGER
         }
@@ -61,5 +57,31 @@ module.exports = (sequelize, DataTypes) => {
         sequelize,
         modelName: 'stakeholder',
     });
+    stakeholder.associate = function(models) {
+        // stakeholder.belongsTo(models.address, {
+        //     as: "address",
+        //     foreignKey: "address_id"
+        // })
+        stakeholder.belongsTo(models.stakeholdertype, {
+            as: "staketype",
+            foreignKey: "stakeholdertype_id"
+        })
+        stakeholder.belongsTo(models.stakecategory, {
+            as: "stakecategory",
+            foreignKey: "stakecategory_id"
+        })
+        stakeholder.belongsTo(models.stakesubcategory, {
+            as: "stakesubcategory",
+            foreignKey: "stakesubcategory_id"
+        })
+        stakeholder.belongsTo(models.ownership, {
+            as: "ownership",
+            foreignKey: "ownership_id"
+        })
+        stakeholder.belongsTo(models.businessfield, {
+            as: "businessfield",
+            foreignKey: "businessfield_id"
+        })
+    }
     return stakeholder;
 }

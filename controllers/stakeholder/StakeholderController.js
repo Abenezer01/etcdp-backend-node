@@ -119,26 +119,29 @@ self.getAll = async(req, res) => {
 
 
 
-    // try {
-    //     let data = await stakeholder.findAll();
-    //     return res.json(data)
 
-    // } catch (error) {
-    //     res.status(500).json({
-    //         message: error.message
-    //     })
-    // }
 
 
 }
+self.getStakeholders = async(req, res) => {
+    try {
+        let data = await stakeholder.findAll();
+        return res.json(data)
 
+    } catch (error) {
+        res.status(500).json({
+            message: error.message
+        })
+    }
+}
 self.get = async(req, res) => {
     try {
         let id = req.params.id;
         let data = await stakeholder.findOne({
             where: {
                 id: id
-            }
+            },
+            include: ["staketype", "stakecategory", "stakesubcategory", "ownership", "businessfield"]
         });
         return res.status(200).json({
             data: (data) ? data : {}
@@ -187,7 +190,7 @@ self.getStakeHolderByTypeId = async(req, res) => {
             ],
             where: {
                 [Op.and]: filter()
-            }
+            },
 
         })
         .then(data => {

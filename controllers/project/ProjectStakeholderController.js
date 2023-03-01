@@ -66,7 +66,24 @@ self.get = async(req, res) => {
         })
     }
 }
-
+self.getByProjectId = async(req, res) => {
+    try {
+        let id = req.params.id;
+        let data = await projectstakeholder.findAll({
+            where: {
+                project_id: id
+            },
+            include: ['stakeholder']
+        });
+        return res.status(200).json({
+            data: (data) ? data : []
+        })
+    } catch (error) {
+        res.status(500).json({
+            message: error.message
+        })
+    }
+}
 self.search = async(req, res) => {
     try {
         let text = req.query.text;

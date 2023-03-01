@@ -4,8 +4,8 @@ const permissionController = require("../../../controllers/user/permissionContro
 const userPhotoController = require("../../../controllers/user/userPhotoController.js")
 const positionController = require("../../../controllers/user/positionController.js")
 const departmentController = require("../../../controllers/user/departmentController.js")
-const TestController = require("../../../controllers/TestController.js")
-//Hr
+    //const TestController = require("../../../controllers/TestController.js")
+    //Hr
 const EducationStatusController = require("../../../controllers/user/EducationStatusController.js")
 const ChildController = require("../../../controllers/user/ChildController.js")
 const FamilyStatusController = require("../../../controllers/user/FamilyStatusController.js")
@@ -27,12 +27,12 @@ module.exports = function(express) {
 
     route.post("/assign-user-position", userController.assignPosition);
     route.get("/disable-user-position/:id", userController.dePosition);
-	route.post("/switch-account", userController.switchAccount);
+    route.post("/switch-account", userController.switchAccount);
     route.get("/user-positions/:id", userController.getAllUserPositions);
 
-    
 
-    
+
+
     //position route
     route.get("/position", positionController.getAll);
     route.get("/position/:id", positionController.get);
@@ -42,7 +42,7 @@ module.exports = function(express) {
     route.delete("/position/:id", positionController.delete);
     route.get("/department-positions/:id", positionController.getDepartmentPositions);
 
-    
+
     //department route
     route.get("/department", departmentController.getAll);
     route.get("/department/:id", departmentController.get);
@@ -56,13 +56,13 @@ module.exports = function(express) {
 
 
     route.get("/search-department/:id?", departmentController.getParentOrGivenId);
-	route.get("/department-structure", departmentController.getStructure);
+    route.get("/department-structure", departmentController.getStructure);
     route.get("/department-structure/:id", departmentController.getChildren);
 
-	route.get("/department-head/:id", departmentController.getDepartmentHead);
-	route.get("/all-parents/:id", departmentController.getToRoot);
+    route.get("/department-head/:id", departmentController.getDepartmentHead);
+    route.get("/all-parents/:id", departmentController.getToRoot);
 
-    
+
 
 
 
@@ -84,9 +84,9 @@ module.exports = function(express) {
     route.get("/generate-permission", permissionController.initPermission);
     route.get("/models", permissionController.getModels);
 
-	route.get("/grouped-permissions/:id/:module",permissionController.getGroupedPermissions);
+    route.get("/grouped-permissions/:id/:module", permissionController.getGroupedPermissions);
 
-	route.get("/module-permissions/:module",permissionController.getPermissionsByModule);
+    route.get("/module-permissions/:module", permissionController.getPermissionsByModule);
 
 
     //Photo route
@@ -101,8 +101,8 @@ module.exports = function(express) {
     route.get("/education-status", EducationStatusController.getAll);
     route.get("/education-status/:id", EducationStatusController.get);
     route.get("/education-status-search", EducationStatusController.search);
-    route.post("/education-status", validateInput.educationStatusValidate,  EducationStatusController.save);
-    route.put("/education-status/:id", validateInput.educationStatusValidate,  EducationStatusController.update);
+    route.post("/education-status", validateInput.educationStatusValidate, EducationStatusController.save);
+    route.put("/education-status/:id", validateInput.educationStatusValidate, EducationStatusController.update);
     route.delete("/education-status/:id", roleController.delete);
 
     //child
@@ -122,7 +122,7 @@ module.exports = function(express) {
     route.put("/family-status/:id", validateInput.familyStatusValidate, FamilyStatusController.update);
     route.delete("/family-status/:id", FamilyStatusController.delete);
 
-      //Role route
+    //Role route
     route.get("/contact-person", ContactPersonController.getAll);
     route.get("/contact-person/:id", ContactPersonController.get);
     route.get("/contact-person-search", ContactPersonController.search);
@@ -131,22 +131,22 @@ module.exports = function(express) {
     route.delete("/contact-person/:id", ContactPersonController.delete);
     //job experience
 
-     //Role route
-     route.get("/job-experience", JobExperienceController.getAll);
-     route.get("/job-experience/:id", JobExperienceController.get);
-     route.get("/job-experience-search", JobExperienceController.search);
-     route.post("/job-experience", validateInput.jobExperienceValidate, JobExperienceController.save);
-     route.put("/job-experience/:id", validateInput.jobExperienceValidate, JobExperienceController.update);
-     route.delete("/job-experience/:id", JobExperienceController.delete);
-    
-     //user hr routing
+    //Role route
+    route.get("/job-experience", JobExperienceController.getAll);
+    route.get("/job-experience/:id", JobExperienceController.get);
+    route.get("/job-experience-search", JobExperienceController.search);
+    route.post("/job-experience", validateInput.jobExperienceValidate, JobExperienceController.save);
+    route.put("/job-experience/:id", validateInput.jobExperienceValidate, JobExperienceController.update);
+    route.delete("/job-experience/:id", JobExperienceController.delete);
 
-     route.get("/education-status/user/:id", EducationStatusController.getByUserId);
-     route.get("/family-status/user/:id", FamilyStatusController.getByUserId);
-     route.get("/contact-person/user/:id", ContactPersonController.getByUserId);
-     route.get("/job-experience/user/:id", JobExperienceController.getByUserId);
+    //user hr routing
+
+    route.get("/education-status/user/:id", EducationStatusController.getByUserId);
+    route.get("/family-status/user/:id", FamilyStatusController.getByUserId);
+    route.get("/contact-person/user/:id", ContactPersonController.getByUserId);
+    route.get("/job-experience/user/:id", JobExperienceController.getByUserId);
     //test
-    route.get("/test", TestController.getAll);
+    //route.get("/test", TestController.getAll);
 
     return route;
 };
