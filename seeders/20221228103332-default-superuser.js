@@ -167,13 +167,13 @@ module.exports = {
             createdAt: new Date(),
             updatedAt: new Date()
         }]);
-        await queryInterface.bulkInsert('studyfields', [{
-            title: "Science",
-            description: "Study field description",
-            id: uuid.v4(),
-            createdAt: new Date(),
-            updatedAt: new Date()
-        }]);
+        // await queryInterface.bulkInsert('studyfields', [{
+        //     title: "Science",
+        //     description: "Study field description",
+        //     id: uuid.v4(),
+        //     createdAt: new Date(),
+        //     updatedAt: new Date()
+        // }]);
         await queryInterface.bulkInsert('agelevels', [{
                 title: "< 25",
                 description: "",

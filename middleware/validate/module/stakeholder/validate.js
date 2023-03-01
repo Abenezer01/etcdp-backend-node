@@ -100,8 +100,7 @@ const stakeHolderValidate = async(req, res, next) => {
         "tin": "required|string",
         "ownership_id": "required|string",
         "businessfield_id": "required|string",
-        "origin": "required|string",
-        "operation_location": "required|string",
+        "origin": "required|string"
     };
 
     await validateReply.validateReply(req.body, validationRule, res, next)
@@ -135,6 +134,7 @@ const certificateValidate = async(req, res, next) => {
     await validateReply.validateReply(req.body, validationRule, res, next)
 }
 const totalEmployeeValidate = async(req, res, next) => {
+    return res.json("Hi Leul")
     let param = await validateReply.checkParam(req, res, next)
     if (param == "failed") {
         return res.status(400).json({
@@ -146,8 +146,8 @@ const totalEmployeeValidate = async(req, res, next) => {
         "year": "required|date",
         "domain": "required|string",
         "nationality": "required|string",
-        "gender": "required|string",
-        "quantity": "required|integer"
+        "male": "required|integer",
+        "female": "required|integer"
     };
 
     await validateReply.validateReply(req.body, validationRule, res, next)
@@ -189,15 +189,14 @@ const educationValidate = async(req, res, next) => {
         "stakeholder_id": "required|string",
         "year": "required|date",
         "domain": "required|string",
-        "gender": "required|string",
-        "studylevel_id": "required|string",
-        "quantity": "required|integer"
+        "nationality": "required|string",
+        "male": "required|integer",
+        "female": "required|integer",
+        "studylevel_id": "required|string"
 
     };
-    let bodyArr = req.body.arr
-    for (i = 0; i < bodyArr.length; i++) {
-        await validateReply.validateReply(bodyArr[i], validationRule, res, next)
-    }
+    let bodyArr = req.body.empEduArr
+    await validateReply.validateArrayReply(bodyArr, validationRule, res, next)
 
 
 
@@ -227,12 +226,14 @@ const employeeAgeValidate = async(req, res, next) => {
         "stakeholder_id": "required|string",
         "year": "required|date",
         "domain": "required|string",
-        "gender": "required|string",
-        "agelevel_id": "required|string",
-        "quantity": "required|integer"
+        "nationality": "required|string",
+        "male": "required|integer",
+        "female": "required|integer",
+        "agelevel_id": "required|string"
     };
 
-    await validateReply.validateReply(req.body, validationRule, res, next)
+    let bodyArr = req.body.empAgeArr
+    await validateReply.validateArrayReply(bodyArr, validationRule, res, next)
 }
 const experienceLevelValidate = async(req, res, next) => {
     let param = await validateReply.checkParam(req, res, next)
@@ -258,12 +259,16 @@ const workExperienceValidate = async(req, res, next) => {
         "stakeholder_id": "required|string",
         "year": "required|date",
         "domain": "required|string",
-        "gender": "required|string",
-        "experiencelevel_id": "required|string",
-        "quantity": "required|integer"
+        "nationality": "required|string",
+        "male": "required|integer",
+        "female": "required|integer",
+        "experiencelevel_id": "required|string"
     };
 
-    await validateReply.validateReply(req.body, validationRule, res, next)
+    let bodyArr = req.body.empWorkArr
+    await validateReply.validateArrayReply(bodyArr, validationRule, res, next)
+
+
 }
 const workExperienceLevelValidate = async(req, res, next) => {
     let param = await validateReply.checkParam(req, res, next)

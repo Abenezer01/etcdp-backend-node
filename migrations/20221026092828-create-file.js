@@ -10,7 +10,7 @@ module.exports = {
             parent_id: {
                 type: Sequelize.UUID
             },
-            fileable_type: {
+            project_type: {
                 type: Sequelize.STRING
             },
             title: {
@@ -32,6 +32,9 @@ module.exports = {
             },
             reference_id: {
                 type: Sequelize.UUID
+            },
+            size: {
+                type: Sequelize.DOUBLE
             },
             revision_no: {
                 type: Sequelize.INTEGER

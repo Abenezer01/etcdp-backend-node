@@ -66,7 +66,21 @@ self.get = async(req, res) => {
         })
     }
 }
-
+self.getByProjectId = async(req, res) => {
+    try {
+        let id = req.params.id;
+        let data = await projectplan.findAll({
+            where: {
+                project_id: id
+            }
+        });
+        return res.status(200).json(data)
+    } catch (error) {
+        res.status(500).json({
+            message: error.message
+        })
+    }
+}
 self.search = async(req, res) => {
     try {
         let text = req.query.text;
@@ -89,6 +103,9 @@ self.save = async(req, res) => {
     try {
         let usr = await usrData.userData(req, res)
         let body = req.body;
+        var date = new Date(body.start);
+        var lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+        body.end = lastDay
         if (usr) {
             let data = await projectplan.create(body);
             if (data) {

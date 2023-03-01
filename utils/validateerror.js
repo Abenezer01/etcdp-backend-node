@@ -27,13 +27,43 @@ const validateReply = async(body, validationRule, res, next) => {
                     message: 'Validation failed',
                     error: err.errors,
                 });
+
             console.log("The error", err)
         } else {
             next();
         }
     }).catch(err => console.log(err))
 }
+const validateArrayReply = async(body, validationRule, res, next) => {
+    let bodyArr = body
+    let errarr = []
+    for (i = 0; i < bodyArr.length; i++) {
+        //console.log(i, bodyArr[i])
+        await validator(bodyArr[i], validationRule, {}, (err, status) => {
+            if (!status) {
+
+                errarr.push({ row: i, ...err.errors })
+
+
+
+            }
+        })
+
+    }
+    if (errarr.length) {
+        res.status(412)
+            .send({
+                success: false,
+                message: 'Missing fields',
+                error: errarr,
+            });
+    } else {
+        next()
+    }
+
+}
 module.exports = {
     validateReply,
-    checkParam
+    checkParam,
+    validateArrayReply
 }

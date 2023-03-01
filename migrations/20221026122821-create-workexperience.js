@@ -56,10 +56,6 @@ module.exports = {
                 onUpdate: 'CASCADE',
                 onDelete: 'CASCADE'
             },
-            quantity: {
-                type: Sequelize.INTEGER,
-                allowNull: false
-            },
             file_id: {
                 type: Sequelize.UUID,
                 references: {

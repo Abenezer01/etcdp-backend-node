@@ -41,7 +41,7 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.DATE,
             allowNull: false
         },
-
+        quantity: DataTypes.INTEGER,
         file_id: DataTypes.UUID,
         revision_no: DataTypes.INTEGER
     }, {

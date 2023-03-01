@@ -41,7 +41,7 @@ For sequlize db migration:-
      sequlize seed:-
              npx sequelize-cli db:seed:all   
 To kill the port:-
-             sudo kill -9 $(sudo lsof -t -i:9001)
+             sudo kill -9 $(sudo lsof -t -i:3000)
 To stop mysql startup on ubuntu:-
              sudo systemctl disable mysql
 Git push:
@@ -50,3 +50,5 @@ Mysqlconf:
 Dbname:- etcdpdb
 Dbuser:- kalebt
 Dbpass:- pg@Pass1
+For conflict
+git config pull.rebase false

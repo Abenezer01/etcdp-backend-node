@@ -7,6 +7,7 @@ module.exports = function(express) {
     route.get("/document", DocumentController.getAll);
     route.get("/document/:id", DocumentController.get);
     route.get("/document/reference/:id", DocumentController.getMyFiles);
+    route.get("/filter/document", validateData.filterValidate, DocumentController.getMyFilteredFiles);
     route.get("/document_search", DocumentController.search);
     route.post("/document", validateData.documentValidate, DocumentController.save);
     route.put("/document/:id", validateData.documentValidate, DocumentController.update);

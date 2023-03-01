@@ -41,6 +41,9 @@ module.exports = {
                 type: Sequelize.STRING,
                 allowNull: false
             },
+            quantity: {
+                type: Sequelize.INTEGER
+            },
             provision_date: {
                 type: Sequelize.DATE,
                 allowNull: false

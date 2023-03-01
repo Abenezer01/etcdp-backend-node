@@ -86,10 +86,6 @@ module.exports = {
                 type: Sequelize.STRING,
                 allowNull: false
             },
-            operation_location: {
-                type: Sequelize.STRING,
-                allowNull: false
-            },
             revision_no: {
                 type: Sequelize.INTEGER
             },

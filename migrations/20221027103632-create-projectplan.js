@@ -26,29 +26,40 @@ module.exports = {
                 onUpdate: 'CASCADE',
                 onDelete: 'CASCADE'
             },
-            period_start: {
+            start: {
                 type: Sequelize.DATE
             },
-            period_end: {
+            end: {
                 type: Sequelize.DATE
             },
-            financial: {
-                type: Sequelize.DOUBLE
+            type: {
+                type: Sequelize.STRING,
+                allowNull: null
             },
-            physical: {
-                type: Sequelize.DOUBLE
+            project_expense: Sequelize.DOUBLE,
+            manpower: Sequelize.DOUBLE,
+            direct_labour: Sequelize.DOUBLE,
+            indirect_labour: Sequelize.DOUBLE,
+            material: Sequelize.DOUBLE,
+            machinery: Sequelize.DOUBLE,
+            other_expense: Sequelize.DOUBLE,
+            sub_contractor_cost: Sequelize.DOUBLE,
+            financial_performance: Sequelize.DOUBLE,
+            physical_performance: Sequelize.DOUBLE,
+            cost_due_to_rework: Sequelize.DOUBLE,
+            over_head_cost: Sequelize.DOUBLE,
+            year: Sequelize.STRING,
+            month: Sequelize.STRING,
+            start: {
+                type: Sequelize.DATE,
+                allowNull: false
             },
-            over_head: {
-                type: Sequelize.DOUBLE
+            end: {
+                type: Sequelize.DATE,
+                // allowNull: false
             },
-            expense: {
+            profit: {
                 type: Sequelize.DOUBLE
-            },
-            subtotal: {
-                type: Sequelize.DOUBLE
-            },
-            is_planned: {
-                type: Sequelize.BOOLEAN
             },
             remark: {
                 type: Sequelize.TEXT

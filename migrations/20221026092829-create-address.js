@@ -43,6 +43,9 @@ module.exports = {
             house_number: {
                 type: Sequelize.STRING
             },
+            hq: {
+                type: Sequelize.BOOLEAN
+            },
 
             northing: {
                 type: Sequelize.DOUBLE,

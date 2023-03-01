@@ -3,6 +3,7 @@ const {
     projectbond,
     Sequelize
 } = require("./../../models");
+const paginate = require("../../utils/pagination");
 const usrData = require("../../utils/userDataFromToken");
 const dotenv = require('dotenv');
 dotenv.config();
@@ -50,6 +51,33 @@ self.get = async(req, res) => {
         return res.status(200).json({
             data: data
         })
+    } catch (error) {
+        res.status(500).json({
+            message: error.message
+        })
+    }
+}
+self.getByProjectType = async(req, res) => {
+    try {
+        let { type, project_id } = req.query;
+        if (!project_id) {
+            res.status(400).json({ message: "Can't get project_id at param" })
+        }
+        if (!type) {
+            res.status(400).json({ message: "Can't get type value at param" })
+        }
+        await projectbond.findAll({
+            where: {
+                type: type,
+                project_id: project_id
+            }
+        }).then(function(datas) {
+            return res.json({
+                data: datas
+            });
+        }).catch(function(error) {
+            console.log(error);
+        });
     } catch (error) {
         res.status(500).json({
             message: error.message

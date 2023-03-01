@@ -14,7 +14,7 @@ self.getAll = async(req, res) => {
     try {
         let data = await file.findAll();
         return res.status(200).json({
-            data
+            data: data
         })
 
     } catch (error) {
@@ -63,7 +63,25 @@ self.getMyFiles = async(req, res) => {
         })
     }
 }
-
+self.getMyFilteredFiles = async(req, res) => {
+    try {
+        let id = req.query.id;
+        let projectType = req.query.project_type;
+        let data = await file.findAll({
+            where: {
+                reference_id: id,
+                project_type: projectType
+            }
+        });
+        return res.status(200).json({
+            data: data
+        })
+    } catch (error) {
+        res.status(500).json({
+            message: error.message
+        })
+    }
+}
 self.search = async(req, res) => {
     try {
         let text = req.query.text;
@@ -93,19 +111,28 @@ self.save = async(req, res) => {
     const title = req.body.title;
     const description = req.body.description;
     const referenceId = req.body.reference_id;
+    const fileabletype = req.body.fileable_type;
+    const projectType = req.body.project_type
+
     const ext = req.files.upload.mimetype.split("/")[1];
     console.log("The file type is", ext)
+    var name = req.files.upload.name;
     let rand = Math.floor(100000 + Math.random() * 900000)
-    const filePath = path.join(__dirname, '../../public', 'documents', rand + '.' +
+    var newName = name.concat(rand)
+    checkedNew = newName.split('.').join("");
+    const filePath = path.join(__dirname, '../../public', 'documents', checkedNew + '.' +
         `${ext}`)
+
     let document = {
-        fileable_type: ext,
-        title: title,
+        fileable_type: fileabletype,
+        title: checkedNew,
         url: filePath,
         type: type,
         description: description,
         extension: ext,
-        reference_id: referenceId
+        reference_id: referenceId,
+        project_type: projectType,
+        size: 12
     }
 
 

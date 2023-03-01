@@ -23,14 +23,32 @@ module.exports = (sequelize, DataTypes) => {
         resourcetype_id: DataTypes.UUID,
         resourcecategory_id: DataTypes.UUID,
         resourcesubcategory_id: DataTypes.UUID,
-        item_specification: DataTypes.UUID,
-        measurement_unit: DataTypes.DOUBLE,
+        measurement_unit: DataTypes.STRING,
         title: DataTypes.STRING,
         description: DataTypes.TEXT,
+        image_id: DataTypes.UUID,
         revision_no: DataTypes.INTEGER
     }, {
         sequelize,
         modelName: 'resource',
     });
+    resource.associate = function(models) {
+        // resource.belongsTo(models.address, {
+        //     as: "address",
+        //     foreignKey: "address_id"
+        // })
+        resource.belongsTo(models.resourcetype, {
+            as: "resourcetype",
+            foreignKey: "resourcetype_id"
+        })
+        resource.belongsTo(models.resourcecategory, {
+            as: "resourcecategory",
+            foreignKey: "resourcecategory_id"
+        })
+        resource.belongsTo(models.resourcesubcategory, {
+            as: "resourcesubcategory",
+            foreignKey: "resourcesubcategory_id"
+        })
+    }
     return resource;
 };

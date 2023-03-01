@@ -42,7 +42,7 @@ const RailwayStationController = require("../../../controllers/project/RailwaySt
 
 const WaterIrrigationDamController = require("../../../controllers/project/WaterIrrigationDamController.js")
 const PortController = require("../../../controllers/project/PortController.js")
-
+const PaymentController = require("../../../controllers/project/PaymentController.js")
 
 // const middleware = require("../../../middleware/middleware")
 // const stakeCategoryValidate = require("../../../middleware/validate")
@@ -97,6 +97,7 @@ module.exports = function(express) {
     //Project stakeholder
     route.get("/project-stakeholder", ProjectStakeholderController.getAll);
     route.get("/project-stakeholder/:id", ProjectStakeholderController.get);
+    route.get("/project/project-stakeholder/:id", ProjectStakeholderController.getByProjectId);
     route.get("/project-stakeholder-search", ProjectStakeholderController.search);
     route.post("/project-stakeholder", validateData.projectStakeholderValidate, ProjectStakeholderController.save);
     route.put("/project-stakeholder/:id", validateData.projectStakeholderValidate, ProjectStakeholderController.update);
@@ -104,6 +105,7 @@ module.exports = function(express) {
     //Project plan
     route.get("/project-plan", ProjectPlanController.getAll);
     route.get("/project-plan/:id", ProjectPlanController.get);
+    route.get("/project/project-plan/:id", ProjectPlanController.getByProjectId);
     route.get("/project-plan-search", ProjectPlanController.search);
     route.post("/project-plan", validateData.projectPlanValidate, ProjectPlanController.save);
     route.put("/project-plan/:id", validateData.projectPlanValidate, ProjectPlanController.update);
@@ -116,12 +118,12 @@ module.exports = function(express) {
     route.put("/project-document/:id", validateData.projectDocumentValidate, ProjectDocumentController.update);
     route.delete("/project-document/:id", ProjectDocumentController.delete);
     //Construction resource
-    route.get("/construction-resource", ConstructionResourceController.getAll);
-    route.get("/construction-resource/:id", ConstructionResourceController.get);
-    route.get("/construction-resource-search", ConstructionResourceController.search);
-    route.post("/construction-resource", validateData.constructionResourceValidate, ConstructionResourceController.save);
-    route.put("/construction-resource/:id", validateData.constructionResourceValidate, ConstructionResourceController.update);
-    route.delete("/construction-resource/:id", ConstructionResourceController.delete);
+    route.get("/project/construction-resource", ConstructionResourceController.getAll);
+    route.get("/project/construction-resource/:id", ConstructionResourceController.get);
+    route.get("/project/construction-resource-search", ConstructionResourceController.search);
+    route.post("/project/construction-resource", validateData.constructionResourceValidate, ConstructionResourceController.save);
+    route.put("/project/construction-resource/:id", validateData.constructionResourceValidate, ConstructionResourceController.update);
+    route.delete("/project/construction-resource/:id", ConstructionResourceController.delete);
     //Building envelop material
     route.get("/building-envelop-material", BuildingEnvelopMaterialController.getAll);
     route.get("/building-envelop-material/:id", BuildingEnvelopMaterialController.get);
@@ -215,6 +217,7 @@ module.exports = function(express) {
     //project finance route
     route.get("/project-finance/", ProjectFinanceController.getAll);
     route.get("/project-finance/:id", ProjectFinanceController.get);
+    route.get("/project-finance/project/:id", ProjectFinanceController.getByProjectId);
     route.get("/project-finance-search", ProjectFinanceController.search);
     route.post("/project-finance", validateData.projectFinanceValidate, ProjectFinanceController.save);
     route.put("/project-finance/:id", validateData.projectFinanceValidate, ProjectFinanceController.update);
@@ -224,6 +227,7 @@ module.exports = function(express) {
     //project variation route
     route.get("/project-variation/", ProjectVariationController.getAll);
     route.get("/project-variation/:id", ProjectVariationController.get);
+    route.get("/type/project-variation", ProjectVariationController.getByProjectType);
     route.get("/project-variation-search", ProjectVariationController.search);
     route.post("/project-variation", validateData.projectVariationValidate, ProjectVariationController.save);
     route.put("/project-variation/:id", validateData.projectVariationValidate, ProjectVariationController.update);
@@ -232,6 +236,7 @@ module.exports = function(express) {
     //project time
     route.get("/project-time/", ProjectTimeController.getAll);
     route.get("/project-time/:id", ProjectTimeController.get);
+    route.get("/project/project-time/:id", ProjectTimeController.getByProjectId);
     route.get("/project-time-search", ProjectTimeController.search);
     route.post("/project-time", validateData.projectTimeValidate, ProjectTimeController.save);
     route.put("/project-time/:id", validateData.projectTimeValidate, ProjectTimeController.update);
@@ -240,6 +245,7 @@ module.exports = function(express) {
     //project bond
     route.get("/project-bond/", ProjectBondController.getAll);
     route.get("/project-bond/:id", ProjectBondController.get);
+    route.get("/type/project-bond", ProjectBondController.getByProjectType);
     route.get("/project-bond-search", ProjectBondController.search);
     route.post("/project-bond", validateData.projectBondValidate, ProjectBondController.save);
     route.put("/project-bond/:id", validateData.projectBondValidate, ProjectBondController.update);
@@ -351,7 +357,13 @@ module.exports = function(express) {
     route.put("/port/:id", validateData.portValidate, PortController.update);
     route.delete("/port/:id", PortController.delete);
 
-
+    //payment
+    route.get("/payment", PaymentController.getAll);
+    route.get("/payment/:id", PaymentController.get);
+    route.get("/payment", PaymentController.search);
+    route.post("/payment", validateData.paymentValidate, PaymentController.save);
+    route.put("/payment/:id", validateData.paymentValidate, PaymentController.update);
+    route.delete("/payment/:id", PaymentController.delete);
 
     return route;
 };

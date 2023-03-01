@@ -76,10 +76,10 @@ self.loginUser = async(request, response) => {
                 usr = { id: id, department_id: userData.position.department_id }
                 accessToken = jwt.sign(usr,
                     TOKEN_KEY, {
-                        expiresIn: "2h",
+                        expiresIn: "10h",
                     }
                 );
-                refreshToken = jwt.sign(usr, REFRESH_TOKEN_KEY, { expiresIn: "3h" })
+                refreshToken = jwt.sign(usr, REFRESH_TOKEN_KEY, { expiresIn: "10h" })
                     // save user token
 
                 user.update({

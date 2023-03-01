@@ -84,7 +84,39 @@ self.search = async(req, res) => {
         })
     }
 }
-
+self.getCRCByResourceTypeId = async(req, res) => {
+    let { page, size, order } = req.query;
+    let id = req.params.id;
+    //console.log("The page", page, size)
+    if (page == null && size == null) {
+        page = process.env.page,
+            size = process.env.size
+    }
+    if (order == null) {
+        order = process.env.order
+    }
+    const { limit, offset } = paginate.getPagination(page, size);
+    resourcecategory.findAndCountAll({
+            limit,
+            offset,
+            order: [
+                ['createdAt', order]
+            ],
+            where: {
+                resourcetype_id: id
+            },
+            include: ['resourcesubcategories']
+        })
+        .then(data => {
+            const response = paginate.getPagingData(data, page, limit);
+            res.send(response);
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: err.message || "Some error occurred while retrieving data."
+            });
+        });
+}
 self.save = async(req, res) => {
     try {
         let usr = await usrData.userData(req, res)

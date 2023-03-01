@@ -34,5 +34,12 @@ module.exports = (sequelize, DataTypes) => {
         sequelize,
         modelName: 'resourcecategory',
     });
+    resourcecategory.associate = function(models) {
+        // associations can be defined here
+        resourcecategory.hasMany(models.resourcesubcategory, {
+            foreignKey: 'resourcecategory_Id',
+            as: 'resourcesubcategories',
+        });
+    }
     return resourcecategory;
 };

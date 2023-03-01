@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue: DataTypes.UUIDV4
         },
         parent_id: DataTypes.UUID,
-        fileable_type: {
+        project_type: {
             type: DataTypes.STRING,
             allowNull: false
         },
@@ -33,6 +33,7 @@ module.exports = (sequelize, DataTypes) => {
         description: DataTypes.TEXT,
         extension: DataTypes.STRING,
         reference_id: DataTypes.UUID,
+        size: DataTypes.DOUBLE,
         revision_no: {
             type: DataTypes.INTEGER
         }
