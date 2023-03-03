@@ -96,7 +96,27 @@ let modules = [
     "stakeholder",
     "resource",
     "document",
-    "analysis" // analysis can be further classified as project, stakeholder...
+    "analysis"
+     // analysis can be further classified as project, stakeholder...
+]
+
+let permissionModules = [
+    "StakeholderInfo",
+    "StakeholderEmployee",
+    "StakeholderSpecific",
+    "StakeholderProject",
+    "StakeholderFile",
+    "ProjectInfo",
+    "ProjectTime",
+    "ProjectFinance",
+    "ProjectStakeholder",
+    "ProjectFile",
+    "ProjectPlan",
+    "ProjectResource",
+    "ProjectReport",
+    "Resources",
+    "Document",
+    "Centers"
 ]
 let roleName = [
     "Admin", 
@@ -109,5 +129,6 @@ let roleName = [
 
 module.exports = {
     models,
-    roleName
+    roleName,
+    permissionModules
 }

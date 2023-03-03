@@ -264,7 +264,9 @@ self.getGroupedPermissions = async (req, res) => {
 		return res.json(arr)
 
 	} catch (error) {
-		
+		 return res.status(500).json({
+            message: error.message
+         })
 	}
 	
 }
