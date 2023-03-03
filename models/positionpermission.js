@@ -14,6 +14,11 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   positionpermission.init({
+    id: {
+      type: DataTypes.UUID,
+      primaryKey: true,
+      defaultValue: DataTypes.UUIDV4
+    },
     position_id: {
       type: DataTypes.UUID,
       allowNull: false
@@ -24,10 +29,7 @@ module.exports = (sequelize, DataTypes) => {
     }
 }, {
     sequelize,
-    modelName: 'rolepermission',
-}, {
-    sequelize,
     modelName: 'positionpermission',
-  });
+});
   return positionpermission;
 };

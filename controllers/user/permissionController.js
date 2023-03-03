@@ -1,6 +1,7 @@
 const {
     permission,
     rolepermission,
+    positionpermission,
     Sequelize
 } = require("../../models");
 const { saveActionState } = require("../../utils/helper");
@@ -115,21 +116,29 @@ self.delete = async(req, res) => {
 
 self.initPermission = async(req, res) => {
     try {
-        let permissions = master.models 
+        const { permissionModules, actions } = master;
+        const permissionPromises = [];
 
-        let permissionData = permissions.map((per) => ({
-            name: per,
-            model: per,
-            module: "project"
-        }))
-        await Promise.all(permissionData.map((data)=> permission.create(data)))
+        for (const action of actions) {
+            for (const module of permissionModules) {
+                permissionPromises.push(permission.create({
+                    name: `${action}_${module}`,
+                    module: module
+                }));
+            }
+        }
+
+        await Promise.all(permissionPromises.flatMap(p => p));
+
+        return res.json("test")
+
 
     } catch (error) {
         return res.status(500).json({
             message: error.message
         })
     }
-}
+}   
 
 self.getModels = async (req, res) => {
 	try {
@@ -270,4 +279,115 @@ self.getGroupedPermissions = async (req, res) => {
 	}
 	
 }
+self.getPermissionModules = async(req, res) => {
+    try {
+        let modules = master.permissionModules
+        return res.json(modules)
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message
+        })
+    }
+}
+
+self.getPermissionsByAction = async(req, res) => {
+
+    const { id, action }  = req.params
+
+	try {
+
+        const ePermissions = await permission.findAll({
+            where: {
+                name: {
+                    [Op.like]: `%${action}%`
+                }
+            }
+        });
+    
+        const newObj = {};
+    
+        const modules = master.modules;
+    
+        await Promise.all(modules.map(async (cat) => {
+            const newArr = await Promise.all(ePermissions
+                .filter(per => per.category === cat)
+                .map(async (per) => {
+                    const pos = await positionpermission.findOne({
+                        where: {
+                            position_id: id,
+                            permission_id: per.id
+                        }
+                    });
+    
+                    return {
+                        id:per.id,
+                        name: per.name,
+                        module: per.module,
+                        category: per.category,
+                        is_selected: Boolean(pos),
+                        createdAt: per.createdAt,
+                        updatedAt: per.updatedAt
+                    };
+                })
+            );
+            newObj[cat] = newArr;
+        }));
+    
+        return res.json(newObj);
+	
+	} catch (error) {
+		 return res.status(500).json({
+            message: error.message
+         })
+	}
+}
+
+self.assignPositionPermissions = async(req, res) => {
+    try {
+        const { permissions } = req.body;
+        let data = []
+        for(let per of permissions) {
+            if(per.is_selected){
+                let exists = await positionpermission.findOne({
+                    where: {
+                        position_id: per.position_id,
+                        permission_id: per.id
+                    }
+                })
+                if(!exists){
+                    let temp = await positionpermission.create({
+                        position_id: per.position_id,
+                        permission_id: per.id
+                    })
+                    data.push(temp)
+                }
+            }else{
+
+                let exists = await positionpermission.findOne({
+                    where: {
+                        position_id: per.position_id,
+                        permission_id: per.id
+                    }
+                })
+                if(exists){
+                    let temp = await positionpermission.delete({
+                       where: {
+                        id: exists.id
+                       }
+                    })
+                    data.push(temp)
+                }
+            }
+            
+        }
+          
+        return res.status(200).json(data);
+
+    } catch (error) {
+        res.status(500).json({
+            message: error.message
+        })
+    }
+}
+
 module.exports = self;

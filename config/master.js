@@ -91,32 +91,32 @@ let models = [
 ]
 
 let modules = [
-    "project",
-    "master",
-    "stakeholder",
-    "resource",
-    "document",
-    "analysis"
+    "PROJECT",
+    "STAKEHOLDER",
+    "DOCUMENT",
+    "RESOURCE",
+    "CENTER",
+    // "analysis"
      // analysis can be further classified as project, stakeholder...
 ]
 
 let permissionModules = [
-    "StakeholderInfo",
-    "StakeholderEmployee",
-    "StakeholderSpecific",
-    "StakeholderProject",
-    "StakeholderFile",
-    "ProjectInfo",
-    "ProjectTime",
-    "ProjectFinance",
-    "ProjectStakeholder",
-    "ProjectFile",
-    "ProjectPlan",
-    "ProjectResource",
-    "ProjectReport",
-    "Resources",
-    "Document",
-    "Centers"
+    "stakeholderinfo",
+    "stakeholderemployee",
+    "stakeholderspecific",
+    "stakeholderproject",
+    "stakeholderfile",
+    "projectinfo",
+    "projecttime",
+    "projectfinance",
+    "projectstakeholder",
+    "projectfile",
+    "projectplan",
+    "projectresource",
+    "projectreport",
+    "resources",
+    "document",
+    "center"
 ]
 let roleName = [
     "Admin", 
@@ -127,8 +127,18 @@ let roleName = [
     "Viewer"
 ]
 
+let actions = [
+    "register",
+    "check",
+    "approve",
+    "authorize",
+    "view"
+]
+
 module.exports = {
     models,
+    modules,
     roleName,
-    permissionModules
+    permissionModules,
+    actions
 }

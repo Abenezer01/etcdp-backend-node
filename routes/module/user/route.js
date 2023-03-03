@@ -85,10 +85,15 @@ module.exports = function(express) {
     route.get("/models", permissionController.getModels);
 
     route.get("/grouped-permissions/:id/:module", permissionController.getGroupedPermissions);
+    route.get("/position-permissions/:id/:action", permissionController.getPermissionsByAction);
+
+    route.post("/assign-permissions", permissionController.assignPositionPermissions);
+
+    
+    
 
     route.get("/module-permissions/:module", permissionController.getPermissionsByModule);
-
-
+    route.get("/permission-modules", permissionController.getPermissionModules);
     //Photo route
     route.get("/photo", userPhotoController.getAll);
     route.get("/photo/:id", userPhotoController.get);
