@@ -36,7 +36,7 @@ self.get = async(req, res) => {
         });
         if (data) {
             let us = "e1594d67-3aa2-429b-bb77-2e4ecc2124f8"
-            saveActionState(data.id, "permission", "REGISTER", us)
+            saveActionState(data.id, "permission", "REGISTER", us, req, res)
         }
         return res.status(200).json({
             data: data
