@@ -126,32 +126,6 @@ self.delete = async(req, res) => {
     }
 }
 
-self.initPermission = async(req, res) => {
-    try {
-        const { permissionModules, actions } = master;
-        const permissionPromises = [];
-
-        for (const action of actions) {
-            for (const module of permissionModules) {
-                permissionPromises.push(permission.create({
-                    name: `${action}_${module}`,
-                    module: module
-                }));
-            }
-        }
-
-        await Promise.all(permissionPromises.flatMap(p => p));
-
-        return res.json("test")
-
-
-    } catch (error) {
-        return res.status(500).json({
-            message: error.message
-        })
-    }
-}   
-
 self.getModels = async (req, res) => {
 	try {
         let models = master.models
@@ -461,5 +435,30 @@ self.getUserPermission = async(req, res) => {
         })
     }
 }
+self.initPermission = async(req, res) => {
+    try {
+        const { permissionModules, actions } = master;
+        const permissionPromises = [];
+
+        for (const action of actions) {
+            for (const module of permissionModules) {
+                permissionPromises.push(permission.create({
+                    name: `${action}_${module}`,
+                    module: module
+                }));
+            }
+        }
+
+        await Promise.all(permissionPromises.flatMap(p => p));
+
+        return res.json("test")
+
+
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message
+        })
+    }
+}   
 
 module.exports = self;
