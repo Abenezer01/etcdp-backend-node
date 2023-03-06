@@ -91,9 +91,8 @@ module.exports = function(express) {
     route.get("/grouped-permissions/:id/:module", permissionController.getGroupedPermissions);
     route.get("/position-permissions/:id/:action", permissionController.getPermissionsByAction);
 
-    route.post("/assign-permissions", permissionController.assignPositionPermissions);
-
-    
+    route.post("/assign-position-permissions", permissionController.assignPositionPermissions);
+    route.get("/user-permissions", permissionController.getUserPermission);
     
 
     route.get("/module-permissions/:module", permissionController.getPermissionsByModule);

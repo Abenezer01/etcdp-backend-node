@@ -4,7 +4,6 @@ const {
 } = require("../../models");
 const { saveActionState } = require("../../utils/helper");
 const usrData = require("../../utils/userDataFromToken");
-let usr = await usrData.userData(req, res)
 const Op = Sequelize.Op;
 
 let self = {};
