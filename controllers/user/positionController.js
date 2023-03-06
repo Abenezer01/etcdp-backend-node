@@ -3,7 +3,7 @@ const {
     position,
     Sequelize
 } = require("./../../models");
-
+const usrData = require("../../utils/userDataFromToken");
 const Op = Sequelize.Op;
 
 let self = {};
@@ -62,11 +62,17 @@ self.save = async(req, res) => {
     try {
         let body = req.body;
         let data = await position.create(body); 
-        // if(data){
-            let us = "e1594d67-3aa2-429b-bb77-2e4ecc2124f8"
-            await saveActionState(data.id, "position", "REGISTER", us)
-            
-        // }
+        if(data) {
+            let usr = await usrData.userData(req, res)
+            await actionstate.create({
+                model_id: data.id,
+                model:"position",
+                action: "REGISTER",
+                user_id: usr.usrID,
+                position_id: usr.position_id,
+                time: new Date(),
+            })
+        }
         return res.json(data)
     } catch (error) {
         res.status(500).json({

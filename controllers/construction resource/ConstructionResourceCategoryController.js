@@ -124,7 +124,6 @@ self.save = async(req, res) => {
         if (usr) {
             let data = await resourcecategory.create(body);
             if (data) {
-
                 let us = usr.usrID
                 await saveActionState(data.id, "resourcecategory", "REGISTER", us)
             }

@@ -9,6 +9,7 @@ const {
     actionstate,
     Sequelize
 } = require("./../../models");
+const usrData = require("../../utils/userDataFromToken");
 
 const Op = Sequelize.Op;
 
@@ -75,14 +76,14 @@ self.save = async(req, res) => {
         let body = req.body;
         let data = await department.create(body);
         if(data){
-            let us = "f01da526-7f87-40b5-a967-dd711eef0740"
-            // saveActionState(data.id, "department", "REGISTER", us)
+            
+            let usr = await usrData.userData(req, res)
             await actionstate.create({
                 model_id: data.id,
                 model:"department",
                 action: "REGISTER",
-                user_id: us,
-                position_id: "be25a148-c195-498d-95e0-fd4be224959f",
+                user_id: usr.usrID,
+                position_id: usr.position_id,
                 time: new Date(),
             })
             
@@ -93,7 +94,16 @@ self.save = async(req, res) => {
                 is_head: true,
                 role_id:"03963640-6675-4c68-a073-25ac309abd74"
             })
-            await saveActionState(pos.id, "position", "REGISTER", us)
+            if(pos){
+                await actionstate.create({
+                    model_id: data.id,
+                    model:"position",
+                    action: "REGISTER",
+                    user_id: usr.usrID,
+                    position_id: usr.position_id,
+                    time: new Date(),
+                })
+            }
 
             //default role and position
             // let allRoles = master.roleName
