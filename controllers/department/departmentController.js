@@ -72,70 +72,60 @@ self.search = async(req, res) => {
 }
 
 self.save = async(req, res) => {
-        try {
-            let body = req.body;
-            let data = await department.create(body);
+    try {
+        let body = req.body;
+        let data = await department.create(body);
+
+        if (data) {
+            let us = "f01da526-7f87-40b5-a967-dd711eef0740"
+                // saveActionState(data.id, "department", "REGISTER", us)
 
             if (data) {
-                let us = "f01da526-7f87-40b5-a967-dd711eef0740"
-                    // saveActionState(data.id, "department", "REGISTER", us)
 
-                if (data) {
+                let usr = await usrData.userData(req, res)
 
-                    let usr = await usrData.userData(req, res)
+                await actionstate.create({
+                    model_id: data.id,
+                    model: "department",
+                    action: "REGISTER",
+                    user_id: usr.usrID,
+                    position_id: usr.position_id,
+                    time: new Date(),
+                })
 
-                    await actionstate.create({
-                        model_id: data.id,
-                        model: "department",
-                        action: "REGISTER",
-                        user_id: usr.usrID,
-                        position_id: usr.position_id,
-                        time: new Date(),
-                    })
+                let pos = await position.create({
+                    department_id: data.id,
+                    name: `Head of ${data.name}`,
+                    description: "discr",
+                    is_head: true,
+                    role_id: "03963640-6675-4c68-a073-25ac309abd74"
+                })
 
-                    let pos = await position.create({
-                        department_id: data.id,
-                        name: `Head of ${data.name}`,
-                        description: "discr",
-                        is_head: true,
-                        role_id: "03963640-6675-4c68-a073-25ac309abd74"
-                    })
-
-                    await saveActionState(pos.id, "position", "REGISTER", us, req, res)
-
-                    if (pos) {
-                        await actionstate.create({
-                            model_id: data.id,
-                            model: "position",
-                            action: "REGISTER",
-                            user_id: usr.usrID,
-                            position_id: usr.position_id,
-                            time: new Date(),
-                        })
-                    }
+                await saveActionState(pos.id, "position", "REGISTER", us, req, res)
 
 
-                    //default role and position
-                    // let allRoles = master.roleName
 
-                    // for(let ro of allRoles) {
-                    //     let createdRole = await role.create({
-                    //         name: ro,
-                    //         department_id: data.id
-                    //     })
-                    //     if(createdRole){
-                    //         let createdPos = await position.create({
-                    //             name: ro,
-                    //             department_id: data.od,
-                    //             role_id: createdRole.id
-                    //         })
-                    //         if(createdPos) {
-                    //             saveActionState(createdPos.id, "position","REGISTER", us)
-                    //         }
-                    //         saveActionState(createdRole.id, "role","REGISTER", us)
-                    //     }
-                    // }
-                }
+                //default role and position
+                // let allRoles = master.roleName
+
+                // for(let ro of allRoles) {
+                //     let createdRole = await role.create({
+                //         name: ro,
+                //         department_id: data.id
+                //     })
+                //     if(createdRole){
+                //         let createdPos = await position.create({
+                //             name: ro,
+                //             department_id: data.od,
+                //             role_id: createdRole.id
+                //         })
+                //         if(createdPos) {
+                //             saveActionState(createdPos.id, "position","REGISTER", us)
+                //         }
+                //         saveActionState(createdRole.id, "role","REGISTER", us)
+                //     }
+                // }
+            }
 
         }
         return res.json(data)

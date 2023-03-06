@@ -1,12 +1,8 @@
 const {
     permission,
-    rolepermission,
-    positionpermission,
     Sequelize
 } = require("../../models");
 const { saveActionState } = require("../../utils/helper");
-const usrData = require("../../utils/userDataFromToken");
-const master = require("./../../config/master")
 
 const Op = Sequelize.Op;
 
@@ -38,7 +34,7 @@ self.get = async(req, res) => {
                 id: id
             }
         });
-        if(data){
+        if (data) {
             let us = "e1594d67-3aa2-429b-bb77-2e4ecc2124f8"
             saveActionState(data.id, "permission", "REGISTER", us)
         }
@@ -74,17 +70,6 @@ self.save = async(req, res) => {
     try {
         let body = req.body;
         let data = await permission.create(body);
-        if(data){
-            let usr = await usrData.userData(req, res)
-            await actionstate.create({
-                model_id: data.id,
-                model:"permission",
-                action: "REGISTER",
-                user_id: usr.usrID,
-                position_id: usr.position_id,
-                time: new Date(),
-            })
-        }
         return res.json(data)
     } catch (error) {
         res.status(500).json({
@@ -125,6 +110,32 @@ self.delete = async(req, res) => {
         })
     }
 }
+
+self.initPermission = async(req, res) => {
+    try {
+        const { permissionModules, actions } = master;
+        const permissionPromises = [];
+
+        for (const action of actions) {
+            for (const module of permissionModules) {
+                permissionPromises.push(permission.create({
+                    name: `${action}_${module}`,
+                    module: module
+                }));
+            }
+        }
+
+        await Promise.all(permissionPromises.flatMap(p => p));
+
+        return res.json("test")
+
+
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message
+        })
+    }
+}   
 
 self.getModels = async (req, res) => {
 	try {
