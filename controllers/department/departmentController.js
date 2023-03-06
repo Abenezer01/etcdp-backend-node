@@ -103,16 +103,6 @@ self.save = async(req, res) => {
 
                 await saveActionState(pos.id, "position", "REGISTER", us, req, res)
 
-                if (pos) {
-                    await actionstate.create({
-                        model_id: data.id,
-                        model: "position",
-                        action: "REGISTER",
-                        user_id: usr.usrID,
-                        position_id: usr.position_id,
-                        time: new Date(),
-                    })
-                }
 
 
                 //default role and position
@@ -135,8 +125,8 @@ self.save = async(req, res) => {
                 //         saveActionState(createdRole.id, "role","REGISTER", us)
                 //     }
                 // }
-
             }
+
         }
         return res.json(data)
     } catch (error) {

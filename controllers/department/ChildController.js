@@ -4,14 +4,19 @@ const {
 } = require("../../models");
 const { saveActionState } = require("../../utils/helper");
 
-const Op = Sequelize.Op;
 
+
+const Op = Sequelize.Op;
 let self = {};
+
+
 
 self.getAll = async(req, res) => {
     try {
         let data = await child.findAll();
         return res.json(data)
+
+
 
     } catch (error) {
         res.status(500).json({
@@ -56,6 +61,8 @@ self.search = async(req, res) => {
     }
 }
 
+
+
 self.save = async(req, res) => {
     try {
         let body = req.body;
@@ -64,6 +71,39 @@ self.save = async(req, res) => {
             let us = "e1594d67-3aa2-429b-bb77-2e4ecc2124f8"
             saveActionState(data.id, "child", "REGISTER", us, req, res)
         }
+        return res.json(data)
+    } catch (error) {
+        res.status(500).json({
+            message: error.message
+        })
+    }
+
+
+}
+self.update = async(req, res) => {
+    try {
+        let id = req.params.id;
+        let body = req.body;
+        let data = await child.update(body, {
+            where: {
+                id: id
+            }
+        });
+        return res.json(data)
+    } catch (error) {
+        res.status(500).json({
+            message: error.message
+        })
+    }
+}
+self.delete = async(req, res) => {
+    try {
+        let id = req.params.id;
+        let data = await child.destroy({
+            where: {
+                id: id
+            }
+        });
         return res.json(data)
     } catch (error) {
         res.status(500).json({

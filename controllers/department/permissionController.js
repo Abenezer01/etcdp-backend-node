@@ -112,4 +112,63 @@ self.delete = async(req, res) => {
 }
 
 
+self.getUserPermission = async(req, res) => {
+
+    try {
+
+        const usr = await usrData.userData(req, res);
+        const positionpermissions = await positionpermission.findAll({
+        where: {
+            position_id: usr.position_id
+        }
+        });
+
+        const perArr = await Promise.all(positionpermissions.map(async (posper) => {
+            const data = await permission.findOne({
+                where: {
+                id: posper.permission_id
+                }
+            });
+            let obj = {
+                "action": data ? data.name : null,
+                "subject": data ? data.module : null,
+            }
+            return obj
+        }));
+
+        // Remove any null values from the array
+        const filteredArr = perArr.filter(Boolean);
+
+        return res.json(filteredArr)
+
+
+
+        // let usr = await usrData.userData(req, res) 
+        // let positionpermissions = await positionpermission.findAll({
+        //     where:{
+        //         position_id: usr.position_id
+        //     }
+        // })
+        
+        // let perArr = []
+        // for(let posper of positionpermissions){
+        //     let data = await permission.findOne({
+        //         where: {
+        //             id: posper.permission_id
+        //         }
+        //     })
+        //     if(data){
+        //         perArr.push(data.name)
+        //     }
+
+
+        // }
+        // return res.json(perArr)
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message
+        })
+    }
+}
+
 module.exports = self;
