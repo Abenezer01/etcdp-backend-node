@@ -36,13 +36,13 @@ module.exports = function(express) {
     route.put("/construction-resource-subcategory/:id", validateData.constructionResourceSubCategoryValidate, ConstructionResourceSubCategoryController.update);
     route.delete("/construction-resource-subcategory/:id", ConstructionResourceSubCategoryController.delete);
     //construction resource registration controller
-    route.get("/construction-resource", ConstructionResourceRegistrationController.getAll);
-    route.get("/construction-resource/:id", ConstructionResourceRegistrationController.get);
-    route.get("/filter/construction-resource", ConstructionResourceRegistrationController.filter);
-    route.get("/construction-resource_search", ConstructionResourceRegistrationController.search);
-    route.post("/construction-resource", validateData.constructionResourceValidate, ConstructionResourceRegistrationController.save);
-    route.put("/construction-resource/:id", validateData.constructionResourceValidate, ConstructionResourceRegistrationController.update);
-    route.delete("/construction-resource/:id", ConstructionResourceRegistrationController.delete);
+    route.get("/resource", ConstructionResourceRegistrationController.getAll);
+    route.get("/resource/:id", ConstructionResourceRegistrationController.get);
+    route.get("/filter/resource", ConstructionResourceRegistrationController.filter);
+    route.get("/resource_search", ConstructionResourceRegistrationController.search);
+    route.post("/resource", validateData.constructionResourceValidate, ConstructionResourceRegistrationController.save);
+    route.put("/resource/:id", validateData.constructionResourceValidate, ConstructionResourceRegistrationController.update);
+    route.delete("/resource/:id", ConstructionResourceRegistrationController.delete);
     //construction resource quantity and controller
     // route.get("/construction-resource-quantity-price", ConstructionResourceQuantityAndPriceController.getAll);
     // route.get("/construction-resource-quantity-price/:id", ConstructionResourceQuantityAndPriceController.get);
@@ -91,8 +91,8 @@ module.exports = function(express) {
     route.put("/construction-resource-specification/:id", validateData.resourceSpecificationValidate, ResourceSpecificationController.update);
     route.delete("/construction-resource-specification/:id", ResourceSpecificationController.delete);
     //Resource image
-    route.post("/resource-image/:id", ResourceImageController.save);
-    route.put("/resource-image/:id", ResourceImageController.update);
+    route.post("/resource-image/:id", validateData.resourceImageValidate, ResourceImageController.save);
+    route.put("/resource-image/:id", validateData.resourceImageValidate, ResourceImageController.update);
     route.delete("/resource-image/:id", ResourceImageController.delete);
     return route;
 };

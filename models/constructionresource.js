@@ -11,6 +11,9 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             // define association here
+            constructionresource.belongsTo(models.resource, {
+                foreignKey: 'resource_id'
+            });
         }
     }
     constructionresource.init({
@@ -24,16 +27,8 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.UUID,
             allowNull: false
         },
-        resourcecategory_id: {
+        resource_id: {
             type: DataTypes.UUID,
-            allowNull: false
-        },
-        resourcesubcategory_id: {
-            type: DataTypes.UUID,
-            allowNull: false
-        },
-        type: {
-            type: DataTypes.STRING,
             allowNull: false
         },
         used_quantity: DataTypes.DOUBLE,
@@ -46,5 +41,6 @@ module.exports = (sequelize, DataTypes) => {
         sequelize,
         modelName: 'constructionresource',
     });
+
     return constructionresource;
 };

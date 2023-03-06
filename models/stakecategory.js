@@ -11,6 +11,9 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             // define association here
+            stakecategory.hasMany(models.stakesubcategory, {
+                foreignKey: 'stakecategoryId'
+            });
         }
     }
     stakecategory.init({
@@ -31,12 +34,9 @@ module.exports = (sequelize, DataTypes) => {
         sequelize,
         modelName: 'stakecategory',
     });
-    stakecategory.associate = function(models) {
-        // associations can be defined here
-        stakecategory.hasMany(models.stakesubcategory, {
-            foreignKey: 'stakecategoryId',
-            as: 'stakesubcategories',
-        });
-    }
+    // stakecategory.associate = function(models) {
+    //     // associations can be defined here
+
+    // }
     return stakecategory;
 };

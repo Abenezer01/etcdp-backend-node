@@ -25,28 +25,15 @@ module.exports = {
                 onUpdate: 'CASCADE',
                 onDelete: 'CASCADE'
             },
-            resourcecategory_id: {
+            resource_id: {
                 type: Sequelize.UUID,
                 allowNull: false,
                 references: {
-                    model: 'resourcecategories',
+                    model: 'resources',
                     key: 'id'
                 },
                 onUpdate: 'CASCADE',
                 onDelete: 'CASCADE'
-            },
-            resourcesubcategory_id: {
-                type: Sequelize.UUID,
-                allowNull: false,
-                references: {
-                    model: 'resourcesubcategories',
-                    key: 'id'
-                },
-                onUpdate: 'CASCADE',
-                onDelete: 'CASCADE'
-            },
-            type: {
-                type: Sequelize.STRING,
             },
             used_quantity: {
                 type: Sequelize.DOUBLE

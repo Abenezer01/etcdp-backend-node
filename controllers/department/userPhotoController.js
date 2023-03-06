@@ -89,7 +89,10 @@ self.save = async(req, res) => {
         }
         const ext = req.files.upload.mimetype.split("/")[1];
         let rand = Math.floor(100000 + Math.random() * 900000)
-        const filePath = path.join(__dirname, '../../public', 'images/user photo', rand + '.' +
+        var name = req.files.image.name;
+        var newName = name.concat(rand)
+        checkedNew = newName.split('.').join("");
+        const filePath = path.join(__dirname, '../../public', 'images/user photo', checkedNew + '.' +
                 `${ext}`)
             //console.log("The file path is ", filePath)
 

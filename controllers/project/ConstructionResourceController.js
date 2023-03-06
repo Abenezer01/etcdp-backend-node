@@ -1,5 +1,6 @@
 const {
     constructionresource,
+    resource,
     Sequelize
 } = require("../../models");
 const usrData = require("../../utils/userDataFromToken");
@@ -108,8 +109,10 @@ self.getByProjectId = async(req, res) => {
         let id = req.params.id;
         let data = await constructionresource.findAll({
             where: {
-                id: project_id
-            }
+                project_id: id
+            },
+            //include: { model: resource, as: 'resource', attributes: ['title', 'measurement_unit', ''] },
+            include: { model: resource, as: 'resource' },
         });
         return res.status(200).json({
             data: (data) ? data : []

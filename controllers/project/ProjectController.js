@@ -244,12 +244,12 @@ self.save = async(req, res) => {
                 let usrID = usr.usrID
                 await saveActionState(data.id, "project", "REGISTER", usrID)
             }
-            let arr = [{ name: "Client", id: body.clientId }, { name: "Consultant", id: body.consultantId }, { name: "Contractor", id: body.contractorId }]
-            for (let i = 0; i < arr.length; i++) {
-                let body = { project_id: data.id, stakeholder_id: arr[i].id, title: arr[i].name }
-                projectstakeholder.create(body)
+            // let arr = [{ name: "Client", id: body.clientId }, { name: "Consultant", id: body.consultantId }, { name: "Contractor", id: body.contractorId }]
+            // for (let i = 0; i < arr.length; i++) {
+            //     let body = { project_id: data.id, stakeholder_id: arr[i].id, title: arr[i].name }
+            //     projectstakeholder.create(body)
 
-            }
+            // }
             return res.json(data)
         }
     } catch (error) {

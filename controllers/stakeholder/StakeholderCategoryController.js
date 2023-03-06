@@ -85,6 +85,11 @@ self.getAllCatByTypeId = async(req, res) => {
             order: [
                 ['createdAt', order]
             ],
+            // include: {
+            //     model: stakesubcategory,
+            //     as: 'stakesubcategories',
+            //     attributes: ['title']
+            // },
             include: [{
                 model: stakesubcategory,
                 as: 'stakesubcategories',

@@ -18,10 +18,10 @@ const saveActionState = async(model_id, model, action, user_id) => {
 
     } catch (error) {
         return {
-            message : error.message
+            message: error.message
         }
     }
-    
+
 }
 
 

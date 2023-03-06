@@ -146,6 +146,25 @@ const resourceQuantityValidate = async(req, res, next) => {
 
     await validateReply.validateReply(req.body, validationRule, res, next)
 }
+const resourceImageValidate = async(req, res, next) => {
+    let param = await validateReply.checkParam(req, res, next)
+    if (param == "failed") {
+        return res.status(400).json({
+            message: "Invalid id"
+        })
+    }
+    if (!req.files) {
+        return res.status(402).json({
+            message: "There is no image file attached"
+        })
+    } else if (!req.files.image) {
+        return res.status(402).json({
+            message: "There is no image field on file upload"
+        })
+    } else {
+        next()
+    }
+}
 module.exports = {
     constructionResourceCategoryValidate,
     constructionResourceQuantityandPriceValidate,
@@ -156,5 +175,6 @@ module.exports = {
     resourceBrandValidate,
     resourcePriceValidate,
     resourceQuantityValidate,
-    resourceSpecificationValidate
+    resourceSpecificationValidate,
+    resourceImageValidate
 };

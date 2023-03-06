@@ -87,13 +87,13 @@ module.exports = function(express) {
     route.post("/project-status", validateData.projectStatusValidate, ProjectStatusController.save);
     route.put("/project-status/:id", validateData.projectStatusValidate, ProjectStatusController.update);
     route.delete("/project-status/:id", ProjectStatusController.delete);
-    //Project registration
-    route.get("/project", ProjectController.getAll);
-    route.get("/project/:id", ProjectController.get);
-    route.get("/project-search", ProjectController.search);
-    route.post("/project", validateData.projectValidate, ProjectController.save);
-    route.put("/project/:id", validateData.projectValidate, ProjectController.update);
-    route.delete("/project/:id", ProjectController.delete);
+    // //Project registration
+    // route.get("/project", ProjectController.getAll);
+    // route.get("/project/:id", ProjectController.get);
+    // route.get("/project-search", ProjectController.search);
+    // route.post("/project", validateData.projectValidate, ProjectController.save);
+    // route.put("/project/:id", validateData.projectValidate, ProjectController.update);
+    // route.delete("/project/:id", ProjectController.delete);
     //Project stakeholder
     route.get("/project-stakeholder", ProjectStakeholderController.getAll);
     route.get("/project-stakeholder/:id", ProjectStakeholderController.get);
@@ -118,13 +118,13 @@ module.exports = function(express) {
     route.put("/project-document/:id", validateData.projectDocumentValidate, ProjectDocumentController.update);
     route.delete("/project-document/:id", ProjectDocumentController.delete);
     //Construction resource
-    route.get("/project/construction-resource", ConstructionResourceController.getAll);
-    route.get("/project/construction-resource/:id", ConstructionResourceController.get);
+    route.get("/construction-resource", ConstructionResourceController.getAll);
+    route.get("/construction-resource/:id", ConstructionResourceController.get);
     route.get("/constructionproject/construction-resource/:id", ConstructionResourceController.getByProjectId);
-    route.get("/project/construction-resource-search", ConstructionResourceController.search);
-    route.post("/project/construction-resource", validateData.constructionResourceValidate, ConstructionResourceController.save);
-    route.put("/project/construction-resource/:id", validateData.constructionResourceValidate, ConstructionResourceController.update);
-    route.delete("/project/construction-resource/:id", ConstructionResourceController.delete);
+    route.get("/construction-resource-search", ConstructionResourceController.search);
+    route.post("/construction-resource", validateData.constructionResourceValidate, ConstructionResourceController.save);
+    route.put("/construction-resource/:id", validateData.constructionResourceValidate, ConstructionResourceController.update);
+    route.delete("/construction-resource/:id", ConstructionResourceController.delete);
     //Building envelop material
     route.get("/building-envelop-material", BuildingEnvelopMaterialController.getAll);
     route.get("/building-envelop-material/:id", BuildingEnvelopMaterialController.get);

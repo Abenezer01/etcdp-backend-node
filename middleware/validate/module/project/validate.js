@@ -191,8 +191,7 @@ const constructionResourceValidate = async(req, res, next) => {
     }
     const validationRule = {
         "project_id": "required|string",
-        "resourcecategory_id": "required|string",
-        "resourcesubcategory_id": "required|string"
+        "resource_id": "required|string"
     };
 
     await validateReply.validateReply(req.body, validationRule, res, next)
