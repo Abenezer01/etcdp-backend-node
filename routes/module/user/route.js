@@ -53,6 +53,10 @@ module.exports = function(express) {
     route.get("/sub-departments/:id", departmentController.getSubDepartments);
     route.get("/parent-department", departmentController.getParentDepartment);
 
+    route.get("/department-dashboard/:id", departmentController.getDepartmentDashboad);
+
+    
+
 
 
     route.get("/search-department/:id?", departmentController.getParentOrGivenId);

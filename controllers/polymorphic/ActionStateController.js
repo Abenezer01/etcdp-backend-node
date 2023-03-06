@@ -1,6 +1,6 @@
 const {
     actionstate,
-    address,
+    note,
     user,
     userposition,
     position,
@@ -20,6 +20,23 @@ self.getAll = async(req, res) => {
 
     } catch (error) {
         res.status(500).json({
+            message: error.message
+        })
+    }
+}
+
+self.get = async(req, res) => {
+    let id = req.params.id 
+    try {
+        let data = await actionstate.findOne({
+            where: {
+                id:id
+            }
+        })
+
+        return res.json(data)
+    } catch (error) {
+        return res.status(500).json({
             message: error.message
         })
     }
@@ -63,7 +80,7 @@ self.check = async(req, res) => {
                 //         message: 'You are not allowed to check the data as you are the register'
                 //     })
                 // } else {
-                    await actionstate.create({
+                    let action = await actionstate.create({
                         model_id: id,
                         model: model,
                         action: "CHECK",
@@ -72,9 +89,7 @@ self.check = async(req, res) => {
                         time: new Date()
                     })
 
-                    return res.json({
-                        message: "Data checked successfully"
-                    })
+                    return res.status(200).json(action)
                 // }
             }
         }
@@ -120,7 +135,7 @@ self.approve = async(req, res) => {
                 //         message: 'You can not approve as you either register or check the data'
                 //     })
                 // } else {
-                    actionstate.create({
+                    let action = actionstate.create({
                         model: (model).toLowerCase(),
                         model_id: id,
                         action: "APPROVE",
@@ -129,9 +144,7 @@ self.approve = async(req, res) => {
                         time: new Date()
                     })
 
-                    return res.status(200).json({
-                        message: "Data approved successfully!"
-                    })
+                    return res.status(200).json(action)
                 // }
             }
         }
@@ -179,7 +192,7 @@ self.reject = async(req, res) => {
                         message: 'You can not approve as you either register or check or approver the data'
                     })
                 } else {
-                    actionstate.create({
+                    let action = actionstate.create({
                         model: (model).toLowerCase(),
                         model_id: id,
                         action: "REJECT",
@@ -188,9 +201,7 @@ self.reject = async(req, res) => {
                         time: new Date()
                     })
 
-                    return res.status(200).json({
-                        message: "Date rejected successfully!"
-                    })
+                    return res.status(200).json(action)
                 }
             }
         }
@@ -237,7 +248,7 @@ self.authorize = async(req, res) => {
                 //         message: 'You can not approve as you either register or check or approver the data'
                 //     })
                 // } else {
-                    actionstate.create({
+                    let action = actionstate.create({
                         model: (model).toLowerCase(),
                         model_id: id,
                         action: "AUTHORIZE",
@@ -246,9 +257,7 @@ self.authorize = async(req, res) => {
                         time: new Date()
                     })
 
-                    return res.status(200).json({
-                        message: "Date authorized successfully!"
-                    })
+                    return res.status(200).json(action)
                 // }
 
             }
@@ -682,22 +691,37 @@ self.getModelAction = async(req, res) => {
         if (register) {
 
             const registerUser = await self.getUserData(register.user_id, register.id);
+             //notes
+             let registerNote = await note.findAll({
+                where: {
+                    model_id: register.id
+                }
+            })
             element.registeredData = {
                 id: register.id,
                 by: register.user_id,
                 user: registerUser,
                 time: register.time,
+                notes: registerNote,
             };
+
         }
 
         if (check) {
             const checkUser = await self.getUserData(check.user_id, check.id);
+             //notes
+             let checkNote = await note.findAll({
+                where: {
+                    model_id: check.id
+                }
+            })
             // const checkedFiles = await self.getFileData(check.id, 'CHECK');
             element.checkedData = {
                 id: check.id,
                 by: check.user_id,
                 user: checkUser,
                 time: check.time,
+                notes: checkNote
                 // files: checkedFiles.rows,
                 // fileCount: checkedFiles.count,
             };
@@ -705,12 +729,19 @@ self.getModelAction = async(req, res) => {
 
         if (approve) {
             const approveUser = await self.getUserData(approve.user_id, approve.id);
+             //notes
+             let approveNote = await note.findAll({
+                where: {
+                    model_id: approve.id
+                }
+            })
             // const approvedFiles = await self.getFileData(approve.id, 'APPROVE');
             element.approvedData = {
                 id: approve.id,
                 by: approve.user_id,
                 user: approveUser,
                 time: approve.time,
+                notes: approveNote
             //     files: approvedFiles.rows,
             //     fileCount: approvedFiles.count,
             };
@@ -718,12 +749,19 @@ self.getModelAction = async(req, res) => {
 
         if (authorize) {
             const authorizeUser = await self.getUserData(authorize.user_id, authorize.id);
+             //notes
+             let authorizeNote = await note.findAll({
+                where: {
+                    model_id: authorize.id
+                }
+            })
             // const authorizedFiles = await self.getFileData(authorize.id, 'AUTHORIZE');
             element.authorizedData = {
                 id: authorize.id,
                 by: authorize.user_id,
                 user: authorizeUser,
                 time: authorize.time,
+                notes: authorizeNote
                 // files: authorizedFiles.rows,
                 // fileCount: authorizedFiles.count,
             };
@@ -731,12 +769,19 @@ self.getModelAction = async(req, res) => {
         
         if (reject) {
             const rejectUser = await self.getUserData(reject.user_id, reject.id);
+             //notes
+             let rejectNote = await note.findAll({
+                where: {
+                    model_id: reject.id
+                }
+            })
             // const rejectedFiles = await self.getFileData(reject.id, 'REJECT');
             element.rejectData = {
                 id: reject.id,
                 by: reject.user_id,
                 user: rejectUser,
                 time: reject.time,
+                notes: rejectNote
                 // files: rejectedFiles.rows,
                 // fileCount: rejectedFiles.count,
             };

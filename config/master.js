@@ -91,11 +91,12 @@ let models = [
 ]
 
 let modules = [
+    "MASTER",
     "PROJECT",
     "STAKEHOLDER",
     "DOCUMENT",
     "RESOURCE",
-    "CENTER",
+    "CENTER"
     // "analysis"
      // analysis can be further classified as project, stakeholder...
 ]

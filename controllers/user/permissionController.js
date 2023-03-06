@@ -344,6 +344,7 @@ self.getPermissionsByAction = async(req, res) => {
 
 self.assignPositionPermissions = async(req, res) => {
     try {
+        //optimize it one more
         const { permissions } = req.body;
         let data = []
         for(let per of permissions) {

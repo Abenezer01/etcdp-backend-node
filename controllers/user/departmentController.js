@@ -447,4 +447,45 @@ self.getChildren = async(req, res) => {
 	}
 }
 
+self.getDepartmentDashboad = async(req, res) => {
+    try {
+        
+
+        let id = req.params.id 
+
+        let departments = await department.findAll({
+            where: {
+                parent_department_id: id
+            }
+        })
+
+        let positions = await position.findAll({
+            where: {
+                department_id: id
+            }
+        })
+
+
+
+        let userpositions = await userposition.findAll({
+            where: {
+                department_id:id,
+                is_primary: true
+            }
+        })
+
+
+        return res.json({
+            departments: departments.length,
+            positions: positions.length,
+            users: userpositions.length
+        })
+
+    } catch (error) {
+        return res.status(500).jso({
+            message: error.message
+        })
+    }
+}
+
 module.exports = self;
