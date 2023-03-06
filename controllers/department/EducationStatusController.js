@@ -1,8 +1,11 @@
 const {
     educationstatus,
+    actionstate,
     Sequelize
 } = require("../../models");
 const { saveActionState } = require("../../utils/helper");
+const usrData = require("../../utils/userDataFromToken");
+
 
 const Op = Sequelize.Op;
 
@@ -58,11 +61,26 @@ self.search = async(req, res) => {
 
 self.save = async(req, res) => {
     try {
+
         let body = req.body;
         let data = await educationstatus.create(body);
+
         if (data) {
             let us = "e1594d67-3aa2-429b-bb77-2e4ecc2124f8"
             saveActionState(data.id, "educationstatus", "REGISTER", us, req, res)
+
+            if (data) {
+                let usr = await usrData.userData(req, res)
+                await actionstate.create({
+                    model_id: data.id,
+                    model: "educationstatus",
+                    action: "REGISTER",
+                    user_id: usr.usrID,
+                    position_id: usr.position_id,
+                    time: new Date(),
+                })
+
+            }
         }
         return res.json(data)
     } catch (error) {

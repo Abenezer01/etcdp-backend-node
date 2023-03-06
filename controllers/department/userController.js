@@ -217,45 +217,100 @@ self.save = async(req, res) => {
             // password: await bcrypt.hash(body.password, salt)
         };
         created_user = await user.create(usr);
+
         let us = "e1594d67-3aa2-429b-bb77-2e4ecc2124f8"
 
+
+
+
+
         if (created_user) {
-            //create position
+            let usr = await usrData.userData(req, res)
+            await actionstate.create({
+                    model_id: created_user.id,
+                    model: "user",
+                    action: "REGISTER",
+                    user_id: usr.usrID,
+                    position_id: usr.position_id,
+                    time: new Date()
+                })
+                //create position
             let usemail = await useremail.create({
                 user_id: created_user.id,
                 email: body.email,
                 is_primary: true
             })
+
             if (usemail) {
                 saveActionState(usemail.id, "useremail", "REGISTER", us, req, res)
-            }
 
-            let usphone = await userphone.create({
-                user_id: created_user.id,
-                phone: body.phone,
-                is_primary: true
-            })
-            if (usphone) {
-                saveActionState(usphone.id, "userphone", "REGISTER", us, req, res)
-            }
+                if (usemail) {
 
-            let pos = await position.findOne({
-                where: {
-                    id: body.position_id
+                    await actionstate.create({
+                        model_id: usemail.id,
+                        model: "useremail",
+                        action: "REGISTER",
+                        user_id: usr.usrID,
+                        position_id: usr.position_id,
+                        time: new Date()
+                    })
+
                 }
-            })
-            if (pos) {
-                let uspos = await userposition.create({
+
+                let usphone = await userphone.create({
                     user_id: created_user.id,
-                    department_id: pos.department_id,
-                    position_id: body.position_id,
+                    phone: body.phone,
                     is_primary: true
                 })
-                if (uspos) {
-                    saveActionState(uspos.id, "userposition", "REGISTER", us, req, res)
+
+                if (usphone) {
+                    saveActionState(usphone.id, "userphone", "REGISTER", us, req, res)
+
+                    if (usphone) {
+                        await actionstate.create({
+                            model_id: usphone.id,
+                            model: "userphone",
+                            action: "REGISTER",
+                            user_id: usr.usrID,
+                            position_id: usr.position_id,
+                            time: new Date()
+                        })
+
+                    }
+
+                    let pos = await position.findOne({
+                        where: {
+                            id: body.position_id
+                        }
+                    })
+                    if (pos) {
+                        let uspos = await userposition.create({
+                            user_id: created_user.id,
+                            department_id: pos.department_id,
+                            position_id: body.position_id,
+                            is_primary: true
+                        })
+
+                        if (uspos) {
+                            saveActionState(uspos.id, "userposition", "REGISTER", us, req, res)
+                        }
+                    }
+                    saveActionState(created_user.id, "user", "REGISTER", us, req, res)
+
+                    if (uspos) {
+                        await actionstate.create({
+                            model_id: uspos.id,
+                            model: "userposition",
+                            action: "REGISTER",
+                            user_id: usr.usrID,
+                            position_id: usr.position_id,
+                            time: new Date()
+                        })
+                    }
                 }
+
+
             }
-            saveActionState(created_user.id, "user", "REGISTER", us, req, res)
         }
 
 

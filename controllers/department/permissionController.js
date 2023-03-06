@@ -5,6 +5,7 @@ const {
     Sequelize
 } = require("../../models");
 const { saveActionState } = require("../../utils/helper");
+const usrData = require("../../utils/userDataFromToken");
 const master = require("./../../config/master")
 
 const Op = Sequelize.Op;
@@ -73,6 +74,17 @@ self.save = async(req, res) => {
     try {
         let body = req.body;
         let data = await permission.create(body);
+        if(data){
+            let usr = await usrData.userData(req, res)
+            await actionstate.create({
+                model_id: data.id,
+                model:"permission",
+                action: "REGISTER",
+                user_id: usr.usrID,
+                position_id: usr.position_id,
+                time: new Date(),
+            })
+        }
         return res.json(data)
     } catch (error) {
         res.status(500).json({

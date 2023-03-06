@@ -64,7 +64,7 @@ self.save = async(req, res) => {
         let data = await position.create(body);
         // if(data){
         let us = "e1594d67-3aa2-429b-bb77-2e4ecc2124f8"
-        await saveActionState(data.id, "position", "REGISTER", us, req, res)
+        await saveActionState(data.id, "position", "REGISTER", us)
 
         // }
         return res.json(data)

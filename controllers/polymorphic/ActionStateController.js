@@ -30,7 +30,11 @@ self.get = async(req, res) => {
     try {
         let data = await actionstate.findOne({
             where: {
-                id: id
+
+                id: id,
+
+                model_id: id
+
             }
         })
 
