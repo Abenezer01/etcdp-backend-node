@@ -46,11 +46,11 @@ self.save = async(req, res) => {
         if (usr) {
             let data = await reply.create(body);
             return res.json(data)
-            data.creator_id = usr.usrID 
+            data.creator_id = usr.usrID
             await data.save()
             if (data) {
                 let usrID = usr.usrID
-                await saveActionState(data.id, "reply", "REGISTER", usrID)
+                await saveActionState(data.id, "reply", "REGISTER", usrID, req, res)
             }
             return res.json(data)
         }

@@ -4,7 +4,7 @@
 .env
 
 /Commands.bat
-
+/config/config.json
 # .env
 # /config/config.json
 /controllers/TestController.js

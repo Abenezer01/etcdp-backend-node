@@ -1,17 +1,16 @@
 const {
-    familystatus,
+    jobexperience,
     Sequelize
 } = require("../../models");
 const { saveActionState } = require("../../utils/helper");
 const usrData = require("../../utils/userDataFromToken");
-
 const Op = Sequelize.Op;
 
 let self = {};
 
 self.getAll = async(req, res) => {
     try {
-        let data = await familystatus.findAll();
+        let data = await jobexperience.findAll();
         return res.json(data)
 
     } catch (error) {
@@ -24,7 +23,7 @@ self.getAll = async(req, res) => {
 self.get = async(req, res) => {
     try {
         let id = req.params.id;
-        let data = await familystatus.findOne({
+        let data = await jobexperience.findOne({
             where: {
                 id: id
             }
@@ -42,7 +41,7 @@ self.get = async(req, res) => {
 self.search = async(req, res) => {
     try {
         let text = req.query.text;
-        let data = await familystatus.findAll({
+        let data = await jobexperience.findAll({
             where: {
                 name: {
                     [Op.like]: "%" + text + "%"
@@ -60,18 +59,24 @@ self.search = async(req, res) => {
 self.save = async(req, res) => {
     try {
         let body = req.body;
-        let data = await familystatus.create(body);
-        if(data){
-            let usr = await usrData.userData(req, res)
+        let data = await jobexperience.create(body);
+
+        if (data) {
+            let us = "e1594d67-3aa2-429b-bb77-2e4ecc2124f8"
+            saveActionState(data.id, "jobexperience", "REGISTER", us, req, res)
+
+            if (data) {
+                let usr = await usrData.userData(req, res)
                 await actionstate.create({
                     model_id: data.id,
-                    model:"familystatus",
+                    model: "jobexperience",
                     action: "REGISTER",
                     user_id: usr.usrID,
                     position_id: usr.position_id,
                     time: new Date(),
                 })
             }
+        }
         return res.json(data)
     } catch (error) {
         res.status(500).json({
@@ -84,7 +89,7 @@ self.update = async(req, res) => {
     try {
         let id = req.params.id;
         let body = req.body;
-        let data = await familystatus.update(body, {
+        let data = await jobexperience.update(body, {
             where: {
                 id: id
             }
@@ -100,7 +105,7 @@ self.update = async(req, res) => {
 self.delete = async(req, res) => {
     try {
         let id = req.params.id;
-        let data = await familystatus.destroy({
+        let data = await jobexperience.destroy({
             where: {
                 id: id
             }
@@ -112,10 +117,11 @@ self.delete = async(req, res) => {
         })
     }
 }
+
 self.getByUserId = async(req, res) => {
     try {
         let id = req.params.id
-        let data = await familystatus.findAll({
+        let data = await jobexperience.findAll({
             where: {
                 user_id: id
             }
@@ -128,5 +134,4 @@ self.getByUserId = async(req, res) => {
         })
     }
 }
-
 module.exports = self;

@@ -164,13 +164,13 @@ module.exports = {
             createdAt: new Date(),
             updatedAt: new Date()
         }]);
-        await queryInterface.bulkInsert('stakeholdertypes', [{
-            title: "Consultant",
-            description: "",
-            id: uuid.v4(),
-            createdAt: new Date(),
-            updatedAt: new Date()
-        }]);
+        // await queryInterface.bulkInsert('stakeholdertypes', [{
+        //     title: "Consultant",
+        //     description: "",
+        //     id: uuid.v4(),
+        //     createdAt: new Date(),
+        //     updatedAt: new Date()
+        // }]);
         await queryInterface.bulkInsert('ownerships', [{
             title: "Gov",
             description: "This is gov description",

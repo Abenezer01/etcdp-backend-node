@@ -219,7 +219,7 @@ self.save = async(req, res) => {
             if (data) {
                 let us = usr.usrID
                     // let us = "e1594d67-3aa2-429b-bb77-2e4ecc2124f8"
-                saveActionState(data.id, "studyperiodcost", "REGISTER", us)
+                saveActionState(data.id, "studyperiodcost", "REGISTER", us, req, res)
             }
             return res.json(data)
         }

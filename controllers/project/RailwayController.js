@@ -80,7 +80,7 @@ self.save = async(req, res) => {
             let data = await railway.create(body);
             if (data) {
                 let usrID = usr.usrID
-                await saveActionState(data.id, "railway", "REGISTER", usrID)
+                await saveActionState(data.id, "railway", "REGISTER", usrID, req, res)
             }
             return res.json(data)
         }

@@ -80,7 +80,7 @@ self.save = async(req, res) => {
             let data = await transformer.create(body);
             if (data) {
                 let usrID = usr.usrID
-                await saveActionState(data.id, "transformer", "REGISTER", usrID)
+                await saveActionState(data.id, "transformer", "REGISTER", usrID, req, res)
             }
             return res.json(data)
         }

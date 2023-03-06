@@ -1,5 +1,6 @@
 const {
     resource,
+    image,
     Sequelize
 } = require("../../models");
 const usrData = require("../../utils/userDataFromToken");
@@ -56,7 +57,8 @@ self.get = async(req, res) => {
         let data = await resource.findOne({
             where: {
                 id: id
-            }
+            },
+            include: { model: image, as: 'image', attributes: ['url'] },
         });
         return res.status(200).json({
             data: (data) ? data : {}
@@ -67,23 +69,7 @@ self.get = async(req, res) => {
         })
     }
 }
-self.getByProjectId = async(req, res) => {
-    try {
-        let id = req.params.id;
-        let data = await resource.findAll({
-            where: {
-                id: project_id
-            }
-        });
-        return res.status(200).json({
-            data: (data) ? data : []
-        })
-    } catch (error) {
-        res.status(500).json({
-            message: error.message
-        })
-    }
-}
+
 self.filter = async(req, res) => {
     let { page, size, order } = req.query;
     const { typeId, categoryId, subcategoryId } = req.query
@@ -162,7 +148,7 @@ self.save = async(req, res) => {
             if (data) {
 
                 let us = usr.usrID
-                await saveActionState(data.id, "resource", "REGISTER", us)
+                await saveActionState(data.id, "resource", "REGISTER", us, req, res)
             }
             return res.json(data)
         }

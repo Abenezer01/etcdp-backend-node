@@ -134,7 +134,6 @@ const certificateValidate = async(req, res, next) => {
     await validateReply.validateReply(req.body, validationRule, res, next)
 }
 const totalEmployeeValidate = async(req, res, next) => {
-    return res.json("Hi Leul")
     let param = await validateReply.checkParam(req, res, next)
     if (param == "failed") {
         return res.status(400).json({

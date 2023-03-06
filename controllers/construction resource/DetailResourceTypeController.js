@@ -108,7 +108,10 @@ self.save = async(req, res) => {
 
             const ext = req.files.image.mimetype.split("/")[1];
             let rand = Math.floor(100000 + Math.random() * 900000)
-            const filePath = path.join(__dirname, '../../public', 'images/detailresourcetypeimage', rand + '.' +
+            var name = req.files.image.name;
+            let parsedName = path.parse(name).name;
+            checkedNew = parsedName.concat(rand);
+            const filePath = path.join(__dirname, '../../public', 'images/detailresourcetypeimage', checkedNew + '.' +
                 `${ext}`)
             console.log("The file path is ", filePath)
             var filePathh = filePath.split("public").pop();
@@ -133,7 +136,7 @@ self.save = async(req, res) => {
                     })
                 }
                 let us = usr.usrID
-                await saveActionState(data.id, "detailresourcetype", "REGISTER", us)
+                await saveActionState(data.id, "detailresourcetype", "REGISTER", us, req, res)
             }
             return res.json(data)
         }
@@ -156,7 +159,10 @@ self.update = async(req, res) => {
 
             const ext = req.files.image.mimetype.split("/")[1];
             let rand = Math.floor(100000 + Math.random() * 900000)
-            const filePath = path.join(__dirname, '../../public', 'images/detailresourcetypeimage', rand + '.' +
+            var name = req.files.image.name;
+            let parsedName = path.parse(name).name;
+            checkedNew = parsedName.concat(rand);
+            const filePath = path.join(__dirname, '../../public', 'images/detailresourcetypeimage', checkedNew + '.' +
                 `${ext}`)
             console.log("The file path is ", filePath)
             var filePathh = filePath.split("public").pop();

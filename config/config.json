@@ -1,9 +1,9 @@
 {
     "development": {
-        "username": "root",
-        "password": "onespace@database",
+        "username": "kaleb",
+        "password": "pgpass",
         "host": "localhost",
-        "database": "etcdp_database",
+        "database": "Etcdp",
 
         "port": "3306",
         "dialect": "mysql",

@@ -143,7 +143,7 @@ self.save = async(req, res) => {
             let data = await regulation.create(body);
             if (data) {
                 let us = usr.usrID
-                await saveActionState(data.id, "regulation", "REGISTER", us)
+                await saveActionState(data.id, "regulation", "REGISTER", us, req, res)
             }
             return res.json(data)
         }

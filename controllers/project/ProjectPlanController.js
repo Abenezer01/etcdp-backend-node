@@ -110,7 +110,7 @@ self.save = async(req, res) => {
             let data = await projectplan.create(body);
             if (data) {
                 let usrID = usr.usrID
-                await saveActionState(data.id, "projectplan", "REGISTER", usrID)
+                await saveActionState(data.id, "projectplan", "REGISTER", usrID, req, res)
             }
             return res.json(data)
         }

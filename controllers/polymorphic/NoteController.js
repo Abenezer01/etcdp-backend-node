@@ -45,11 +45,11 @@ self.save = async(req, res) => {
         let body = req.body;
         if (usr) {
             let data = await note.create(body);
-            data.user_id = usr.usrID 
+            data.user_id = usr.usrID
             await data.save()
             if (data) {
                 let usrID = usr.usrID
-                await saveActionState(data.id, "note", "REGISTER", usrID)
+                await saveActionState(data.id, "note", "REGISTER", usrID, req, res)
             }
             return res.json(data)
         }
@@ -95,26 +95,26 @@ self.delete = async(req, res) => {
 
 
 self.getNoteByModelId = async(req, res) => {
-	let id = req.params.id 
-	try {
-		let data = await note.findAll({
-			// include: [
-			// 	{
-			// 		model: file,
-			// 		as: 'files'
-			// 	}
-			// ],
-			where: {
-				model_id: id
-			}	
-		})
+    let id = req.params.id
+    try {
+        let data = await note.findAll({
+            // include: [
+            // 	{
+            // 		model: file,
+            // 		as: 'files'
+            // 	}
+            // ],
+            where: {
+                model_id: id
+            }
+        })
 
-		return res.json(data)
-	} catch (error) {
-		return res.status(500).json({
-			message: error.message
-		})
-	}
+        return res.json(data)
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message
+        })
+    }
 }
 
 

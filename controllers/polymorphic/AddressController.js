@@ -125,7 +125,7 @@ self.save = async(req, res) => {
                 body.hq = true
                 let hqBod = await address.create(body)
                 if (hqBod) {
-                    await saveActionState(hqBod.id, "address", "REGISTER", usrID)
+                    await saveActionState(hqBod.id, "address", "REGISTER", usrID, req, res)
                     return res.status(200).json({
                         data: hqBod
                     })
@@ -135,7 +135,7 @@ self.save = async(req, res) => {
             let data = await address.create(body);
             if (data) {
                 let usrID = usr.usrID
-                await saveActionState(data.id, "address", "REGISTER", usrID)
+                await saveActionState(data.id, "address", "REGISTER", usrID, req, res)
                 return res.json(data)
             }
 

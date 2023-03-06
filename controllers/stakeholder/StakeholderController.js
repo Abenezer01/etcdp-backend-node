@@ -246,7 +246,7 @@ self.save = async(req, res) => {
             let data = await stakeholder.create(body);
             if (data) {
                 let usrID = usr.usrID
-                saveActionState(data.id, "stakeholder", "REGISTER", usrID)
+                saveActionState(data.id, "stakeholder", "REGISTER", usrID, req, res)
             }
             return res.json(data)
         }

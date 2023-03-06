@@ -93,7 +93,7 @@ self.save = async(req, res) => {
             let data = await buildingenvelopmaterial.create(body);
             if (data) {
                 let usrID = usr.usrID
-                await saveActionState(data.id, "buildingenvelopmaterial", "REGISTER", usrID)
+                await saveActionState(data.id, "buildingenvelopmaterial", "REGISTER", usrID, req, res)
             }
             return res.json(data)
         }

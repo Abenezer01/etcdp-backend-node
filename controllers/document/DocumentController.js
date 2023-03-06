@@ -118,8 +118,8 @@ self.save = async(req, res) => {
     console.log("The file type is", ext)
     var name = req.files.upload.name;
     let rand = Math.floor(100000 + Math.random() * 900000)
-    var newName = name.concat(rand)
-    checkedNew = newName.split('.').join("");
+    let parsedName = path.parse(name).name;
+    checkedNew = parsedName.concat(rand);
     const filePath = path.join(__dirname, '../../public', 'documents', checkedNew + '.' +
         `${ext}`)
 
@@ -147,7 +147,7 @@ self.save = async(req, res) => {
             })
             if (doc) {
                 let usrID = usr.usrID
-                await saveActionState(doc.id, "document", "REGISTER", usrID)
+                await saveActionState(doc.id, "document", "REGISTER", usrID, req, res)
             }
             return res.status(200).send({
                 data: doc
@@ -194,7 +194,10 @@ self.update = async(req, res) => {
         }
         const ext = req.files.upload.mimetype.split("/")[1];
         let rand = Math.floor(100000 + Math.random() * 900000)
-        const filePath = path.join(__dirname, '../../public', 'documents', rand + '.' +
+        var name = req.files.upload.name;
+        let parsedName = path.parse(name).name;
+        checkedNew = parsedName.concat(rand);
+        const filePath = path.join(__dirname, '../../public', 'documents', checkedNew + '.' +
                 `${ext}`)
             //console.log("The file path is ", filePath)
 

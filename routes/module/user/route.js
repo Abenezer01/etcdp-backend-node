@@ -1,16 +1,16 @@
-const userController = require("../../../controllers/user/userController.js")
-const roleController = require("../../../controllers/user/roleController.js")
-const permissionController = require("../../../controllers/user/permissionController.js")
-const userPhotoController = require("../../../controllers/user/userPhotoController.js")
-const positionController = require("../../../controllers/user/positionController.js")
-const departmentController = require("../../../controllers/user/departmentController.js")
+const userController = require("../../../controllers/department/userController.js")
+const roleController = require("../../../controllers/department/roleController.js")
+const permissionController = require("../../../controllers/department/permissionController.js")
+const userPhotoController = require("../../../controllers/department/userPhotoController.js")
+const positionController = require("../../../controllers/department/positionController.js")
+const departmentController = require("../../../controllers/department/departmentController.js")
     //const TestController = require("../../../controllers/TestController.js")
     //Hr
-const EducationStatusController = require("../../../controllers/user/EducationStatusController.js")
-const ChildController = require("../../../controllers/user/ChildController.js")
-const FamilyStatusController = require("../../../controllers/user/FamilyStatusController.js")
-const ContactPersonController = require("../../../controllers/user/ContactPersonController.js")
-const JobExperienceController = require("../../../controllers/user/JobExperienceController.js")
+const EducationStatusController = require("../../../controllers/department/EducationStatusController.js")
+const ChildController = require("../../../controllers/department/ChildController.js")
+const FamilyStatusController = require("../../../controllers/department/FamilyStatusController.js")
+const ContactPersonController = require("../../../controllers/department/ContactPersonController.js")
+const JobExperienceController = require("../../../controllers/department/JobExperienceController.js")
 
 const validateInput = require("../../../middleware/validate/module/user/validate")
 module.exports = function(express) {
@@ -125,7 +125,7 @@ module.exports = function(express) {
     //family status
     route.get("/family-status", FamilyStatusController.getAll);
     route.get("/family-status/:id", FamilyStatusController.get);
-    route.get("/familyt-status-search", FamilyStatusController.search);
+    route.get("/family-status-search", FamilyStatusController.search);
     route.post("/family-status", validateInput.familyStatusValidate, FamilyStatusController.save);
     route.put("/family-status/:id", validateInput.familyStatusValidate, FamilyStatusController.update);
     route.delete("/family-status/:id", FamilyStatusController.delete);

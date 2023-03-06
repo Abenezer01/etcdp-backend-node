@@ -11,6 +11,23 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             // define association here
+            resource.belongsTo(models.image, {
+                foreignKey: 'image_id',
+            });
+            resource.belongsTo(models.resourcetype, {
+                as: "resourcetype",
+                foreignKey: "resourcetype_id"
+            })
+            resource.belongsTo(models.resourcecategory, {
+                as: "resourcecategory",
+                foreignKey: "resourcecategory_id"
+            })
+            resource.belongsTo(models.resourcesubcategory, {
+                as: "resourcesubcategory",
+                foreignKey: "resourcesubcategory_id"
+            })
+
+
         }
     }
     resource.init({
@@ -32,23 +49,12 @@ module.exports = (sequelize, DataTypes) => {
         sequelize,
         modelName: 'resource',
     });
-    resource.associate = function(models) {
-        // resource.belongsTo(models.address, {
-        //     as: "address",
-        //     foreignKey: "address_id"
-        // })
-        resource.belongsTo(models.resourcetype, {
-            as: "resourcetype",
-            foreignKey: "resourcetype_id"
-        })
-        resource.belongsTo(models.resourcecategory, {
-            as: "resourcecategory",
-            foreignKey: "resourcecategory_id"
-        })
-        resource.belongsTo(models.resourcesubcategory, {
-            as: "resourcesubcategory",
-            foreignKey: "resourcesubcategory_id"
-        })
-    }
+    // resource.associate = function(models) {
+    //     // resource.belongsTo(models.address, {
+    //     //     as: "address",
+    //     //     foreignKey: "address_id"
+    //     // })
+
+    // }
     return resource;
 };
