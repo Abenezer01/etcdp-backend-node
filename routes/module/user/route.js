@@ -55,7 +55,7 @@ module.exports = function(express) {
 
     route.get("/department-dashboard/:id", departmentController.getDepartmentDashboad);
 
-    
+
 
 
 
@@ -93,8 +93,8 @@ module.exports = function(express) {
 
     route.post("/assign-permissions", permissionController.assignPositionPermissions);
 
-    
-    
+
+
 
     route.get("/module-permissions/:module", permissionController.getPermissionsByModule);
     route.get("/permission-modules", permissionController.getPermissionModules);
