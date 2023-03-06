@@ -1,17 +1,18 @@
 const {
-    familystatus,
+    note,
+    user,
     Sequelize
-} = require("../../models");
+} = require('../../models');
+const usrData = require("../../utils/userDataFromToken");
 const { saveActionState } = require("../../utils/helper");
-
 const Op = Sequelize.Op;
 
 let self = {};
 
 self.getAll = async(req, res) => {
     try {
-        let data = await familystatus.findAll();
-        return res.json(data)
+        let data = await note.findAll();
+        return res.status(200).json(data)
 
     } catch (error) {
         res.status(500).json({
@@ -23,7 +24,7 @@ self.getAll = async(req, res) => {
 self.get = async(req, res) => {
     try {
         let id = req.params.id;
-        let data = await familystatus.findOne({
+        let data = await note.findOne({
             where: {
                 id: id
             }
@@ -38,33 +39,20 @@ self.get = async(req, res) => {
     }
 }
 
-self.search = async(req, res) => {
-    try {
-        let text = req.query.text;
-        let data = await familystatus.findAll({
-            where: {
-                name: {
-                    [Op.like]: "%" + text + "%"
-                }
-            }
-        });
-        return res.json(data)
-    } catch (error) {
-        res.status(500).json({
-            message: error.message
-        })
-    }
-}
-
 self.save = async(req, res) => {
     try {
+        let usr = await usrData.userData(req, res)
         let body = req.body;
-        let data = await familystatus.create(body);
-        if (data) {
-            let us = "e1594d67-3aa2-429b-bb77-2e4ecc2124f8"
-            saveActionState(data.id, "familystatus", "REGISTER", us, req, res)
+        if (usr) {
+            let data = await note.create(body);
+            data.user_id = usr.usrID
+            await data.save()
+            if (data) {
+                let usrID = usr.usrID
+                await saveActionState(data.id, "note", "REGISTER", usrID, req, res)
+            }
+            return res.json(data)
         }
-        return res.json(data)
     } catch (error) {
         res.status(500).json({
             message: error.message
@@ -76,12 +64,12 @@ self.update = async(req, res) => {
     try {
         let id = req.params.id;
         let body = req.body;
-        let data = await familystatus.update(body, {
+        let data = await note.update(body, {
             where: {
                 id: id
             }
         });
-        return res.json(data)
+        return res.status(200).json({ message: "Reply updated successfully" })
     } catch (error) {
         res.status(500).json({
             message: error.message
@@ -92,7 +80,7 @@ self.update = async(req, res) => {
 self.delete = async(req, res) => {
     try {
         let id = req.params.id;
-        let data = await familystatus.destroy({
+        let data = await note.destroy({
             where: {
                 id: id
             }
@@ -104,12 +92,20 @@ self.delete = async(req, res) => {
         })
     }
 }
-self.getByUserId = async(req, res) => {
+
+
+self.getNoteByModelId = async(req, res) => {
+    let id = req.params.id
     try {
-        let id = req.params.id
-        let data = await familystatus.findAll({
+        let data = await note.findAll({
+            // include: [
+            // 	{
+            // 		model: file,
+            // 		as: 'files'
+            // 	}
+            // ],
             where: {
-                user_id: id
+                model_id: id
             }
         })
 
@@ -120,5 +116,6 @@ self.getByUserId = async(req, res) => {
         })
     }
 }
+
 
 module.exports = self;

@@ -107,7 +107,7 @@ self.save = async(req, res) => {
             let arr = [];
             for (i = 0; i < body.length; i++) {
                 let data = await operationlocation.create(body[i]);
-                await saveActionState(data.id, "operationlocation", "REGISTER", us);
+                await saveActionState(data.id, "operationlocation", "REGISTER", us, req, res);
                 arr.push(data);
             }
             return res.json(arr);

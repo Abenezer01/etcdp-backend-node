@@ -83,7 +83,7 @@ self.save = async(req, res) => {
             let data = await port.create(body);
             if (data) {
                 let usrID = usr.usrID
-                await saveActionState(data.id, "port", "REGISTER", usrID)
+                await saveActionState(data.id, "port", "REGISTER", usrID, req, res)
             }
             return res.json(data)
         }

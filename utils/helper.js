@@ -1,18 +1,25 @@
 const {
     actionstate,
     department,
+    userposition,
     Sequelize
 } = require("../models");
+const usrData = require("./userDataFromToken");
 const Op = Sequelize.Op;
 
-const saveActionState = async(model_id, model, action, user_id) => {
+const saveActionState = async(model_id, model, action, user_id, req, res) => {
     try {
+        let usr = await usrData.userData(req, res)
+            //test
+
+        // console.log("The position id is", usr.position_id)
+        // return res.send(pos.id)
         await actionstate.create({
             model_id,
             model,
             action,
             user_id,
-            position_id: "be25a148-c195-498d-95e0-fd4be224959f",
+            position_id: usr.position_id,
             time: new Date(),
         })
 

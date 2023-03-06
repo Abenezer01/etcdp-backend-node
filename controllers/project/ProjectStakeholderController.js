@@ -110,7 +110,7 @@ self.save = async(req, res) => {
             let data = await projectstakeholder.create(body);
             if (data) {
                 let usrID = usr.usrID
-                await saveActionState(data.id, "projectstakeholder", "REGISTER", usrID)
+                await saveActionState(data.id, "projectstakeholder", "REGISTER", usrID, req, res)
             }
             return res.json(data)
         }

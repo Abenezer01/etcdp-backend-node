@@ -60,9 +60,9 @@ self.save = async(req, res) => {
     try {
         let body = req.body;
         let data = await child.create(body);
-        if(data){
+        if (data) {
             let us = "e1594d67-3aa2-429b-bb77-2e4ecc2124f8"
-            saveActionState(data.id, "child", "REGISTER", us)
+            saveActionState(data.id, "child", "REGISTER", us, req, res)
         }
         return res.json(data)
     } catch (error) {

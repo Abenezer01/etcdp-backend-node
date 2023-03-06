@@ -147,7 +147,7 @@ self.save = async(req, res) => {
             })
             if (doc) {
                 let usrID = usr.usrID
-                await saveActionState(doc.id, "document", "REGISTER", usrID)
+                await saveActionState(doc.id, "document", "REGISTER", usrID, req, res)
             }
             return res.status(200).send({
                 data: doc

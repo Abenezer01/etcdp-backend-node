@@ -103,7 +103,7 @@ self.save = async(req, res) => {
             ll = await photo.create(photoo)
             if (ll) {
                 let us = "e1594d67-3aa2-429b-bb77-2e4ecc2124f8"
-                saveActionState(data.id, "photo", "REGISTER", us)
+                saveActionState(data.id, "photo", "REGISTER", us, req, res)
             }
             file.mv(filePath, err => {
                 if (err) return res.status(500).send(err)

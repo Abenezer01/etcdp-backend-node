@@ -163,7 +163,7 @@ self.save = async(req, res) => {
             let data = await projectcategory.create(body);
             if (data) {
                 let usrID = usr.usrID
-                await saveActionState(data.id, "projectcategory", "REGISTER", usrID)
+                await saveActionState(data.id, "projectcategory", "REGISTER", usrID, req, res)
             }
             return res.json(data)
         }

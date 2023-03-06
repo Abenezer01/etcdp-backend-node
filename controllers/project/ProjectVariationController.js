@@ -110,7 +110,7 @@ self.save = async(req, res) => {
             let data = await projectvariation.create(body);
             if (data) {
                 let usrID = usr.usrID
-                await saveActionState(data.id, "projectvariation", "REGISTER", usrID)
+                await saveActionState(data.id, "projectvariation", "REGISTER", usrID, req, res)
             }
             return res.json(data)
         }

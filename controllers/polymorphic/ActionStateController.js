@@ -1,6 +1,6 @@
 const {
     actionstate,
-    address,
+    note,
     user,
     userposition,
     position,
@@ -20,6 +20,23 @@ self.getAll = async(req, res) => {
 
     } catch (error) {
         res.status(500).json({
+            message: error.message
+        })
+    }
+}
+
+self.get = async(req, res) => {
+    let id = req.params.id
+    try {
+        let data = await actionstate.findOne({
+            where: {
+                id: id
+            }
+        })
+
+        return res.json(data)
+    } catch (error) {
+        return res.status(500).json({
             message: error.message
         })
     }
@@ -179,7 +196,7 @@ self.reject = async(req, res) => {
                         message: 'You can not approve as you either register or check or approver the data'
                     })
                 } else {
-                    actionstate.create({
+                    let action = actionstate.create({
                         model: (model).toLowerCase(),
                         model_id: id,
                         action: "REJECT",
@@ -188,9 +205,7 @@ self.reject = async(req, res) => {
                         time: new Date()
                     })
 
-                    return res.status(200).json({
-                        message: "Date rejected successfully!"
-                    })
+                    return res.status(200).json(action)
                 }
             }
         }

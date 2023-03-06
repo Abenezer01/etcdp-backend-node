@@ -326,7 +326,7 @@ self.save = async(req, res) => {
                                 }
                                 if (body) {
                                     let data = await employeeage.create(body);
-                                    await saveActionState(data.id, "employeeage", "REGISTER", us)
+                                    await saveActionState(data.id, "employeeage", "REGISTER", us, req, res)
                                     arr2.push(data)
                                 }
                             }

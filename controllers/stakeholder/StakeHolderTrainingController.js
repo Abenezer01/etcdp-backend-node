@@ -144,7 +144,7 @@ self.save = async(req, res) => {
             let data = await training.create(body);
             if (data) {
                 let us = usr.usrID
-                await saveActionState(data.id, "training", "REGISTER", us)
+                await saveActionState(data.id, "training", "REGISTER", us, req, res)
             }
             return res.json(data)
         }

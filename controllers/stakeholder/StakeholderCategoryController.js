@@ -225,7 +225,7 @@ self.save = async(req, res) => {
             let data = await stakecategory.create(body);
             if (data) {
                 let us = usr.usrID
-                await saveActionState(data.id, "stakecategory", "REGISTER", us)
+                await saveActionState(data.id, "stakecategory", "REGISTER", us, req, res)
             }
             return res.json(data)
         }

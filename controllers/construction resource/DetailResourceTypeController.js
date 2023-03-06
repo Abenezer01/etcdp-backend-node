@@ -136,7 +136,7 @@ self.save = async(req, res) => {
                     })
                 }
                 let us = usr.usrID
-                await saveActionState(data.id, "detailresourcetype", "REGISTER", us)
+                await saveActionState(data.id, "detailresourcetype", "REGISTER", us, req, res)
             }
             return res.json(data)
         }

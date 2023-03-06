@@ -41,7 +41,7 @@ self.get = async(req, res) => {
                 id: id
             }
         });
-        
+
         return res.status(200).json({
             data: data
         })
@@ -74,26 +74,26 @@ self.save = async(req, res) => {
     try {
         let body = req.body;
         let data = await department.create(body);
-        if(data){
+        if (data) {
             let us = "f01da526-7f87-40b5-a967-dd711eef0740"
-            // saveActionState(data.id, "department", "REGISTER", us)
+                // saveActionState(data.id, "department", "REGISTER", us)
             await actionstate.create({
                 model_id: data.id,
-                model:"department",
+                model: "department",
                 action: "REGISTER",
                 user_id: us,
                 position_id: "be25a148-c195-498d-95e0-fd4be224959f",
                 time: new Date(),
             })
-            
+
             let pos = await position.create({
                 department_id: data.id,
                 name: `Head of ${data.name}`,
                 description: "discr",
                 is_head: true,
-                role_id:"03963640-6675-4c68-a073-25ac309abd74"
+                role_id: "03963640-6675-4c68-a073-25ac309abd74"
             })
-            await saveActionState(pos.id, "position", "REGISTER", us)
+            await saveActionState(pos.id, "position", "REGISTER", us, req, res)
 
             //default role and position
             // let allRoles = master.roleName
@@ -115,7 +115,7 @@ self.save = async(req, res) => {
             //         saveActionState(createdRole.id, "role","REGISTER", us)
             //     }
             // }
-            
+
         }
         return res.json(data)
     } catch (error) {
@@ -160,19 +160,19 @@ self.delete = async(req, res) => {
     }
 }
 self.getSubDepartments = async(req, res) => {
-	try {
-		let id = req.params.id 
-		let data = await department.findAll({
-			where: {
-				parent_department_id: id
-			}
-		})
-		return res.json(data)
-	} catch (error) {
-		return res.status(500).json({
-			message: error.message
-		})
-	}
+    try {
+        let id = req.params.id
+        let data = await department.findAll({
+            where: {
+                parent_department_id: id
+            }
+        })
+        return res.json(data)
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message
+        })
+    }
 }
 self.getParentDepartment = async(req, res) => {
     try {
@@ -182,8 +182,8 @@ self.getParentDepartment = async(req, res) => {
             }
         })
 
-        if(data){
-           return res.json(data)
+        if (data) {
+            return res.json(data)
         }
     } catch (error) {
         return res.json({
@@ -194,15 +194,15 @@ self.getParentDepartment = async(req, res) => {
 
 self.getParentOrGivenId = async(req, res) => {
     try {
-        let id = req.params.id 
+        let id = req.params.id
         let data = null
-        if(id){
+        if (id) {
             data = await department.findOne({
                 where: {
                     id: id
                 }
             })
-        }else{
+        } else {
             data = await department.findOne({
                 where: {
                     parent_department_id: null
@@ -218,12 +218,12 @@ self.getParentOrGivenId = async(req, res) => {
 }
 
 self.getStructure = async(req, res) => {
-	try {
+    try {
 
         const departments = await department.findAll();
 
         const arr = await Promise.all(
-            departments.map(async (dept) => {
+            departments.map(async(dept) => {
                 const userpos = await userposition.findAll({
                     attributes: ["user_id"],
                     where: { department_id: dept.id },
@@ -231,10 +231,10 @@ self.getStructure = async(req, res) => {
                 const userId = [...new Set(userpos.map((item) => item.user_id))].filter((n) => n);
 
                 const staffs = await user.findAndCountAll({
-                    where: { 
-                        id: { 
-                            [Op.in]: userId 
-                        } 
+                    where: {
+                        id: {
+                            [Op.in]: userId
+                        }
                     },
                 });
 
@@ -264,30 +264,30 @@ self.getStructure = async(req, res) => {
 }
 
 self.getDepartmentHead = async(req, res) => {
-    let id = req.params.id 
+    let id = req.params.id
     try {
         let data = await department.findOne({
             where: {
                 id: id
             }
         })
-        if(data) {
+        if (data) {
             let pos = await position.findOne({
                 where: {
                     department_id: data.id,
                     is_head: true
                 }
             })
-            if(pos){
+            if (pos) {
                 let userpos = await userposition.findOne({
                     where: {
                         position_id: pos.id
                     }
                 })
 
-                if(userpos){
+                if (userpos) {
                     let usr = await user.findOne({
-                        attributes:['full_name', 'first_name', 'middle_name', 'last_name'],
+                        attributes: ['full_name', 'first_name', 'middle_name', 'last_name'],
                         where: {
                             id: userpos.user_id
                         }
@@ -296,17 +296,17 @@ self.getDepartmentHead = async(req, res) => {
                     temp.position_name = pos.name
 
                     return res.json(temp)
-                }else{
+                } else {
                     return res.status(404).json({
                         message: "User Position not found!"
                     })
                 }
-            }else{
+            } else {
                 return res.status(404).json({
                     message: "Position not found!"
                 })
             }
-        }else{
+        } else {
             return res.status(404).json({
                 message: "Department not found!"
             })
@@ -322,33 +322,33 @@ self.getDepartmentHead = async(req, res) => {
 
 let all = []
 self.getToRoot = async(req, res) => {
-	try {
-		let id = req.params.id 
-		let data = await department.findAll()
-		await self.getPath(data, id)
-		return res.json(all)
-	} catch (error) {
-		return res.status(500).json({
-			message: error.message
-		})
-	}
+    try {
+        let id = req.params.id
+        let data = await department.findAll()
+        await self.getPath(data, id)
+        return res.json(all)
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message
+        })
+    }
 }
 
-self.getPath = async (arr, x) => {
-	all = []
-    for(var i=0; i<arr.length; i++){
-        if(arr[i].id== x){
+self.getPath = async(arr, x) => {
+    all = []
+    for (var i = 0; i < arr.length; i++) {
+        if (arr[i].id == x) {
             self.getPath(arr, arr[i].parent_department_id);
-            if(arr[i].parent_department_id !== null){
-					let child = await department.findOne({
-						where: {
-							id: arr[i].parent_department_id
-						}
-					})
-			        all.push(child);
-			        // all.push(arr[i].parent_department_id);
+            if (arr[i].parent_department_id !== null) {
+                let child = await department.findOne({
+                    where: {
+                        id: arr[i].parent_department_id
+                    }
+                })
+                all.push(child);
+                // all.push(arr[i].parent_department_id);
             }
-            
+
 
         }
     }
@@ -358,47 +358,47 @@ self.getPath = async (arr, x) => {
 let children = []
 self.getAllChildren = async(arr) => {
 
-	for(var i=0; i<arr.length; i++){
-		let dd = await department.findAll({
-			where: {
-				parent_department_id: arr[i].id
-			}
-		})
-		if(dd.length > 0){
-			children.concat(dd)
-			self.getChildren(dd)
-		}
-	}
-	return children;
+    for (var i = 0; i < arr.length; i++) {
+        let dd = await department.findAll({
+            where: {
+                parent_department_id: arr[i].id
+            }
+        })
+        if (dd.length > 0) {
+            children.concat(dd)
+            self.getChildren(dd)
+        }
+    }
+    return children;
 }
 
 self.getChildren = async(req, res) => {
-	let id = req.params.id
-	try {
+    let id = req.params.id
+    try {
         let parent = await department.findOne({
             where: {
                 id: id
             }
         })
-		let data = await department.findAll({
-			where: {
-				parent_department_id: id
-			}
-		})
-		let all = await self.getAllChildren(data)
-		Array.prototype.push.apply(all,data);
+        let data = await department.findAll({
+            where: {
+                parent_department_id: id
+            }
+        })
+        let all = await self.getAllChildren(data)
+        Array.prototype.push.apply(all, data);
         all.unshift(parent)
         let arr = []
-        for(let dept of all){
+        for (let dept of all) {
             let posi = await userposition.findAll({
                 attributes: ["user_id"],
                 where: {
                     department_id: dept.id
                 }
             })
-    
-            let userId = [ ...new Set(posi.map((item)=> item.user_id))].filter(n=>n)
-            
+
+            let userId = [...new Set(posi.map((item) => item.user_id))].filter(n => n)
+
             let staffs = await user.findAndCountAll({
                 where: {
                     id: {
@@ -409,42 +409,83 @@ self.getChildren = async(req, res) => {
 
 
             let pos = await position.findOne({
-				where: {
-					department_id: dept.id,
-					is_head: true
-				}
-			})
+                where: {
+                    department_id: dept.id,
+                    is_head: true
+                }
+            })
 
-			
-			let head = null 
-			if(pos){
-				head = await user.findOne({
-					where: {
-						position_id: pos.id
-					}
-				})
-			}
-			arr.push({
-				id: dept.id,
-				parentNodeId: dept.parent_department_id,
-				name: dept.name,
-				head: head? head: null,
-				staff_no: staffs.count
-			})
+
+            let head = null
+            if (pos) {
+                head = await user.findOne({
+                    where: {
+                        position_id: pos.id
+                    }
+                })
+            }
+            arr.push({
+                id: dept.id,
+                parentNodeId: dept.parent_department_id,
+                name: dept.name,
+                head: head ? head : null,
+                staff_no: staffs.count
+            })
         }
 
         // arr.find(department => department.id==id).parentNodeId=null
         // return res.json(arr)
         const container = arr.map(department =>
-            department.id === id ? { ...department, parentNodeId: null } : department
+            department.id === id ? {...department, parentNodeId: null } : department
         );
-		return res.json(container)
+        return res.json(container)
 
-	} catch (error) {
-		return res.status(500).json({
-			message: error.message
-		})
-	}
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message
+        })
+    }
+}
+
+self.getDepartmentDashboad = async(req, res) => {
+    try {
+
+
+        let id = req.params.id
+
+        let departments = await department.findAll({
+            where: {
+                parent_department_id: id
+            }
+        })
+
+        let positions = await position.findAll({
+            where: {
+                department_id: id
+            }
+        })
+
+
+
+        let userpositions = await userposition.findAll({
+            where: {
+                department_id: id,
+                is_primary: true
+            }
+        })
+
+
+        return res.json({
+            departments: departments.length,
+            positions: positions.length,
+            users: userpositions.length
+        })
+
+    } catch (error) {
+        return res.status(500).jso({
+            message: error.message
+        })
+    }
 }
 
 module.exports = self;

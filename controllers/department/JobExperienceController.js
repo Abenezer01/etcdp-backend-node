@@ -60,9 +60,9 @@ self.save = async(req, res) => {
     try {
         let body = req.body;
         let data = await jobexperience.create(body);
-        if(data){
+        if (data) {
             let us = "e1594d67-3aa2-429b-bb77-2e4ecc2124f8"
-            saveActionState(data.id, "jobexperience", "REGISTER", us)
+            saveActionState(data.id, "jobexperience", "REGISTER", us, req, res)
         }
         return res.json(data)
     } catch (error) {

@@ -67,9 +67,9 @@ self.save = async(req, res) => {
     try {
         let body = req.body;
         let data = await role.create(body);
-        if(data){
+        if (data) {
             let us = "e1594d67-3aa2-429b-bb77-2e4ecc2124f8"
-            saveActionState(data.id, "role", "REGISTER", us)
+            saveActionState(data.id, "role", "REGISTER", us, req, res)
         }
         return res.json(data)
     } catch (error) {
@@ -113,48 +113,48 @@ self.delete = async(req, res) => {
 }
 self.givePermission = async(req, res) => {
 
-	let id = req.params.id
-	
-	try {
-		let body = req.body	
-		let permissions = body.permissions
-		let rol = await role.findOne({
-			where: {
-				id:id
-			}
-		})
+    let id = req.params.id
+
+    try {
+        let body = req.body
+        let permissions = body.permissions
+        let rol = await role.findOne({
+            where: {
+                id: id
+            }
+        })
 
 
-		for(let per of permissions){
-			if(per.is_selected){
-				await rolepermission.findOrCreate({
-					where: {
-						permission_id: per.id,
-						role_id: rol.id
-					}	
-				})
+        for (let per of permissions) {
+            if (per.is_selected) {
+                await rolepermission.findOrCreate({
+                    where: {
+                        permission_id: per.id,
+                        role_id: rol.id
+                    }
+                })
 
-			}else{
+            } else {
 
-				await rolepermission.destroy({
-					where: {
-						permission_id:per.id
-					}
-				})
+                await rolepermission.destroy({
+                    where: {
+                        permission_id: per.id
+                    }
+                })
 
-			}
-				
-		}
+            }
 
-		return res.json({
-			message: "permissions are given to a role "
-		})
-		
-	} catch (error) {
-		return res.status(500).json({
-			message: error.message
-		})
-	}
+        }
+
+        return res.json({
+            message: "permissions are given to a role "
+        })
+
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message
+        })
+    }
 }
 
 module.exports = self;

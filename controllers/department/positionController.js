@@ -61,11 +61,11 @@ self.search = async(req, res) => {
 self.save = async(req, res) => {
     try {
         let body = req.body;
-        let data = await position.create(body); 
+        let data = await position.create(body);
         // if(data){
-            let us = "e1594d67-3aa2-429b-bb77-2e4ecc2124f8"
-            await saveActionState(data.id, "position", "REGISTER", us)
-            
+        let us = "e1594d67-3aa2-429b-bb77-2e4ecc2124f8"
+        await saveActionState(data.id, "position", "REGISTER", us, req, res)
+
         // }
         return res.json(data)
     } catch (error) {
@@ -116,8 +116,8 @@ self.getParentDepartment = async(req, res) => {
             }
         })
 
-        if(data){
-           return res.json(data)
+        if (data) {
+            return res.json(data)
         }
     } catch (error) {
         return res.json({
@@ -128,7 +128,7 @@ self.getParentDepartment = async(req, res) => {
 
 self.getDepartmentPositions = async(req, res) => {
     try {
-        let id = req.params.id 
+        let id = req.params.id
 
         let positions = await position.findAll({
             where: {

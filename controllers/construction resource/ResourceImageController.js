@@ -121,7 +121,7 @@ self.save = async(req, res) => {
                                 })
                             }
                             let us = usr.usrID
-                            await saveActionState(ll.id, "resourceimage", "REGISTER", us)
+                            await saveActionState(ll.id, "resourceimage", "REGISTER", us, req, res)
                             await resource.update({
                                 image_id: ll.id
                             }, {

@@ -112,8 +112,8 @@ self.getAll = async(req, res) => {
     let data = await user.findAll()
 
     return res.json(data)
-    // let one = "12c85269-9dc5-4e89-8d47-62719baea7ed"
-    // let queryString = `SELECT first_name FROM users as U WHERE U.id='${one}';`
+        // let one = "12c85269-9dc5-4e89-8d47-62719baea7ed"
+        // let queryString = `SELECT first_name FROM users as U WHERE U.id='${one}';`
     let queryString = "SELECT *  FROM users as U JOIN actionstates as A WHERE U.id=A.model_id AND A.action='REGISTER';"
     let userData = await sequelize.query(
         queryString, { type: sequelize.QueryTypes.SELECT }
@@ -136,7 +136,7 @@ self.get = async(req, res) => {
             }
         });
 
-        if(data){
+        if (data) {
             let usEmail = await useremail.findOne({
                 where: {
                     user_id: data.id,
@@ -152,13 +152,13 @@ self.get = async(req, res) => {
             })
 
             let temp = data.toJSON()
-            temp.email = usEmail ? usEmail.email  : null
-            temp.phone = usPhone ? usPhone.phone  : null
+            temp.email = usEmail ? usEmail.email : null
+            temp.phone = usPhone ? usPhone.phone : null
             return res.json(temp)
 
         }
-        
-       
+
+
     } catch (error) {
         res.status(500).json({
             message: error.message
@@ -208,7 +208,7 @@ self.save = async(req, res) => {
             first_name: body.first_name,
             last_name: body.last_name,
             middle_name: body.middle_name,
-            
+
             gender: body.gender,
             marital_status: body.marital_status,
             partner_name: body.partner_name,
@@ -218,25 +218,25 @@ self.save = async(req, res) => {
         };
         created_user = await user.create(usr);
         let us = "e1594d67-3aa2-429b-bb77-2e4ecc2124f8"
-        
+
         if (created_user) {
             //create position
             let usemail = await useremail.create({
                 user_id: created_user.id,
                 email: body.email,
-                is_primary:true
+                is_primary: true
             })
-            if(usemail) {
-                saveActionState(usemail.id, "useremail", "REGISTER", us)
+            if (usemail) {
+                saveActionState(usemail.id, "useremail", "REGISTER", us, req, res)
             }
 
             let usphone = await userphone.create({
                 user_id: created_user.id,
                 phone: body.phone,
-                is_primary:true
+                is_primary: true
             })
-            if(usphone) {
-                saveActionState(usphone.id, "userphone", "REGISTER", us)
+            if (usphone) {
+                saveActionState(usphone.id, "userphone", "REGISTER", us, req, res)
             }
 
             let pos = await position.findOne({
@@ -244,30 +244,30 @@ self.save = async(req, res) => {
                     id: body.position_id
                 }
             })
-            if(pos){
+            if (pos) {
                 let uspos = await userposition.create({
                     user_id: created_user.id,
                     department_id: pos.department_id,
                     position_id: body.position_id,
-                    is_primary:true
+                    is_primary: true
                 })
-                if(uspos) {
-                    saveActionState(uspos.id, "userposition", "REGISTER", us)
+                if (uspos) {
+                    saveActionState(uspos.id, "userposition", "REGISTER", us, req, res)
                 }
             }
-            saveActionState(created_user.id, "user", "REGISTER", us)
+            saveActionState(created_user.id, "user", "REGISTER", us, req, res)
         }
 
 
         return res.json(created_user)
-        
-    
+
+
     } catch (err) {
         return res.status(500).json({
             message: err.message
         })
     }
-   
+
 }
 
 
@@ -306,8 +306,8 @@ self.delete = async(req, res) => {
 
 self.getDepartmentUsers = async(req, res) => {
     try {
-        let id = req.params.id 
-        //demo
+        let id = req.params.id
+            //demo
 
         // let data = await user.findAll({
         //     where: {
@@ -323,8 +323,8 @@ self.getDepartmentUsers = async(req, res) => {
             }
         })
 
-		let userId = [ ...new Set(pos.map((item)=> item.user_id))].filter(n=>n)
-        
+        let userId = [...new Set(pos.map((item) => item.user_id))].filter(n => n)
+
         let users = await user.findAll({
             where: {
                 id: {
@@ -345,20 +345,20 @@ self.assignPosition = async(req, res) => {
     try {
         let body = req.body
         let existing = await userposition.findOne({
-			where: {
-				user_id: body.user_id,
-				position_id: body.position_id
-			}
-		})	
-		
-		if(existing){
-            if(existing.status){
+            where: {
+                user_id: body.user_id,
+                position_id: body.position_id
+            }
+        })
+
+        if (existing) {
+            if (existing.status) {
                 return res.status(302).json({
                     message: "User Already assigned this position"
                 })
-            }else{
+            } else {
 
-                await userposition.update({status: true}, {
+                await userposition.update({ status: true }, {
                     where: {
                         id: existing.id
                     }
@@ -367,19 +367,19 @@ self.assignPosition = async(req, res) => {
                     message: "Position enabled!"
                 })
             }
-		}else{
+        } else {
             let pos = await position.findOne({
                 where: {
                     id: body.position_id
                 }
             })
-			let data = await userposition.create(body)
+            let data = await userposition.create(body)
             data.status = true
-            data.department_id = pos.department_id 
+            data.department_id = pos.department_id
             await data.save()
 
-			return res.status(200).json(data)
-		}
+            return res.status(200).json(data)
+        }
     } catch (error) {
         return res.status(500).json({
             message: error.message
@@ -387,43 +387,43 @@ self.assignPosition = async(req, res) => {
     }
 }
 
-self.dePosition = async(req, res) =>  {
-	try {
-		let id = req.params.id 
-		let data = await userposition.findOne({
-			where: {
-				id: id
-			}
-		})
+self.dePosition = async(req, res) => {
+    try {
+        let id = req.params.id
+        let data = await userposition.findOne({
+            where: {
+                id: id
+            }
+        })
 
-		if(data){
-			if(data.status) {
-				let updated = await userposition.update({status:false},{
-					where:{
-						id:id
-					}
-				});
-				if(updated){
-					return res.json({
-						message: "User Position is Disable"
-					})
-				}
+        if (data) {
+            if (data.status) {
+                let updated = await userposition.update({ status: false }, {
+                    where: {
+                        id: id
+                    }
+                });
+                if (updated) {
+                    return res.json({
+                        message: "User Position is Disable"
+                    })
+                }
 
-			}else{
-				return res.status(302).json({
-					message: "Already Disabled!"
-				})
-			}
-		}else{
-			return res.status(404).json({
-				message: "User Position is not Found!"
-			})
-		}
-	} catch (error) {
-		return res.status(500).json({
-			message: error.message
-		})
-	}
+            } else {
+                return res.status(302).json({
+                    message: "Already Disabled!"
+                })
+            }
+        } else {
+            return res.status(404).json({
+                message: "User Position is not Found!"
+            })
+        }
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message
+        })
+    }
 }
 
 
@@ -431,87 +431,82 @@ self.switchAccount = async(req, res) => {
 
     let accessToken
     let refreshToken
-   
+
     try {
         let [userpos, account, pos, usrRole, usEmail, usPhone] = await Promise.all([
-                userposition.findOne({ where: { id: body.position_id } }),
-                user.findOne({
-                    where: { id: user_id },
-                    include: [
-                        { model: photo, as: "photo" },
-                        { model: userposition, as: "positions" },
-                    ],
-                }),
-                position.findOne({ where: { id: userpos.position_id } }),
-                role.findOne({ where: { id: pos.role_id } }),
-                useremail.findOne({
-                    where: { user_id: account.id, is_primary: true },
-                }),
-                userphone.findOne({
-                    where: { user_id: account.id, is_primary: true },
-                })
-            ]);
+            userposition.findOne({ where: { id: body.position_id } }),
+            user.findOne({
+                where: { id: user_id },
+                include: [
+                    { model: photo, as: "photo" },
+                    { model: userposition, as: "positions" },
+                ],
+            }),
+            position.findOne({ where: { id: userpos.position_id } }),
+            role.findOne({ where: { id: pos.role_id } }),
+            useremail.findOne({
+                where: { user_id: account.id, is_primary: true },
+            }),
+            userphone.findOne({
+                where: { user_id: account.id, is_primary: true },
+            })
+        ]);
 
-            let { id, first_name, middle_name, last_name, gender } = account;
-            let { email } = usEmail || {};
-            let { phone } = usPhone || {};
+        let { id, first_name, middle_name, last_name, gender } = account;
+        let { email } = usEmail || {};
+        let { phone } = usPhone || {};
 
-            let replyUser = {
-                id,
-                first_name,
-                middle_name,
-                last_name,
-                email,
-                phone,
-                gender,
-                position_id: userpos.position_id,
-                position_name: pos.name,
-                role: usrRole.name,
-                avatar: account.photo.avatar,
-            };
-                
-   
-            try {
-                let usr = { id: account.id, department_id: pos.department_id, position_id: pos.id };
-                accessToken = jwt.sign(
-                  usr,
-                  TOKEN_KEY,
-                  { expiresIn: "2h" },
-                  (err, token) => {
+        let replyUser = {
+            id,
+            first_name,
+            middle_name,
+            last_name,
+            email,
+            phone,
+            gender,
+            position_id: userpos.position_id,
+            position_name: pos.name,
+            role: usrRole.name,
+            avatar: account.photo.avatar,
+        };
+
+
+        try {
+            let usr = { id: account.id, department_id: pos.department_id, position_id: pos.id };
+            accessToken = jwt.sign(
+                usr,
+                TOKEN_KEY, { expiresIn: "2h" },
+                (err, token) => {
                     if (err) throw err;
                     return token;
-                  }
-                );
-                refreshToken = jwt.sign(
-                  usr,
-                  REFRESH_TOKEN_KEY,
-                  { expiresIn: "3h" },
-                  (err, token) => {
+                }
+            );
+            refreshToken = jwt.sign(
+                usr,
+                REFRESH_TOKEN_KEY, { expiresIn: "3h" },
+                (err, token) => {
                     if (err) throw err;
                     return token;
-                  }
-                );
-                // update refresh token
-                await user.update(
-                    { refresh_token: refreshToken },
-                    { where: { id: id } }
-                  );
-                  return res.status(200).json({
-                    userData: replyUser,
-                    accessToken: accessToken,
-                    refreshToken: refreshToken,
-                  });
-              } catch (error) {
-                return res.status(500).json({ message: error.message });
-              }
-    
+                }
+            );
+            // update refresh token
+            await user.update({ refresh_token: refreshToken }, { where: { id: id } });
+            return res.status(200).json({
+                userData: replyUser,
+                accessToken: accessToken,
+                refreshToken: refreshToken,
+            });
+        } catch (error) {
+            return res.status(500).json({ message: error.message });
+        }
+
 
     } catch (error) {
         return res.status(500).json({
             message: error.message
         })
     }
-    
+
 }
 
 self.getAllUserPositions = async(req, res) => {
@@ -519,28 +514,28 @@ self.getAllUserPositions = async(req, res) => {
         let { id } = req.params;
 
         let data = await userposition.findAll({
-          where: { user_id: id },
-          include: [
-            { model: position, attributes: ['name'] },
-            { model: department, attributes: ['name'] }
-          ]
+            where: { user_id: id },
+            include: [
+                { model: position, attributes: ['name'] },
+                { model: department, attributes: ['name'] }
+            ]
         });
-      
+
         if (!data || data.length === 0) {
-          return res.json([]);
+            return res.json([]);
         }
-      
+
         let arr = await Promise.all(data.map(async usrpos => {
-          let temp = usrpos.toJSON();
-          let [pos, dept] = await Promise.all([
-            usrpos.getPosition(),
-            usrpos.getDepartment()
-          ]);
-          temp.position_name = pos ? pos.name : null;
-          temp.department_name = dept ? dept.name : null;
-          return temp;
+            let temp = usrpos.toJSON();
+            let [pos, dept] = await Promise.all([
+                usrpos.getPosition(),
+                usrpos.getDepartment()
+            ]);
+            temp.position_name = pos ? pos.name : null;
+            temp.department_name = dept ? dept.name : null;
+            return temp;
         }));
-      
+
         return res.json(arr);
     } catch (error) {
         return res.status(500).json({

@@ -94,7 +94,7 @@ self.save = async(req, res) => {
             let data = await projecttype.create(body);
             if (data) {
                 let usrID = usr.usrID
-                await saveActionState(data.id, "projecttype", "REGISTER", usrID)
+                await saveActionState(data.id, "projecttype", "REGISTER", usrID, req, res)
             }
             return res.json(data)
         }
