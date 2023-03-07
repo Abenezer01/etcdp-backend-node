@@ -154,8 +154,7 @@ self.save = async(req, res) => {
             let data = await graduate.create(da);
             if (data) {
                 let us = usr.usrID
-                    // let us = "e1594d67-3aa2-429b-bb77-2e4ecc2124f8"
-                saveActionState(data.id, "graduate", "REGISTER", us, req, res)
+                await saveActionState(data.id, "graduate", "REGISTER", us, req, res)
             }
             return res.json(data)
         }

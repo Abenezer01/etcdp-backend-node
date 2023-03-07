@@ -1,6 +1,3 @@
-const { saveActionState } = require("../../utils/helper");
-
-const helper = require("../../utils/helper")
 const {
     department,
     position,
@@ -10,10 +7,12 @@ const {
     Sequelize
 } = require("./../../models");
 const usrData = require("../../utils/userDataFromToken");
+const { saveActionState } = require("../../utils/helper");
+let master = require("../../config/master");
+
 
 const Op = Sequelize.Op;
 
-let master = require("../../config/master");
 
 let self = {};
 
@@ -77,21 +76,12 @@ self.save = async(req, res) => {
         let data = await department.create(body);
 
         if (data) {
-            let us = "f01da526-7f87-40b5-a967-dd711eef0740"
-                // saveActionState(data.id, "department", "REGISTER", us)
-
+        
             if (data) {
 
                 let usr = await usrData.userData(req, res)
 
-                await actionstate.create({
-                    model_id: data.id,
-                    model: "department",
-                    action: "REGISTER",
-                    user_id: usr.usrID,
-                    position_id: usr.position_id,
-                    time: new Date(),
-                })
+                await saveActionState(pos.id, "department", "REGISTER", usr.usrID, req, res)
 
                 let pos = await position.create({
                     department_id: data.id,
@@ -100,8 +90,10 @@ self.save = async(req, res) => {
                     is_head: true,
                     role_id: "03963640-6675-4c68-a073-25ac309abd74"
                 })
+                if(pos){
+                    await saveActionState(pos.id, "position", "REGISTER", usr.usrID, req, res)
+                }
 
-                await saveActionState(pos.id, "position", "REGISTER", us, req, res)
 
 
 

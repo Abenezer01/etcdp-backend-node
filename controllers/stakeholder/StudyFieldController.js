@@ -110,8 +110,7 @@ self.save = async(req, res) => {
             let data = await studyfield.create(body);
             if (data) {
                 let usrID = usr.usrID
-                    // let us = "e1594d67-3aa2-429b-bb77-2e4ecc2124f8"
-                saveActionState(data.id, "studyfield", "REGISTER", usrID, req, res)
+                await saveActionState(data.id, "studyfield", "REGISTER", usrID, req, res)
             }
             return res.json(data)
         }

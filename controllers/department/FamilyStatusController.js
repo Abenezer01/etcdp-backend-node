@@ -63,20 +63,8 @@ self.save = async(req, res) => {
         let data = await familystatus.create(body);
 
         if (data) {
-            let us = "e1594d67-3aa2-429b-bb77-2e4ecc2124f8"
-            saveActionState(data.id, "familystatus", "REGISTER", us, req, res)
-        }
-
-        if (data) {
             let usr = await usrData.userData(req, res)
-            await actionstate.create({
-                model_id: data.id,
-                model: "familystatus",
-                action: "REGISTER",
-                user_id: usr.usrID,
-                position_id: usr.position_id,
-                time: new Date(),
-            })
+            await saveActionState(data.id, "familystatus", "REGISTER", usr.usrID, req, res)
         }
 
         return res.json(data)

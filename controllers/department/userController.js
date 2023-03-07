@@ -218,22 +218,9 @@ self.save = async(req, res) => {
         };
         created_user = await user.create(usr);
 
-        let us = "e1594d67-3aa2-429b-bb77-2e4ecc2124f8"
-
-
-
-
-
         if (created_user) {
             let usr = await usrData.userData(req, res)
-            await actionstate.create({
-                    model_id: created_user.id,
-                    model: "user",
-                    action: "REGISTER",
-                    user_id: usr.usrID,
-                    position_id: usr.position_id,
-                    time: new Date()
-                })
+            await saveActionState(created_user.id, "user", "REGISTER", usr.usrID, req, res)
                 //create position
             let usemail = await useremail.create({
                 user_id: created_user.id,
@@ -242,20 +229,7 @@ self.save = async(req, res) => {
             })
 
             if (usemail) {
-                saveActionState(usemail.id, "useremail", "REGISTER", us, req, res)
-
-                if (usemail) {
-
-                    await actionstate.create({
-                        model_id: usemail.id,
-                        model: "useremail",
-                        action: "REGISTER",
-                        user_id: usr.usrID,
-                        position_id: usr.position_id,
-                        time: new Date()
-                    })
-
-                }
+                saveActionState(usemail.id, "useremail", "REGISTER", usr.usrID, req, res)
 
                 let usphone = await userphone.create({
                     user_id: created_user.id,
@@ -264,18 +238,9 @@ self.save = async(req, res) => {
                 })
 
                 if (usphone) {
-                    saveActionState(usphone.id, "userphone", "REGISTER", us, req, res)
 
                     if (usphone) {
-                        await actionstate.create({
-                            model_id: usphone.id,
-                            model: "userphone",
-                            action: "REGISTER",
-                            user_id: usr.usrID,
-                            position_id: usr.position_id,
-                            time: new Date()
-                        })
-
+                        saveActionState(usphone.id, "userphone", "REGISTER", usr.usrID, req, res)
                     }
 
                     let pos = await position.findOne({
@@ -292,20 +257,8 @@ self.save = async(req, res) => {
                         })
 
                         if (uspos) {
-                            saveActionState(uspos.id, "userposition", "REGISTER", us, req, res)
+                            saveActionState(uspos.id, "userposition", "REGISTER", usr.usrID, req, res)
                         }
-                    }
-                    saveActionState(created_user.id, "user", "REGISTER", us, req, res)
-
-                    if (uspos) {
-                        await actionstate.create({
-                            model_id: uspos.id,
-                            model: "userposition",
-                            action: "REGISTER",
-                            user_id: usr.usrID,
-                            position_id: usr.position_id,
-                            time: new Date()
-                        })
                     }
                 }
 

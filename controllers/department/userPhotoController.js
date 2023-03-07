@@ -8,6 +8,7 @@ const path = require('path');
 const fs = require('fs');
 
 const { saveActionState } = require("../../utils/helper");
+const usrData = require("../../utils/userDataFromToken");
 
 
 const Op = Sequelize.Op;
@@ -102,8 +103,8 @@ self.save = async(req, res) => {
         try {
             ll = await photo.create(photoo)
             if (ll) {
-                let us = "e1594d67-3aa2-429b-bb77-2e4ecc2124f8"
-                saveActionState(data.id, "photo", "REGISTER", us, req, res)
+                let usr = await usrData.userData(req, res)
+                await saveActionState(ll.id, "photo", "REGISTER", usr.usrID, req, res)
             }
             file.mv(filePath, err => {
                 if (err) return res.status(500).send(err)
