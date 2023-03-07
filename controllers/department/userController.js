@@ -25,6 +25,7 @@ const jwt = require("jsonwebtoken");
 
 let TOKEN_KEY = process.env.ACCESS_TOKEN_KEY
 let REFRESH_TOKEN_KEY = process.env.REFRESH_TOKEN_KEY
+let TOKEN_MAX_AGE = process.env.TOKEN_MAX_AGE
 
 
 let self = {};
@@ -437,28 +438,34 @@ self.dePosition = async(req, res) => {
 
 self.switchAccount = async(req, res) => {
 
-    let accessToken
-    let refreshToken
-
     try {
-        let [userpos, account, pos, usrRole, usEmail, usPhone] = await Promise.all([
-            userposition.findOne({ where: { id: body.position_id } }),
-            user.findOne({
-                where: { id: user_id },
-                include: [
-                    { model: photo, as: "photo" },
-                    { model: userposition, as: "positions" },
-                ],
-            }),
-            position.findOne({ where: { id: userpos.position_id } }),
-            role.findOne({ where: { id: pos.role_id } }),
-            useremail.findOne({
-                where: { user_id: account.id, is_primary: true },
-            }),
-            userphone.findOne({
-                where: { user_id: account.id, is_primary: true },
-            })
-        ]);
+        let body = req.body
+        let usr = await usrData.userData(req, res)
+        //position_id === userposition_id
+        const userpos = await userposition.findOne({ 
+            where: { 
+                id: body.position_id
+            } 
+        })
+        const pos = await position.findOne({ where: { id: userpos.position_id} })
+
+        const account = await user.findOne({
+            where: { id: usr.usrID },
+            include: [
+                { model: photo, as: "photo" },
+                { model: userposition, as: "positions" },
+            ],
+        });
+
+        // let usrRole = await role.findOne({ where: { id: pos.role_id } })
+        const usEmail = await useremail.findOne({
+            where: { user_id: account.id, is_primary: true }
+        })
+
+        const usPhone = await userphone.findOne({
+            where: { user_id: account.id, is_primary: true },
+        })
+        
 
         let { id, first_name, middle_name, last_name, gender } = account;
         let { email } = usEmail || {};
@@ -472,29 +479,26 @@ self.switchAccount = async(req, res) => {
             email,
             phone,
             gender,
-            position_id: userpos.position_id,
-            position_name: pos.name,
-            role: usrRole.name,
+            position_id: userpos ? userpos.position_id: null,
+            position_name: pos ? pos.name : null,
+            // role: usrRole.name,
             avatar: account.photo.avatar,
         };
 
-
         try {
-            let usr = { id: account.id, department_id: pos.department_id, position_id: pos.id };
-            accessToken = jwt.sign(
-                usr,
-                TOKEN_KEY, { expiresIn: "2h" },
-                (err, token) => {
-                    if (err) throw err;
-                    return token;
+
+            let accessToken = null 
+            let refreshToken = null
+            let us = { id: account.id, department_id: userpos.department_id, position_id: userpos.position_id };
+
+            accessToken = jwt.sign(us,
+                TOKEN_KEY, { 
+                    expiresIn: "100h" 
                 }
             );
-            refreshToken = jwt.sign(
-                usr,
-                REFRESH_TOKEN_KEY, { expiresIn: "3h" },
-                (err, token) => {
-                    if (err) throw err;
-                    return token;
+            refreshToken = jwt.sign(us,
+                REFRESH_TOKEN_KEY, {
+                    expiresIn: "100h" 
                 }
             );
             // update refresh token
@@ -502,7 +506,7 @@ self.switchAccount = async(req, res) => {
             return res.status(200).json({
                 userData: replyUser,
                 accessToken: accessToken,
-                refreshToken: refreshToken,
+                refreshToken: refreshToken
             });
         } catch (error) {
             return res.status(500).json({ message: error.message });

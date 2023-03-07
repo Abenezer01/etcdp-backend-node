@@ -1,10 +1,12 @@
 const {
     permission,
+    positionpermission,
     Sequelize
 } = require("../../models");
 const { saveActionState } = require("../../utils/helper");
 const usrData = require("../../utils/userDataFromToken");
 const Op = Sequelize.Op;
+const master = require("../../config/master")
 
 let self = {};
 
@@ -175,7 +177,7 @@ self.getGroupedPermissions = async (req, res) => {
 	try {
 
         const [rolePos, ePermissions] = await Promise.all([
-            rolepermission.findAll({ where: { role_id: id } }),
+            positionpermission.findAll({ where: { position_id: id } }),
             permission.findAll({ where: { module: module } })
         ])
 		

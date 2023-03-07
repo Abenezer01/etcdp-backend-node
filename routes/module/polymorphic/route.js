@@ -5,6 +5,7 @@ const validateData = require("../../../middleware/validate/module/polymorphic/va
 const ActionStateController = require("../../../controllers/polymorphic/ActionStateController.js")
 const ReplyController = require("../../../controllers/polymorphic/ReplyController.js")
 const NoteController = require("../../../controllers/polymorphic/NoteController.js")
+const ModelMenuController = require("../../../controllers/polymorphic/ModelMenuController.js")
 const middleware = require("../../../middleware/middleware")
 
 module.exports = function(express) {
@@ -47,7 +48,16 @@ module.exports = function(express) {
     route.delete("/note/:id", NoteController.delete);
     route.get("/model-notes/:id", NoteController.getNoteByModelId);
 
+    //Model Menu
+
+    route.get("/model-menu", ModelMenuController.getAll);
+    route.get("/model-menu/:id", ModelMenuController.get);
+    route.post("/model-menu", ModelMenuController.save);
+    route.put("/model-menu/:id", ModelMenuController.update);
+    route.delete("/model-menu/:id", ModelMenuController.delete);
+    route.get("/module-model-menus/:id", ModelMenuController.getModelMenuByModule);
     
+
     
 
 
