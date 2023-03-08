@@ -15,6 +15,21 @@ const addressValidate = async(req, res, next) => {
 
     await validateReply.validateReply(req.body, validationRule, res, next)
 }
+const modelMenuValidate = async(req, res, next) => {
+    let param = await validateReply.checkParam(req, res, next)
+    if (param == "failed") {
+        return res.status(400).json({
+            message: "Invalid id"
+        })
+    }
+    const validationRule = {
+        "module_type_id": "required|string",
+        "module": "required|string",
+        "model": "required"
+    };
+
+    await validateReply.validateReply(req.body, validationRule, res, next)
+}
 const actionStateValidate = async(req, res, next) => {
     let param = await validateReply.checkParam(req, res, next)
     if (param == "failed") {
@@ -29,7 +44,45 @@ const actionStateValidate = async(req, res, next) => {
         })
     }
 }
+const noteValidate = async(req, res, next) => {
+    let param = await validateReply.checkParam(req, res, next)
+    if (param == "failed") {
+        return res.status(400).json({
+            message: "Invalid id"
+        })
+    }
+    const validationRule = {
+        "model": "required|string",
+        "model_id": "required|string",
+        "user_id": "string",
+        "description": "required|string"
+    };
+
+    await validateReply.validateReply(req.body, validationRule, res, next)
+}
+const replyValidate = async(req, res, next) => {
+    let param = await validateReply.checkParam(req, res, next)
+    if (param == "failed") {
+        return res.status(400).json({
+            message: "Invalid id"
+        })
+    }
+    const validationRule = {
+        "actionstate_id": "required|string",
+        "creator_id": "string",
+        "content": "required|string",
+        "type": "string",
+        "status": "boolean",
+        "is_authorized": "boolean"
+    };
+
+    await validateReply.validateReply(req.body, validationRule, res, next)
+}
+
 module.exports = {
     addressValidate,
-    actionStateValidate
+    modelMenuValidate,
+    actionStateValidate,
+    noteValidate,
+    replyValidate
 };

@@ -34,7 +34,7 @@ module.exports = function(express) {
 
     route.get("/reply", ReplyController.getAll);
     route.get("/reply/:id", ReplyController.get);
-    route.post("/reply", ReplyController.save);
+    route.post("/reply", validateData.replyValidate, ReplyController.save);
     route.put("/reply/:id", ReplyController.update);
     route.delete("/reply/:id", ReplyController.delete);
     route.get("/action-replies/:id", ReplyController.getActionReplies);
@@ -43,7 +43,7 @@ module.exports = function(express) {
 
     route.get("/note", NoteController.getAll);
     route.get("/note/:id", NoteController.get);
-    route.post("/note", NoteController.save);
+    route.post("/note", validateData.noteValidate, NoteController.save);
     route.put("/note/:id", NoteController.update);
     route.delete("/note/:id", NoteController.delete);
     route.get("/model-notes/:id", NoteController.getNoteByModelId);
@@ -52,21 +52,10 @@ module.exports = function(express) {
 
     route.get("/model-menu", ModelMenuController.getAll);
     route.get("/model-menu/:id", ModelMenuController.get);
-    route.post("/model-menu", ModelMenuController.save);
+    route.post("/model-menu", validateData.modelMenuValidate,ModelMenuController.save);
     route.put("/model-menu/:id", ModelMenuController.update);
     route.delete("/model-menu/:id", ModelMenuController.delete);
     route.get("/module-model-menus/:id", ModelMenuController.getModelMenuByModule);
-    
-
-    
-
-
-
-    // route.get("/address/:id", AddressController.get);
-    // route.get("/address-search", AddressController.search);
-    // route.post("/address", AddressController.save);
-    // route.put("/address/:id", AddressController.update);
-    // route.delete("/address/:id", AddressController.delete);
 
     return route;
 };
