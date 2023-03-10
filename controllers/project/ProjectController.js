@@ -352,8 +352,8 @@
             client,
             contractor,
             consultant,
-            finance: finance,
-            time: time
+            main_contract_price_amount: finance ? finance.main_contract_price_amount: null,
+            contract_signing_date: time ? time.contract_signing_date : null
 
         })
 
