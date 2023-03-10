@@ -25,7 +25,7 @@ const modelMenuValidate = async(req, res, next) => {
     const validationRule = {
         "module_type_id": "required|string",
         "module": "required|string",
-        "model": "required"
+        "models": "required"
     };
 
     await validateReply.validateReply(req.body, validationRule, res, next)

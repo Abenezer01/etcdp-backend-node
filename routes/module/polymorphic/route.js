@@ -57,5 +57,7 @@ module.exports = function(express) {
     route.delete("/model-menu/:id", ModelMenuController.delete);
     route.get("/module-model-menus/:id", ModelMenuController.getModelMenuByModule);
 
+    route.get("/module-models/:module", ModelMenuController.getModuleExtraModels);
+
     return route;
 };

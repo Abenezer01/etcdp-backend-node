@@ -106,7 +106,7 @@ self.loginUser = async(request, response) => {
                     }
                 );
                 refreshToken = jwt.sign(usrr, REFRESH_TOKEN_KEY, { expiresIn: "100h" })
-                    // save user token
+                    // save user token  
                     //let replyUser = {first_name:usr.first_name,last_name:usr_last_name,}
                 user.update({
                         refresh_token: refreshToken

@@ -13,7 +13,7 @@ let models = [
     "contactperson",
     "department",
     "educationstatus",
-    "electrictower",
+"electrictower",
     "employeeage",
     "employeeeducation",
     "experiencelevel",
@@ -86,7 +86,10 @@ let models = [
     "userposition",
     "waterirrigationdam",
     "windenergy",
-    "workexperience"
+    "workexperience",
+    "modelmenu",
+    "note",
+    "reply"
 
 ]
 
@@ -115,6 +118,7 @@ let permissionModules = [
     "projectplan",
     "projectresource",
     "projectreport",
+    "other",
     "resources",
     "document",
     "center"
@@ -136,10 +140,61 @@ let actions = [
     "view"
 ]
 
+const modulemodels = {
+    'project':[    
+        "buildingdimensiondetail",    
+        "buildingenvelopmaterial",    
+        "electrictower",    
+        "generatingcapacity",    
+        "hydroelectricdam",    
+        "irrigationcapacity",    
+        "port",    
+        "railway",    
+        "railwaystation",    
+        "reservoirinfo",    
+        "roadinfo",    
+        "roadlayer",    
+        "roadsegment",    
+        "solarenergy",    
+        "spillwayinfo",    
+        "transformer",    
+        "transformertype",    
+        "transmissionline",    
+        "transmissiontype",    
+        "turbineinfo",    
+        "waterirrigationdam",    
+        "windenergy"
+    ],
+    
+    'stakeholder': [
+        'studyfield',
+        'studyperiodcost',
+        'graduate',
+        'stakeholderservice',
+        "constructionrelatedservice"
+    ],
+    'resource': [
+        'contracttimeinformation',
+        'extensiontime'
+    ],
+    'document': [
+        'stakeholder',
+        'professional',
+        'responsibility',
+        'stakeholderpermission',
+        'projectprofessionalrole'
+    ],
+    'center': [
+        
+    ]
+    
+}
+
 module.exports = {
     models,
     modules,
     roleName,
     permissionModules,
-    actions
+    actions,
+    modulemodels
 }

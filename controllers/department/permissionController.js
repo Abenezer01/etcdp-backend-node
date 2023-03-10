@@ -461,7 +461,8 @@ self.initPermission = async(req, res) => {
             for (const module of permissionModules) {
                 permissionPromises.push(permission.create({
                     name: `${action}_${module}`,
-                    module: module
+                    module: module,
+                    category: "PROJECT"
                 }));
             }
         }

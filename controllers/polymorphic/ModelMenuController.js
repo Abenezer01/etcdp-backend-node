@@ -1,15 +1,16 @@
-const {
+    const {
     modelmenu,
     Sequelize
 } = require("../../models");
 const usrData = require("../../utils/userDataFromToken");
 const { saveActionState } = require("../../utils/helper");
-
+const master = require("../../config/master")
 const Op = Sequelize.Op;
 const dotenv = require('dotenv');
 dotenv.config();
 
 let self = {};
+
 
 self.getAll = async(req, res) => {
     try {
@@ -74,23 +75,39 @@ self.save = async(req, res) => {
     try {
         let usr = await usrData.userData(req, res)
         let body = req.body;
-        if (usr) {
-            let existing = await modelmenu.findOne({
-                where: body
-            })
-            if(existing){
-                return res.status(302).json({
-                    message: "This model menu already existed!"
+
+        let models = body.models 
+
+        if(models.length > 0){
+            let arr = []
+            for(let model of models){
+                let existing = await modelmenu.findOne({
+                    where: {
+                        module_type_id: body.module_type_id,
+                        module: body.module,
+                        model: model
+                    }
                 })
-            }else{
-                let data = await modelmenu.create(body);
-                if (data) {
-                    let usrID = usr.usrID
-                    await saveActionState(data.id, "modelmenu", "REGISTER", usrID, req, res)
+
+                if(!existing){
+                    let data = await modelmenu.create({
+                        module_type_id: body.module_type_id,
+                        module: body.module,
+                        model: model
+                    });
+                    if (data) {
+                        arr.push(data)
+                        let usrID = usr.usrID
+                        await saveActionState(data.id, "modelmenu", "REGISTER", usrID, req, res)
+                    }
+                    
                 }
-                return res.json(data)
             }
-            
+            return res.json(arr)
+        }else{
+            return res.status(404).json({
+                message: "Empty Models!"
+            })
         }
     } catch (error) {
         res.status(500).json({
@@ -148,5 +165,19 @@ self.getModelMenuByModule = async(req, res) => {
     }
 }
 
+
+self.getModuleExtraModels = async(req, res) => {
+    let module = req.params.module
+    try {
+        
+        let models = master.modulemodels[module]
+
+        return res.json(models)
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message
+        })
+    }
+}
 
 module.exports = self;
