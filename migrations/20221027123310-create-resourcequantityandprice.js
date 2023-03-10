@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
     async up(queryInterface, Sequelize) {
-        await queryInterface.createTable('resourcequantities', {
+        await queryInterface.createTable('resourcequantityandprices', {
             id: {
                 allowNull: false,
                 primaryKey: true,
@@ -10,7 +10,7 @@ module.exports = {
             parent_id: {
                 type: Sequelize.UUID,
                 references: {
-                    model: 'resourcequantities',
+                    model: 'resourcequantityandprices',
                     key: 'id'
                 },
                 onUpdate: 'CASCADE',
@@ -46,8 +46,18 @@ module.exports = {
                 onUpdate: 'CASCADE',
                 onDelete: 'CASCADE'
             },
+            project_id: { type: Sequelize.UUID },
+            unit_price: {
+                type: Sequelize.DOUBLE
+            },
             quantity: {
-                type: Sequelize.INTEGER
+                type: Sequelize.DOUBLE
+            },
+            store_address: {
+                type: Sequelize.STRING
+            },
+            date: {
+                type: Sequelize.DATE
             },
             datasource: {
                 type: Sequelize.STRING
@@ -66,6 +76,6 @@ module.exports = {
         });
     },
     async down(queryInterface, Sequelize) {
-        await queryInterface.dropTable('resourcequantities');
+        await queryInterface.dropTable('resourcequantityandprices');
     }
 };

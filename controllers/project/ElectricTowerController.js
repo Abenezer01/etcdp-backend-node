@@ -1,11 +1,13 @@
 const { saveActionState } = require("../../utils/helper");
 const {
     electrictower,
+    transmissionline,
     Sequelize
 } = require("../../models");
 const usrData = require("../../utils/userDataFromToken");
 const dotenv = require('dotenv');
 dotenv.config();
+const paginate = require("../../utils/pagination");
 const Op = Sequelize.Op;
 
 let self = {};
@@ -54,7 +56,39 @@ self.get = async(req, res) => {
         })
     }
 }
-
+self.getByProjectId = async(req, res) => {
+    let id = req.params.id
+    let { page, size, order } = req.query;
+    //console.log("The page", page, size)
+    if (page == null && size == null) {
+        page = process.env.page,
+            size = process.env.size
+    }
+    if (order == null) {
+        order = process.env.order
+    }
+    const { limit, offset } = paginate.getPagination(page, size);
+    electrictower.findAndCountAll({
+            limit,
+            offset,
+            order: [
+                ['createdAt', 'ASC']
+            ],
+            where: {
+                project_id: id
+            },
+            include: { model: transmissionline, as: 'transmissionline', attributes: ['id', 'name'] },
+        })
+        .then(data => {
+            const response = paginate.getPagingData(data, page, limit);
+            res.send(response);
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: err.message || "Some error occurred while retrieving data."
+            });
+        });
+}
 self.search = async(req, res) => {
     try {
         let text = req.query.text;

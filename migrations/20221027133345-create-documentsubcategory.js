@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
     async up(queryInterface, Sequelize) {
-        await queryInterface.createTable('resourceprices', {
+        await queryInterface.createTable('documentsubcategories', {
             id: {
                 allowNull: false,
                 primaryKey: true,
@@ -10,47 +10,38 @@ module.exports = {
             parent_id: {
                 type: Sequelize.UUID,
                 references: {
-                    model: 'resourceprices',
+                    model: 'documentsubcategories',
                     key: 'id'
                 },
                 onUpdate: 'CASCADE',
                 onDelete: 'CASCADE'
             },
-            resource_id: {
+            documenttype_id: {
                 type: Sequelize.UUID,
                 allowNull: false,
                 references: {
-                    model: 'resources',
+                    model: 'documenttypes',
                     key: 'id'
                 },
                 onUpdate: 'CASCADE',
                 onDelete: 'CASCADE'
             },
-            resourcebrand_id: {
+            documentcategory_id: {
                 type: Sequelize.UUID,
                 allowNull: false,
                 references: {
-                    model: 'resourcebrands',
+                    model: 'documentcategories',
                     key: 'id'
                 },
                 onUpdate: 'CASCADE',
                 onDelete: 'CASCADE'
             },
-            detailresourcetype_id: {
-                type: Sequelize.UUID,
-                allowNull: false,
-                references: {
-                    model: 'detailresourcetypes',
-                    key: 'id'
-                },
-                onUpdate: 'CASCADE',
-                onDelete: 'CASCADE'
+            title: {
+                type: Sequelize.STRING,
+                allowNull: false
             },
-            unit_price: {
-                type: Sequelize.INTEGER
-            },
-            datasource: {
-                type: Sequelize.STRING
+            description: {
+                type: Sequelize.TEXT
             },
             revision_no: {
                 type: Sequelize.INTEGER
@@ -66,6 +57,6 @@ module.exports = {
         });
     },
     async down(queryInterface, Sequelize) {
-        await queryInterface.dropTable('resourceprices');
+        await queryInterface.dropTable('documentsubcategories');
     }
 };

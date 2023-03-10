@@ -7,7 +7,13 @@ module.exports = {
                 primaryKey: true,
                 type: Sequelize.UUID
             },
-            avatar: {
+            url: {
+                type: Sequelize.STRING
+            },
+            model_id: {
+                type: Sequelize.UUID
+            },
+            type: {
                 type: Sequelize.STRING
             },
             createdAt: {

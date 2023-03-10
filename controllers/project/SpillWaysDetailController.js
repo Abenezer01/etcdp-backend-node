@@ -1,5 +1,5 @@
 const {
-    spilwayinfo,
+    spillwayinfo,
     Sequelize
 } = require("../../models");
 const usrData = require("../../utils/userDataFromToken");
@@ -7,6 +7,7 @@ const { saveActionState } = require("../../utils/helper");
 const Op = Sequelize.Op;
 const paginate = require("../../utils/pagination");
 const dotenv = require('dotenv');
+const { spillWayInfoValidate } = require("../../middleware/validate/module/project/validate");
 dotenv.config();
 let self = {};
 
@@ -21,7 +22,7 @@ self.getAll = async(req, res) => {
         order = process.env.order
     }
     const { limit, offset } = paginate.getPagination(page, size);
-    spilwayinfo.findAndCountAll({
+    spillwayinfo.findAndCountAll({
             limit,
             offset,
             order: [
@@ -38,7 +39,7 @@ self.getAll = async(req, res) => {
             });
         });
     // try {
-    //     let data = await spilwayinfo.findAll();
+    //     let data = await spillwayinfo.findAll();
     //     return res.json(data)
 
     // } catch (error) {
@@ -47,12 +48,43 @@ self.getAll = async(req, res) => {
     //     })
     // }
 }
-
+self.getByProjectId = async(req, res) => {
+    let id = req.params.id
+    let { page, size, order } = req.query;
+    //console.log("The page", page, size)
+    if (page == null && size == null) {
+        page = process.env.page,
+            size = process.env.size
+    }
+    if (order == null) {
+        order = process.env.order
+    }
+    const { limit, offset } = paginate.getPagination(page, size);
+    spillwayinfo.findAndCountAll({
+            limit,
+            offset,
+            order: [
+                ['createdAt', 'ASC']
+            ],
+            where: {
+                project_id: id
+            }
+        })
+        .then(data => {
+            const response = paginate.getPagingData(data, page, limit);
+            res.send(response);
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: err.message || "Some error occurred while retrieving data."
+            });
+        });
+}
 
 self.get = async(req, res) => {
     try {
         let id = req.params.id;
-        let data = await spilwayinfo.findOne({
+        let data = await spillwayinfo.findOne({
             where: {
                 id: id
             }
@@ -70,7 +102,7 @@ self.get = async(req, res) => {
 self.search = async(req, res) => {
     try {
         let text = req.query.text;
-        let data = await spilwayinfo.findAll({
+        let data = await spillwayinfo.findAll({
             where: {
                 name: {
                     [Op.like]: "%" + text + "%"
@@ -90,10 +122,10 @@ self.save = async(req, res) => {
         let usr = await usrData.userData(req, res)
         let body = req.body;
         if (usr) {
-            let data = await spilwayinfo.create(body);
+            let data = await spillwayinfo.create(body);
             if (data) {
                 let usrID = usr.usrID
-                await saveActionState(data.id, "spilwaydetail", "REGISTER", usrID, req, res)
+                await saveActionState(data.id, "spillwaydetail", "REGISTER", usrID, req, res)
             }
             return res.json(data)
         }
@@ -108,7 +140,7 @@ self.update = async(req, res) => {
     try {
         let id = req.params.id;
         let body = req.body;
-        let data = await spilwayinfo.update(body, {
+        let data = await spillwayinfo.update(body, {
             where: {
                 id: id
             }
@@ -126,7 +158,7 @@ self.update = async(req, res) => {
 self.delete = async(req, res) => {
     try {
         let id = req.params.id;
-        let data = await spilwayinfo.destroy({
+        let data = await spillwayinfo.destroy({
             where: {
                 id: id
             }

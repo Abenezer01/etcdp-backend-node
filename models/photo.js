@@ -19,8 +19,9 @@ module.exports = (sequelize, DataTypes) => {
             primaryKey: true,
             defaultValue: DataTypes.UUIDV4
         },
-        avatar: DataTypes.STRING,
-
+        url: DataTypes.STRING,
+        type: DataTypes.STRING,
+        model_id: DataTypes.UUID
     }, {
         sequelize,
         modelName: 'photo',

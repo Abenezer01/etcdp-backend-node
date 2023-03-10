@@ -5,6 +5,7 @@ const validateData = require("../../../middleware/validate/module/polymorphic/va
 const ActionStateController = require("../../../controllers/polymorphic/ActionStateController.js")
 const ReplyController = require("../../../controllers/polymorphic/ReplyController.js")
 const NoteController = require("../../../controllers/polymorphic/NoteController.js")
+const PhotoController = require("../../../controllers/polymorphic/PhotoController.js")
 const middleware = require("../../../middleware/middleware")
 
 module.exports = function(express) {
@@ -28,7 +29,9 @@ module.exports = function(express) {
     route.put("/reject/:model/:id", ActionStateController.reject);
     // route.put("/reject/:model/:id", validateData.actionStateValidate, ActionStateController.reject);
     route.get("/model-action-data/:id", ActionStateController.getModelAction);
-
+    //Photo
+    route.post("/photo/:id", PhotoController.save);
+    route.get("/photo/:id", PhotoController.servePhoto);
     //reply
 
     route.get("/reply", ReplyController.getAll);
@@ -47,8 +50,8 @@ module.exports = function(express) {
     route.delete("/note/:id", NoteController.delete);
     route.get("/model-notes/:id", NoteController.getNoteByModelId);
 
-    
-    
+
+
 
 
 

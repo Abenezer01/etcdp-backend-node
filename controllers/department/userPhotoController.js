@@ -8,8 +8,8 @@ const path = require('path');
 const fs = require('fs');
 
 const { saveActionState } = require("../../utils/helper");
-
-
+const usrData = require("../../utils/userDataFromToken");
+const paginate = require("../../utils/pagination");
 const Op = Sequelize.Op;
 
 let self = {};
@@ -70,18 +70,20 @@ self.search = async(req, res) => {
 }
 
 self.save = async(req, res) => {
+
     try {
-        // let body = req.body;
-        // let data = await photo.create(body);
-        // return res.json(data)
+        let usr = await usrData.userData(req, res)
+        if (!usr) {
+            return
+        }
         let id = req.params.id;
         const file = req.files.upload
-        if (id == null) {
+        if (!id) {
             return res.status(400).send({
                 message: "User id is empty"
 
             })
-        } else if (file == null) {
+        } else if (!file) {
             return res.status(400).send({
                 message: " file is empty"
 
@@ -89,54 +91,75 @@ self.save = async(req, res) => {
         }
         const ext = req.files.upload.mimetype.split("/")[1];
         let rand = Math.floor(100000 + Math.random() * 900000)
-        var name = req.files.image.name;
+        var name = req.files.upload.name;
         var newName = name.concat(rand)
         checkedNew = newName.split('.').join("");
         const filePath = path.join(__dirname, '../../public', 'images/user photo', checkedNew + '.' +
                 `${ext}`)
             //console.log("The file path is ", filePath)
+        var filePathh = filePath.split("public").pop();
 
-        photoo = { avatar: filePath }
-            //console.log("The rand is: ", rand)
-        let ll
-        try {
-            ll = await photo.create(photoo)
-            if (ll) {
-                let us = "e1594d67-3aa2-429b-bb77-2e4ecc2124f8"
-                saveActionState(data.id, "photo", "REGISTER", us, req, res)
-            }
-            file.mv(filePath, err => {
-                if (err) return res.status(500).send(err)
-                    // res.redirect('/')
-            })
-            console.log("The photo id is: ", ll.id)
-            await user.update({
-                photo_id: ll.id
-            }, {
-                where: { id: id },
-            })
-            return res.status(200).send({
-                message: "Uploaded"
-            })
-        } catch (error) {
-            return res.status(500).send({
-                message: ll
-            })
+        //console.log("The rand is: ", rand)
+        let photoData
+        photoo = { url: filePathh, type: "USER", model_id: id }
+        photoData = await photo.create(photoo)
+        if (photoData) {
+            let usrID = usr.usrID
+            saveActionState(photoData.id, "photo", "REGISTER", usrID, req, res)
         }
-        // let data = await user.create(avatar: filePath, {
-        //     where: {
-        //         id: id
-        //     }
-        // });
-        return res.json(data)
+        file.mv(filePath, err => {
+            if (err) return res.status(500).send(err)
+                // res.redirect('/')
+        })
+
+        console.log("The photo id is: ", photoData.id)
+        await user.update({
+            photo_id: photoData.id
+        }, {
+            where: { id: id },
+        })
+        return res.status(200).send({
+            message: photoData
+        })
+
+
+        // return res.json(data)
+
 
     } catch (error) {
         res.status(500).json({
             message: error.message
         })
     }
+
 }
 
+self.getUserPhoto = async(req, res) => {
+    try {
+        let id = req.params.id;
+        let data = await user.findOne({
+            where: {
+                id: id
+            }
+        });
+        let img = await photo.findOne({
+            where: {
+                model_id: id
+            },
+            order: [
+                ['createdAt', 'DESC']
+            ]
+        })
+
+        let prePath = "/home/kaleb/Desktop/etcdp-backend-node/public"
+        let conPath = prePath.concat(img.url)
+        return res.download(conPath)
+    } catch (error) {
+        res.status(500).json({
+            message: error.message
+        })
+    }
+}
 self.update = async(req, res) => {
     let id = req.params.id;
     const file = req.files.upload

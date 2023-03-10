@@ -141,7 +141,9 @@ const resourceQuantityValidate = async(req, res, next) => {
         "resource_id": "required|string",
         "resourcebrand_id": "required|string",
         "detailresourcetype_id": "required|string",
-        "quantity": "required|integer"
+        "quantity": "required|integer",
+        "unit_price": "required",
+        "date": "required|date",
     };
 
     await validateReply.validateReply(req.body, validationRule, res, next)

@@ -3,7 +3,7 @@ const {
     Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-    class resourcequantity extends Model {
+    class resourcequantityandprice extends Model {
         /**
          * Helper method for defining associations.
          * This method is not a part of Sequelize lifecycle.
@@ -11,9 +11,15 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             // define association here
+            resourcequantityandprice.belongsTo(models.detailresourcetype, {
+                foreignKey: "detailresourcetype_id"
+            })
+            resourcequantityandprice.belongsTo(models.resourcebrand, {
+                foreignKey: "resourcebrand_id"
+            })
         }
     }
-    resourcequantity.init({
+    resourcequantityandprice.init({
         id: {
             type: DataTypes.UUID,
             primaryKey: true,
@@ -23,22 +29,19 @@ module.exports = (sequelize, DataTypes) => {
         resource_id: DataTypes.UUID,
         detailresourcetype_id: DataTypes.UUID,
         resourcebrand_id: DataTypes.UUID,
-        quantity: DataTypes.INTEGER,
+        project_id: DataTypes.UUID,
+        quantity: DataTypes.DOUBLE,
+        unit_price: DataTypes.DOUBLE,
+        store_address: DataTypes.STRING,
+        date: DataTypes.DATE,
         datasource: DataTypes.STRING,
         revision_no: DataTypes.INTEGER
     }, {
         sequelize,
-        modelName: 'resourcequantity',
+        modelName: 'resourcequantityandprice',
     });
-    resourcequantity.associate = function(models) {
-        resourcequantity.belongsTo(models.detailresourcetype, {
-            as: "resourcetype",
-            foreignKey: "detailresourcetype_id"
-        })
-        resourcequantity.belongsTo(models.resourcebrand, {
-            as: "resourcebrand",
-            foreignKey: "resourcebrand_id"
-        })
-    }
-    return resourcequantity;
+    // resourcequantityandprice.associate = function(models) {
+
+    // }
+    return resourcequantityandprice;
 };
