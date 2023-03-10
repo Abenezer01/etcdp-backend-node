@@ -31,7 +31,7 @@ module.exports = function(express) {
     // route.put("/reject/:model/:id", validateData.actionStateValidate, ActionStateController.reject);
     route.get("/model-action-data/:id", ActionStateController.getModelAction);
     //Photo
-    route.post("/photo/:id", PhotoController.save);
+    route.post("/photo/:id", validateData.photoValidate, PhotoController.save);
     route.get("/photo/:id", PhotoController.servePhoto);
     //reply
 

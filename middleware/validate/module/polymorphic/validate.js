@@ -78,11 +78,34 @@ const replyValidate = async(req, res, next) => {
 
     await validateReply.validateReply(req.body, validationRule, res, next)
 }
+const photoValidate = async(req, res, next) => {
+    let param = await validateReply.checkParam(req, res, next)
+    if (param == "failed") {
+        return res.status(400).json({
+            message: "Invalid id"
+        })
+    }
+    if (!req.files) {
+        return res.status(412).json({
+            message: "File is empty"
+        })
+    }
+    if (!req.filesupload) {
+        return res.status(412).json({
+            message: "Attachement is empty"
+        })
+    }
+    const validationRule = {
+        "type": "required|string"
+    };
 
+    await validateReply.validateReply(req.body, validationRule, res, next)
+}
 module.exports = {
     addressValidate,
     modelMenuValidate,
     actionStateValidate,
     noteValidate,
-    replyValidate
+    replyValidate,
+    photoValidate
 };
