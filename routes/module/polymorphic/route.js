@@ -32,7 +32,7 @@ module.exports = function(express) {
     route.get("/model-action-data/:id", ActionStateController.getModelAction);
     //Photo
     route.post("/photo/:id", validateData.photoValidate, PhotoController.save);
-    route.get("/photo/:id", PhotoController.servePhoto);
+    route.get("/photo", PhotoController.servePhoto);
     //reply
 
     route.get("/reply", ReplyController.getAll);
