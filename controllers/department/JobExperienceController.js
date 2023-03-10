@@ -62,20 +62,8 @@ self.save = async(req, res) => {
         let data = await jobexperience.create(body);
 
         if (data) {
-            let us = "e1594d67-3aa2-429b-bb77-2e4ecc2124f8"
-            saveActionState(data.id, "jobexperience", "REGISTER", us, req, res)
-
-            if (data) {
-                let usr = await usrData.userData(req, res)
-                await actionstate.create({
-                    model_id: data.id,
-                    model: "jobexperience",
-                    action: "REGISTER",
-                    user_id: usr.usrID,
-                    position_id: usr.position_id,
-                    time: new Date(),
-                })
-            }
+            let usr = await usrData.userData(req, res)
+            await saveActionState(data.id, "jobexperience", "REGISTER", usr.usrID, req, res)
         }
         return res.json(data)
     } catch (error) {

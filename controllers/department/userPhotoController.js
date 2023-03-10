@@ -10,6 +10,7 @@ const fs = require('fs');
 const { saveActionState } = require("../../utils/helper");
 const usrData = require("../../utils/userDataFromToken");
 const paginate = require("../../utils/pagination");
+
 const Op = Sequelize.Op;
 
 let self = {};

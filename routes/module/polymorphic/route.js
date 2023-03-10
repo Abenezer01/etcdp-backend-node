@@ -6,6 +6,7 @@ const ActionStateController = require("../../../controllers/polymorphic/ActionSt
 const ReplyController = require("../../../controllers/polymorphic/ReplyController.js")
 const NoteController = require("../../../controllers/polymorphic/NoteController.js")
 const PhotoController = require("../../../controllers/polymorphic/PhotoController.js")
+const ModelMenuController = require("../../../controllers/polymorphic/ModelMenuController.js")
 const middleware = require("../../../middleware/middleware")
 
 module.exports = function(express) {
@@ -36,7 +37,7 @@ module.exports = function(express) {
 
     route.get("/reply", ReplyController.getAll);
     route.get("/reply/:id", ReplyController.get);
-    route.post("/reply", ReplyController.save);
+    route.post("/reply", validateData.replyValidate, ReplyController.save);
     route.put("/reply/:id", ReplyController.update);
     route.delete("/reply/:id", ReplyController.delete);
     route.get("/action-replies/:id", ReplyController.getActionReplies);
@@ -45,7 +46,7 @@ module.exports = function(express) {
 
     route.get("/note", NoteController.getAll);
     route.get("/note/:id", NoteController.get);
-    route.post("/note", NoteController.save);
+    route.post("/note", validateData.noteValidate, NoteController.save);
     route.put("/note/:id", NoteController.update);
     route.delete("/note/:id", NoteController.delete);
     route.get("/model-notes/:id", NoteController.getNoteByModelId);
@@ -60,6 +61,18 @@ module.exports = function(express) {
     // route.post("/address", AddressController.save);
     // route.put("/address/:id", AddressController.update);
     // route.delete("/address/:id", AddressController.delete);
+    //Model Menu
+
+    route.get("/model-menu", ModelMenuController.getAll);
+    route.get("/model-menu/:id", ModelMenuController.get);
+    route.post("/model-menu", validateData.modelMenuValidate, ModelMenuController.save);
+    route.put("/model-menu/:id", ModelMenuController.update);
+    route.delete("/model-menu/:id", ModelMenuController.delete);
+    route.get("/module-model-menus/:id", ModelMenuController.getModelMenuByModule);
+
+    route.get("/module-models/:module", ModelMenuController.getModuleExtraModels);
+
+    route.put("/module-type-models-update/:id", ModelMenuController.editModuleTypeModels);
 
     return route;
 };

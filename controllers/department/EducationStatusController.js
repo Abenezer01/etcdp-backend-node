@@ -66,19 +66,11 @@ self.save = async(req, res) => {
         let data = await educationstatus.create(body);
 
         if (data) {
-            let us = "e1594d67-3aa2-429b-bb77-2e4ecc2124f8"
-            saveActionState(data.id, "educationstatus", "REGISTER", us, req, res)
+            
 
             if (data) {
                 let usr = await usrData.userData(req, res)
-                await actionstate.create({
-                    model_id: data.id,
-                    model: "educationstatus",
-                    action: "REGISTER",
-                    user_id: usr.usrID,
-                    position_id: usr.position_id,
-                    time: new Date(),
-                })
+                await saveActionState(data.id, "educationstatus", "REGISTER", usr.usrID, req, res)
 
             }
         }

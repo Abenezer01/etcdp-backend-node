@@ -180,6 +180,22 @@ const roleValidate = async(req, res, next) => {
 
     await validateReply.validateReply(req.body, validationRule, res, next)
 }
+
+const permissionValidate = async(req, res, next) => {
+    let param = await validateReply.checkParam(req, res, next)
+    if (param == "failed") {
+        return res.status(400).json({
+            message: "Invalid id"
+        })
+    }
+    const validationRule = {
+        "name": "required|string",
+        "module": "required|string",
+        "category": "string"
+    };
+
+    await validateReply.validateReply(req.body, validationRule, res, next)
+}
 const userPhotoValidate = async(req, res, next) => {
     if (!req.files) {
         return res.status(412).json({
@@ -212,5 +228,6 @@ module.exports = {
     familyStatusValidate,
     contactPersonValidate,
     jobExperienceValidate,
-    childValidate
+    childValidate,
+    permissionValidate
 };

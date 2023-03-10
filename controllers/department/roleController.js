@@ -5,6 +5,7 @@ const {
     Sequelize
 } = require("../../models");
 const { saveActionState } = require("../../utils/helper");
+const usrData = require("../../utils/userDataFromToken");
 
 const Op = Sequelize.Op;
 
@@ -68,8 +69,8 @@ self.save = async(req, res) => {
         let body = req.body;
         let data = await role.create(body);
         if (data) {
-            let us = "e1594d67-3aa2-429b-bb77-2e4ecc2124f8"
-            saveActionState(data.id, "role", "REGISTER", us, req, res)
+            let usr = await usrData.userData(req, res)
+            await saveActionState(data.id, "role", "REGISTER", usr.usrID, req, res)
         }
         return res.json(data)
     } catch (error) {

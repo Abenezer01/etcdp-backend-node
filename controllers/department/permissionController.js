@@ -1,10 +1,12 @@
 const {
     permission,
+    positionpermission,
     Sequelize
 } = require("../../models");
 const { saveActionState } = require("../../utils/helper");
-
+const usrData = require("../../utils/userDataFromToken");
 const Op = Sequelize.Op;
+const master = require("../../config/master")
 
 let self = {};
 
@@ -35,8 +37,8 @@ self.get = async(req, res) => {
             }
         });
         if (data) {
-            let us = "e1594d67-3aa2-429b-bb77-2e4ecc2124f8"
-            saveActionState(data.id, "permission", "REGISTER", us, req, res)
+            let usr = await usrData.userData(req, res)
+            await saveActionState(data.id, "permission", "REGISTER", usr.usrID, req, res)
         }
         return res.status(200).json({
             data: data
@@ -70,6 +72,10 @@ self.save = async(req, res) => {
     try {
         let body = req.body;
         let data = await permission.create(body);
+        if(data){
+            let usr = await usrData.userData(req, res)
+            saveActionState(data.id, "permission", "REGISTER", usr.usrID, req, res)
+        }
         return res.json(data)
     } catch (error) {
         res.status(500).json({
@@ -171,7 +177,7 @@ self.getGroupedPermissions = async(req, res) => {
     try {
 
         const [rolePos, ePermissions] = await Promise.all([
-            rolepermission.findAll({ where: { role_id: id } }),
+            positionpermission.findAll({ where: { position_id: id } }),
             permission.findAll({ where: { module: module } })
         ])
 
@@ -455,7 +461,8 @@ self.initPermission = async(req, res) => {
             for (const module of permissionModules) {
                 permissionPromises.push(permission.create({
                     name: `${action}_${module}`,
-                    module: module
+                    module: module,
+                    category: "PROJECT"
                 }));
             }
         }

@@ -82,7 +82,7 @@ module.exports = function(express) {
     route.get("/permission", permissionController.getAll);
     route.get("/permission/:id", permissionController.get);
     route.get("/permission_search", permissionController.search);
-    route.post("/permission", permissionController.save);
+    route.post("/permission", validateInput.permissionValidate, permissionController.save);
     route.put("/permission/:id", permissionController.update);
     route.delete("/permission/:id", permissionController.delete);
     route.get("/generate-permission", permissionController.initPermission);

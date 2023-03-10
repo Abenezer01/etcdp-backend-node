@@ -103,11 +103,11 @@ self.refreshToken = async(request, response, next) => {
             // console.log("The position id is", positionID)
         payload = {  id: userId, department_id: departmentId, position_id: positionId }
         const access_tokener = jwt.sign(payload, ACCESS_TOKEN_KEY, {
-            expiresIn: TOKEN_MAX_AGE,
+            expiresIn: "100h",
         });
 
         const refreshtokener = jwt.sign(payload, REFRESH_TOKEN_KEY, {
-            expiresIn: TOKEN_MAX_AGE
+            expiresIn: "100h"
         })
         await user.update({
                 refresh_token: refreshtokener
