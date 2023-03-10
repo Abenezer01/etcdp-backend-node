@@ -53,112 +53,101 @@ self.get = async(req, res) => {
 }
 
 self.search = async(req, res) => {
-    try {
-        let text = req.query.text;
-        let data = await image.findAll({
-            where: {
-                name: {
-                    [Op.like]: "%" + text + "%"
-                }
-            }
-        });
-        return res.json(data)
-    } catch (error) {
-        res.status(500).json({
-            message: error.message
-        })
-    }
-}
-
-self.save = async(req, res) => {
-
-    try {
-        let usr = await usrData.userData(req, res)
-        if (usr) {
-            // let body = req.body;
-            // let data = await image.create(body);
-            // return res.json(data)
-            let id = req.params.id;
-            const reqFile = req.files
-            if (reqFile) {
-                let file = req.files.image
-                if (id == null) {
-                    return res.status(400).send({
-                        message: "resource id is empty"
-
-                    })
-                } else if (file == null) {
-                    return res.status(400).send({
-                        message: " file is empty"
-
-                    })
-                }
-                const ext = req.files.image.mimetype.split("/")[1];
-                let rand = Math.floor(100000 + Math.random() * 900000)
-                var name = req.files.image.name;
-                let parsedName = path.parse(name).name;
-                checkedNew = parsedName.concat(rand);
-                const filePath = path.join(__dirname, '../../public', 'images/resourceimages', checkedNew + '.' +
-                    `${ext}`)
-                console.log("The file path is ", filePath)
-                var filePathh = filePath.split("public").pop();
-                console.log("The file path is ", filePathh)
-                    //return res.send(filePathh)
-                let pat = filePath
-
-                let imagee = { url: filePathh }
-                    //console.log("The rand is: ", rand)
-                let ll
-                try {
-                    if (usr) {
-                        ll = await image.create(imagee);
-                        if (ll) {
-                            if (pat) {
-                                const filee = req.files.image
-                                filee.mv(pat, err => {
-                                    if (err) return res.status(500).send(err)
-                                        // res.redirect('/')
-                                })
-                            }
-                            let us = usr.usrID
-                            await saveActionState(ll.id, "resourceimage", "REGISTER", us, req, res)
-                            await resource.update({
-                                image_id: ll.id
-                            }, {
-                                where: { id: id },
-                            })
-
-                        }
-                        return res.status(200).json({
-                            data: ll
-                        })
+        try {
+            let text = req.query.text;
+            let data = await image.findAll({
+                where: {
+                    name: {
+                        [Op.like]: "%" + text + "%"
                     }
-
-                } catch (error) {
-                    console.log("The error is", error)
-                    return res.status(500).send({
-                        message: error
-                    })
                 }
-                // let data = await user.create(avatar: filePath, {
-                //     where: {
-                //         id: id
-                //     }
-                // });
-                return res.json(data)
-            } else {
-                return res.status(402).json("Can't get any file")
-            }
+            });
+            return res.json(data)
+        } catch (error) {
+            res.status(500).json({
+                message: error.message
+            })
+        }
+    }
+    //Save
+self.save = async(req, res) => {
+    try {
+        const usr = await usrData.userData(req, res);
+        if (!usr) {
+            return res.status(400).send({ message: "resource id is empty" });;
         }
 
+        const { id } = req.params;
+        const reqimage = req.files.image || {};
+
+        if (!id) {
+            return res.status(400).send({ message: "resource id is empty" });
+        }
+
+        if (!reqimage) {
+            return res.status(400).send({ message: "file is empty" });
+        }
+
+        const ext = reqimage.mimetype.split("/")[1];
+        const rand = Math.floor(100000 + Math.random() * 900000);
+        const { name } = reqimage;
+        const parsedName = path.parse(name).name;
+        const checkedNew = parsedName.concat(rand);
+        const filePath = path.join(
+            __dirname,
+            "../../public",
+            "images/resourceimages",
+            `${checkedNew}.${ext}`
+        );
+        const filePathh = filePath.split("public").pop();
+        const pat = filePath;
+
+        const imagee = { url: filePathh };
+        const ll = await image.create(imagee);
+        if (!ll) {
+            return res.status(500).send({ message: "Failed to create image" });
+        }
+
+        const { usrID } = usr;
+        await saveActionState(ll.id, "resourceimage", "REGISTER", usrID, req, res);
+
+        await resource.update({ image_id: ll.id }, { where: { id } });
+
+        const file = req.files.image;
+        file.mv(pat, (err) => {
+            if (err) {
+                return res.status(500).send(err);
+            }
+        });
+
+        return res.status(200).json({ data: ll });
     } catch (error) {
-        console.log("The error is", error)
+        console.log("The error is", error);
+        res.status(500).json({ message: error.message });
+    }
+};
+self.getImage = async(req, res) => {
+    try {
+        let id = req.params.id;
+        let data = await resource.findOne({
+            where: {
+                id: id
+            }
+        });
+        let img = await image.findOne({
+            where: {
+                id: data.image_id
+            }
+        })
+        let prePath = "/home/kaleb/Desktop/etcdp-backend-node/public"
+        let conPath = prePath.concat(img.url)
+        return res.download(conPath)
+    } catch (error) {
         res.status(500).json({
             message: error.message
         })
     }
 }
-
 self.update = async(req, res) => {
     let id = req.params.id;
     const file = req.files.image

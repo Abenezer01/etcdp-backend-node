@@ -5,6 +5,7 @@ const validateData = require("../../../middleware/validate/module/polymorphic/va
 const ActionStateController = require("../../../controllers/polymorphic/ActionStateController.js")
 const ReplyController = require("../../../controllers/polymorphic/ReplyController.js")
 const NoteController = require("../../../controllers/polymorphic/NoteController.js")
+const PhotoController = require("../../../controllers/polymorphic/PhotoController.js")
 const ModelMenuController = require("../../../controllers/polymorphic/ModelMenuController.js")
 const middleware = require("../../../middleware/middleware")
 
@@ -29,7 +30,9 @@ module.exports = function(express) {
     route.put("/reject/:model/:id", ActionStateController.reject);
     // route.put("/reject/:model/:id", validateData.actionStateValidate, ActionStateController.reject);
     route.get("/model-action-data/:id", ActionStateController.getModelAction);
-
+    //Photo
+    route.post("/photo/:id", validateData.photoValidate, PhotoController.save);
+    route.get("/photo/:id", PhotoController.servePhoto);
     //reply
 
     route.get("/reply", ReplyController.getAll);
@@ -48,17 +51,27 @@ module.exports = function(express) {
     route.delete("/note/:id", NoteController.delete);
     route.get("/model-notes/:id", NoteController.getNoteByModelId);
 
+
+
+
+
+
+    // route.get("/address/:id", AddressController.get);
+    // route.get("/address-search", AddressController.search);
+    // route.post("/address", AddressController.save);
+    // route.put("/address/:id", AddressController.update);
+    // route.delete("/address/:id", AddressController.delete);
     //Model Menu
 
     route.get("/model-menu", ModelMenuController.getAll);
     route.get("/model-menu/:id", ModelMenuController.get);
-    route.post("/model-menu", validateData.modelMenuValidate,ModelMenuController.save);
+    route.post("/model-menu", validateData.modelMenuValidate, ModelMenuController.save);
     route.put("/model-menu/:id", ModelMenuController.update);
     route.delete("/model-menu/:id", ModelMenuController.delete);
     route.get("/module-model-menus/:id", ModelMenuController.getModelMenuByModule);
 
     route.get("/module-models/:module", ModelMenuController.getModuleExtraModels);
-    
+
     route.put("/module-type-models-update/:id", ModelMenuController.editModuleTypeModels);
 
     return route;

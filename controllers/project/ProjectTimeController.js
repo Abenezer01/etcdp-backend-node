@@ -57,19 +57,36 @@ self.get = async(req, res) => {
     }
 }
 self.getByProjectId = async(req, res) => {
-    try {
-        let id = req.params.id;
-        let data = await projecttime.findOne({
+    let id = req.params.id
+    let { page, size, order } = req.query;
+    //console.log("The page", page, size)
+    if (page == null && size == null) {
+        page = process.env.page,
+            size = process.env.size
+    }
+    if (order == null) {
+        order = process.env.order
+    }
+    const { limit, offset } = paginate.getPagination(page, size);
+    projecttime.findAndCountAll({
+            limit,
+            offset,
+            order: [
+                ['createdAt', 'ASC']
+            ],
             where: {
                 project_id: id
             }
-        });
-        return res.status(200).json(data)
-    } catch (error) {
-        res.status(500).json({
-            message: error.message
         })
-    }
+        .then(data => {
+            const response = paginate.getPagingData(data, page, limit);
+            res.send(response);
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: err.message || "Some error occurred while retrieving data."
+            });
+        });
 }
 self.search = async(req, res) => {
     try {

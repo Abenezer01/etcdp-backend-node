@@ -105,11 +105,11 @@ module.exports = function(express) {
     route.get("/module-permissions/:module", permissionController.getPermissionsByModule);
     route.get("/permission-modules", permissionController.getPermissionModules);
     //Photo route
-    route.get("/photo", userPhotoController.getAll);
-    route.get("/photo/:id", userPhotoController.get);
-    route.post("/photo/:id", userPhotoController.save);
-    route.put("/photo/:id", validateInput.userPhotoValidate, userPhotoController.update);
-    route.delete("/photo/:id", validateInput.userPhotoValidate, userPhotoController.delete);
+    // route.get("/photo", userPhotoController.getAll);
+    // route.get("/photo/:id", userPhotoController.get);
+    // route.post("/photo/:id", userPhotoController.save);
+    // route.put("/photo/:id", validateInput.userPhotoValidate, userPhotoController.update);
+    // route.delete("/photo/:id", validateInput.userPhotoValidate, userPhotoController.delete);
 
     //hr for 
     //Role route

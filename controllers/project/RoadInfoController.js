@@ -4,6 +4,7 @@ const {
     Sequelize
 } = require("./../../models");
 const usrData = require("../../utils/userDataFromToken");
+const paginate = require("../../utils/pagination");
 const Op = Sequelize.Op;
 const dotenv = require('dotenv');
 dotenv.config();
@@ -26,6 +27,38 @@ self.getAll = async(req, res) => {
             order: [
                 ['createdAt', 'ASC']
             ],
+        })
+        .then(data => {
+            const response = paginate.getPagingData(data, page, limit);
+            res.send(response);
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: err.message || "Some error occurred while retrieving data."
+            });
+        });
+}
+self.getByProjectId = async(req, res) => {
+    let id = req.params.id
+    let { page, size, order } = req.query;
+    //console.log("The page", page, size)
+    if (page == null && size == null) {
+        page = process.env.page,
+            size = process.env.size
+    }
+    if (order == null) {
+        order = process.env.order
+    }
+    const { limit, offset } = paginate.getPagination(page, size);
+    roadinfo.findAndCountAll({
+            limit,
+            offset,
+            order: [
+                ['createdAt', 'ASC']
+            ],
+            where: {
+                project_id: id
+            }
         })
         .then(data => {
             const response = paginate.getPagingData(data, page, limit);

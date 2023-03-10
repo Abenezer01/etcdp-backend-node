@@ -39,15 +39,6 @@ self.getAll = async(req, res) => {
                 message: err.message || "Some error occurred while retrieving data."
             });
         });
-    // try {
-    //     let data = await resource.findAll();
-    //     return res.json(data)
-
-    // } catch (error) {
-    //     res.status(500).json({
-    //         message: error.message
-    //     })
-    // }
 }
 
 

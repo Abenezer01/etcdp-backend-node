@@ -60,24 +60,42 @@ self.get = async(req, res) => {
     }
 }
 self.getByResourceId = async(req, res) => {
-    try {
-        let id = req.params.id;
-        let data = await detailresourcetype.findAll({
+    let id = req.params.id
+    let { page, size, order } = req.query;
+    //console.log("The page", page, size)
+    if (page == null && size == null) {
+        page = process.env.page,
+            size = process.env.size
+        console.log("The page", page, size)
+    }
+    if (order == null) {
+        order = process.env.order
+    }
+    const { limit, offset } = paginate.getPagination(page, size);
+    detailresourcetype.findAndCountAll({
+            limit,
+            offset,
             where: {
                 resource_id: id
             },
             order: [
-                ['createdAt', 'DESC']
+                ['createdAt', order]
             ],
+            raw: true
+        })
+        .then(data => {
+            const newData = data.rows.map(item => {
+                // console.log("The item attachement", )
+                return {...item, image: item.image.substr(item.image.lastIndexOf('/') + 1) }
+            })
+            const response = paginate.getPagingData({ rows: newData, count: data.count }, page, limit);
+            res.send(response);
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: err.message || "Some error occurred while retrieving data."
+            });
         });
-        return res.status(200).json({
-            data: (data) ? data : []
-        })
-    } catch (error) {
-        res.status(500).json({
-            message: error.message
-        })
-    }
 }
 self.search = async(req, res) => {
     try {
@@ -146,7 +164,23 @@ self.save = async(req, res) => {
         })
     }
 }
-
+self.getImage = async(req, res) => {
+    try {
+        let id = req.params.id;
+        let data = await detailresourcetype.findOne({
+            where: {
+                id: id
+            }
+        });
+        let prePath = "/home/kaleb/Desktop/etcdp-backend-node/public"
+        let conPath = prePath.concat(data.image)
+        return res.download(conPath)
+    } catch (error) {
+        res.status(500).json({
+            message: error.message
+        })
+    }
+}
 self.update = async(req, res) => {
     try {
         let id = req.params.id

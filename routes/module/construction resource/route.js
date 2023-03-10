@@ -2,11 +2,11 @@ const ConstructionResourceTypeController = require("../../../controllers/constru
 const ConstructionResourceCategoryController = require("../../../controllers/construction resource/ConstructionResourceCategoryController")
 const ConstructionResourceSubCategoryController = require("../../../controllers/construction resource/ConstructionResourceSubCategoryController")
 const ConstructionResourceRegistrationController = require("../../../controllers/construction resource/ConstructionResourceRegistrationController")
-const ConstructionResourceQuantityAndPriceController = require("../../../controllers/construction resource/ConstructionResourceQuantityAndPriceController")
+    //const ConstructionResourceQuantityAndPriceController = require("../../../controllers/construction resource/ConstructionResourceQuantityAndPriceController")
 const DetailResourceTypeController = require("../../../controllers/construction resource/DetailResourceTypeController")
 const ResourceBrandController = require("../../../controllers/construction resource/ResourceBrandController")
-const ResourcePriceController = require("../../../controllers/construction resource/ResourcePriceController")
-const ResourceQuantityController = require("../../../controllers/construction resource/ResourceQuantityController")
+    //const ResourcePriceController = require("../../../controllers/construction resource/ResourcePriceController")
+const ResourceQuantityandPriceController = require("../../../controllers/construction resource/ResourceQuantityandPriceController")
 const ResourceSpecificationController = require("../../../controllers/construction resource/ResourceSpecificationController")
 const ResourceImageController = require("../../../controllers/construction resource/ResourceImageController")
 const validateData = require("../../../middleware/validate/module/construction resource/validate")
@@ -53,6 +53,7 @@ module.exports = function(express) {
     //construction resource quantity and controller
     route.get("/detail-construction-resource-type", DetailResourceTypeController.getAll);
     route.get("/detail-construction-resource-type/:id", DetailResourceTypeController.get);
+    route.get("/image/detail-construction-resource-type/:id", DetailResourceTypeController.getImage);
     route.get("/resource/detail-construction-resource-type/:id", DetailResourceTypeController.getByResourceId);
     route.get("/detail-construction-resource-type_search", DetailResourceTypeController.search);
     route.post("/detail-construction-resource-type", validateData.detailResourceTypeValidate, DetailResourceTypeController.save);
@@ -61,30 +62,33 @@ module.exports = function(express) {
     //construction resource quantity and controller
     route.get("/construction-resource-brand", ResourceBrandController.getAll);
     route.get("/construction-resource-brand/:id", ResourceBrandController.get);
+    route.get("/image/construction-resource-brand/:id", ResourceBrandController.getImage);
     route.get("/resource/construction-resource-brand/:id", ResourceBrandController.getByResourceId);
     route.get("/construction-resource-brand_search", ResourceBrandController.search);
     route.post("/construction-resource-brand", validateData.resourceBrandValidate, ResourceBrandController.save);
     route.put("/construction-resource-brand/:id", validateData.resourceBrandValidate, ResourceBrandController.update);
     route.delete("/construction-resource-brand/:id", ResourceBrandController.delete);
     //construction resource quantity and controller
-    route.get("/construction-resource-price", ResourcePriceController.getAll);
-    route.get("/construction-resource-price/:id", ResourcePriceController.get);
-    route.get("/resource/construction-resource-price/:id", ResourcePriceController.getByResourceId);
-    route.get("/construction-resource-price_search", ResourcePriceController.search);
-    route.post("/construction-resource-price", validateData.resourcePriceValidate, ResourcePriceController.save);
-    route.put("/construction-resource-price/:id", validateData.resourcePriceValidate, ResourcePriceController.update);
-    route.delete("/construction-resource-price/:id", ResourcePriceController.delete);
-    //construction resource quantity and controller
-    route.get("/construction-resource-quantity", ResourceQuantityController.getAll);
-    route.get("/construction-resource-quantity/:id", ResourceQuantityController.get);
-    route.get("/resource/construction-resource-quantity/:id", ResourceQuantityController.getByResourceId);
-    route.get("/construction-resource-quantity_search", ResourceQuantityController.search);
-    route.post("/construction-resource-quantity", validateData.resourceQuantityValidate, ResourceQuantityController.save);
-    route.put("/construction-resource-quantity/:id", validateData.resourceQuantityValidate, ResourceQuantityController.update);
-    route.delete("/construction-resource-quantity/:id", ResourceQuantityController.delete);
+    // route.get("/construction-resource-price", ResourcePriceController.getAll);
+    // route.get("/construction-resource-price/:id", ResourcePriceController.get);
+    // route.get("/resource/construction-resource-price/:id", ResourcePriceController.getByResourceId);
+    // route.get("/construction-resource-price_search", ResourcePriceController.search);
+    // route.post("/construction-resource-price", validateData.resourcePriceValidate, ResourcePriceController.save);
+    // route.put("/construction-resource-price/:id", validateData.resourcePriceValidate, ResourcePriceController.update);
+    // route.delete("/construction-resource-price/:id", ResourcePriceController.delete);
+    //construction resource quantity and price controller
+    route.get("/construction-resource-quantity-price", ResourceQuantityandPriceController.getAll);
+    route.get("/construction-resource-quantity-price/:id", ResourceQuantityandPriceController.get);
+    route.get("/project/construction-resource-quantity-price/:id", ResourceQuantityandPriceController.getByProjectId);
+    route.get("/resource/construction-resource-quantity-price/:id", ResourceQuantityandPriceController.getByResourceId);
+    route.get("/construction-resource-quantity-price_search", ResourceQuantityandPriceController.search);
+    route.post("/construction-resource-quantity-price", validateData.resourceQuantityValidate, ResourceQuantityandPriceController.save);
+    route.put("/construction-resource-quantity-price/:id", validateData.resourceQuantityValidate, ResourceQuantityandPriceController.update);
+    route.delete("/construction-resource-quantity-price/:id", ResourceQuantityandPriceController.delete);
     //construction resource quantity and controller
     route.get("/construction-resource-specification", ResourceSpecificationController.getAll);
     route.get("/construction-resource-specification/:id", ResourceSpecificationController.get);
+    route.get("/image/construction-resource-specification/:id", ResourceSpecificationController.getImage);
     route.get("/resource/construction-resource-specification/:id", ResourceSpecificationController.getByResourceId);
     route.get("/construction-resource-specification_search", ResourceSpecificationController.search);
     route.post("/construction-resource-specification", validateData.resourceSpecificationValidate, ResourceSpecificationController.save);
@@ -92,6 +96,8 @@ module.exports = function(express) {
     route.delete("/construction-resource-specification/:id", ResourceSpecificationController.delete);
     //Resource image
     route.post("/resource-image/:id", validateData.resourceImageValidate, ResourceImageController.save);
+    route.get("/resource-image/:id", ResourceImageController.getAll);
+    route.get("/image/resource-image/:id", ResourceImageController.getImage);
     route.put("/resource-image/:id", validateData.resourceImageValidate, ResourceImageController.update);
     route.delete("/resource-image/:id", ResourceImageController.delete);
     return route;

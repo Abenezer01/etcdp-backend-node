@@ -141,10 +141,10 @@ self.initPermission = async(req, res) => {
             message: error.message
         })
     }
-}   
+}
 
-self.getModels = async (req, res) => {
-	try {
+self.getModels = async(req, res) => {
+    try {
         let models = master.models
         return res.json(models)
     } catch (error) {
@@ -169,118 +169,118 @@ self.getPermissionsByModule = async(req, res) => {
         })
     }
 }
-self.getGroupedPermissions = async (req, res) => {
-	
-	let id = req.params.id
-	let module = req.params.module
+self.getGroupedPermissions = async(req, res) => {
 
-	try {
+    let id = req.params.id
+    let module = req.params.module
+
+    try {
 
         const [rolePos, ePermissions] = await Promise.all([
             positionpermission.findAll({ where: { position_id: id } }),
             permission.findAll({ where: { module: module } })
         ])
-		
-
-		if(ePermissions.length == 0){
-			//if no permission under this module doesnt exist
-			//return empty array []
-			return res.json([])
-		}
-
-		let permissions = rolePos
-        .filter((pos) => pers.some((per) => per.id == pos.permission_id))
-        .map((pos) => pers.find((per) => per.id == pos.permission_id).name)
-
-        
-	
-		let newArray = []
-		for(let per of ePermissions){
-			if(permissions.includes(per.name)){
-				newArray.push({
-					id: per.id,
-				    name: per.name,
-					model: per.model,
-					module: per.module,
-					is_selected: true,
-					createdAt: per.createdAt,
-					updatedAt: per.updatedAt
-				})
-			}else{
-				newArray.push({
-					id: per.id,
-				    name: per.name,
-					model: per.model,
-					module: per.module,
-					is_selected: false,
-					createdAt: per.createdAt,
-					updatedAt: per.updatedAt
-				})
-
-			}
-		}
 
 
-			let arr = []
-		
-			let pers = await permission.findAll({
-				where: {
-					module: module
-				}
-			})
-			
-			let model = models.models
+        if (ePermissions.length == 0) {
+            //if no permission under this module doesnt exist
+            //return empty array []
+            return res.json([])
+        }
 
-			for(let mod of model){
-				let x = pers.filter((item)=> item.model==mod)
-				if(x.length != 0){
+        let permissions = rolePos
+            .filter((pos) => pers.some((per) => per.id == pos.permission_id))
+            .map((pos) => pers.find((per) => per.id == pos.permission_id).name)
 
-					let newArray = []
-					for(let per of x){
-						if(permissions.includes(per.name)){
-							newArray.push({
-								id: per.id,
-								name: per.name,
-								model: per.model,
-								module: per.module,
-								is_selected: true,
-								createdAt: per.createdAt,
-								updatedAt: per.updatedAt
-							})
-						}else{
-							newArray.push({
-								id: per.id,
-								name: per.name,
-								model: per.model,
-								module: per.module,
-								is_selected: false,
-								createdAt: per.createdAt,
-								updatedAt: per.updatedAt
-							})
 
-						}
-					}
-					
-					// return res.json(newArray)
-					if(newArray.length !=0){
-						let ele = {
-							model: mod,
-							permissions: newArray
-						}
-						// ele[mod] =newArray 
-						arr.push(ele)
-					}
-				}	
-			}
-			
-		return res.json(arr)
 
-	} catch (error) {
-		 return res.status(500).json({
+        let newArray = []
+        for (let per of ePermissions) {
+            if (permissions.includes(per.name)) {
+                newArray.push({
+                    id: per.id,
+                    name: per.name,
+                    model: per.model,
+                    module: per.module,
+                    is_selected: true,
+                    createdAt: per.createdAt,
+                    updatedAt: per.updatedAt
+                })
+            } else {
+                newArray.push({
+                    id: per.id,
+                    name: per.name,
+                    model: per.model,
+                    module: per.module,
+                    is_selected: false,
+                    createdAt: per.createdAt,
+                    updatedAt: per.updatedAt
+                })
+
+            }
+        }
+
+
+        let arr = []
+
+        let pers = await permission.findAll({
+            where: {
+                module: module
+            }
+        })
+
+        let model = models.models
+
+        for (let mod of model) {
+            let x = pers.filter((item) => item.model == mod)
+            if (x.length != 0) {
+
+                let newArray = []
+                for (let per of x) {
+                    if (permissions.includes(per.name)) {
+                        newArray.push({
+                            id: per.id,
+                            name: per.name,
+                            model: per.model,
+                            module: per.module,
+                            is_selected: true,
+                            createdAt: per.createdAt,
+                            updatedAt: per.updatedAt
+                        })
+                    } else {
+                        newArray.push({
+                            id: per.id,
+                            name: per.name,
+                            model: per.model,
+                            module: per.module,
+                            is_selected: false,
+                            createdAt: per.createdAt,
+                            updatedAt: per.updatedAt
+                        })
+
+                    }
+                }
+
+                // return res.json(newArray)
+                if (newArray.length != 0) {
+                    let ele = {
+                            model: mod,
+                            permissions: newArray
+                        }
+                        // ele[mod] =newArray 
+                    arr.push(ele)
+                }
+            }
+        }
+
+        return res.json(arr)
+
+    } catch (error) {
+        return res.status(500).json({
             message: error.message
-         })
-	}
-	
+        })
+    }
+
 }
 self.getPermissionModules = async(req, res) => {
     try {
@@ -295,9 +295,9 @@ self.getPermissionModules = async(req, res) => {
 
 self.getPermissionsByAction = async(req, res) => {
 
-    const { id, action }  = req.params
+    const { id, action } = req.params
 
-	try {
+    try {
 
         const ePermissions = await permission.findAll({
             where: {
@@ -306,24 +306,24 @@ self.getPermissionsByAction = async(req, res) => {
                 }
             }
         });
-    
+
         const newObj = {};
-    
+
         const modules = master.modules;
-    
-        await Promise.all(modules.map(async (cat) => {
+
+        await Promise.all(modules.map(async(cat) => {
             const newArr = await Promise.all(ePermissions
                 .filter(per => per.category === cat)
-                .map(async (per) => {
+                .map(async(per) => {
                     const pos = await positionpermission.findOne({
                         where: {
                             position_id: id,
                             permission_id: per.id
                         }
                     });
-    
+
                     return {
-                        id:per.id,
+                        id: per.id,
                         name: per.name,
                         module: per.module,
                         category: per.category,
@@ -335,14 +335,14 @@ self.getPermissionsByAction = async(req, res) => {
             );
             newObj[cat] = newArr;
         }));
-    
+
         return res.json(newObj);
-	
-	} catch (error) {
-		 return res.status(500).json({
+
+    } catch (error) {
+        return res.status(500).json({
             message: error.message
-         })
-	}
+        })
+    }
 }
 
 self.assignPositionPermissions = async(req, res) => {
@@ -350,22 +350,22 @@ self.assignPositionPermissions = async(req, res) => {
         //optimize it one more
         const { permissions } = req.body;
         let data = []
-        for(let per of permissions) {
-            if(per.is_selected){
+        for (let per of permissions) {
+            if (per.is_selected) {
                 let exists = await positionpermission.findOne({
                     where: {
                         position_id: per.position_id,
                         permission_id: per.id
                     }
                 })
-                if(!exists){
+                if (!exists) {
                     let temp = await positionpermission.create({
                         position_id: per.position_id,
                         permission_id: per.id
                     })
                     data.push(temp)
                 }
-            }else{
+            } else {
 
                 let exists = await positionpermission.findOne({
                     where: {
@@ -373,18 +373,18 @@ self.assignPositionPermissions = async(req, res) => {
                         permission_id: per.id
                     }
                 })
-                if(exists){
+                if (exists) {
                     let temp = await positionpermission.delete({
-                       where: {
-                        id: exists.id
-                       }
+                        where: {
+                            id: exists.id
+                        }
                     })
                     data.push(temp)
                 }
             }
-            
+
         }
-          
+
         return res.status(200).json(data);
 
     } catch (error) {
@@ -400,15 +400,15 @@ self.getUserPermission = async(req, res) => {
 
         const usr = await usrData.userData(req, res);
         const positionpermissions = await positionpermission.findAll({
-        where: {
-            position_id: usr.position_id
-        }
+            where: {
+                position_id: usr.position_id
+            }
         });
 
-        const perArr = await Promise.all(positionpermissions.map(async (posper) => {
+        const perArr = await Promise.all(positionpermissions.map(async(posper) => {
             const data = await permission.findOne({
                 where: {
-                id: posper.permission_id
+                    id: posper.permission_id
                 }
             });
             let obj = {
@@ -431,7 +431,7 @@ self.getUserPermission = async(req, res) => {
         //         position_id: usr.position_id
         //     }
         // })
-        
+
         // let perArr = []
         // for(let posper of positionpermissions){
         //     let data = await permission.findOne({
@@ -477,6 +477,6 @@ self.initPermission = async(req, res) => {
             message: error.message
         })
     }
-}   
+}
 
 module.exports = self;

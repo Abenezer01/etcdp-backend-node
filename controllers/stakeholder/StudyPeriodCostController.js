@@ -91,6 +91,7 @@ self.getByHigherInstituteId = async(req, res) => {
                 higher_institute_id: id
             },
             include: ["stakestudyfield", "studyprogram", "studylevel"],
+
         })
         .then(async data => {
             console.log("The data", data)

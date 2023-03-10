@@ -262,7 +262,7 @@ const roadLayerValidate = async(req, res, next) => {
         "project_id": "required|string",
         "segment_id": "required|string",
         "name": "required|string",
-        "number": "required|string"
+        "number": "required|integer"
     };
 
     await validateReply.validateReply(req.body, validationRule, res, next)
@@ -378,7 +378,8 @@ const transformerTypeValidate = async(req, res, next) => {
         })
     }
     const validationRule = {
-        "name": "required|string"
+        "name": "required|string",
+        "project_id": "required|string"
 
     };
 
@@ -438,8 +439,7 @@ const railWayValidate = async(req, res, next) => {
         })
     }
     const validationRule = {
-        "project_id": "required|string",
-        "transmissionline_id": "required|string"
+        "project_id": "required|string"
 
     };
 

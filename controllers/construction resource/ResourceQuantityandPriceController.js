@@ -1,5 +1,7 @@
 const {
-    resourcequantity,
+    resourcequantityandprice,
+    detailresourcetype,
+    resourcebrand,
     Sequelize
 } = require("../../models");
 const usrData = require("../../utils/userDataFromToken");
@@ -22,7 +24,7 @@ self.getAll = async(req, res) => {
         order = process.env.order
     }
     const { limit, offset } = paginate.getPagination(page, size);
-    resourcequantity.findAndCountAll({
+    resourcequantityandprice.findAndCountAll({
             limit,
             offset,
             order: [
@@ -39,12 +41,47 @@ self.getAll = async(req, res) => {
             });
         });
 }
-
+self.getByProjectId = async(req, res) => {
+    let id = req.params.id;
+    let { page, size, order } = req.query;
+    //console.log("The page", page, size)
+    if (page == null && size == null) {
+        page = process.env.page,
+            size = process.env.size
+        console.log("The page", page, size)
+    }
+    if (order == null) {
+        order = process.env.order
+    }
+    const { limit, offset } = paginate.getPagination(page, size);
+    resourcequantityandprice.findAndCountAll({
+            limit,
+            offset,
+            where: {
+                project_id: id
+            },
+            order: [
+                ['createdAt', order]
+            ],
+            include: [{ model: resourcebrand, as: 'resourcebrand', attributes: ['id', 'title'] },
+                { model: detailresourcetype, as: 'detailresourcetype', attributes: ['id', 'title'] }
+            ]
+        })
+        .then(data => {
+            const response = paginate.getPagingData(data, page, limit);
+            res.send(response);
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: err.message || "Some error occurred while retrieving data."
+            });
+        });
+}
 
 self.get = async(req, res) => {
     try {
         let id = req.params.id;
-        let data = await resourcequantity.findOne({
+        let data = await resourcequantityandprice.findOne({
             where: {
                 id: id
             }
@@ -61,15 +98,37 @@ self.get = async(req, res) => {
 self.getByResourceId = async(req, res) => {
     try {
         let id = req.params.id;
-        let data = await resourcequantity.findAll({
-            where: {
-                resource_id: id
-            },
-            include: ['resourcetype', 'resourcebrand']
-        });
-        return res.status(200).json({
-            data: (data) ? data : []
-        })
+        let { page, size, order } = req.query;
+        //console.log("The page", page, size)
+        if (page == null && size == null) {
+            page = process.env.page,
+                size = process.env.size
+            console.log("The page", page, size)
+        }
+        if (order == null) {
+            order = process.env.order
+        }
+        const { limit, offset } = paginate.getPagination(page, size);
+
+        await resourcequantityandprice.findAndCountAll({
+                limit,
+                offset,
+                where: {
+                    resource_id: id
+                },
+                include: [{ model: resourcebrand, as: 'resourcebrand' },
+                    { model: detailresourcetype, as: 'detailresourcetype' }
+                ]
+
+            }).then(data => {
+                const response = paginate.getPagingData(data, page, limit);
+                res.send(response);
+            })
+            .catch(err => {
+                res.status(500).send({
+                    message: err.message || "Some error occurred while retrieving data."
+                });
+            });
     } catch (error) {
         res.status(500).json({
             message: error.message
@@ -79,7 +138,7 @@ self.getByResourceId = async(req, res) => {
 self.search = async(req, res) => {
     try {
         let text = req.query.text;
-        let data = await resourcequantity.findAll({
+        let data = await resourcequantityandprice.findAll({
             where: {
                 name: {
                     [Op.like]: "%" + text + "%"
@@ -99,11 +158,11 @@ self.save = async(req, res) => {
         let usr = await usrData.userData(req, res)
         let body = req.body;
         if (usr) {
-            let data = await resourcequantity.create(body);
+            let data = await resourcequantityandprice.create(body);
             if (data) {
 
                 let us = usr.usrID
-                await saveActionState(data.id, "resourcequantity", "REGISTER", us, req, res)
+                await saveActionState(data.id, "resourcequantityandprice", "REGISTER", us, req, res)
             }
             return res.json(data)
         }
@@ -118,7 +177,7 @@ self.update = async(req, res) => {
     try {
         let id = req.params.id;
         let body = req.body;
-        let data = await resourcequantity.update(body, {
+        let data = await resourcequantityandprice.update(body, {
             where: {
                 id: id
             }
@@ -136,7 +195,7 @@ self.update = async(req, res) => {
 self.delete = async(req, res) => {
     try {
         let id = req.params.id;
-        let data = await resourcequantity.destroy({
+        let data = await resourcequantityandprice.destroy({
             where: {
                 id: id
             }

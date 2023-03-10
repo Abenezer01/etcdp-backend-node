@@ -54,6 +54,7 @@ module.exports = function(express) {
 
     route.get("/project-type", ProjectTypeController.getAll);
     route.get("/project-type/:id", ProjectTypeController.get);
+    route.get("/project/project-type/:id", ProjectTypeController.getByProjectId);
     route.get("/project-type-search", ProjectTypeController.search);
     route.post("/project-type", validateData.projectTypeValidate, ProjectTypeController.save);
     route.put("/project-type/:id", validateData.projectTypeValidate, ProjectTypeController.update);
@@ -61,6 +62,7 @@ module.exports = function(express) {
     //project category
     route.get("/project-category", ProjectCategoryController.getAll);
     route.get("/project-category/:id", ProjectCategoryController.get);
+    route.get("/project/project-category/:id", ProjectCategoryController.getByProjectId);
     route.get("/project-category-search", ProjectCategoryController.search);
     route.get("/project-category/projecttype/:id", ProjectCategoryController.getAllProCatByTypeId);
     route.post("/project-category", validateData.projectCategoryValidate, ProjectCategoryController.save);
@@ -69,6 +71,7 @@ module.exports = function(express) {
     //project subcategory
     route.get("/project-sub-category", ProjectSubCategoryController.getAll);
     route.get("/project-sub-category/:id", ProjectSubCategoryController.get);
+    route.get("/project/project-sub-category/:id", ProjectSubCategoryController.getByProjectId);
     route.get("/project-sub-category-search", ProjectSubCategoryController.search);
     route.post("/project-sub-category", validateData.projectSubCategoryValidate, ProjectSubCategoryController.save);
     route.put("/project-sub-category/:id", validateData.projectSubCategoryValidate, ProjectSubCategoryController.update);
@@ -83,6 +86,7 @@ module.exports = function(express) {
     //Project status
     route.get("/project-status", ProjectStatusController.getAll);
     route.get("/project-status/:id", ProjectStatusController.get);
+    route.get("/project/project-status/:id", ProjectStatusController.getByProjectId);
     route.get("/project-status-search", ProjectStatusController.search);
     route.post("/project-status", validateData.projectStatusValidate, ProjectStatusController.save);
     route.put("/project-status/:id", validateData.projectStatusValidate, ProjectStatusController.update);
@@ -113,6 +117,7 @@ module.exports = function(express) {
     //Project document
     route.get("/project-document", ProjectDocumentController.getAll);
     route.get("/project-document/:id", ProjectDocumentController.get);
+    route.get("/project/project-document/:id", ProjectDocumentController.getByProjectId);
     route.get("/project-document-search", ProjectDocumentController.search);
     route.post("/project-document", validateData.projectDocumentValidate, ProjectDocumentController.save);
     route.put("/project-document/:id", validateData.projectDocumentValidate, ProjectDocumentController.update);
@@ -120,6 +125,7 @@ module.exports = function(express) {
     //Construction resource
     route.get("/construction-resource", ConstructionResourceController.getAll);
     route.get("/construction-resource/:id", ConstructionResourceController.get);
+    route.get("/project/construction-resource/:id", ConstructionResourceController.getByProjectId);
     route.get("/constructionproject/construction-resource/:id", ConstructionResourceController.getByProjectId);
     route.get("/construction-resource-search", ConstructionResourceController.search);
     route.post("/construction-resource", validateData.constructionResourceValidate, ConstructionResourceController.save);
@@ -128,6 +134,7 @@ module.exports = function(express) {
     //Building envelop material
     route.get("/building-envelop-material", BuildingEnvelopMaterialController.getAll);
     route.get("/building-envelop-material/:id", BuildingEnvelopMaterialController.get);
+    route.get("/project/building-envelop-material/:id", BuildingEnvelopMaterialController.getByProjectId);
     route.get("/building-envelop-material-search", BuildingEnvelopMaterialController.search);
     route.post("/building-envelop-material", validateData.buildingEnvelopMaterialValidate, BuildingEnvelopMaterialController.save);
     route.put("/building-envelop-material/:id", validateData.buildingEnvelopMaterialValidate, BuildingEnvelopMaterialController.update);
@@ -135,6 +142,7 @@ module.exports = function(express) {
     //Building dimension details
     route.get("/building-dimension-detail", BuildingDimensionDetailsController.getAll);
     route.get("/building-dimension-detail/:id", BuildingDimensionDetailsController.get);
+    route.get("/project/building-dimension-detail/:id", BuildingDimensionDetailsController.getByProjectId);
     route.get("/building-dimension-detail-search", BuildingDimensionDetailsController.search);
     route.post("/building-dimension-detail", validateData.buildingDimensionDetailValidate, BuildingDimensionDetailsController.save);
     route.put("/building-dimension-detail/:id", validateData.buildingDimensionDetailValidate, BuildingDimensionDetailsController.update);
@@ -142,6 +150,7 @@ module.exports = function(express) {
     //Telecom infrastructure
     route.get("/telecom-infrastructure", TelecomInfrastructureController.getAll);
     route.get("/telecom-infrastructure/:id", TelecomInfrastructureController.get);
+    route.get("/project/telecom-infrastructure/:id", TelecomInfrastructureController.getByProjectId);
     route.get("/telecom-infrastructure-search", TelecomInfrastructureController.search);
     route.post("/telecom-infrastructure", validateData.telecomValidate, TelecomInfrastructureController.save);
     route.put("/telecom-infrastructure/:id", validateData.telecomValidate, TelecomInfrastructureController.update);
@@ -149,6 +158,7 @@ module.exports = function(express) {
     //Generating capacity
     route.get("/generating-capacity", GeneratingCapacityController.getAll);
     route.get("/generating-capacity/:id", GeneratingCapacityController.get);
+    route.get("/project/generating-capacity/:id", GeneratingCapacityController.getByProjectId);
     route.get("/generating-capacity-search", GeneratingCapacityController.search);
     route.post("/generating-capacity", validateData.generatingCapacityValidate, GeneratingCapacityController.save);
     route.put("/generating-capacity/:id", validateData.generatingCapacityValidate, GeneratingCapacityController.update);
@@ -156,6 +166,7 @@ module.exports = function(express) {
     //Turbine detail
     route.get("/turbine-detail", TurbineDetailController.getAll);
     route.get("/turbine-detail/:id", TurbineDetailController.get);
+    route.get("/project/turbine-detail/:id", TurbineDetailController.getByProjectId);
     route.get("/turbine-detail-search", TurbineDetailController.search);
     route.post("/turbine-detail", validateData.turbineInfoValidate, TurbineDetailController.save);
     route.put("/turbine-detail/:id", validateData.turbineInfoValidate, TurbineDetailController.update);
@@ -163,13 +174,15 @@ module.exports = function(express) {
     //Hydrolectric dam
     route.get("/hydro-electric-dam", HydroElectricDamController.getAll);
     route.get("/hydro-electric-dam/:id", HydroElectricDamController.get);
+    route.get("/project/hydro-electric-dam/:id", HydroElectricDamController.getByProjectId);
     route.get("/hydro-electric-dam-search", HydroElectricDamController.search);
     route.post("/hydro-electric-dam", validateData.hydroElectricDamValidate, HydroElectricDamController.save);
     route.put("/hydro-electric-dam/:id", validateData.hydroElectricDamValidate, HydroElectricDamController.update);
     route.delete("/hydro-electric-dam/:id", HydroElectricDamController.delete);
-    //Spillways detail
+    //Spillways detailf
     route.get("/spill-way-detail", SpillWaysDetailController.getAll);
     route.get("/spill-way-detail/:id", SpillWaysDetailController.get);
+    route.get("/project/spill-way-detail/:id", SpillWaysDetailController.getByProjectId);
     route.get("/spill-way-detail-search", SpillWaysDetailController.search);
     route.post("/spill-way-detail", validateData.spillWayInfoValidate, SpillWaysDetailController.save);
     route.put("/spill-way-detail/:id", validateData.spillWayInfoValidate, SpillWaysDetailController.update);
@@ -177,17 +190,19 @@ module.exports = function(express) {
     //Reservoir detail
     route.get("/reservoir-detail", ReservoirDetailsController.getAll);
     route.get("/reservoir-detail/:id", ReservoirDetailsController.get);
+    route.get("/project/reservoir-detail/:id", ReservoirDetailsController.getByProjectId);
     route.get("/reservoir-detail-search", ReservoirDetailsController.search);
-    route.post("/reservoir-detail", validateData.irrigationCapacityValidate, ReservoirDetailsController.save);
-    route.put("/reservoir-detail/:id", validateData.irrigationCapacityValidate, ReservoirDetailsController.update);
+    route.post("/reservoir-detail", validateData.reserviorDetailValidate, ReservoirDetailsController.save);
+    route.put("/reservoir-detail/:id", validateData.reserviorDetailValidate, ReservoirDetailsController.update);
     route.delete("/reservoir-detail/:id", ReservoirDetailsController.delete);
     //Irrigation capacity
-    route.get("/irrigation-capcaity", IrrigationCapacityController.getAll);
-    route.get("/irrigation-capcaity/:id", IrrigationCapacityController.get);
-    route.get("/irrigation-capcaity-search", IrrigationCapacityController.search);
-    route.post("/irrigation-capcaity", validateData.reserviorDetailValidate, IrrigationCapacityController.save);
-    route.put("/irrigation-capcaity/:id", validateData.reserviorDetailValidate, IrrigationCapacityController.update);
-    route.delete("/irrigation-capcaity/:id", IrrigationCapacityController.delete);
+    route.get("/irrigation-capacity", IrrigationCapacityController.getAll);
+    route.get("/irrigation-capacity/:id", IrrigationCapacityController.get);
+    route.get("/project/irrigation-capacity/:id", IrrigationCapacityController.getByProjectId);
+    route.get("/irrigation-capacity-search", IrrigationCapacityController.search);
+    route.post("/irrigation-capacity", validateData.irrigationCapacityValidate, IrrigationCapacityController.save);
+    route.put("/irrigation-capacity/:id", validateData.irrigationCapacityValidate, IrrigationCapacityController.update);
+    route.delete("/irrigation-capacity/:id", IrrigationCapacityController.delete);
 
     route.get("/project/", ProjectController.getAll);
     route.get("/project/:id", ProjectController.get);
@@ -202,6 +217,7 @@ module.exports = function(express) {
     //project category
     route.get("/project-category/", ProjectCategoryController.getAll);
     route.get("/project-category/:id", ProjectCategoryController.get);
+    route.get("/project/project-category/:id", ProjectCategoryController.getByProjectId);
     route.get("/project-category-search", ProjectCategoryController.search);
     route.post("/project-category", validateData.projectCategoryValidate, ProjectCategoryController.save);
     route.put("/project-category/:id", validateData.projectCategoryValidate, ProjectCategoryController.update);
@@ -211,6 +227,7 @@ module.exports = function(express) {
     //projec subcategory
     route.get("/project-sub-category/", ProjectSubCategoryController.getAll);
     route.get("/project-sub-category/:id", ProjectSubCategoryController.get);
+    route.get("/project/project-sub-category/:id", ProjectSubCategoryController.getByProjectId);
     route.get("/project-sub-category-search", ProjectSubCategoryController.search);
     route.post("/project-sub-category", validateData.projectSubCategoryValidate, ProjectSubCategoryController.save);
     route.put("/project-sub-category/:id", validateData.projectSubCategoryValidate, ProjectSubCategoryController.update);
@@ -230,6 +247,7 @@ module.exports = function(express) {
     //project variation route
     route.get("/project-variation/", ProjectVariationController.getAll);
     route.get("/project-variation/:id", ProjectVariationController.get);
+    route.get("/project/project-variation/:id", ProjectVariationController.getByProjectId);
     route.get("/type/project-variation", ProjectVariationController.getByProjectType);
     route.get("/project-variation-search", ProjectVariationController.search);
     route.post("/project-variation", validateData.projectVariationValidate, ProjectVariationController.save);
@@ -248,6 +266,7 @@ module.exports = function(express) {
     //project bond
     route.get("/project-bond/", ProjectBondController.getAll);
     route.get("/project-bond/:id", ProjectBondController.get);
+    route.get("/project/project-bond/:id", ProjectBondController.getByProjectId);
     route.get("/type/project-bond", ProjectBondController.getByProjectType);
     route.get("/project-bond-search", ProjectBondController.search);
     route.post("/project-bond", validateData.projectBondValidate, ProjectBondController.save);
@@ -257,6 +276,7 @@ module.exports = function(express) {
     //road info
     route.get("/road-info/", RoadInfoController.getAll);
     route.get("/road-info/:id", RoadInfoController.get);
+    route.get("/project/road-info/:id", RoadInfoController.getByProjectId);
     route.get("/road-info-search", RoadInfoController.search);
     route.post("/road-info", validateData.roadDetailValidate, RoadInfoController.save);
     route.put("/road-info/:id", validateData.roadDetailValidate, RoadInfoController.update);
@@ -265,6 +285,7 @@ module.exports = function(express) {
     //road segment
     route.get("/road-segment/", RoadSegmentController.getAll);
     route.get("/road-segment/:id", RoadSegmentController.get);
+    route.get("/project/road-segment/:id", RoadSegmentController.getByProjectId);
     route.get("/road-segment-search", RoadSegmentController.search);
     route.post("/road-segment", validateData.roadSegmentValidate, RoadSegmentController.save);
     route.put("/road-segment/:id", validateData.roadSegmentValidate, RoadSegmentController.update);
@@ -273,6 +294,7 @@ module.exports = function(express) {
     //road layer
     route.get("/road-layer/", RoadLayerController.getAll);
     route.get("/road-layer/:id", RoadLayerController.get);
+    route.get("/project/road-layer/:id", RoadLayerController.getByProjectId);
     route.get("/road-layer-search", RoadLayerController.search);
     route.post("/road-layer", validateData.roadLayerValidate, RoadLayerController.save);
     route.put("/road-layer/:id", validateData.roadLayerValidate, RoadLayerController.update);
@@ -281,6 +303,7 @@ module.exports = function(express) {
     //solar energy
     route.get("/solar-energy", SolarEnergyController.getAll);
     route.get("/solar-energy/:id", SolarEnergyController.get);
+    route.get("/project/solar-energy/:id", SolarEnergyController.getByProjectId);
     route.get("/solar-enegy-search", SolarEnergyController.search);
     route.post("/solar-energy", validateData.solarEnergyValidate, SolarEnergyController.save);
     route.put("/solar-energy/:id", validateData.solarEnergyValidate, SolarEnergyController.update);
@@ -289,6 +312,7 @@ module.exports = function(express) {
     //wind energy
     route.get("/wind-energy", WindEnergyController.getAll);
     route.get("/wind-energy/:id", WindEnergyController.get);
+    route.get("/project/wind-energy/:id", WindEnergyController.getByProjectId);
     route.get("/wind-enegy-search", WindEnergyController.search);
     route.post("/wind-energy", validateData.windEnergyValidate, WindEnergyController.save);
     route.put("/wind-energy/:id", validateData.windEnergyValidate, WindEnergyController.update);
@@ -297,6 +321,7 @@ module.exports = function(express) {
     //transformer
     route.get("/transformer", TransformerController.getAll);
     route.get("/transformer/:id", TransformerController.get);
+    route.get("/project/transformer/:id", TransformerController.getByProjectId);
     route.get("/transformer-search", TransformerController.search);
     route.post("/transformer", validateData.transformerValidate, TransformerController.save);
     route.put("/transformer/:id", validateData.transformerValidate, TransformerController.update);
@@ -305,6 +330,7 @@ module.exports = function(express) {
     //transformer type
     route.get("/transformer-type", TransformerTypeController.getAll);
     route.get("/transformer-type/:id", TransformerTypeController.get);
+    route.get("/project/transformer-type/:id", TransformerTypeController.getByProjectId);
     route.get("/transformer-type-search", TransformerTypeController.search);
     route.post("/transformer-type", validateData.transformerTypeValidate, TransformerTypeController.save);
     route.put("/transformer-type/:id", validateData.transformerTypeValidate, TransformerTypeController.update);
@@ -314,6 +340,7 @@ module.exports = function(express) {
     //transmission lines
     route.get("/transmission-line", TransmissionLineController.getAll);
     route.get("/transmission-line/:id", TransmissionLineController.get);
+    route.get("/project/transmission-line/:id", TransmissionLineController.getByProjectId);
     route.get("/transmission-line-search", TransmissionLineController.search);
     route.post("/transmission-line", validateData.transmissionLineValidate, TransmissionLineController.save);
     route.put("/transmission-line/:id", validateData.transmissionLineValidate, TransmissionLineController.update);
@@ -322,6 +349,7 @@ module.exports = function(express) {
     //electric tower
     route.get("/electric-tower", ElectricTowerController.getAll);
     route.get("/electric-tower/:id", ElectricTowerController.get);
+    route.get("/project/electric-tower/:id", ElectricTowerController.getByProjectId);
     route.get("/electric-tower-search", ElectricTowerController.search);
     route.post("/electric-tower", validateData.electricTowerValidate, ElectricTowerController.save);
     route.put("/electric-tower/:id", validateData.electricTowerValidate, ElectricTowerController.update);
@@ -330,6 +358,7 @@ module.exports = function(express) {
     //railway
     route.get("/railway", RailwayController.getAll);
     route.get("/railway/:id", RailwayController.get);
+    route.get("/project/railway/:id", RailwayController.getByProjectId);
     route.get("/railway-search", RailwayController.search);
     route.post("/railway", validateData.railWayValidate, RailwayController.save);
     route.put("/railway/:id", validateData.railWayValidate, RailwayController.update);
@@ -338,6 +367,7 @@ module.exports = function(express) {
     //railway station
     route.get("/railway-station", RailwayStationController.getAll);
     route.get("/railway-station/:id", RailwayStationController.get);
+    route.get("/project/railway-station/:id", RailwayStationController.getByProjectId);
     route.get("/railway-station-search", RailwayStationController.search);
     route.post("/railway-station", validateData.railWayStationValidate, RailwayStationController.save);
     route.put("/railway-station/:id", validateData.railWayStationValidate, RailwayStationController.update);
@@ -347,6 +377,7 @@ module.exports = function(express) {
     //water irrigation dam
     route.get("/water-irrigation-dam", WaterIrrigationDamController.getAll);
     route.get("/water-irrigation-dam/:id", WaterIrrigationDamController.get);
+    route.get("/project/water-irrigation-dam/:id", WaterIrrigationDamController.getByProjectId);
     route.get("/water-irrigation-dam-search", WaterIrrigationDamController.search);
     route.post("/water-irrigation-dam", validateData.waterIrrigationValidate, WaterIrrigationDamController.save);
     route.put("/water-irrigation-dam/:id", validateData.waterIrrigationValidate, WaterIrrigationDamController.update);
@@ -355,6 +386,7 @@ module.exports = function(express) {
     //port
     route.get("/port", PortController.getAll);
     route.get("/port/:id", PortController.get);
+    route.get("/project/port/:id", PortController.getByProjectId);
     route.get("/port", PortController.search);
     route.post("/port", validateData.portValidate, PortController.save);
     route.put("/port/:id", validateData.portValidate, PortController.update);
@@ -363,6 +395,7 @@ module.exports = function(express) {
     //payment
     route.get("/payment", PaymentController.getAll);
     route.get("/payment/:id", PaymentController.get);
+    route.get("/project/payment/:id", PaymentController.getByProjectId);
     route.get("/payment", PaymentController.search);
     route.post("/payment", validateData.paymentValidate, PaymentController.save);
     route.put("/payment/:id", validateData.paymentValidate, PaymentController.update);

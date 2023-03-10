@@ -1,15 +1,28 @@
 {
     "development": {
-        "username": "root",
-        "password": "onespace@database",
-        "host": "localhost",
+        "dialect": "mysql",
+        "username": "etcdp_user",
+        "password": "etcdp&password",
+        "host": "206.189.6.38",
         "database": "etcdp_database",
 
         "port": "3306",
-        "dialect": "mysql",
         "dialectOptions": {
             "ssl": false
         }
+    },
+    "Kaldevelopment": {
+        "dialect": "mysql",
+        "username": "kaleb",
+        "password": "pgpass",
+        "host": "localhost",
+        "database": "Etcdp",
+
+        "port": "3306",
+        "dialectOptions": {
+            "ssl": false
+        }
+
     },
     "test": {
         "dialect": "mysql",
