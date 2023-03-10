@@ -48,14 +48,13 @@ module.exports = (sequelize, DataTypes) => {
         //     allowNull: false
         // },
         refresh_token: DataTypes.STRING,
-        photo_id: DataTypes.UUID,
         revision_no: DataTypes.INTEGER,
         full_name: {
             type: DataTypes.VIRTUAL,
             get() {
-              return this.first_name +" " + this.middle_name;
+                return this.first_name + " " + this.middle_name;
             },
-            
+
         },
 
     }, {
@@ -78,10 +77,10 @@ module.exports = (sequelize, DataTypes) => {
         //     as: "position",
         //     foreignKey: "position_id"
         // })
-        user.belongsTo(models.photo, {
-            as: "photo",
-            foreignKey: "photo_id"
-        })
+        // user.belongsTo(models.photo, {
+        //     as: "photo",
+        //     foreignKey: "photo_id"
+        // })
 
 
     };

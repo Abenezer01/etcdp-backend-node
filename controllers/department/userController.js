@@ -441,13 +441,13 @@ self.switchAccount = async(req, res) => {
     try {
         let body = req.body
         let usr = await usrData.userData(req, res)
-        //position_id === userposition_id
-        const userpos = await userposition.findOne({ 
-            where: { 
+            //position_id === userposition_id
+        const userpos = await userposition.findOne({
+            where: {
                 id: body.position_id
-            } 
+            }
         })
-        const pos = await position.findOne({ where: { id: userpos.position_id} })
+        const pos = await position.findOne({ where: { id: userpos.position_id } })
 
         const account = await user.findOne({
             where: { id: usr.usrID },
@@ -465,7 +465,7 @@ self.switchAccount = async(req, res) => {
         const usPhone = await userphone.findOne({
             where: { user_id: account.id, is_primary: true },
         })
-        
+
 
         let { id, first_name, middle_name, last_name, gender } = account;
         let { email } = usEmail || {};
@@ -479,7 +479,7 @@ self.switchAccount = async(req, res) => {
             email,
             phone,
             gender,
-            position_id: userpos ? userpos.position_id: null,
+            position_id: userpos ? userpos.position_id : null,
             position_name: pos ? pos.name : null,
             // role: usrRole.name,
             avatar: account.photo.avatar,
@@ -487,18 +487,18 @@ self.switchAccount = async(req, res) => {
 
         try {
 
-            let accessToken = null 
+            let accessToken = null
             let refreshToken = null
             let us = { id: account.id, department_id: userpos.department_id, position_id: userpos.position_id };
 
             accessToken = jwt.sign(us,
-                TOKEN_KEY, { 
-                    expiresIn: "100h" 
+                TOKEN_KEY, {
+                    expiresIn: "100h"
                 }
             );
             refreshToken = jwt.sign(us,
                 REFRESH_TOKEN_KEY, {
-                    expiresIn: "100h" 
+                    expiresIn: "100h"
                 }
             );
             // update refresh token
