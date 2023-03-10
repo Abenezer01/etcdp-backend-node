@@ -89,7 +89,10 @@ let models = [
     "workexperience",
     "modelmenu",
     "note",
-    "reply"
+    "reply",
+    "specification",
+    "brand",
+    "resourcedetailtype"
 
 ]
 
@@ -174,8 +177,11 @@ const modulemodels = {
         "constructionrelatedservice"
     ],
     'resource': [
-        'contracttimeinformation',
-        'extensiontime'
+        "specification",
+        "brand",
+        "resourcedetailtype",
+        "quantity",
+        "price"
     ],
     'document': [
         'stakeholder',
