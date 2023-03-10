@@ -126,7 +126,12 @@ self.servePhoto = async(req, res) => {
         const { id, type } = req.query;
 
         const img = await photo.findOne({
-            where: { model_id: id, type: type },
+            where: {
+                [Op.and]: [
+                    { model_id: id },
+                    { type: type }
+                ]
+            },
             order: [
                 ['createdAt', 'DESC']
             ]
