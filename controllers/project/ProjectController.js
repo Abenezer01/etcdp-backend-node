@@ -343,12 +343,10 @@
         let client = clientStake ? await self.getStakeholderName(clientStake.stakeholder_id): null
         let contractor = contractorStake ? await self.getStakeholderName(contractorStake.stakeholder_id): null
         let consultant = consultantStake ? await self.getStakeholderName(consultantStake.stakeholder_id): null
-        let {name: project_name} = pro || {}
-
 
 
         return res.json({
-            project_name,
+            project_name : pro ? pro.name : null,
             client,
             contractor,
             consultant,
@@ -356,7 +354,7 @@
             contract_signing_date: time ? time.contract_signing_date : null
 
         })
-
+add
 
 
     } catch (error) {

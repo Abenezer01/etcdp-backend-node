@@ -159,11 +159,11 @@ const modulemodels = {
         "spillwayinfo",    
         "transformer",    
         "transformertype",    
-        "transmissionline",    
-        "transmissiontype",    
+        "transmissionline",     
         "turbineinfo",    
         "waterirrigationdam",    
-        "windenergy"
+        "windenergy",
+        "telecom"
     ],
     
     'stakeholder': [
