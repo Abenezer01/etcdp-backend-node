@@ -28,27 +28,12 @@ module.exports = (sequelize, DataTypes) => {
         },
         middle_name: DataTypes.STRING,
         last_name: DataTypes.STRING,
-        // email: {
-        //     type: DataTypes.STRING,
-        //     unique: true,
-        //     allowNull: false
-        // },
         password: DataTypes.STRING,
-        // phone: {
-        //     type: DataTypes.STRING,
-        //     unique: true,
-        //     allow: false
-        // },
         gender: DataTypes.STRING,
         marital_status: DataTypes.BOOLEAN,
         partner_name: DataTypes.STRING,
         birth_date: DataTypes.DATE,
-        // position_id: {
-        //     type: DataTypes.UUID,
-        //     allowNull: false
-        // },
         refresh_token: DataTypes.STRING,
-        // photo_id: DataTypes.UUID,
         revision_no: DataTypes.INTEGER,
         full_name: {
             type: DataTypes.VIRTUAL,
@@ -74,15 +59,6 @@ module.exports = (sequelize, DataTypes) => {
             foreignKey: 'user_id',
             as: 'positions',
         });
-        // user.belongsTo(models.position, {
-        //     as: "position",
-        //     foreignKey: "position_id"
-        // })
-        // user.belongsTo(models.photo, {
-        //     as: "photo",
-        //     foreignKey: "photo_id"
-        // })
-
 
     };
 
