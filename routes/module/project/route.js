@@ -196,6 +196,8 @@ module.exports = function(express) {
     route.post("/project", validateData.projectValidate, ProjectController.save);
     route.put("/project/:id", validateData.projectValidate, ProjectController.update);
     route.delete("/project/:id", ProjectController.delete);
+    route.get("/project-general-information/:id", ProjectController.getProjectDetail);
+    
 
     //project category
     route.get("/project-category/", ProjectCategoryController.getAll);

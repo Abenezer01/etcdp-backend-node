@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
             primaryKey: true,
             defaultValue: DataTypes.UUIDV4
         },
-        avatar: DataTypes.STRING,
+        url: DataTypes.STRING,
 
     }, {
         sequelize,

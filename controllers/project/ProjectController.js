@@ -2,6 +2,9 @@
      project,
      actionstate,
      projectstakeholder,
+     stakeholder,
+     projecttime,
+     projectfinance,
      Sequelize
  } = require("./../../models");
 
@@ -296,5 +299,86 @@
      }
  }
 
+
+ self.getProjectDetail = async(req, res) => {
+    let id = req.params.id
+    try {
+        let [clientStake, consultantStake, contractorStake, pro, finance, time] = await Promise.all([
+            projectstakeholder.findOne({
+                where: {
+                    project_id: id,
+                    title: "Client"
+                }
+            }),
+            projectstakeholder.findOne({
+                where: {
+                    project_id: id,
+                    title: "Consultant"
+                }
+            }),
+            projectstakeholder.findOne({
+                where: {
+                    project_id: id,
+                    title: "Contractor"
+                }
+            }),
+            project.findOne({
+                where: {
+                    id: id
+                }
+            }),
+            projectfinance.findOne({
+                where: {
+                    project_id: id
+                }
+            }),
+            projecttime.findOne({
+                where: {
+                    project_id:id
+                }
+            })
+        ])
+
+
+        let client = clientStake ? await self.getStakeholderName(clientStake.stakeholder_id): null
+        let contractor = contractorStake ? await self.getStakeholderName(contractorStake.stakeholder_id): null
+        let consultant = consultantStake ? await self.getStakeholderName(consultantStake.stakeholder_id): null
+        let {name: project_name} = pro || {}
+
+
+
+        return res.json({
+            project_name,
+            client,
+            contractor,
+            consultant,
+            finance: finance,
+            time: time
+
+        })
+
+
+
+    } catch (error) {
+        return res.json({
+            message: error.messge
+        })
+    }
+ }
+self.getStakeholderName = async(id) => {
+    try {
+        let data = await stakeholder.findOne({
+            where: {
+                id: id
+            }
+        })
+
+        return data ? data.trade_name : null
+    } catch (error) {
+        return {
+            message: error.message
+        }
+    }
+}
 
  module.exports = self;
