@@ -90,7 +90,7 @@ const photoValidate = async(req, res, next) => {
             message: "File is empty"
         })
     }
-    if (!req.filesupload) {
+    if (!req.files.upload) {
         return res.status(412).json({
             message: "Attachement is empty"
         })
