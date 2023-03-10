@@ -92,7 +92,7 @@ const photoValidate = async(req, res, next) => {
     }
     if (!req.files.upload) {
         return res.status(412).json({
-            message: "Attachement is empty"
+            message: "Can't get upload name"
         })
     }
     const validationRule = {
