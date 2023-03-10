@@ -48,6 +48,7 @@ module.exports = (sequelize, DataTypes) => {
         //     allowNull: false
         // },
         refresh_token: DataTypes.STRING,
+        // photo_id: DataTypes.UUID,
         revision_no: DataTypes.INTEGER,
         full_name: {
             type: DataTypes.VIRTUAL,

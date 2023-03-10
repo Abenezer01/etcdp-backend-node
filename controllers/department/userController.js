@@ -482,7 +482,7 @@ self.switchAccount = async(req, res) => {
             position_id: userpos ? userpos.position_id : null,
             position_name: pos ? pos.name : null,
             // role: usrRole.name,
-            avatar: account.photo.avatar,
+            avatar: account.photo.url,
         };
 
         try {

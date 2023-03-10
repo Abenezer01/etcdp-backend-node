@@ -39,10 +39,6 @@ self.refreshToken = async(request, response, next) => {
                 include: [{
                         model: userposition,
                         as: "positions"
-                    },
-                    {
-                        model: photo,
-                        as: "photo"
                     }
                 ],
                 where: {
@@ -80,6 +76,13 @@ self.refreshToken = async(request, response, next) => {
             }
         })
 
+
+        let usPhoto = await photo.findOne({
+            where: {
+                model_id: usr.id,
+                type:"USER"
+            }
+        })
         replyUser = {
             id: usr.id,
             first_name: usr.first_name,
@@ -91,7 +94,7 @@ self.refreshToken = async(request, response, next) => {
             position_id: positionId,
             position_name: pos.name,
             role: rol.name,
-            avatar: usr.photo.avatar
+            avatar: usPhoto.url
         }
 
         if (!usr) {
