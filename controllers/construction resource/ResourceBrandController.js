@@ -183,76 +183,116 @@ self.getImage = async(req, res) => {
     }
 }
 self.update = async(req, res) => {
-    try {
-        let id = req.params.id
-        let usr = await usrData.userData(req, res)
-        let body = req.body;
-        const file = req.files
-        console.log("the file", file)
-        let pat
-        if (file) {
+        try {
+            const id = req.params.id;
+            const userData = await usrData.userData(req, res);
+            const { body, files } = req;
+            const file = files && files.image;
 
-            const ext = req.files.image.mimetype.split("/")[1];
-            let rand = Math.floor(100000 + Math.random() * 900000)
-            var name = req.files.image.name;
-            let parsedName = path.parse(name).name;
-            checkedNew = parsedName.concat(rand);
-            const filePath = path.join(__dirname, '../../public', 'images/resourcebrand', checkedNew + '.' +
-                `${ext}`)
-            console.log("The file path is ", filePath)
-            var filePathh = filePath.split("public").pop();
-            console.log("The file path is ", filePathh)
-                //return res.send(filePathh)
+            if (userData) {
+                if (file) {
+                    const ext = file.mimetype.split("/")[1];
+                    const rand = Math.floor(100000 + Math.random() * 900000);
+                    const { name } = file;
+                    const parsedName = path.parse(name).name;
+                    const checkedNew = parsedName.concat(rand);
+                    const filePath = path.join(__dirname, "../../public/images/resourcebrand", checkedNew + "." + ext);
+                    const filePathh = filePath.split("public").pop();
+                    body.image = filePathh;
+                    await file.mv(filePath);
 
-            body.image = filePathh
-            pat = filePath
-        }
-        // if (!file) {
-        //     body.image = ''
-        // }
-
-        if (usr) {
-            if (pat) {
-                const filee = req.files.image
-                let data = await resourcebrand.findOne({
-                    where: {
-                        id: id
-                    },
-                });
-                if (data.image) {
-                    let f = "/home/kaleb/Desktop/etcdp-backend-node/public"
-                    let fc = f + data.image
-
-                    if (fs.existsSync(fc)) {
-                        fs.unlink(fc, (err) => {
-                            if (err) {
-                                throw err;
-                            }
-
-                            console.log("Deleted File successfully.");
-                        });
+                    const data = await resourcebrand.findOne({ where: { id } });
+                    if (data.image) {
+                        const fc = path.join(__dirname, "../../public", data.image);
+                        if (fs.existsSync(fc)) {
+                            fs.unlink(fc, (err) => {
+                                if (err) {
+                                    throw err;
+                                }
+                                console.log("Deleted File successfully.");
+                            });
+                        }
                     }
-
-
                 }
-                filee.mv(pat, err => {
-                    if (err) return res.status(500).send(err)
-                        // res.redirect('/')
-                })
+
+                await resourcebrand.update(body, { where: { id } });
+                return res.json({ message: "Success" });
             }
-            let data = await resourcebrand.update(body, {
-                where: {
-                    id: id
-                },
-            });
-            return res.json({ message: "Success" })
+        } catch (error) {
+            res.status(500).json({ message: error.message });
         }
-    } catch (error) {
-        res.status(500).json({
-            message: error.message
-        })
     }
-}
+    // self.updatee = async(req, res) => {
+    //     try {
+    //         let id = req.params.id
+    //         let usr = await usrData.userData(req, res)
+    //         let body = req.body;
+    //         const file = req.files
+    //         console.log("the file", file)
+    //         let pat
+    //         if (file) {
+
+//             const ext = req.files.image.mimetype.split("/")[1];
+//             let rand = Math.floor(100000 + Math.random() * 900000)
+//             var name = req.files.image.name;
+//             let parsedName = path.parse(name).name;
+//             checkedNew = parsedName.concat(rand);
+//             const filePath = path.join(__dirname, '../../public', 'images/resourcebrand', checkedNew + '.' +
+//                 `${ext}`)
+//             console.log("The file path is ", filePath)
+//             var filePathh = filePath.split("public").pop();
+//             console.log("The file path is ", filePathh)
+//                 //return res.send(filePathh)
+
+//             body.image = filePathh
+//             pat = filePath
+//         }
+//         // if (!file) {
+//         //     body.image = ''
+//         // }
+
+//         if (usr) {
+//             if (pat) {
+//                 const filee = req.files.image
+//                 let data = await resourcebrand.findOne({
+//                     where: {
+//                         id: id
+//                     },
+//                 });
+//                 if (data.image) {
+//                     let f = "/home/kaleb/Desktop/etcdp-backend-node/public"
+//                     let fc = f + data.image
+
+//                     if (fs.existsSync(fc)) {
+//                         fs.unlink(fc, (err) => {
+//                             if (err) {
+//                                 throw err;
+//                             }
+
+//                             console.log("Deleted File successfully.");
+//                         });
+//                     }
+
+
+//                 }
+//                 filee.mv(pat, err => {
+//                     if (err) return res.status(500).send(err)
+//                         // res.redirect('/')
+//                 })
+//             }
+//             let data = await resourcebrand.update(body, {
+//                 where: {
+//                     id: id
+//                 },
+//             });
+//             return res.json({ message: "Success" })
+//         }
+//     } catch (error) {
+//         res.status(500).json({
+//             message: error.message
+//         })
+//     }
+// }
 
 self.delete = async(req, res) => {
     try {

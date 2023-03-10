@@ -150,74 +150,117 @@ self.getImage = async(req, res) => {
         })
     }
 }
+
+// self.updatee = async(req, res) => {
+//     let id = req.params.id;
+//     const file = req.files.image
+//     if (!id) {
+//         return res.status(412).json({
+//             message: "Can't get user id"
+
+//         })
+//     }
+//     let contentLength = parseInt(req.headers['content-length']);
+//     fileSizeinKB = Math.round(parseInt(contentLength) / 1024 * 100) / 100;
+//     let approx = Math.round(fileSizeinKB);
+//     //return res.status(200).json(approx)
+//     try {
+//         let resourceData = await resource.findOne({
+//             where: {
+//                 id: id
+//             }
+//         });
+//         let image_id = resourceData.image_id
+//         if (image_id) {
+//             let resourceImageData = await image.findOne({
+//                 where: {
+//                     id: image_id
+//                 }
+//             })
+//             let f = "/home/kaleb/Desktop/etcdp-backend-node/public"
+//             let fc = f + resourceImageData.url
+//             if (fs.existsSync(fc)) {
+//                 fs.unlink(fc, (err) => {
+//                     if (err) {
+//                         throw err;
+//                     }
+
+//                     console.log("Deleted File successfully.");
+//                 });
+//             }
+
+
+//         }
+//         const ext = req.files.image.mimetype.split("/")[1];
+//         let rand = Math.floor(100000 + Math.random() * 900000)
+//         var name = req.files.image.name;
+//         let parsedName = path.parse(name).name;
+//         checkedNew = parsedName.concat(rand);
+//         const filePath = path.join(__dirname, '../../public', 'images/resourceimages', checkedNew + '.' +
+//                 `${ext}`)
+//             //console.log("The file path is ", filePath)
+
+//         file.mv(filePath, err => {
+//             if (err) return res.status(500).send(err)
+//                 // res.redirect('/')
+//         })
+//         var filePathh = filePath.split("public").pop();
+//         await image.update({
+//             url: filePathh
+//         }, {
+//             where: { id: image_id },
+//         })
+//         return res.status(200).json({
+//             message: "Success"
+//         })
+//     } catch (error) {
+//         res.status(500).json({
+//             message: error.message
+//         })
+//     }
+// }
+
 self.update = async(req, res) => {
-    let id = req.params.id;
-    const file = req.files.image
+    const id = req.params.id;
+    const file = req.files.image;
+
     if (!id) {
-        return res.status(412).json({
-            message: "Can't get user id"
-
-        })
+        return res.status(412).json({ message: "Can't get user id" });
     }
-    let contentLength = parseInt(req.headers['content-length']);
-    fileSizeinKB = Math.round(parseInt(contentLength) / 1024 * 100) / 100;
-    let approx = Math.round(fileSizeinKB);
-    //return res.status(200).json(approx)
+
+    const contentLength = parseInt(req.headers['content-length']);
+    const fileSizeInKB = Math.round(contentLength / 1024 * 100) / 100;
+
     try {
-        let resourceData = await resource.findOne({
-            where: {
-                id: id
-            }
-        });
-        let image_id = resourceData.image_id
-        if (image_id) {
-            let resourceImageData = await image.findOne({
-                where: {
-                    id: image_id
-                }
-            })
-            let f = "/home/kaleb/Desktop/etcdp-backend-node/public"
-            let fc = f + resourceImageData.url
+        const resourceData = await resource.findOne({ where: { id } });
+        const imageId = resourceData.image_id;
+
+        if (imageId) {
+            const resourceImageData = await image.findOne({ where: { id: imageId } });
+            const fc = path.join(prePath, resourceImageData.url);
+
             if (fs.existsSync(fc)) {
-                fs.unlink(fc, (err) => {
-                    if (err) {
-                        throw err;
-                    }
-
-                    console.log("Deleted File successfully.");
-                });
+                fs.unlinkSync(fc);
             }
-
-
         }
-        const ext = req.files.image.mimetype.split("/")[1];
-        let rand = Math.floor(100000 + Math.random() * 900000)
-        var name = req.files.image.name;
-        let parsedName = path.parse(name).name;
-        checkedNew = parsedName.concat(rand);
-        const filePath = path.join(__dirname, '../../public', 'images/resourceimages', checkedNew + '.' +
-                `${ext}`)
-            //console.log("The file path is ", filePath)
 
-        file.mv(filePath, err => {
-            if (err) return res.status(500).send(err)
-                // res.redirect('/')
-        })
-        var filePathh = filePath.split("public").pop();
-        await image.update({
-            url: filePathh
-        }, {
-            where: { id: image_id },
-        })
-        return res.status(200).json({
-            message: "Success"
-        })
+        const ext = file.mimetype.split("/")[1];
+        const rand = Math.floor(100000 + Math.random() * 900000);
+        const parsedName = path.parse(file.name).name;
+        const checkedNew = parsedName.concat(rand);
+        const filePath = path.join(__dirname, "../../public", "images/resourceimages", `${checkedNew}.${ext}`);
+
+        await file.mv(filePath);
+        const filePathh = filePath.split("public").pop();
+
+        await image.update({ url: filePathh }, { where: { id: imageId } });
+
+        return res.status(200).json({ message: "Success" });
     } catch (error) {
-        res.status(500).json({
-            message: error.message
-        })
+        console.error(error);
+        return res.status(500).json({ message: "Internal Server Error" });
     }
-}
+};
 
 self.delete = async(req, res) => {
     try {
