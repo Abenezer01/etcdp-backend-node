@@ -119,12 +119,16 @@ self.update = async(req, res) => {
     try {
         let id = req.params.id;
         let body = req.body;
-        let data = await modelmenu.update(body, {
+
+        await modelmenu.update(body, {
             where: {
                 id: id
             }
         });
-        return res.json(data)
+        
+        return res.status(200).json({
+            message: "Successfully Updated!"
+        })
     } catch (error) {
         res.status(500).json({
             message: error.message
@@ -132,6 +136,57 @@ self.update = async(req, res) => {
     }
 }
 
+self.editModuleTypeModels = async (req, res) => {
+    try {
+      const id = req.params.id;
+      const { models, module } = req.body;
+  
+      if (models.length > 0) {
+
+        const usr = await usrData.userData(req, res);
+  
+        for (const model of models) {
+          const { status } = model;
+  
+          const where = {
+            module_type_id: id,
+            model: model.model,
+            module
+          };
+  
+          if (status) {
+            const [data, created] = await modelmenu.findOrCreate({
+              where,
+              defaults: {
+                module_type_id: id,
+                model: model.model,
+                module
+              }
+            });
+  
+            if (created) {
+              await saveActionState(data.id, "modelmenu", "REGISTER", usr.usrID, "req, res");
+            }
+          } else {
+            const exist = await modelmenu.findOne({ where });
+  
+            if (exist) {
+              await modelmenu.destroy({ where: { id: exist.id } });
+            }
+          }
+        }
+      }
+  
+      return res.status(200).json({
+        message: "Successfully updated"
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({
+        message: error.message
+      });
+    }
+};
 self.delete = async(req, res) => {
     try {
         let id = req.params.id;

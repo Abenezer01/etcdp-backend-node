@@ -58,6 +58,8 @@ module.exports = function(express) {
     route.get("/module-model-menus/:id", ModelMenuController.getModelMenuByModule);
 
     route.get("/module-models/:module", ModelMenuController.getModuleExtraModels);
+    
+    route.put("/module-type-models-update/:id", ModelMenuController.editModuleTypeModels);
 
     return route;
 };
