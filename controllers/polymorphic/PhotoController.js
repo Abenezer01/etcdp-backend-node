@@ -69,86 +69,76 @@ self.search = async(req, res) => {
 }
 
 self.save = async(req, res) => {
-
     try {
-        let usr = await usrData.userData(req, res)
-        if (!usr) {
-            return
+        const userData = await usrData.userData(req, res);
+        if (!userData) {
+            return;
         }
-        let id = req.params.id;
-        const file = req.files.upload
+
+        const id = req.params.id || '';
+        const { upload } = req.files;
+
         if (!id) {
-            return res.status(400).send({
-                message: "User id is empty"
-
-            })
-        } else if (!file) {
-            return res.status(400).send({
-                message: " file is empty"
-
-            })
+            return res.status(400).send({ message: 'User id is empty' });
         }
-        const ext = req.files.upload.mimetype.split("/")[1];
-        let rand = Math.floor(100000 + Math.random() * 900000)
-        var name = req.files.upload.name;
-        var newName = name.concat(rand)
-        checkedNew = newName.split('.').join("");
-        const filePath = path.join(__dirname, '../../public', 'images/user photo', checkedNew + '.' +
-                `${ext}`)
-            //console.log("The file path is ", filePath)
-        var filePathh = filePath.split("public").pop();
 
-        //console.log("The rand is: ", rand)
-        let photoData
-        photoo = { url: filePathh, type: req.body.type, model_id: id }
-        photoData = await photo.create(photoo)
+        if (!upload) {
+            return res.status(400).send({ message: 'File is empty' });
+        }
+
+        const ext = upload.mimetype.split('/')[1];
+        const randomNumber = Math.floor(100000 + Math.random() * 900000);
+        const name = upload.name;
+        const newName = `${name}${randomNumber}`;
+        const checkedNew = newName.split('.').join('');
+        const filePath = path.join(
+            __dirname,
+            '../../public',
+            'images/user photo',
+            `${checkedNew}.${ext}`
+        );
+        const filePathh = filePath.split('public').pop();
+
+        const photoObject = { url: filePathh, type: req.body.type, model_id: id };
+        const photoData = await photo.create(photoObject);
+
         if (photoData) {
-            let usrID = usr.usrID
-            saveActionState(photoData.id, "photo", "REGISTER", usrID, req, res)
+            const userID = userData.usrID;
+            saveActionState(photoData.id, 'photo', 'REGISTER', userID, req, res);
         }
-        file.mv(filePath, err => {
-            if (err) return res.status(500).send(err)
-                // res.redirect('/')
-        })
 
-        console.log("The photo id is: ", photoData.id)
-        return res.status(200).send({
-            message: photoData
-        })
+        upload.mv(filePath, (err) => {
+            if (err) return res.status(500).send(err);
+        });
 
-
-        // return res.json(data)
-
-
+        console.log(`The photo id is: ${photoData.id}`);
+        return res.status(200).send({ message: photoData });
     } catch (error) {
-        res.status(500).json({
-            message: error.message
-        })
+        res.status(500).json({ message: error.message });
     }
+};
 
-}
+
+const prePath = path.join(__dirname, '..', '..', 'public');
 
 self.servePhoto = async(req, res) => {
     try {
-        let id = req.params.id;
-        let img = await photo.findOne({
-            where: {
-                model_id: id
-            },
+        const id = req.params.id;
+
+        const img = await photo.findOne({
+            where: { model_id: id },
             order: [
                 ['createdAt', 'DESC']
             ]
-        })
+        });
 
-        let prePath = "/home/kaleb/Desktop/etcdp-backend-node/public"
-        let conPath = prePath.concat(img.url)
-        return res.download(conPath)
+        const imagePath = path.join(prePath, img.url);
+        return res.sendFile(imagePath);
     } catch (error) {
-        res.status(500).json({
-            message: error.message
-        })
+        res.status(500).json({ message: error.message });
     }
-}
+};
+
 self.update = async(req, res) => {
     let id = req.params.id;
     const file = req.files.upload
