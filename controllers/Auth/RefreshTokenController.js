@@ -137,6 +137,5 @@ self.refreshToken = async(request, response, next) => {
         })
     }
 
-
 }
 module.exports = self;
