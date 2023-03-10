@@ -126,6 +126,8 @@ self.save = async(req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+const prePath = path.join(__dirname, '..', '..', 'public');
+
 self.getImage = async(req, res) => {
     try {
         let id = req.params.id;
@@ -135,11 +137,11 @@ self.getImage = async(req, res) => {
             }
         });
         let img = await image.findOne({
-            where: {
-                id: data.image_id
-            }
-        })
-        let prePath = "/home/kaleb/Desktop/etcdp-backend-node/public"
+                where: {
+                    id: data.image_id
+                }
+            })
+            //let prePath = "/home/kaleb/Desktop/etcdp-backend-node/public"
         let conPath = prePath.concat(img.url)
         return res.download(conPath)
     } catch (error) {

@@ -98,23 +98,7 @@ self.getByResourceId = async(req, res) => {
             });
         });
 }
-self.search = async(req, res) => {
-    try {
-        let text = req.query.text;
-        let data = await resourcebrand.findAll({
-            where: {
-                name: {
-                    [Op.like]: "%" + text + "%"
-                }
-            }
-        });
-        return res.json(data)
-    } catch (error) {
-        res.status(500).json({
-            message: error.message
-        })
-    }
-}
+
 self.search = async(req, res) => {
     try {
         let text = req.query.text;
@@ -181,6 +165,7 @@ self.save = async(req, res) => {
         })
     }
 }
+const prePath = path.join(__dirname, '..', '..', 'public');
 self.getImage = async(req, res) => {
     try {
         let id = req.params.id;
@@ -189,7 +174,6 @@ self.getImage = async(req, res) => {
                 id: id
             }
         });
-        let prePath = "/home/kaleb/Desktop/etcdp-backend-node/public"
         let conPath = prePath.concat(data.image)
         return res.download(conPath)
     } catch (error) {
