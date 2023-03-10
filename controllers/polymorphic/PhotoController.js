@@ -123,7 +123,7 @@ const prePath = path.join(__dirname, '..', '..', 'public');
 
 self.servePhoto = async(req, res) => {
     try {
-        const { id, type } = req.query;
+        const { id, type } = req.params
 
         const img = await photo.findOne({
             where: {
