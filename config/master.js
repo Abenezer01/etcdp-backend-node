@@ -107,12 +107,14 @@ let modules = [
      // analysis can be further classified as project, stakeholder...
 ]
 
-let permissionModules = [,
+let permissionModules = [
     "projectmaster",
     "stakeholdermaster",
     "documentmaster",
     "resourcemaster",
     "generalmaster",
+    "document",
+    "resource",
     "stakeholderinfo",
     "stakeholderemployee",
     "stakeholderspecific",
@@ -127,9 +129,10 @@ let permissionModules = [,
     "projectresource",
     "projectreport",
     "other",
-    "resources",
-    "document",
-    "center"
+    "center",
+    "department",
+    "position",
+    "professional"
 ]
 let roleName = [
     "Admin", 
@@ -189,6 +192,7 @@ const modulemodels = {
         "constructionrelatedservice"
     ],
     'resource': [
+        "resource",
         "specification",
         "brand",
         "resourcedetailtype",
@@ -196,14 +200,12 @@ const modulemodels = {
         "price"
     ],
     'document': [
-        'stakeholder',
-        'professional',
-        'responsibility',
-        'stakeholderpermission',
-        'projectprofessionalrole'
+        "document"
     ],
     'center': [
-        
+        "department",
+        "position",
+        "professional"
     ]
     
 }
