@@ -212,7 +212,7 @@ module.exports = function(express) {
     route.put("/project/:id", validateData.projectValidate, ProjectController.update);
     route.delete("/project/:id", ProjectController.delete);
     route.get("/project-general-information/:id", ProjectController.getProjectDetail);
-    
+
 
     //project category
     route.get("/project-category/", ProjectCategoryController.getAll);
@@ -395,6 +395,7 @@ module.exports = function(express) {
     //payment
     route.get("/payment", PaymentController.getAll);
     route.get("/payment/:id", PaymentController.get);
+    route.get("/type/project/payment", PaymentController.getByProjectIdAndType);
     route.get("/project/payment/:id", PaymentController.getByProjectId);
     route.get("/payment", PaymentController.search);
     route.post("/payment", validateData.paymentValidate, PaymentController.save);

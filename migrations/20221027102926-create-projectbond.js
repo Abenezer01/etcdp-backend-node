@@ -48,7 +48,7 @@ module.exports = {
                 type: Sequelize.STRING
             },
             amount: {
-                type: Sequelize.INTEGER
+                type: Sequelize.BIGINT
             },
             remark: {
                 type: Sequelize.TEXT

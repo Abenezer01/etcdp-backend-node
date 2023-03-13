@@ -33,6 +33,7 @@ module.exports = function(express) {
     //Photo
     route.post("/photo/:id", validateData.photoValidate, PhotoController.save);
     route.get("/photo/:type/:id", PhotoController.servePhoto);
+    route.get("/multiple/photo/:id", PhotoController.serveMultiplePhoto);
     //reply
 
     route.get("/reply", ReplyController.getAll);

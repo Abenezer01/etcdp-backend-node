@@ -13,33 +13,28 @@ dotenv.config();
 let self = {};
 
 self.getAll = async(req, res) => {
-    let { page, size, order } = req.query;
-    //console.log("The page", page, size)
-    if (page == null && size == null) {
-        page = process.env.page,
-            size = process.env.size
-        console.log("The page", page, size)
-    }
-    if (order == null) {
-        order = process.env.order
-    }
+    const { page = process.env.page, size = process.env.size, order = process.env.order } = req.query;
+
     const { limit, offset } = paginate.getPagination(page, size);
-    resourcequantityandprice.findAndCountAll({
+
+    try {
+        const { rows, count } = await resourcequantityandprice.findAndCountAll({
             limit,
             offset,
             order: [
                 ['createdAt', order]
             ],
-        })
-        .then(data => {
-            const response = paginate.getPagingData(data, page, limit);
-            res.send(response);
-        })
-        .catch(err => {
-            res.status(500).send({
-                message: err.message || "Some error occurred while retrieving data."
-            });
         });
+
+        const response = paginate.getPagingData({ rows, count }, page, limit, count);
+
+        res.send(response);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send({
+            message: 'An error occurred while retrieving data.',
+        });
+    }
 }
 self.getByProjectId = async(req, res) => {
     let id = req.params.id;
@@ -95,6 +90,7 @@ self.get = async(req, res) => {
         })
     }
 }
+
 self.getByResourceId = async(req, res) => {
     try {
         let id = req.params.id;

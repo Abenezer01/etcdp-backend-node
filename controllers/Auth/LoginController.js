@@ -55,10 +55,9 @@ self.loginUser = async(request, response) => {
                     id: usEmail.user_id
                 },
                 include: [{
-                        model: userposition,
-                        as: "positions"
-                    }
-                ],
+                    model: userposition,
+                    as: "positions"
+                }],
             })
         ]);
 
