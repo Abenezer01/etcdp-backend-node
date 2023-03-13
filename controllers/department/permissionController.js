@@ -14,13 +14,7 @@ self.getAll = async(req, res) => {
     try {
         let data = await permission.findAll();
         return res.json(data)
-
     } catch (error) {
-        // if (err.message === 'Error') {
-        //     res.status(500).json({
-        //         message: error.message
-        //     })
-        // }
         res.status(500).json({
             message: error.message
         })
@@ -112,32 +106,6 @@ self.delete = async(req, res) => {
         return res.json(data)
     } catch (error) {
         res.status(500).json({
-            message: error.message
-        })
-    }
-}
-
-self.initPermission = async(req, res) => {
-    try {
-        const { permissionModules, actions } = master;
-        const permissionPromises = [];
-
-        for (const action of actions) {
-            for (const module of permissionModules) {
-                permissionPromises.push(permission.create({
-                    name: `${action}_${module}`,
-                    module: module
-                }));
-            }
-        }
-
-        await Promise.all(permissionPromises.flatMap(p => p));
-
-        return res.json("test")
-
-
-    } catch (error) {
-        return res.status(500).json({
             message: error.message
         })
     }
@@ -462,14 +430,16 @@ self.initPermission = async(req, res) => {
                 permissionPromises.push(permission.create({
                     name: `${action}_${module}`,
                     module: module,
-                    category: "PROJECT"
+                    category: "CENTER"
                 }));
             }
         }
 
         await Promise.all(permissionPromises.flatMap(p => p));
 
-        return res.json("test")
+        return res.json({
+            message: "Permission successfully initialized!"
+        })
 
 
     } catch (error) {
@@ -478,5 +448,6 @@ self.initPermission = async(req, res) => {
         })
     }
 }
+
 
 module.exports = self;

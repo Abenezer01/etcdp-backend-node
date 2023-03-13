@@ -79,18 +79,20 @@ self.loginUser = async(request, response) => {
             }
         })
 
-        const usrRole = await role.findOne({
-            where: {
-                id: pos.role_id
-            }
-        })
+        // const usrRole = await role.findOne({
+        //     where: {
+        //         id: pos.role_id
+        //     }
+        // })
+        // return response.json(usrRole)
+
         const usrPhoto = await photo.findOne({
             where: {
                 model_id: usr.id,
                 type: "USER"
             }
         })
-        let replyUser = { id: usr.id, full_name: usr.full_name, first_name: usr.last_name, middle_name: usr.middle_name, phone: usPhone.phone, gender: usr.gender, avatar: usrPhoto.url, position_id: pos.id, position_name: pos.name, role: usrRole.name }
+        let replyUser = { id: usr.id, full_name: usr.full_name, first_name: usr.last_name, middle_name: usr.middle_name, phone: usPhone.phone, gender: usr.gender, avatar: usrPhoto.url, position_id: pos.id, position_name: pos.name}
 
 
         bcrypt.compare(password, usr.password, function(err, result) {  

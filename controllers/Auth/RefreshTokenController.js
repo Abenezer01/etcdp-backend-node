@@ -57,11 +57,6 @@ self.refreshToken = async(request, response, next) => {
                 id: departmentId
             }
         })
-        rol = await role.findOne({
-            where: {
-                id: pos.role_id
-            }
-        })
         let usEmail = await useremail.findOne({
             where: {
                 user_id: userId,
@@ -93,7 +88,6 @@ self.refreshToken = async(request, response, next) => {
             gender: usr.gender,
             position_id: positionId,
             position_name: pos.name,
-            role: rol.name,
             avatar: usPhoto.url
         }
 

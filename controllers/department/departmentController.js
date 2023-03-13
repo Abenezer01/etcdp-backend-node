@@ -81,44 +81,41 @@ self.save = async(req, res) => {
 
                 let usr = await usrData.userData(req, res)
 
-                await saveActionState(pos.id, "department", "REGISTER", usr.usrID, req, res)
-
-                let pos = await position.create({
-                    department_id: data.id,
-                    name: `Head of ${data.name}`,
-                    description: "discr",
-                    is_head: true,
-                    role_id: "03963640-6675-4c68-a073-25ac309abd74"
-                })
-                if(pos){
-                    await saveActionState(pos.id, "position", "REGISTER", usr.usrID, req, res)
+                let roles = master.roleName 
+                let pos
+                for(let name of roles){
+                    if(name == "Admin"){
+                        pos = await position.create({
+                            department_id: data.id,
+                            name: name,
+                            description: "discr",
+                            is_head: true,
+                        })
+                    }else{
+                        pos = await position.create({
+                            department_id: data.id,
+                            name: name,
+                            description: "discr",
+                            is_head: false,
+                        })
+                    }
+                        
                 }
 
-
-
-
-                //default role and position
-                // let allRoles = master.roleName
-
-                // for(let ro of allRoles) {
-                //     let createdRole = await role.create({
-                //         name: ro,
-                //         department_id: data.id
-                //     })
-                //     if(createdRole){
-                //         let createdPos = await position.create({
-                //             name: ro,
-                //             department_id: data.od,
-                //             role_id: createdRole.id
-                //         })
-                //         if(createdPos) {
-                //             saveActionState(createdPos.id, "position","REGISTER", us)
-                //         }
-                //         saveActionState(createdRole.id, "role","REGISTER", us)
-                //     }
-                // }
+                if(pos){
+                    await saveActionState(pos.id, "position", "REGISTER", usr.usrID, req, res)
+                }else{
+                    await department.destroy({
+                        where: {
+                            id: data.id
+                        }
+                    })
+                }
             }
 
+        }
+        if(data){
+            await saveActionState(data.id, "department", "REGISTER", usr.usrID, req, res)
         }
         return res.json(data)
     } catch (error) {

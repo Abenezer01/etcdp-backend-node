@@ -89,7 +89,10 @@ let models = [
     "workexperience",
     "modelmenu",
     "note",
-    "reply"
+    "reply",
+    "specification",
+    "brand",
+    "resourcedetailtype"
 
 ]
 
@@ -105,6 +108,13 @@ let modules = [
 ]
 
 let permissionModules = [
+    "projectmaster",
+    "stakeholdermaster",
+    "documentmaster",
+    "resourcemaster",
+    "generalmaster",
+    "document",
+    "resource",
     "stakeholderinfo",
     "stakeholderemployee",
     "stakeholderspecific",
@@ -119,9 +129,10 @@ let permissionModules = [
     "projectresource",
     "projectreport",
     "other",
-    "resources",
-    "document",
-    "center"
+    //forcenter
+    "department",
+    "position",
+    "professional"
 ]
 let roleName = [
     "Admin", 
@@ -131,7 +142,6 @@ let roleName = [
     "Authorizer", 
     "Viewer"
 ]
-
 let actions = [
     "register",
     "check",
@@ -141,6 +151,13 @@ let actions = [
 ]
 
 const modulemodels = {
+    'master': [
+        "projectmaster",
+        "stakeholdermaster",
+        "documentmaster",
+        "resourcemaster",
+        "generalmaster"
+    ],
     'project':[    
         "buildingdimensiondetail",    
         "buildingenvelopmaterial",    
@@ -174,18 +191,20 @@ const modulemodels = {
         "constructionrelatedservice"
     ],
     'resource': [
-        'contracttimeinformation',
-        'extensiontime'
+        "resource",
+        "specification",
+        "brand",
+        "resourcedetailtype",
+        "quantity",
+        "price"
     ],
     'document': [
-        'stakeholder',
-        'professional',
-        'responsibility',
-        'stakeholderpermission',
-        'projectprofessionalrole'
+        "document"
     ],
     'center': [
-        
+        "department",
+        "position",
+        "professional"
     ]
     
 }
