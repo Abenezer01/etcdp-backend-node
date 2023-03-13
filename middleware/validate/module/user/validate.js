@@ -50,8 +50,7 @@ const positionValidate = async(req, res, next) => {
     const validationRule = {
         "department_id": "required|string",
         "name": "required|string",
-        "is_head": "boolean",
-        "role_id": "required|string"
+        "is_head": "boolean"
     };
 
     await validateReply.validateReply(req.body, validationRule, res, next)

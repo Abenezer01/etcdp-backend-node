@@ -34,10 +34,6 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue: false
         },
         quantity_needed: DataTypes.INTEGER,
-        role_id: {
-            type: DataTypes.UUID,
-            allowNull: false
-        },
         revision_no: DataTypes.INTEGER
     }, {
         sequelize,

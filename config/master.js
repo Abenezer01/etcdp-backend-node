@@ -129,7 +129,7 @@ let permissionModules = [
     "projectresource",
     "projectreport",
     "other",
-    "center",
+    //forcenter
     "department",
     "position",
     "professional"
@@ -142,7 +142,6 @@ let roleName = [
     "Authorizer", 
     "Viewer"
 ]
-
 let actions = [
     "register",
     "check",
