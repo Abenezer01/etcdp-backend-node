@@ -107,7 +107,12 @@ let modules = [
      // analysis can be further classified as project, stakeholder...
 ]
 
-let permissionModules = [
+let permissionModules = [,
+    "projectmaster",
+    "stakeholdermaster",
+    "documentmaster",
+    "resourcemaster",
+    "generalmaster",
     "stakeholderinfo",
     "stakeholderemployee",
     "stakeholderspecific",
@@ -144,6 +149,13 @@ let actions = [
 ]
 
 const modulemodels = {
+    'master': [
+        "projectmaster",
+        "stakeholdermaster",
+        "documentmaster",
+        "resourcemaster",
+        "generalmaster"
+    ],
     'project':[    
         "buildingdimensiondetail",    
         "buildingenvelopmaterial",    
