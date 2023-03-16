@@ -556,4 +556,11 @@ self.getAllUserPositions = async(req, res) => {
     }
 }
 
+// self.addContactPerson = async(req, res) => {
+//     try {
+//         let data = await 
+//     } catch (error) {
+//     }
+// }
+
 module.exports = self

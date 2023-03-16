@@ -245,6 +245,8 @@
              let data = await project.create(body);
              if (data) {
                  let usrID = usr.usrID
+                 data.department_id = usr.departmentID 
+                 await data.save()
                  await saveActionState(data.id, "project", "REGISTER", usrID, req, res)
              }
              // let arr = [{ name: "Client", id: body.clientId }, { name: "Consultant", id: body.consultantId }, { name: "Contractor", id: body.contractorId }]

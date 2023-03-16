@@ -33,7 +33,7 @@ self.getAll = async(req, res) => {
         let usr = await usrData.userData(req, res)
             // let us = req.decoded	
         let us = {
-            id: "e1594d67-3aa2-429b-bb77-2e4ecc2124f8",
+            id: usr.usrID,
             department_id: usr.departmentID
         }
 
