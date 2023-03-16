@@ -75,12 +75,9 @@ self.save = async(req, res) => {
         let body = req.body;
         let data = await department.create(body);
 
+        let usr = await usrData.userData(req, res)
+
         if (data) {
-        
-            if (data) {
-
-                let usr = await usrData.userData(req, res)
-
                 let roles = master.roleName 
                 let pos
                 for(let name of roles){
@@ -99,21 +96,21 @@ self.save = async(req, res) => {
                             is_head: false,
                         })
                     }
-                        
-                }
 
-                if(pos){
-                    await saveActionState(pos.id, "position", "REGISTER", usr.usrID, req, res)
-                }else{
-                    await department.destroy({
-                        where: {
-                            id: data.id
-                        }
-                    })
+                    if(pos){
+                        await saveActionState(pos.id, "position", "REGISTER", usr.usrID, req, res)
+                        
+                    }else{
+                        await department.destroy({
+                            where: {
+                                id: data.id
+                            }
+                        })
+                    }
+                        
                 }
             }
 
-        }
         if(data){
             await saveActionState(data.id, "department", "REGISTER", usr.usrID, req, res)
         }

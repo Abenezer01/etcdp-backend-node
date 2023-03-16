@@ -6,6 +6,7 @@ const ProjectStatusController = require("../../../controllers/project/ProjectSta
 const ProjectController = require("../../../controllers/project/ProjectController.js")
 const ProjectStakeholderController = require("../../../controllers/project/ProjectStakeholderController.js")
 const ProjectPlanController = require("../../../controllers/project/ProjectPlanController.js")
+const ProjectReportController = require("../../../controllers/project/ProjectReportController.js")
 const ProjectDocumentController = require("../../../controllers/project/ProjectDocumentController.js")
 const ConstructionResourceController = require("../../../controllers/project/ConstructionResourceController.js")
 const BuildingEnvelopMaterialController = require("../../../controllers/project/BuildingEnvelopMaterialController.js")
@@ -114,6 +115,16 @@ module.exports = function(express) {
     route.post("/project-plan", validateData.projectPlanValidate, ProjectPlanController.save);
     route.put("/project-plan/:id", validateData.projectPlanValidate, ProjectPlanController.update);
     route.delete("/project-plan/:id", ProjectPlanController.delete);
+
+    //project report
+
+    route.get("/project-report", ProjectReportController.getAll);
+    route.get("/project-report/:id", ProjectReportController.get);
+    route.get("/project/project-report/:id", ProjectReportController.getByProjectId);
+    route.get("/project-report-search", ProjectReportController.search);
+    route.post("/project-report", validateData.projectReportValidate, ProjectReportController.save);
+    route.put("/project-report/:id", validateData.projectReportValidate, ProjectReportController.update);
+    route.delete("/project-report/:id", ProjectReportController.delete);
     //Project document
     route.get("/project-document", ProjectDocumentController.getAll);
     route.get("/project-document/:id", ProjectDocumentController.get);
