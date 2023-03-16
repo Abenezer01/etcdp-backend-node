@@ -43,7 +43,7 @@ module.exports = {
                 type: Sequelize.TEXT,
             },
             amount: {
-                type: Sequelize.INTEGER,
+                type: Sequelize.BIGINT,
             },
             revision_no: {
                 type: Sequelize.INTEGER,

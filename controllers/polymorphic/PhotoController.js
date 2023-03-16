@@ -94,7 +94,7 @@ self.save = async(req, res) => {
         const filePath = path.join(
             __dirname,
             '../../public',
-            'images/user photo',
+            'images/photo',
             `${checkedNew}.${ext}`
         );
         const filePathh = filePath.split('public').pop();
@@ -143,7 +143,35 @@ self.servePhoto = async(req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+self.serveMultiplePhoto = async(req, res) => {
 
+    try {
+        const { id, type } = req.params
+
+        const img = await photo.findAll({
+            where: {
+
+                model_id: id
+
+            },
+            order: [
+                ['createdAt', 'DESC']
+            ]
+        });
+        let arr = []
+        for (const im of img) {
+            arr.push({ path: im.url })
+        }
+        res.status(200).send(arr);
+        // for (i = 0; i < img.length; i++) {
+        //     const imagePath = path.join(prePath, img[i].url);
+        //     res.sendFile(imagePath);
+        // }
+
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
 self.update = async(req, res) => {
     let id = req.params.id;
     const file = req.files.upload

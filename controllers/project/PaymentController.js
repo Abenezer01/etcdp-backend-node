@@ -79,7 +79,948 @@ self.getByProjectId = async(req, res) => {
             });
         });
 }
+self.getAll = async(req, res) => {
+    const { page = process.env.page, size = process.env.size, order = process.env.order } = req.query;
 
+    const { limit, offset } = paginate.getPagination(page, size);
+
+    try {
+        const { rows, count } = await resourcecategory.findAndCountAll({
+            limit,
+            offset,
+            order: [
+                ['createdAt', order]
+            ],
+        });
+
+        const response = paginate.getPagingData({ rows, count }, page, limit, count);
+
+        res.send(response);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send({
+            message: 'An error occurred while retrieving data.',
+        });
+    }
+}
+self.getAll = async(req, res) => {
+    const { page = process.env.page, size = process.env.size, order = process.env.order } = req.query;
+
+    const { limit, offset } = paginate.getPagination(page, size);
+
+    try {
+        const { rows, count } = await resourcecategory.findAndCountAll({
+            limit,
+            offset,
+            order: [
+                ['createdAt', order]
+            ],
+        });
+
+        const response = paginate.getPagingData({ rows, count }, page, limit, count);
+
+        res.send(response);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send({
+            message: 'An error occurred while retrieving data.',
+        });
+    }
+}
+self.getAll = async(req, res) => {
+    const { page = process.env.page, size = process.env.size, order = process.env.order } = req.query;
+
+    const { limit, offset } = paginate.getPagination(page, size);
+
+    try {
+        const { rows, count } = await resourcecategory.findAndCountAll({
+            limit,
+            offset,
+            order: [
+                ['createdAt', order]
+            ],
+        });
+
+        const response = paginate.getPagingData({ rows, count }, page, limit, count);
+
+        res.send(response);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send({
+            message: 'An error occurred while retrieving data.',
+        });
+    }
+}
+self.getAll = async(req, res) => {
+    const { page = process.env.page, size = process.env.size, order = process.env.order } = req.query;
+
+    const { limit, offset } = paginate.getPagination(page, size);
+
+    try {
+        const { rows, count } = await resourcecategory.findAndCountAll({
+            limit,
+            offset,
+            order: [
+                ['createdAt', order]
+            ],
+        });
+
+        const response = paginate.getPagingData({ rows, count }, page, limit, count);
+
+        res.send(response);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send({
+            message: 'An error occurred while retrieving data.',
+        });
+    }
+}
+self.getAll = async(req, res) => {
+    const { page = process.env.page, size = process.env.size, order = process.env.order } = req.query;
+
+    const { limit, offset } = paginate.getPagination(page, size);
+
+    try {
+        const { rows, count } = await resourcecategory.findAndCountAll({
+            limit,
+            offset,
+            order: [
+                ['createdAt', order]
+            ],
+        });
+
+        const response = paginate.getPagingData({ rows, count }, page, limit, count);
+
+        res.send(response);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send({
+            message: 'An error occurred while retrieving data.',
+        });
+    }
+}
+self.getAll = async(req, res) => {
+    const { page = process.env.page, size = process.env.size, order = process.env.order } = req.query;
+
+    const { limit, offset } = paginate.getPagination(page, size);
+
+    try {
+        const { rows, count } = await resourcecategory.findAndCountAll({
+            limit,
+            offset,
+            order: [
+                ['createdAt', order]
+            ],
+        });
+
+        const response = paginate.getPagingData({ rows, count }, page, limit, count);
+
+        res.send(response);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send({
+            message: 'An error occurred while retrieving data.',
+        });
+    }
+}
+self.getAll = async(req, res) => {
+    const { page = process.env.page, size = process.env.size, order = process.env.order } = req.query;
+
+    const { limit, offset } = paginate.getPagination(page, size);
+
+    try {
+        const { rows, count } = await resourcecategory.findAndCountAll({
+            limit,
+            offset,
+            order: [
+                ['createdAt', order]
+            ],
+        });
+
+        const response = paginate.getPagingData({ rows, count }, page, limit, count);
+
+        res.send(response);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send({
+            message: 'An error occurred while retrieving data.',
+        });
+    }
+}
+self.getAll = async(req, res) => {
+    const { page = process.env.page, size = process.env.size, order = process.env.order } = req.query;
+
+    const { limit, offset } = paginate.getPagination(page, size);
+
+    try {
+        const { rows, count } = await resourcecategory.findAndCountAll({
+            limit,
+            offset,
+            order: [
+                ['createdAt', order]
+            ],
+        });
+
+        const response = paginate.getPagingData({ rows, count }, page, limit, count);
+
+        res.send(response);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send({
+            message: 'An error occurred while retrieving data.',
+        });
+    }
+}
+self.getAll = async(req, res) => {
+    const { page = process.env.page, size = process.env.size, order = process.env.order } = req.query;
+
+    const { limit, offset } = paginate.getPagination(page, size);
+
+    try {
+        const { rows, count } = await resourcecategory.findAndCountAll({
+            limit,
+            offset,
+            order: [
+                ['createdAt', order]
+            ],
+        });
+
+        const response = paginate.getPagingData({ rows, count }, page, limit, count);
+
+        res.send(response);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send({
+            message: 'An error occurred while retrieving data.',
+        });
+    }
+}
+self.getAll = async(req, res) => {
+    const { page = process.env.page, size = process.env.size, order = process.env.order } = req.query;
+
+    const { limit, offset } = paginate.getPagination(page, size);
+
+    try {
+        const { rows, count } = await resourcecategory.findAndCountAll({
+            limit,
+            offset,
+            order: [
+                ['createdAt', order]
+            ],
+        });
+
+        const response = paginate.getPagingData({ rows, count }, page, limit, count);
+
+        res.send(response);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send({
+            message: 'An error occurred while retrieving data.',
+        });
+    }
+}
+self.getAll = async(req, res) => {
+    const { page = process.env.page, size = process.env.size, order = process.env.order } = req.query;
+
+    const { limit, offset } = paginate.getPagination(page, size);
+
+    try {
+        const { rows, count } = await resourcecategory.findAndCountAll({
+            limit,
+            offset,
+            order: [
+                ['createdAt', order]
+            ],
+        });
+
+        const response = paginate.getPagingData({ rows, count }, page, limit, count);
+
+        res.send(response);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send({
+            message: 'An error occurred while retrieving data.',
+        });
+    }
+}
+self.getAll = async(req, res) => {
+    const { page = process.env.page, size = process.env.size, order = process.env.order } = req.query;
+
+    const { limit, offset } = paginate.getPagination(page, size);
+
+    try {
+        const { rows, count } = await resourcecategory.findAndCountAll({
+            limit,
+            offset,
+            order: [
+                ['createdAt', order]
+            ],
+        });
+
+        const response = paginate.getPagingData({ rows, count }, page, limit, count);
+
+        res.send(response);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send({
+            message: 'An error occurred while retrieving data.',
+        });
+    }
+}
+self.getAll = async(req, res) => {
+    const { page = process.env.page, size = process.env.size, order = process.env.order } = req.query;
+
+    const { limit, offset } = paginate.getPagination(page, size);
+
+    try {
+        const { rows, count } = await resourcecategory.findAndCountAll({
+            limit,
+            offset,
+            order: [
+                ['createdAt', order]
+            ],
+        });
+
+        const response = paginate.getPagingData({ rows, count }, page, limit, count);
+
+        res.send(response);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send({
+            message: 'An error occurred while retrieving data.',
+        });
+    }
+}
+self.getAll = async(req, res) => {
+    const { page = process.env.page, size = process.env.size, order = process.env.order } = req.query;
+
+    const { limit, offset } = paginate.getPagination(page, size);
+
+    try {
+        const { rows, count } = await resourcecategory.findAndCountAll({
+            limit,
+            offset,
+            order: [
+                ['createdAt', order]
+            ],
+        });
+
+        const response = paginate.getPagingData({ rows, count }, page, limit, count);
+
+        res.send(response);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send({
+            message: 'An error occurred while retrieving data.',
+        });
+    }
+}
+self.getAll = async(req, res) => {
+    const { page = process.env.page, size = process.env.size, order = process.env.order } = req.query;
+
+    const { limit, offset } = paginate.getPagination(page, size);
+
+    try {
+        const { rows, count } = await resourcecategory.findAndCountAll({
+            limit,
+            offset,
+            order: [
+                ['createdAt', order]
+            ],
+        });
+
+        const response = paginate.getPagingData({ rows, count }, page, limit, count);
+
+        res.send(response);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send({
+            message: 'An error occurred while retrieving data.',
+        });
+    }
+}
+self.getAll = async(req, res) => {
+    const { page = process.env.page, size = process.env.size, order = process.env.order } = req.query;
+
+    const { limit, offset } = paginate.getPagination(page, size);
+
+    try {
+        const { rows, count } = await resourcecategory.findAndCountAll({
+            limit,
+            offset,
+            order: [
+                ['createdAt', order]
+            ],
+        });
+
+        const response = paginate.getPagingData({ rows, count }, page, limit, count);
+
+        res.send(response);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send({
+            message: 'An error occurred while retrieving data.',
+        });
+    }
+}
+self.getAll = async(req, res) => {
+    const { page = process.env.page, size = process.env.size, order = process.env.order } = req.query;
+
+    const { limit, offset } = paginate.getPagination(page, size);
+
+    try {
+        const { rows, count } = await resourcecategory.findAndCountAll({
+            limit,
+            offset,
+            order: [
+                ['createdAt', order]
+            ],
+        });
+
+        const response = paginate.getPagingData({ rows, count }, page, limit, count);
+
+        res.send(response);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send({
+            message: 'An error occurred while retrieving data.',
+        });
+    }
+}
+self.getAll = async(req, res) => {
+    const { page = process.env.page, size = process.env.size, order = process.env.order } = req.query;
+
+    const { limit, offset } = paginate.getPagination(page, size);
+
+    try {
+        const { rows, count } = await resourcecategory.findAndCountAll({
+            limit,
+            offset,
+            order: [
+                ['createdAt', order]
+            ],
+        });
+
+        const response = paginate.getPagingData({ rows, count }, page, limit, count);
+
+        res.send(response);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send({
+            message: 'An error occurred while retrieving data.',
+        });
+    }
+}
+self.getAll = async(req, res) => {
+    const { page = process.env.page, size = process.env.size, order = process.env.order } = req.query;
+
+    const { limit, offset } = paginate.getPagination(page, size);
+
+    try {
+        const { rows, count } = await resourcecategory.findAndCountAll({
+            limit,
+            offset,
+            order: [
+                ['createdAt', order]
+            ],
+        });
+
+        const response = paginate.getPagingData({ rows, count }, page, limit, count);
+
+        res.send(response);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send({
+            message: 'An error occurred while retrieving data.',
+        });
+    }
+}
+self.getAll = async(req, res) => {
+    const { page = process.env.page, size = process.env.size, order = process.env.order } = req.query;
+
+    const { limit, offset } = paginate.getPagination(page, size);
+
+    try {
+        const { rows, count } = await resourcecategory.findAndCountAll({
+            limit,
+            offset,
+            order: [
+                ['createdAt', order]
+            ],
+        });
+
+        const response = paginate.getPagingData({ rows, count }, page, limit, count);
+
+        res.send(response);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send({
+            message: 'An error occurred while retrieving data.',
+        });
+    }
+}
+self.getAll = async(req, res) => {
+    const { page = process.env.page, size = process.env.size, order = process.env.order } = req.query;
+
+    const { limit, offset } = paginate.getPagination(page, size);
+
+    try {
+        const { rows, count } = await resourcecategory.findAndCountAll({
+            limit,
+            offset,
+            order: [
+                ['createdAt', order]
+            ],
+        });
+
+        const response = paginate.getPagingData({ rows, count }, page, limit, count);
+
+        res.send(response);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send({
+            message: 'An error occurred while retrieving data.',
+        });
+    }
+}
+self.getAll = async(req, res) => {
+    const { page = process.env.page, size = process.env.size, order = process.env.order } = req.query;
+
+    const { limit, offset } = paginate.getPagination(page, size);
+
+    try {
+        const { rows, count } = await resourcecategory.findAndCountAll({
+            limit,
+            offset,
+            order: [
+                ['createdAt', order]
+            ],
+        });
+
+        const response = paginate.getPagingData({ rows, count }, page, limit, count);
+
+        res.send(response);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send({
+            message: 'An error occurred while retrieving data.',
+        });
+    }
+}
+self.getAll = async(req, res) => {
+    const { page = process.env.page, size = process.env.size, order = process.env.order } = req.query;
+
+    const { limit, offset } = paginate.getPagination(page, size);
+
+    try {
+        const { rows, count } = await resourcecategory.findAndCountAll({
+            limit,
+            offset,
+            order: [
+                ['createdAt', order]
+            ],
+        });
+
+        const response = paginate.getPagingData({ rows, count }, page, limit, count);
+
+        res.send(response);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send({
+            message: 'An error occurred while retrieving data.',
+        });
+    }
+}
+self.getAll = async(req, res) => {
+    const { page = process.env.page, size = process.env.size, order = process.env.order } = req.query;
+
+    const { limit, offset } = paginate.getPagination(page, size);
+
+    try {
+        const { rows, count } = await resourcecategory.findAndCountAll({
+            limit,
+            offset,
+            order: [
+                ['createdAt', order]
+            ],
+        });
+
+        const response = paginate.getPagingData({ rows, count }, page, limit, count);
+
+        res.send(response);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send({
+            message: 'An error occurred while retrieving data.',
+        });
+    }
+}
+self.getAll = async(req, res) => {
+    const { page = process.env.page, size = process.env.size, order = process.env.order } = req.query;
+
+    const { limit, offset } = paginate.getPagination(page, size);
+
+    try {
+        const { rows, count } = await resourcecategory.findAndCountAll({
+            limit,
+            offset,
+            order: [
+                ['createdAt', order]
+            ],
+        });
+
+        const response = paginate.getPagingData({ rows, count }, page, limit, count);
+
+        res.send(response);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send({
+            message: 'An error occurred while retrieving data.',
+        });
+    }
+}
+self.getAll = async(req, res) => {
+    const { page = process.env.page, size = process.env.size, order = process.env.order } = req.query;
+
+    const { limit, offset } = paginate.getPagination(page, size);
+
+    try {
+        const { rows, count } = await resourcecategory.findAndCountAll({
+            limit,
+            offset,
+            order: [
+                ['createdAt', order]
+            ],
+        });
+
+        const response = paginate.getPagingData({ rows, count }, page, limit, count);
+
+        res.send(response);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send({
+            message: 'An error occurred while retrieving data.',
+        });
+    }
+}
+self.getAll = async(req, res) => {
+    const { page = process.env.page, size = process.env.size, order = process.env.order } = req.query;
+
+    const { limit, offset } = paginate.getPagination(page, size);
+
+    try {
+        const { rows, count } = await resourcecategory.findAndCountAll({
+            limit,
+            offset,
+            order: [
+                ['createdAt', order]
+            ],
+        });
+
+        const response = paginate.getPagingData({ rows, count }, page, limit, count);
+
+        res.send(response);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send({
+            message: 'An error occurred while retrieving data.',
+        });
+    }
+}
+self.getAll = async(req, res) => {
+    const { page = process.env.page, size = process.env.size, order = process.env.order } = req.query;
+
+    const { limit, offset } = paginate.getPagination(page, size);
+
+    try {
+        const { rows, count } = await resourcecategory.findAndCountAll({
+            limit,
+            offset,
+            order: [
+                ['createdAt', order]
+            ],
+        });
+
+        const response = paginate.getPagingData({ rows, count }, page, limit, count);
+
+        res.send(response);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send({
+            message: 'An error occurred while retrieving data.',
+        });
+    }
+}
+self.getAll = async(req, res) => {
+    const { page = process.env.page, size = process.env.size, order = process.env.order } = req.query;
+
+    const { limit, offset } = paginate.getPagination(page, size);
+
+    try {
+        const { rows, count } = await resourcecategory.findAndCountAll({
+            limit,
+            offset,
+            order: [
+                ['createdAt', order]
+            ],
+        });
+
+        const response = paginate.getPagingData({ rows, count }, page, limit, count);
+
+        res.send(response);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send({
+            message: 'An error occurred while retrieving data.',
+        });
+    }
+}
+self.getAll = async(req, res) => {
+    const { page = process.env.page, size = process.env.size, order = process.env.order } = req.query;
+
+    const { limit, offset } = paginate.getPagination(page, size);
+
+    try {
+        const { rows, count } = await resourcecategory.findAndCountAll({
+            limit,
+            offset,
+            order: [
+                ['createdAt', order]
+            ],
+        });
+
+        const response = paginate.getPagingData({ rows, count }, page, limit, count);
+
+        res.send(response);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send({
+            message: 'An error occurred while retrieving data.',
+        });
+    }
+}
+self.getAll = async(req, res) => {
+    const { page = process.env.page, size = process.env.size, order = process.env.order } = req.query;
+
+    const { limit, offset } = paginate.getPagination(page, size);
+
+    try {
+        const { rows, count } = await resourcecategory.findAndCountAll({
+            limit,
+            offset,
+            order: [
+                ['createdAt', order]
+            ],
+        });
+
+        const response = paginate.getPagingData({ rows, count }, page, limit, count);
+
+        res.send(response);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send({
+            message: 'An error occurred while retrieving data.',
+        });
+    }
+}
+self.getAll = async(req, res) => {
+    const { page = process.env.page, size = process.env.size, order = process.env.order } = req.query;
+
+    const { limit, offset } = paginate.getPagination(page, size);
+
+    try {
+        const { rows, count } = await resourcecategory.findAndCountAll({
+            limit,
+            offset,
+            order: [
+                ['createdAt', order]
+            ],
+        });
+
+        const response = paginate.getPagingData({ rows, count }, page, limit, count);
+
+        res.send(response);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send({
+            message: 'An error occurred while retrieving data.',
+        });
+    }
+}
+self.getAll = async(req, res) => {
+    const { page = process.env.page, size = process.env.size, order = process.env.order } = req.query;
+
+    const { limit, offset } = paginate.getPagination(page, size);
+
+    try {
+        const { rows, count } = await resourcecategory.findAndCountAll({
+            limit,
+            offset,
+            order: [
+                ['createdAt', order]
+            ],
+        });
+
+        const response = paginate.getPagingData({ rows, count }, page, limit, count);
+
+        res.send(response);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send({
+            message: 'An error occurred while retrieving data.',
+        });
+    }
+}
+self.getAll = async(req, res) => {
+    const { page = process.env.page, size = process.env.size, order = process.env.order } = req.query;
+
+    const { limit, offset } = paginate.getPagination(page, size);
+
+    try {
+        const { rows, count } = await resourcecategory.findAndCountAll({
+            limit,
+            offset,
+            order: [
+                ['createdAt', order]
+            ],
+        });
+
+        const response = paginate.getPagingData({ rows, count }, page, limit, count);
+
+        res.send(response);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send({
+            message: 'An error occurred while retrieving data.',
+        });
+    }
+}
+self.getAll = async(req, res) => {
+    const { page = process.env.page, size = process.env.size, order = process.env.order } = req.query;
+
+    const { limit, offset } = paginate.getPagination(page, size);
+
+    try {
+        const { rows, count } = await resourcecategory.findAndCountAll({
+            limit,
+            offset,
+            order: [
+                ['createdAt', order]
+            ],
+        });
+
+        const response = paginate.getPagingData({ rows, count }, page, limit, count);
+
+        res.send(response);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send({
+            message: 'An error occurred while retrieving data.',
+        });
+    }
+}
+self.getAll = async(req, res) => {
+    const { page = process.env.page, size = process.env.size, order = process.env.order } = req.query;
+
+    const { limit, offset } = paginate.getPagination(page, size);
+
+    try {
+        const { rows, count } = await resourcecategory.findAndCountAll({
+            limit,
+            offset,
+            order: [
+                ['createdAt', order]
+            ],
+        });
+
+        const response = paginate.getPagingData({ rows, count }, page, limit, count);
+
+        res.send(response);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send({
+            message: 'An error occurred while retrieving data.',
+        });
+    }
+}
+self.getAll = async(req, res) => {
+    const { page = process.env.page, size = process.env.size, order = process.env.order } = req.query;
+
+    const { limit, offset } = paginate.getPagination(page, size);
+
+    try {
+        const { rows, count } = await resourcecategory.findAndCountAll({
+            limit,
+            offset,
+            order: [
+                ['createdAt', order]
+            ],
+        });
+
+        const response = paginate.getPagingData({ rows, count }, page, limit, count);
+
+        res.send(response);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send({
+            message: 'An error occurred while retrieving data.',
+        });
+    }
+}
+self.getAll = async(req, res) => {
+    const { page = process.env.page, size = process.env.size, order = process.env.order } = req.query;
+
+    const { limit, offset } = paginate.getPagination(page, size);
+
+    try {
+        const { rows, count } = await payment.findAndCountAll({
+            limit,
+            offset,
+            order: [
+                ['createdAt', order]
+            ],
+        });
+
+        const response = paginate.getPagingData({ rows, count }, page, limit, count);
+
+        res.send(response);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send({
+            message: 'An error occurred while retrieving data.',
+        });
+    }
+}
+self.getByProjectIdAndType = async(req, res) => {
+    const { page = process.env.page, size = process.env.size, order = process.env.order, project_id, type } = req.query;
+
+    const { limit, offset } = paginate.getPagination(page, size);
+
+    try {
+        const { rows, count } = await payment.findAndCountAll({
+            limit,
+            offset,
+            order: [
+                ['createdAt', order]
+            ],
+            where: {
+                [Op.and]: [
+                    { project_id: project_id },
+                    { type: type }
+                ]
+            },
+        });
+
+        const response = paginate.getPagingData({ rows, count }, page, limit, count);
+
+        res.send(response);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send({
+            message: 'An error occurred while retrieving data.',
+        });
+    }
+}
 self.get = async(req, res) => {
     try {
         let id = req.params.id;

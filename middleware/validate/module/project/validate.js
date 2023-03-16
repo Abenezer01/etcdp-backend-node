@@ -540,7 +540,7 @@ const paymentValidate = async(req, res, next) => {
     }
     const validationRule = {
         "project_id": "required|string",
-        "amount": "required|string"
+        "amount": "required|integer"
     };
 
     await validateReply.validateReply(req.body, validationRule, res, next)

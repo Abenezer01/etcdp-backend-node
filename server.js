@@ -25,7 +25,7 @@ const fileUpload = require('express-fileupload');
 let app = express();
 app.use(fileUpload())
 app.use(cookieParser());
-//app.use(express.static('public'));
+app.use(express.static('public'));
 //app.use('/images', express.static('images'));
 var corsOptions = {
     origin: "*",

@@ -11,34 +11,30 @@ dotenv.config();
 let self = {};
 const path = require('path');
 const fs = require('fs');
+const prePath = path.join(__dirname, '..', '..', 'public');
 self.getAll = async(req, res) => {
-    let { page, size, order } = req.query;
-    //console.log("The page", page, size)
-    if (page == null && size == null) {
-        page = process.env.page,
-            size = process.env.size
-        console.log("The page", page, size)
-    }
-    if (order == null) {
-        order = process.env.order
-    }
+    const { page = process.env.page, size = process.env.size, order = process.env.order } = req.query;
+
     const { limit, offset } = paginate.getPagination(page, size);
-    resourcebrand.findAndCountAll({
+
+    try {
+        const { rows, count } = await resourcebrand.findAndCountAll({
             limit,
             offset,
             order: [
                 ['createdAt', order]
             ],
-        })
-        .then(data => {
-            const response = paginate.getPagingData(data, page, limit);
-            res.send(response);
-        })
-        .catch(err => {
-            res.status(500).send({
-                message: err.message || "Some error occurred while retrieving data."
-            });
         });
+
+        const response = paginate.getPagingData({ rows, count }, page, limit, count);
+
+        res.send(response);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send({
+            message: 'An error occurred while retrieving data.',
+        });
+    }
 }
 
 
@@ -61,43 +57,33 @@ self.get = async(req, res) => {
     }
 }
 self.getByResourceId = async(req, res) => {
-    let id = req.params.id
-    let { page, size, order } = req.query;
-    //console.log("The page", page, size)
-    if (page == null && size == null) {
-        page = process.env.page,
-            size = process.env.size
-        console.log("The page", page, size)
-    }
-    if (order == null) {
-        order = process.env.order
-    }
+    const { id } = req.params;
+    let { page = process.env.page, size = process.env.size, order = process.env.order } = req.query;
     const { limit, offset } = paginate.getPagination(page, size);
-    resourcebrand.findAndCountAll({
+
+    if (order == null) {
+        order = process.env.order;
+    }
+
+    try {
+        const { count, rows } = await resourcebrand.findAndCountAll({
             limit,
             offset,
-            where: {
-                resource_id: id
-            },
+            where: { resource_id: id },
             order: [
                 ['createdAt', order]
             ],
             raw: true
-        })
-        .then(data => {
-            const newData = data.rows.map(item => {
-                // console.log("The item attachement", )
-                return {...item, image: item.image.substr(item.image.lastIndexOf('/') + 1) }
-            })
-            const response = paginate.getPagingData({ rows: newData, count: data.count }, page, limit);
-            res.send(response);
-        })
-        .catch(err => {
-            res.status(500).send({
-                message: err.message || "Some error occurred while retrieving data."
-            });
         });
-}
+
+        const newData = rows.map(item => ({...item, image: item.image.substr(item.image.lastIndexOf('/') + 1) }));
+        const response = paginate.getPagingData({ rows: newData, count }, page, limit);
+        res.send(response);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({ message: "Some error occurred while retrieving data." });
+    }
+};
 
 self.search = async(req, res) => {
     try {
@@ -165,7 +151,7 @@ self.save = async(req, res) => {
         })
     }
 }
-const prePath = path.join(__dirname, '..', '..', 'public');
+
 self.getImage = async(req, res) => {
     try {
         let id = req.params.id;
