@@ -1,5 +1,7 @@
 const {
     projectreport,
+    projectplan,
+    monthlyreport,
     Sequelize
 } = require("../../models");
 const usrData = require("../../utils/userDataFromToken");
@@ -161,6 +163,64 @@ self.delete = async(req, res) => {
             message: error.message
         })
     }
+}
+
+self.getMonthlyProjectReport = async(req, res) => {
+	let id = req.params.id 
+	let year = req.params.year
+	let month = req.params.month 
+
+	try {
+		let data = null
+        let usr = await usrData.userData(req, res)
+
+		let plan = await projectplan.findOne({
+			where: {
+				project_id: id,
+				year:year,
+				month:month
+			}
+		})
+		if(!plan){
+			return res.status(404).json({
+				message: "There is no plan data"
+			})
+		}else{
+			data = await monthlyreport.findOne({
+				where: {
+					project_id: id,
+					year: year,
+					month: month
+				}
+			})
+
+			if(!data){
+				
+
+				data = await monthlyreport.create({
+						project_id: id,
+						year: year,
+						month: month
+				})
+				let us = req.decoded
+
+                await saveActionState(data.id, "monthlyreport", "REGISTER", usr.usrID, req, res)
+			}
+
+			return res.json({
+                data,
+                plan
+            })
+		}
+		
+					
+				
+		
+	} catch (error) {
+		return res.status(500).json({
+			message: error.message
+		})
+	}
 }
 
 

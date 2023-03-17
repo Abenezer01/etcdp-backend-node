@@ -16,7 +16,20 @@
  const dotenv = require('dotenv');
  dotenv.config();
 
+ const {notify} = require("../../utils/Notify")
+
  self.getAll = async(req, res) => {
+    // test notification
+    //send status
+
+    let pro = await project.findOne({
+        where: {
+            id: "0fdbc117-d374-4f9d-86fa-cdb708cca67f"
+        }
+    })
+    
+    notify("REGISTER", "new project is added. check it", "project","00a340e3-431a-489f-a859-6d0c9d15e894" , pro.id, "descr")
+
      let { page, size, order } = req.query;
      //console.log("The page", page, size)
      if (page == null && size == null) {
@@ -24,7 +37,7 @@
              size = process.env.size
      }
      if (order == null) {
-         order = process.env.order
+         order = process.env.order  
      }
      const { limit, offset } = paginate.getPagination(page, size);
      project.findAndCountAll({

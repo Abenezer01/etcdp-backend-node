@@ -125,6 +125,9 @@ module.exports = function(express) {
     route.post("/project-report", validateData.projectReportValidate, ProjectReportController.save);
     route.put("/project-report/:id", validateData.projectReportValidate, ProjectReportController.update);
     route.delete("/project-report/:id", ProjectReportController.delete);
+
+    route.get("/monthly-project-report/:id/:year/:month", ProjectReportController.getMonthlyProjectReport);
+
     //Project document
     route.get("/project-document", ProjectDocumentController.getAll);
     route.get("/project-document/:id", ProjectDocumentController.get);

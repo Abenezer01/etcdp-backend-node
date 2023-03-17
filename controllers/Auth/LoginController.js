@@ -108,9 +108,9 @@ self.loginUser = async(request, response) => {
                     })
                     .then(result => {
                         // //send status
-                        // Socket.emit("loggedIn", {
-                        //     message: true
-                        // });
+                        Socket.emit("loggedIn", {
+                            message: true
+                        });
                         return response.status(200).json({
                                 userData: replyUser,
                                 accessToken: accessToken,

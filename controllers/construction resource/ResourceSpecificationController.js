@@ -55,6 +55,7 @@ self.get = async(req, res) => {
     }
 }
 self.getByResourceId = async(req, res) => {
+
     const { id } = req.params;
     let { page = process.env.page, size = process.env.size, order = process.env.order } = req.query;
     const { limit, offset } = paginate.getPagination(page, size);
@@ -74,7 +75,13 @@ self.getByResourceId = async(req, res) => {
             raw: true
         });
 
-        const newData = rows.map(item => ({...item, image: item.image.substr(item.image.lastIndexOf('/') + 1) }));
+        let newData = rows.map(item => {
+            return {
+              ...item,
+              image: item.image ? item.image.substr(item.image.lastIndexOf('/') + 1) : null
+            }
+          })
+        // const newData = rows.map(item => ( {...item, image: item.image.substr(item.image.lastIndexOf('/') + 1) }));
         const response = paginate.getPagingData({ rows: newData, count }, page, limit);
         res.send(response);
     } catch (error) {

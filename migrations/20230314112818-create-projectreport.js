@@ -76,6 +76,9 @@ module.exports = {
       over_head_cost: {
         type: Sequelize.DOUBLE
       },
+      profit: {
+        type: Sequelize.DOUBLE
+      },
       year: {
         type: Sequelize.STRING
       },

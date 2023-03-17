@@ -7,6 +7,7 @@ const ReplyController = require("../../../controllers/polymorphic/ReplyControlle
 const NoteController = require("../../../controllers/polymorphic/NoteController.js")
 const PhotoController = require("../../../controllers/polymorphic/PhotoController.js")
 const ModelMenuController = require("../../../controllers/polymorphic/ModelMenuController.js")
+const NotificationController = require("../../../controllers/polymorphic/NotificationController.js")
 const middleware = require("../../../middleware/middleware")
 
 module.exports = function(express) {
@@ -34,6 +35,8 @@ module.exports = function(express) {
     route.post("/photo/:id", validateData.photoValidate, PhotoController.save);
     route.get("/photo/:type/:id", PhotoController.servePhoto);
     route.get("/multiple/photo/:id", PhotoController.serveMultiplePhoto);
+    route.put("/photo/:id", validateData.photoValidate, PhotoController.update);
+    route.delete("/photo/:id", PhotoController.delete);
     //reply
 
     route.get("/reply", ReplyController.getAll);
@@ -75,5 +78,10 @@ module.exports = function(express) {
 
     route.put("/module-type-models-update/:id", ModelMenuController.editModuleTypeModels);
 
+
+    route.get("/notification/:limit/:page_no", NotificationController.getAll);
+    route.get("/unread-notification/:count", NotificationController.unreadNotification);
+    route.get("/notification/:id", NotificationController.get);
+    
     return route;
 };
