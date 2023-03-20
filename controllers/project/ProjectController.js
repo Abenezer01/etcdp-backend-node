@@ -17,109 +17,60 @@
  dotenv.config();
 
  self.getAll = async(req, res) => {
-     let { page, size, order } = req.query;
-     //console.log("The page", page, size)
-     if (page == null && size == null) {
-         page = process.env.page,
-             size = process.env.size
-     }
-     if (order == null) {
-         order = process.env.order
-     }
+     const { page = process.env.page, size = process.env.size, order = process.env.order } = req.query;
+
      const { limit, offset } = paginate.getPagination(page, size);
-     project.findAndCountAll({
+
+     try {
+         const { rows, count } = await project.findAndCountAll({
              limit,
              offset,
              order: [
                  ['createdAt', order]
-             ],
-         })
-         .then(data => {
-             const response = paginate.getPagingData(data, page, limit);
-             res.send(response);
-         })
-         .catch(err => {
-             res.status(500).send({
-                 message: err.message || "Some error occurred while retrieving data."
-             });
+             ]
          });
-     // try {
-     //     let data = await project.findAll();
-     //     return res.json(data)
 
-     // } catch (error) {
-     //     res.status(500).json({
-     //         message: error.message
-     //     })
-     // }
+         const response = paginate.getPagingData({ rows, count }, page, limit, count);
+
+         res.send(response);
+     } catch (err) {
+         console.error(err);
+         res.status(500).send({
+             message: 'An error occurred while retrieving data.',
+         });
+     }
  }
-
-
  self.getProjectByTypeId = async(req, res) => {
-     let { page, size, order } = req.query;
+     const { page = process.env.page, size = process.env.size, order = process.env.order } = req.query;
      const { projecttype_id, projectcategory_id, projectsubcategory_id } = req.body
-     console.log("The body", req.body)
-         //console.log("The page", page, size)
-     if (page == null && size == null) {
-         page = process.env.page,
-             size = process.env.size
+     const filter = [{ projecttype_id: projecttype_id }]
+     if (projectcategory_id) {
+         filter.push({ projectcategory_id: projectcategory_id })
      }
-     if (order == null) {
-         order = process.env.order
+     if (projectsubcategory_id) {
+         filter.push({ projectsubcategory_id: projectsubcategory_id })
      }
-     const filter = () => {
-         if (projectsubcategory_id) {
-             return [{ projecttype_id: projecttype_id },
-                 { projectcategory_id: projectcategory_id },
-                 { projectsubcategory_id: projectsubcategory_id }
-             ]
-         }
-
-         if (projectcategory_id) {
-             return [{ projecttype_id: projecttype_id },
-                 { projectcategory_id: projectcategory_id },
-             ]
-
-         }
-         return [{ projecttype_id: projecttype_id }]
-     }
-     console.log("The filter", filter())
      const { limit, offset } = paginate.getPagination(page, size);
-     project.findAndCountAll({
+
+     try {
+         const result = await project.findAndCountAll({
              limit,
              offset,
              order: [
                  ['createdAt', order]
              ],
              where: {
-                 [Op.and]: filter()
-             }
-
-         })
-         .then(data => {
-             const response = paginate.getPagingData(data, page, limit);
-             res.send(response);
-         })
-         .catch(err => {
-             res.status(500).send({
-                 message: err.message || "Some error occurred while retrieving data."
-             });
+                 [Op.and]: filter
+             },
          });
-     // try {
-     //     let id = req.params.id;
-     //     let data = await stakeholder.findAll({
-     //         where: {
-     //             stakeholdertype_id: id
-     //         }
-     //     });
-     //     return res.status(200).json({
-     //         data: (data) ? data : {}
-     //     })
-     // } catch (error) {
-     //     res.status(500).json({
-     //         message: error.message
-     //     })
-     // }
+
+         const pagingData = paginate.getPagingData(result, page, limit);
+         res.send(pagingData);
+     } catch (err) {
+         res.status(500).send({
+             message: err.message || "Some error occurred while retrieving data."
+         });
+     }
  }
 
 
@@ -301,82 +252,82 @@
 
 
  self.getProjectDetail = async(req, res) => {
-    let id = req.params.id
-    try {
-        let [clientStake, consultantStake, contractorStake, pro, finance, time] = await Promise.all([
-            projectstakeholder.findOne({
-                where: {
-                    project_id: id,
-                    title: "Client"
-                }
-            }),
-            projectstakeholder.findOne({
-                where: {
-                    project_id: id,
-                    title: "Consultant"
-                }
-            }),
-            projectstakeholder.findOne({
-                where: {
-                    project_id: id,
-                    title: "Contractor"
-                }
-            }),
-            project.findOne({
-                where: {
-                    id: id
-                }
-            }),
-            projectfinance.findOne({
-                where: {
-                    project_id: id
-                }
-            }),
-            projecttime.findOne({
-                where: {
-                    project_id:id
-                }
-            })
-        ])
+     let id = req.params.id
+     try {
+         let [clientStake, consultantStake, contractorStake, pro, finance, time] = await Promise.all([
+             projectstakeholder.findOne({
+                 where: {
+                     project_id: id,
+                     title: "Client"
+                 }
+             }),
+             projectstakeholder.findOne({
+                 where: {
+                     project_id: id,
+                     title: "Consultant"
+                 }
+             }),
+             projectstakeholder.findOne({
+                 where: {
+                     project_id: id,
+                     title: "Contractor"
+                 }
+             }),
+             project.findOne({
+                 where: {
+                     id: id
+                 }
+             }),
+             projectfinance.findOne({
+                 where: {
+                     project_id: id
+                 }
+             }),
+             projecttime.findOne({
+                 where: {
+                     project_id: id
+                 }
+             })
+         ])
 
 
-        let client = clientStake ? await self.getStakeholderName(clientStake.stakeholder_id): null
-        let contractor = contractorStake ? await self.getStakeholderName(contractorStake.stakeholder_id): null
-        let consultant = consultantStake ? await self.getStakeholderName(consultantStake.stakeholder_id): null
+         let client = clientStake ? await self.getStakeholderName(clientStake.stakeholder_id) : null
+         let contractor = contractorStake ? await self.getStakeholderName(contractorStake.stakeholder_id) : null
+         let consultant = consultantStake ? await self.getStakeholderName(consultantStake.stakeholder_id) : null
 
 
-        return res.json({
-            project_name : pro ? pro.name : null,
-            client,
-            contractor,
-            consultant,
-            main_contract_price_amount: finance ? finance.main_contract_price_amount: null,
-            contract_signing_date: time ? time.contract_signing_date : null
+         return res.json({
+             project_name: pro ? pro.name : null,
+             client,
+             contractor,
+             consultant,
+             main_contract_price_amount: finance ? finance.main_contract_price_amount : null,
+             contract_signing_date: time ? time.contract_signing_date : null
 
-        })
-add
+         })
+         add
 
 
-    } catch (error) {
-        return res.json({
-            message: error.messge
-        })
-    }
+     } catch (error) {
+         return res.json({
+             message: error.messge
+         })
+     }
  }
-self.getStakeholderName = async(id) => {
-    try {
-        let data = await stakeholder.findOne({
-            where: {
-                id: id
-            }
-        })
+ self.getStakeholderName = async(id) => {
+     try {
+         let data = await stakeholder.findOne({
+             where: {
+                 id: id
+             }
+         })
 
-        return data ? data.trade_name : null
-    } catch (error) {
-        return {
-            message: error.message
-        }
-    }
-}
+         return data ? data.trade_name : null
+     } catch (error) {
+         return {
+             message: error.message
+         }
+     }
+ }
 
  module.exports = self;

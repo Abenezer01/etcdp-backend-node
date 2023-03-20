@@ -57,56 +57,35 @@ self.get = async(req, res) => {
 }
 
 self.filter = async(req, res) => {
-    let { page, size, order } = req.query;
-    const { typeId, categoryId, subcategoryId } = req.query
-    console.log("The body", req.body)
-        //console.log("The page", page, size)
-    if (page == null && size == null) {
-        page = process.env.page,
-            size = process.env.size
+    const { page = process.env.page, size = process.env.size, order = process.env.order, typeId, categoryId, subcategoryId } = req.query;
+    const filter = [{ resourcetype_id: typeId }]
+    if (categoryId) {
+        filter.push({ resourcecategory_id: categoryId })
     }
-    if (order == null) {
-        order = process.env.order
+    if (subcategoryId) {
+        filter.push({ resourcesubcategory_id: subcategoryId })
     }
-    const filter = () => {
-        if (subcategoryId) {
-            return [{ resourcetype_id: typeId },
-                { resourcecategory_id: categoryId },
-                { resourcesubcategory_id: subcategoryId }
-            ]
-        }
-
-        if (categoryId) {
-            return [{ resourcetype_id: typeId },
-                { resourcecategory_id: categoryId },
-            ]
-
-        }
-        return [{ resourcetype_id: typeId }]
-    }
-    console.log("The filter", filter())
     const { limit, offset } = paginate.getPagination(page, size);
-    resource.findAndCountAll({
+    try {
+        const result = await resource.findAndCountAll({
             limit,
             offset,
             order: [
                 ['createdAt', order]
             ],
             where: {
-                [Op.and]: filter()
+                [Op.and]: filter
             },
-
-        })
-        .then(data => {
-            const response = paginate.getPagingData(data, page, limit);
-            res.send(response);
-        })
-        .catch(err => {
-            res.status(500).send({
-                message: err.message || "Some error occurred while retrieving data."
-            });
         });
+        const pagingData = paginate.getPagingData(result, page, limit);
+        res.send(pagingData);
+    } catch (err) {
+        res.status(500).send({
+            message: err.message || "Some error occurred while retrieving data."
+        });
+    }
 }
+
 self.search = async(req, res) => {
     try {
         let text = req.query.text;

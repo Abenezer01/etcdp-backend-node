@@ -12,42 +12,53 @@ dotenv.config();
 let self = {};
 
 self.getAll = async(req, res) => {
-    let { page, size, order } = req.query;
-    //console.log("The page", page, size)
-    if (page == null && size == null) {
-        page = process.env.page,
-            size = process.env.size
-    }
-    if (order == null) {
-        order = process.env.order
-    }
+    const { page = process.env.page, size = process.env.size, order = process.env.order } = req.query;
+
     const { limit, offset } = paginate.getPagination(page, size);
-    projectstakeholder.findAndCountAll({
+
+    try {
+        const { rows, count } = await projectstakeholder.findAndCountAll({
             limit,
             offset,
             order: [
                 ['createdAt', order]
             ],
-        })
-        .then(data => {
-            const response = paginate.getPagingData(data, page, limit);
-            res.send(response);
-        })
-        .catch(err => {
-            res.status(500).send({
-                message: err.message || "Some error occurred while retrieving data."
-            });
         });
-    // try {
-    //     let data = await projectstakeholder.findAll();
-    //     return res.json(data)
 
-    // } catch (error) {
-    //     res.status(500).json({
-    //         message: error.message
-    //     })
-    // }
+        const response = paginate.getPagingData({ rows, count }, page, limit, count);
+
+        res.send(response);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send({
+            message: 'An error occurred while retrieving data.',
+        });
+    }
 }
+self.getByProjectId = async(req, res) => {
+    const { id } = req.params;
+    const { page = process.env.page, size = process.env.size, order = process.env.order } = req.query;
+
+    const { limit, offset } = paginate.getPagination(page, size);
+    try {
+        const data = await projectstakeholder.findAndCountAll({
+            limit,
+            offset,
+            where: { project_id: id },
+            order: [
+                ['createdAt', order]
+            ],
+            include: { model: stakeholder, as: 'stakeholder' }
+        });
+
+        const response = paginate.getPagingData(data, page, limit);
+        res.send(response);
+    } catch (error) {
+        res.status(500).send({
+            message: error.message || 'Some error occurred while retrieving data.',
+        });
+    }
+};
 
 
 self.get = async(req, res) => {
@@ -67,39 +78,7 @@ self.get = async(req, res) => {
         })
     }
 }
-self.getByProjectId = async(req, res) => {
-    let id = req.params.id
-    let { page, size, order } = req.query;
-    //console.log("The page", page, size)
-    if (page == null && size == null) {
-        page = process.env.page,
-            size = process.env.size
-    }
-    if (order == null) {
-        order = process.env.order
-    }
-    const { limit, offset } = paginate.getPagination(page, size);
-    projectstakeholder.findAndCountAll({
-            limit,
-            offset,
-            order: [
-                ['createdAt', 'ASC']
-            ],
-            where: {
-                project_id: id
-            },
-            include: { model: stakeholder, as: 'stakeholder' }
-        })
-        .then(data => {
-            const response = paginate.getPagingData(data, page, limit);
-            res.send(response);
-        })
-        .catch(err => {
-            res.status(500).send({
-                message: err.message || "Some error occurred while retrieving data."
-            });
-        });
-}
+
 self.search = async(req, res) => {
     try {
         let text = req.query.text;

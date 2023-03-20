@@ -124,14 +124,27 @@ self.getAll = async(req, res) => {
 
 }
 self.getStakeholders = async(req, res) => {
-    try {
-        let data = await stakeholder.findAll();
-        return res.json(data)
+    const { page = process.env.page, size = process.env.size, order = process.env.order } = req.query;
 
-    } catch (error) {
-        res.status(500).json({
-            message: error.message
-        })
+    const { limit, offset } = paginate.getPagination(page, size);
+
+    try {
+        const { rows, count } = await stakeholder.findAndCountAll({
+            limit,
+            offset,
+            order: [
+                ['createdAt', order]
+            ]
+        });
+
+        const response = paginate.getPagingData({ rows, count }, page, limit, count);
+
+        res.send(response);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send({
+            message: 'An error occurred while retrieving data.',
+        });
     }
 }
 self.get = async(req, res) => {

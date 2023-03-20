@@ -103,53 +103,64 @@ self.search = async(req, res) => {
 
 self.save = async(req, res) => {
     try {
-        let usr = await usrData.userData(req, res)
+        const { userData } = usrData;
+        let usr = await userData(req, res);
         let body = req.body;
-        const file = req.files
-        console.log("the file", file)
-        let pat
+        const file = req.files;
+        console.log("the file", file);
+        let pat;
         if (file) {
-
             const ext = req.files.image.mimetype.split("/")[1];
-            let rand = Math.floor(100000 + Math.random() * 900000)
+            let rand = Math.floor(100000 + Math.random() * 900000);
             var name = req.files.image.name;
             let parsedName = path.parse(name).name;
             checkedNew = parsedName.concat(rand);
-            const filePath = path.join(__dirname, '../../public', 'images/detailresourcetypeimage', checkedNew + '.' +
-                `${ext}`)
-            console.log("The file path is ", filePath)
+            const filePath = path.join(
+                __dirname,
+                "../../public",
+                "images/detailresourcetypeimage",
+                checkedNew + "." + `${ext}`
+            );
+            console.log("The file path is ", filePath);
             var filePathh = filePath.split("public").pop();
-            console.log("The file path is ", filePathh)
-                //return res.send(filePathh)
+            console.log("The file path is ", filePathh);
 
-            body.image = filePathh
-            pat = filePath
-        }
-        if (!file) {
-            body.image = ''
+            body.image = filePathh;
+            pat = filePath;
+        } else {
+            body.image = "";
         }
 
         if (usr) {
             let data = await detailresourcetype.create(body);
             if (data) {
-                if (pat) {
-                    const filee = req.files.image
-                    filee.mv(pat, err => {
-                        if (err) return res.status(500).send(err)
-                            // res.redirect('/')
-                    })
+                try {
+                    if (pat) {
+                        const filee = req.files.image;
+                        await filee.mv(pat);
+                    }
+                } catch (err) {
+                    return res.status(500).send(err);
                 }
-                let us = usr.usrID
-                await saveActionState(data.id, "detailresourcetype", "REGISTER", us, req, res)
+                let us = usr.usrID;
+                await saveActionState(
+                    data.id,
+                    "detailresourcetype",
+                    "REGISTER",
+                    us,
+                    req,
+                    res
+                );
             }
-            return res.json(data)
+            return res.json(data);
         }
     } catch (error) {
         res.status(500).json({
-            message: error.message
-        })
+            message: error.message,
+        });
     }
-}
+};
+
 const prePath = path.join(__dirname, '..', '..', 'public');
 self.getImage = async(req, res) => {
     try {

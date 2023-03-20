@@ -219,7 +219,7 @@ module.exports = function(express) {
     route.get("/stakeholder-operation-location/:id", OperationlocationController.getByStakeholderId);
     route.get("/stakeholder-operation-location-search", OperationlocationController.search);
     route.post("/stakeholder-operation-location", OperationlocationController.save);
-    route.put("/stakeholder-operation-location/:id", OperationlocationController.update);
+    route.put("/stakeholder-operation-location", OperationlocationController.update);
     route.delete("/stakeholder-operation-location/:id", OperationlocationController.delete);
 
     return route;

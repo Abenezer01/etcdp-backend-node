@@ -10,41 +10,28 @@ let self = {};
 const usrData = require("../../utils/userDataFromToken");
 const { saveActionState, getChildren } = require('../../utils/helper');
 self.getAll = async(req, res) => {
-    let { page, size, order } = req.query;
-    //console.log("The page", page, size)
-    if (page == null && size == null) {
-        page = process.env.page,
-            size = process.env.size
-    }
-    if (order == null) {
-        order = process.env.order
-    }
+    const { page = process.env.page, size = process.env.size, order = process.env.order } = req.query;
+
     const { limit, offset } = paginate.getPagination(page, size);
-    constructionrelatedservice.findAndCountAll({
+
+    try {
+        const { rows, count } = await constructionrelatedservice.findAndCountAll({
             limit,
             offset,
             order: [
                 ['createdAt', order]
             ],
-        })
-        .then(data => {
-            const response = paginate.getPagingData(data, page, limit);
-            res.send(response);
-        })
-        .catch(err => {
-            res.status(500).send({
-                message: err.message || "Some error occurred while retrieving data."
-            });
         });
-    // try {
-    //     let data = await constructionrelatedservice.findAll();
-    //     return res.json(data)
 
-    // } catch (error) {
-    //     res.status(500).json({
-    //         message: error.message
-    //     })
-    // }
+        const response = paginate.getPagingData({ rows, count }, page, limit, count);
+
+        res.send(response);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send({
+            message: 'An error occurred while retrieving data.',
+        });
+    }
 }
 
 
@@ -66,51 +53,27 @@ self.get = async(req, res) => {
     }
 }
 self.getConstructionRelatedServiceByStakeholderId = async(req, res) => {
-    let { page, size, order } = req.query;
-    let id = req.params.id;
-    //console.log("The page", page, size)
-    if (page == null && size == null) {
-        page = process.env.page,
-            size = process.env.size
-    }
-    if (order == null) {
-        order = process.env.order
-    }
+    const { id } = req.params;
+    const { page = process.env.page, size = process.env.size, order = process.env.order } = req.query;
+
     const { limit, offset } = paginate.getPagination(page, size);
-    constructionrelatedservice.findAndCountAll({
+    try {
+        const data = await constructionrelatedservice.findAndCountAll({
             limit,
             offset,
+            where: { stakeholder_id: id },
             order: [
                 ['createdAt', order]
             ],
-            where: {
-                stakeholder_id: id
-            }
-        })
-        .then(data => {
-            const response = paginate.getPagingData(data, page, limit);
-            res.send(response);
-        })
-        .catch(err => {
-            res.status(500).send({
-                message: err.message || "Some error occurred while retrieving data."
-            });
         });
-    // try {
-    //     let id = req.params.id;
-    //     let data = await constructionrelatedservice.findAll({
-    //         where: {
-    //             stakeholder_id: id
-    //         }
-    //     });
-    //     return res.status(200).json({
-    //         data: (data) ? data : {}
-    //     })
-    // } catch (error) {
-    //     res.status(500).json({
-    //         message: error.message
-    //     })
-    // }
+
+        const response = paginate.getPagingData(data, page, limit);
+        res.send(response);
+    } catch (error) {
+        res.status(500).send({
+            message: error.message || 'Some error occurred while retrieving data.',
+        });
+    }
 }
 self.search = async(req, res) => {
     try {
