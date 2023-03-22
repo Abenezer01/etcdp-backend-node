@@ -1,38 +1,42 @@
 'use strict';
 const {
-  Model
+    Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class projectstatus extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
-    static associate(models) {
-      // define association here
+    class projectstatus extends Model {
+        /**
+         * Helper method for defining associations.
+         * This method is not a part of Sequelize lifecycle.
+         * The `models/index` file will call this method automatically.
+         */
+        static associate(models) {
+            // define association here
+            projectstatus.belongsTo(models.status, {
+                as: "status",
+                foreignKey: "status_id"
+            })
+        }
     }
-  }
-  projectstatus.init({
-    id: {
-      type: DataTypes.UUID,
-      primaryKey: true,
-      defaultValue: DataTypes.UUIDV4
-    },
-    parent_id: DataTypes.UUID,
-    project_id: {
-      type: DataTypes.UUID,
-      allowNull: false
-    },
-    status_id: {
-      type: DataTypes.UUID,
-      allowNull: false
-    },
-    description: DataTypes.TEXT,
-    revision_no: DataTypes.INTEGER
-  }, {
-    sequelize,
-    modelName: 'projectstatus',
-  });
-  return projectstatus;
+    projectstatus.init({
+        id: {
+            type: DataTypes.UUID,
+            primaryKey: true,
+            defaultValue: DataTypes.UUIDV4
+        },
+        parent_id: DataTypes.UUID,
+        project_id: {
+            type: DataTypes.UUID,
+            allowNull: false
+        },
+        status_id: {
+            type: DataTypes.UUID,
+            allowNull: false
+        },
+        description: DataTypes.TEXT,
+        revision_no: DataTypes.INTEGER
+    }, {
+        sequelize,
+        modelName: 'projectstatus',
+    });
+    return projectstatus;
 };

@@ -37,18 +37,11 @@ self.getAll = async(req, res) => {
     }
 }
 self.getByProjectId = async(req, res) => {
-    let id = req.params.id;
-    let { page, size, order } = req.query;
-    //console.log("The page", page, size)
-    if (page == null && size == null) {
-        page = process.env.page,
-            size = process.env.size
-        console.log("The page", page, size)
-    }
-    if (order == null) {
-        order = process.env.order
-    }
+    const id = req.params.id;
+    const { page = process.env.page, size = process.env.size, order = process.env.order } = req.query;
+
     const { limit, offset } = paginate.getPagination(page, size);
+
     resourcequantityandprice.findAndCountAll({
             limit,
             offset,
@@ -58,20 +51,15 @@ self.getByProjectId = async(req, res) => {
             order: [
                 ['createdAt', order]
             ],
-            include: [{ model: resourcebrand, as: 'resourcebrand', attributes: ['id', 'title'] },
+            include: [
+                { model: resourcebrand, as: 'resourcebrand', attributes: ['id', 'title'] },
                 { model: detailresourcetype, as: 'detailresourcetype', attributes: ['id', 'title'] }
             ]
         })
-        .then(data => {
-            const response = paginate.getPagingData(data, page, limit);
-            res.send(response);
-        })
-        .catch(err => {
-            res.status(500).send({
-                message: err.message || "Some error occurred while retrieving data."
-            });
-        });
+        .then(data => res.send(paginate.getPagingData(data, page, limit)))
+        .catch(err => res.status(500).send({ message: err.message || "Some error occurred while retrieving data." }));
 }
+
 
 self.get = async(req, res) => {
     try {
@@ -93,44 +81,30 @@ self.get = async(req, res) => {
 
 self.getByResourceId = async(req, res) => {
     try {
-        let id = req.params.id;
-        let { page, size, order } = req.query;
-        //console.log("The page", page, size)
-        if (page == null && size == null) {
-            page = process.env.page,
-                size = process.env.size
-            console.log("The page", page, size)
-        }
-        if (order == null) {
-            order = process.env.order
-        }
+        const { page = process.env.page, size = process.env.size, order = process.env.order } = req.query;
+        const id = req.params.id;
         const { limit, offset } = paginate.getPagination(page, size);
 
-        await resourcequantityandprice.findAndCountAll({
-                limit,
-                offset,
-                where: {
-                    resource_id: id
-                },
-                include: [{ model: resourcebrand, as: 'resourcebrand' },
-                    { model: detailresourcetype, as: 'detailresourcetype' }
-                ]
-
-            }).then(data => {
-                const response = paginate.getPagingData(data, page, limit);
-                res.send(response);
-            })
-            .catch(err => {
-                res.status(500).send({
-                    message: err.message || "Some error occurred while retrieving data."
-                });
-            });
+        const data = await resourcequantityandprice.findAndCountAll({
+            limit,
+            offset,
+            where: {
+                resource_id: id
+            },
+            include: [
+                { model: resourcebrand, as: 'resourcebrand' },
+                { model: detailresourcetype, as: 'detailresourcetype' }
+            ]
+        });
+        const response = paginate.getPagingData(data, page, limit);
+        res.send(response);
     } catch (error) {
         res.status(500).json({
             message: error.message
         })
     }
 }
+
 self.search = async(req, res) => {
     try {
         let text = req.query.text;

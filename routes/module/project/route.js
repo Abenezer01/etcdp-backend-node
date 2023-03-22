@@ -103,6 +103,7 @@ module.exports = function(express) {
     route.get("/project-stakeholder", ProjectStakeholderController.getAll);
     route.get("/project-stakeholder/:id", ProjectStakeholderController.get);
     route.get("/project/project-stakeholder/:id", ProjectStakeholderController.getByProjectId);
+    route.get("/stakeholder/project-stakeholder/:id", ProjectStakeholderController.getByStakeholderId);
     route.get("/project-stakeholder-search", ProjectStakeholderController.search);
     route.post("/project-stakeholder", validateData.projectStakeholderValidate, ProjectStakeholderController.save);
     route.put("/project-stakeholder/:id", validateData.projectStakeholderValidate, ProjectStakeholderController.update);
@@ -121,13 +122,14 @@ module.exports = function(express) {
     route.get("/project-report", ProjectReportController.getAll);
     route.get("/project-report/:id", ProjectReportController.get);
     route.get("/project/project-report/:id", ProjectReportController.getByProjectId);
+    route.get("/populate/project-plan/project-report/:id", ProjectReportController.getByProjectIdAndPopulate);
     route.get("/project-report-search", ProjectReportController.search);
     route.post("/project-report", validateData.projectReportValidate, ProjectReportController.save);
     route.put("/project-report/:id", validateData.projectReportValidate, ProjectReportController.update);
     route.delete("/project-report/:id", ProjectReportController.delete);
 
     route.get("/monthly-project-report/:id/:year/:month", ProjectReportController.getMonthlyProjectReport);
-
+    route.get("/report/monthly-project-report/:id", ProjectReportController.getByMonthlyId);
     //Project document
     route.get("/project-document", ProjectDocumentController.getAll);
     route.get("/project-document/:id", ProjectDocumentController.get);
@@ -416,5 +418,8 @@ module.exports = function(express) {
     route.put("/payment/:id", validateData.paymentValidate, PaymentController.update);
     route.delete("/payment/:id", PaymentController.delete);
 
+    //summary
+    route.get("/count/project/projecttype", ProjectController.countAllProjectWithProjectType);
+    route.get("/count/project/projectcategory", ProjectController.countAllProjectWithProjectCategory);
     return route;
 };

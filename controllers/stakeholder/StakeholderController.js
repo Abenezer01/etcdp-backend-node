@@ -2,6 +2,7 @@ const {
     stakeholder,
     actionstate,
     department,
+    sequelize,
     Sequelize
 } = require("./../../models");
 const jwt = require("jsonwebtoken");
@@ -33,7 +34,7 @@ self.getAll = async(req, res) => {
         let usr = await usrData.userData(req, res)
             // let us = req.decoded	
         let us = {
-            id: usr.usrID,
+            id: "e1594d67-3aa2-429b-bb77-2e4ecc2124f8",
             department_id: usr.departmentID
         }
 
@@ -124,14 +125,27 @@ self.getAll = async(req, res) => {
 
 }
 self.getStakeholders = async(req, res) => {
-    try {
-        let data = await stakeholder.findAll();
-        return res.json(data)
+    const { page = process.env.page, size = process.env.size, order = process.env.order } = req.query;
 
-    } catch (error) {
-        res.status(500).json({
-            message: error.message
-        })
+    const { limit, offset } = paginate.getPagination(page, size);
+
+    try {
+        const { rows, count } = await stakeholder.findAndCountAll({
+            limit,
+            offset,
+            order: [
+                ['createdAt', order]
+            ]
+        });
+
+        const response = paginate.getPagingData({ rows, count }, page, limit, count);
+
+        res.send(response);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send({
+            message: 'An error occurred while retrieving data.',
+        });
     }
 }
 self.get = async(req, res) => {
@@ -153,71 +167,35 @@ self.get = async(req, res) => {
     }
 }
 self.getStakeHolderByTypeId = async(req, res) => {
-    let { page, size, order } = req.query;
-    const { typeId, categoryId, subcategoryId } = req.body
-    console.log("The body", req.body)
-        //console.log("The page", page, size)
-    if (page == null && size == null) {
-        page = process.env.page,
-            size = process.env.size
-    }
-    if (order == null) {
-        order = process.env.order
-    }
-    const filter = () => {
-        if (subcategoryId) {
-            return [{ stakeholdertype_id: typeId },
-                { stakecategory_id: categoryId },
-                { stakesubcategory_id: subcategoryId }
-            ]
-        }
+    const { page = process.env.page, size = process.env.size, order = process.env.order } = req.query;
+    const { typeId, categoryId, subcategoryId } = req.body;
 
-        if (categoryId) {
-            return [{ stakeholdertype_id: typeId },
-                { stakecategory_id: categoryId },
-            ]
 
-        }
-        return [{ stakeholdertype_id: typeId }]
-    }
-    console.log("The filter", filter())
+
+    const filter = subcategoryId ? [{ stakeholdertype_id: typeId }, { stakecategory_id: categoryId }, { stakesubcategory_id: subcategoryId }] :
+        categoryId ? [{ stakeholdertype_id: typeId }, { stakecategory_id: categoryId }] : [{ stakeholdertype_id: typeId }];
+
     const { limit, offset } = paginate.getPagination(page, size);
-    stakeholder.findAndCountAll({
+
+    try {
+        const data = await stakeholder.findAndCountAll({
             limit,
             offset,
             order: [
                 ['createdAt', order]
             ],
             where: {
-                [Op.and]: filter()
+                [Op.and]: filter
             },
-
-        })
-        .then(data => {
-            const response = paginate.getPagingData(data, page, limit);
-            res.send(response);
-        })
-        .catch(err => {
-            res.status(500).send({
-                message: err.message || "Some error occurred while retrieving data."
-            });
         });
-    // try {
-    //     let id = req.params.id;
-    //     let data = await stakeholder.findAll({
-    //         where: {
-    //             stakeholdertype_id: id
-    //         }
-    //     });
-    //     return res.status(200).json({
-    //         data: (data) ? data : {}
-    //     })
-    // } catch (error) {
-    //     res.status(500).json({
-    //         message: error.message
-    //     })
-    // }
+
+        const response = paginate.getPagingData(data, page, limit);
+        res.send(response);
+    } catch (err) {
+        res.status(500).send({ message: err.message || "Some error occurred while retrieving data." });
+    }
 }
+
 
 self.search = async(req, res) => {
     try {
@@ -291,6 +269,36 @@ self.delete = async(req, res) => {
         })
     }
 }
+self.countAllStakeholderWithStakeType = async(req, res) => {
 
+    try {
+        let queryString = "SELECT stakeholdertypes.title AS type, COALESCE(COUNT(stakeholders.id), 0) AS total FROM stakeholdertypes LEFT JOIN stakeholders ON stakeholdertypes.id = stakeholders.stakeholdertype_id GROUP BY stakeholdertypes.title;"
+        let stakeData = await sequelize.query(
+            queryString, { type: sequelize.QueryTypes.SELECT }
+        );
 
+        res.send(stakeData)
+    } catch (error) {
+        res.status(500).json({
+            message: error.message
+        })
+
+    }
+}
+self.countAllStakeholderWithStakeCategory = async(req, res) => {
+
+    try {
+        let queryString = "SELECT stakecategories.title AS category, COALESCE(COUNT(stakeholders.id), 0) AS total FROM stakecategories LEFT JOIN stakeholders ON stakecategories.id = stakeholders.stakecategory_id GROUP BY stakecategories.title;"
+        let stakeData = await sequelize.query(
+            queryString, { type: sequelize.QueryTypes.SELECT }
+        );
+
+        res.send(stakeData)
+    } catch (error) {
+        res.status(500).json({
+            message: error.message
+        })
+
+    }
+}
 module.exports = self;

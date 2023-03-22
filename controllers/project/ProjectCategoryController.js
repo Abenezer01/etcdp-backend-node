@@ -18,135 +18,88 @@ const paginate = require("../../utils/pagination");
 const dotenv = require('dotenv');
 dotenv.config();
 self.getAll = async(req, res) => {
-    let { page, size, order } = req.query;
-    //console.log("The page", page, size)
-    if (page == null && size == null) {
-        page = process.env.page,
-            size = process.env.size
-    }
-    if (order == null) {
-        order = process.env.order
-    }
+    const { page = process.env.page, size = process.env.size, order = process.env.order } = req.query;
+
     const { limit, offset } = paginate.getPagination(page, size);
-    projectcategory.findAndCountAll({
+
+    try {
+        const { rows, count } = await projectcategory.findAndCountAll({
             limit,
             offset,
-            include: [
-
-                "Projectsubcategories"
-
-
-
-            ],
             order: [
                 ['createdAt', order]
             ],
-        })
-        .then(data => {
-            const response = paginate.getPagingData(data, page, limit);
-            res.send(response);
-        })
-        .catch(err => {
-            res.status(500).send({
-                message: err.message || "Some error occurred while retrieving data."
-            });
+            include: [
+                "Projectsubcategories"
+            ]
         });
-    // try {
-    //     let data = await projectcategory.findAll({
-    //             include: [
 
-    //                 "Projectsubcategories"
+        const response = paginate.getPagingData({ rows, count }, page, limit, count);
 
-
-
-    //             ],
-    //         }
-
-    //     );
-    //     return res.json(data)
-
-    // } catch (error) {
-    //     res.status(500).json({
-    //         message: error.message
-    //     })
-    // }
-}
-self.getAllProCatByTypeId = async(req, res) => {
-    let id = req.params.id;
-    let { page, size } = req.query;
-    //console.log("The page", page, size)
-    if (page == null && size == null) {
-        page = process.env.page,
-            size = process.env.size
+        res.send(response);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send({
+            message: 'An error occurred while retrieving data.',
+        });
     }
-    const { limit, offset } = paginate.getPagination(page, size);
-    projectcategory.findAndCountAll({
-            limit,
-            offset,
-
-            include: ["Projectsubcategories"],
-            where: {
-                projecttype_id: id
-            }
-        })
-        .then(data => {
-            const response = paginate.getPagingData(data, page, limit);
-            res.send(response);
-        })
-        .catch(err => {
-            res.status(500).send({
-                message: err.message || "Some error occurred while retrieving data."
-            });
-        });
-    // try {
-    //     let data = await projectcategory.findAll({
-    //         include: ["Projectsubcategories"],
-    //         where: {
-    //             projecttype_id: id
-    //         }
-    //     });
-
-    //     return res.json(data ? data : [])
-
-    // } catch (error) {
-    //     res.status(500).json({
-    //         message: error.message
-    //     })
-    // }
 }
-
 self.getByProjectId = async(req, res) => {
-    let id = req.params.id
-    let { page, size, order } = req.query;
-    //console.log("The page", page, size)
-    if (page == null && size == null) {
-        page = process.env.page,
-            size = process.env.size
-    }
-    if (order == null) {
-        order = process.env.order
-    }
+    const { id } = req.params;
+    const { page = process.env.page, size = process.env.size, order = process.env.order } = req.query;
+
     const { limit, offset } = paginate.getPagination(page, size);
-    projectcategory.findAndCountAll({
+    try {
+        const data = await projectcategory.findAndCountAll({
             limit,
             offset,
+            where: { project_id: id },
+
             order: [
-                ['createdAt', 'ASC']
+                ['createdAt', order]
             ],
-            where: {
-                project_id: id
-            }
-        })
-        .then(data => {
-            const response = paginate.getPagingData(data, page, limit);
-            res.send(response);
-        })
-        .catch(err => {
-            res.status(500).send({
-                message: err.message || "Some error occurred while retrieving data."
-            });
         });
-}
+
+        const response = paginate.getPagingData(data, page, limit);
+        res.send(response);
+    } catch (error) {
+        res.status(500).send({
+            message: error.message || 'Some error occurred while retrieving data.',
+        });
+    }
+};
+
+self.getAllProCatByTypeId = async(req, res) => {
+    const { id } = req.params;
+    let { page, size } = req.query;
+
+    if (!page && !size) {
+        page = process.env.page;
+        size = process.env.size;
+    }
+
+    const { limit, offset } = paginate.getPagination(page, size);
+
+    try {
+        const { count, rows } = await projectcategory.findAndCountAll({
+            limit,
+            offset,
+            include: "Projectsubcategories",
+            where: {
+                projecttype_id: id,
+            },
+        });
+
+        const response = paginate.getPagingData({ count, rows }, page, limit);
+
+        res.send(response);
+    } catch (err) {
+        res.status(500).send({
+            message: err.message || "Some error occurred while retrieving data.",
+        });
+    }
+};
+
 self.get = async(req, res) => {
     try {
         let id = req.params.id;

@@ -28,6 +28,7 @@ self.getAll = async(req, res) => {
             order: [
                 ['createdAt', order]
             ],
+            include: ["projectplan"]
         })
         .then(data => {
             const response = paginate.getPagingData(data, page, limit);
@@ -78,9 +79,11 @@ self.getByProjectId = async(req, res) => {
             ],
             where: {
                 project_id: id
-            }
+            },
+
         })
         .then(data => {
+
             const response = paginate.getPagingData(data, page, limit);
             res.send(response);
         })
@@ -89,6 +92,155 @@ self.getByProjectId = async(req, res) => {
                 message: err.message || "Some error occurred while retrieving data."
             });
         });
+}
+self.getByProjectIdAndPopulate = async(req, res) => {
+    const { id } = req.params;
+    const { page = process.env.page, size = process.env.size, order = process.env.order } = req.query;
+
+    const { limit, offset } = paginate.getPagination(page, size);
+    try {
+        const data = await projectreport.findAndCountAll({
+            limit,
+            offset,
+            where: { project_id: id },
+            order: [
+                ['createdAt', order]
+            ],
+
+            include: ["projectplan"]
+        });
+        let totalReportProfitOrLoss = 0;
+        let totalReportProjectExpense = 0;
+        let totalReportSubtotalExpense = 0;
+        let totalReportManPower = 0;
+        let totalReportDirectLabour = 0;
+        let totalReportIndirectLabour = 0;
+        let totalReportMaterial = 0;
+        let totalReportMachinery = 0;
+        let totalReportOtherExpense = 0;
+        let totalReportSubContractorCost = 0;
+        let totalReportFinancialPerformance = 0;
+        let totalReportPhysicalPerformance = 0;
+        let totalReportCostDueToRework = 0;
+        let totalReportoverHeadCost = 0;
+
+        //Plan
+        let totalPlanProfitOrLoss = 0;
+        let totalPlanProjectExpense = 0;
+        let totalPlanSubtotalExpense = 0;
+        let totalPlanManPower = 0;
+        let totalPlanDirectLabour = 0;
+        let totalPlanIndirectLabour = 0;
+        let totalPlanMaterial = 0;
+        let totalPlanMachinery = 0;
+        let totalPlanOtherExpense = 0;
+        let totalPlanSubContractorCost = 0;
+        let totalPlanFinancialPerformance = 0;
+        let totalPlanPhysicalPerformance = 0;
+        let totalPlanCostDueToRework = 0;
+        let totalPlanoverHeadCost = 0;
+        let arr = [];
+
+
+        data.rows.forEach((item) => {
+            console.log("Parse", Number(item.projectplan.sub_total_expense))
+                //Report
+            totalReportProfitOrLoss += Number(item.profit_or_loss)
+            totalReportProjectExpense += Number(item.projectexpense)
+            totalReportSubtotalExpense += Number(item.sub_total_expense)
+            totalReportManPower += item.manpower
+            totalReportDirectLabour += item.direct_labour
+            totalReportIndirectLabour += item.indirect_labour
+            totalReportMaterial += item.material
+            totalReportMachinery += item.machinery
+            totalReportOtherExpense += item.other_expense
+            totalReportSubContractorCost += item.sub_contractor_cost
+            totalReportFinancialPerformance += item.financial_performance
+            totalReportPhysicalPerformance += item.physical_performance
+            totalReportCostDueToRework += item.cost_due_to_rework
+            totalReportoverHeadCost += item.over_head_cost
+                //Plan
+            totalPlanProfitOrLoss += item.projectplan.profit_or_loss
+            totalPlanProjectExpense += item.projectplan.projectexpense
+            totalPlanSubtotalExpense += Number(item.projectplan.sub_total_expense)
+            totalPlanManPower += item.projectplan.manpower
+            totalPlanDirectLabour += item.projectplan.direct_labour
+            totalPlanIndirectLabour += item.projectplan.indirect_labour
+            totalPlanMaterial += item.projectplan.material
+            totalPlanMachinery += item.projectplan.machinery
+            totalPlanOtherExpense += item.projectplan.other_expense
+            totalPlanSubContractorCost += item.projectplan.sub_contractor_cost
+            totalPlanFinancialPerformance += item.projectplan.financial_performance
+            totalPlanPhysicalPerformance += item.projectplan.physical_performance
+            totalPlanCostDueToRework += item.projectplan.cost_due_to_rework
+            totalPlanoverHeadCost += item.projectplan.over_head_cost
+        });
+        //return res.send(totalProfitOrLoss)
+        // arr.forEach((item) => {
+        //     totalReportProfitOrLoss += item.ProfitOrLoss
+        // });
+        // return res.send(arr)
+        // const newData = rows.map(item => ({...item}));
+
+
+        const response = {
+            "Report": {
+                totalProfitOrLoss: totalReportProfitOrLoss,
+                totalProjectExpense: totalReportProjectExpense,
+                totalSubtotalExpense: totalReportSubtotalExpense,
+                totalManPower: totalReportManPower,
+                totalDirectLabour: totalReportDirectLabour,
+                totalIndirectLabour: totalReportIndirectLabour,
+                totalMaterial: totalReportMaterial,
+                totalMachinery: totalReportMachinery,
+                totalOtherExpense: totalReportOtherExpense,
+                totalSubContractorCost: totalReportSubContractorCost,
+                totalFinancialPerformance: totalReportFinancialPerformance,
+                totalPhysicalPerformance: totalReportPhysicalPerformance,
+                totalCostDueToWork: totalReportCostDueToRework,
+                totalOverHeadCost: totalReportoverHeadCost
+            },
+            "Plan": {
+                totalProfitOrLoss: totalPlanProfitOrLoss,
+                totalProjectExpense: totalPlanProjectExpense,
+                totalPlanSubtotalExpense: totalPlanSubtotalExpense,
+                totalManPower: totalPlanManPower,
+                totalDirectLabour: totalPlanDirectLabour,
+                totalIndirectLabour: totalPlanIndirectLabour,
+                totalMaterial: totalPlanMaterial,
+                totalMachinery: totalPlanMachinery,
+                totalOtherExpense: totalPlanOtherExpense,
+                totalSubContractorCost: totalPlanSubContractorCost,
+                totalFinancialPerformance: totalPlanFinancialPerformance,
+                totalPhysicalPerformance: totalPlanPhysicalPerformance,
+                totalCostDueToWork: totalPlanCostDueToRework,
+                totalOverHeadCost: totalPlanoverHeadCost
+            }
+        }
+
+        res.send(response);
+    } catch (error) {
+        res.status(500).send({
+            message: error.message || 'Some error occurred while retrieving data.',
+        });
+    }
+}
+self.getByMonthlyId = async(req, res) => {
+    try {
+        let id = req.params.id;
+        let data = await projectreport.findOne({
+            where: {
+                monthlyreport_id: id
+            }
+        });
+        return res.status(200).json({
+            data: (data) ? data : {}
+        })
+    } catch (error) {
+        res.status(500).json({
+            message: error.message
+        })
+    }
 }
 self.search = async(req, res) => {
     try {
@@ -177,61 +329,61 @@ self.delete = async(req, res) => {
 }
 
 self.getMonthlyProjectReport = async(req, res) => {
-	let id = req.params.id 
-	let year = req.params.year
-	let month = req.params.month 
+    let id = req.params.id
+    let year = req.params.year
+    let month = req.params.month
 
-	try {
-		let data = null
+    try {
+        let data = null
         let usr = await usrData.userData(req, res)
 
-		let plan = await projectplan.findOne({
-			where: {
-				project_id: id,
-				year:year,
-				month:month
-			}
-		})
-		if(!plan){
-			return res.status(404).json({
-				message: "There is no plan data"
-			})
-		}else{
-			data = await monthlyreport.findOne({
-				where: {
-					project_id: id,
-					year: year,
-					month: month
-				}
-			})
+        let plan = await projectplan.findOne({
+            where: {
+                project_id: id,
+                year: year,
+                month: month
+            }
+        })
+        if (!plan) {
+            return res.status(404).json({
+                message: "There is no plan data"
+            })
+        } else {
+            data = await monthlyreport.findOne({
+                where: {
+                    project_id: id,
+                    year: year,
+                    month: month
+                }
+            })
 
-			if(!data){
-				
+            if (!data) {
 
-				data = await monthlyreport.create({
-						project_id: id,
-						year: year,
-						month: month
-				})
-				let us = req.decoded
+
+                data = await monthlyreport.create({
+                    project_id: id,
+                    year: year,
+                    month: month
+                })
+                let us = req.decoded
 
                 await saveActionState(data.id, "monthlyreport", "REGISTER", usr.usrID, req, res)
-			}
+            }
 
-			return res.json({
+            return res.json({
                 data,
                 plan
             })
-		}
-		
-					
-				
-		
-	} catch (error) {
-		return res.status(500).json({
-			message: error.message
-		})
-	}
+        }
+
+
+
+
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message
+        })
+    }
 }
 
 

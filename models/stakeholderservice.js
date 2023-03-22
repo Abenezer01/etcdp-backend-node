@@ -22,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
         parent_id: DataTypes.UUID,
         stakeholder_id: DataTypes.UUID,
         construction_related_service_id: DataTypes.UUID,
-        unit_price: DataTypes.INTEGER
+        unit_price: DataTypes.DOUBLE
     }, {
         sequelize,
         modelName: 'stakeholderservice',

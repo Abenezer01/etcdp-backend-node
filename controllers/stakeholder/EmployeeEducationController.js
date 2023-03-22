@@ -12,41 +12,28 @@ const { saveActionState, getChildren } = require('../../utils/helper');
 let self = {};
 
 self.getAll = async(req, res) => {
-    let { page, size, order } = req.query;
-    //console.log("The page", page, size)
-    if (page == null && size == null) {
-        page = process.env.page,
-            size = process.env.size
-    }
-    if (order == null) {
-        order = process.env.order
-    }
+    const { page = process.env.page, size = process.env.size, order = process.env.order } = req.query;
+
     const { limit, offset } = paginate.getPagination(page, size);
-    employeeeducation.findAndCountAll({
+
+    try {
+        const { rows, count } = await employeeeducation.findAndCountAll({
             limit,
             offset,
             order: [
                 ['createdAt', order]
             ],
-        })
-        .then(data => {
-            const response = paginate.getPagingData(data, page, limit);
-            res.send(response);
-        })
-        .catch(err => {
-            res.status(500).send({
-                message: err.message || "Some error occurred while retrieving data."
-            });
         });
-    // try {
-    //     let data = await employeeeducation.findAll();
-    //     return res.json(data)
 
-    // } catch (error) {
-    //     res.status(500).json({
-    //         message: error.message
-    //     })
-    // }
+        const response = paginate.getPagingData({ rows, count }, page, limit, count);
+
+        res.send(response);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send({
+            message: 'An error occurred while retrieving data.',
+        });
+    }
 }
 
 
@@ -68,52 +55,28 @@ self.get = async(req, res) => {
     }
 }
 self.getEmployeeEducationByStakeholderId = async(req, res) => {
-    let { page, size, order } = req.query;
-    let id = req.params.id;
-    //console.log("The page", page, size)
-    if (page == null && size == null) {
-        page = process.env.page,
-            size = process.env.size
-    }
-    if (order == null) {
-        order = process.env.order
-    }
+    const { id } = req.params;
+    const { page = process.env.page, size = process.env.size, order = process.env.order } = req.query;
+
     const { limit, offset } = paginate.getPagination(page, size);
-    employeeeducation.findAndCountAll({
+    try {
+        const data = await employeeeducation.findAndCountAll({
             limit,
             offset,
-            where: {
-                stakeholder_id: id
-            },
+            where: { stakeholder_id: id },
             order: [
                 ['createdAt', order]
             ],
-            include: ["studylevel"],
-        })
-        .then(data => {
-            const response = paginate.getPagingData(data, page, limit);
-            res.send(response);
-        })
-        .catch(err => {
-            res.status(500).send({
-                message: err.message || "Some error occurred while retrieving data."
-            });
+            include: ["studylevel"]
         });
-    // try {
-    //     let id = req.params.id;
-    //     let data = await employeeeducation.findAll({
-    //         where: {
-    //             stakeholder_id: id
-    //         }
-    //     });
-    //     return res.status(200).json({
-    //         data: (data) ? data : {}
-    //     })
-    // } catch (error) {
-    //     res.status(500).json({
-    //         message: error.message
-    //     })
-    // }
+
+        const response = paginate.getPagingData(data, page, limit);
+        res.send(response);
+    } catch (error) {
+        res.status(500).send({
+            message: error.message || 'Some error occurred while retrieving data.',
+        });
+    }
 }
 
 self.search = async(req, res) => {
@@ -200,7 +163,36 @@ self.search = async(req, res) => {
 //         })
 //     }
 // }
+self.getCollectionOfData = async(req, res) => {
+    let registeredData = await employeeeducation.findAll()
 
+    let rD = []
+    for (i = 0; i < registeredData.length; i++) {
+        var date = new Date(registeredData[i].year);
+        let yy = date.getFullYear()
+        let male = registeredData[i].male
+        let female = registeredData[i].female
+        let nationality = registeredData[i].nationality
+        let stakeholder_id = registeredData[i].stakeholder_id
+        rD.push({ year: yy, female: female, male: male, nationality: nationality, stakeholder_id: stakeholder_id })
+    }
+    const filteredfrmDBArr = [];
+    const result = rD.reduce((acc, curr) => {
+        const { year, nationality } = curr;
+        // const filtered = rD.filter((item) => item.year === year && item.nationality === nationality);
+
+        const key = `${year}, ${nationality}`;
+
+        if (!acc[key]) {
+            acc[key] = [];
+        }
+
+        acc[key].push(curr);
+
+        return acc;
+    }, {});
+    res.send(result)
+}
 self.save = async(req, res) => {
     try {
 
@@ -262,18 +254,6 @@ self.save = async(req, res) => {
                         filteredReqBodyArr[existingIndex].female += reqBodyArr[i].female
                 }
             }
-
-            // return res.status(200).json({
-            //         filteredReqBodyArr
-            //     })
-            // Object.values(reqBodyArr.reduce((a, { year, male, female, nationality }) => {
-            //     a[year, nationality] = (a[year, nationality] || { year, male: 0, female: 0, nationality });
-            //     a[year, nationality].nationality = (nationality);
-            //     a[year, nationality].female = String(Number(a[year, nationality].female) + Number(female));
-            //     a[year, nationality].male = String(Number(a[year, nationality].male) + Number(male));
-
-            //     return a;
-            // }, {}));
             for (i = 0; i < totalEmployeeData.length; i++) {
                 var date = new Date(totalEmployeeData[i].year);
                 let yy = date.getFullYear()
@@ -300,17 +280,7 @@ self.save = async(req, res) => {
                         parseInt(filteredfrmDBArr[existingIndex].female) += parseInt(ssyy[i].female)
                 }
             }
-            // console.log("Hi Kaleb", filteredfrmDBArr, "and", filteredReqBodyArr)
-            // return res.status(200).json({
-            //         filteredfrmDBArr
-            //     })
-            // Object.values(ssyy.reduce((a, { year, male, female, nationality }) => {
-            //     a[year, nationality] = (a[yearss, nationality] || { year, male: 0, female: 0 });
-            //     a[year, nationality].nationality = (nationality);
-            //     a[year, nationality].female = String(Number(a[year, nationality].female) + Number(female));
-            //     a[year, nationality].male = String(Number(a[year, nationality].male) + Number(male));
-            //     return a;
-            // }, {}));
+
             console.log("The final", filteredReqBodyArr);
             console.log("Hello there", filteredfrmDBArr)
             let diffDataYear = []
@@ -347,18 +317,7 @@ self.save = async(req, res) => {
 
                 }
             }
-            // for (i = 0; i < filteredReqBodyArr.length; i++) {
-            //     for (j = 0; j < filteredfrmDBArr.length; j++) {
-            //         if (filteredReqBodyArr[i].year != filteredfrmDBArr[j].year) {
-            //             diffDataYear.push(filteredReqBodyArr[i].year)
-            //         }
-            //         if (filteredReqBodyArr[i].nationality != filteredfrmDBArr[j].nationality) {
-            //             diffDataNational.push(filteredReqBodyArr[i].nationality)
-            //         }
-            //     }
-            // }
 
-            // return res.send(diffDataNational)
             if (diffDataYear.length) {
                 let bod = `Sorry! ${diffDataYear} years are not registered at total employee data with this staleholder`
                 return res.status(400).json({ "message": bod })
@@ -401,25 +360,9 @@ self.save = async(req, res) => {
 
                 }
 
-                // if (existingIndex === -1) {
-                //     console.log("Here 1 arr", arr)
-                //     newArr.push(arr[i]);
-                //     console.log("Here 2 arr", arr)
-                // } else {
-
-                // }
             }
 
-            // for (i = 0; i < rD.length; i++) {
 
-            //     for (j = 0; j < filteredReqBodyArr; j++) {
-            //         if (filteredReqBodyArr[j].nationality == rD[i].nationality && filteredReqBodyArr[j].year == rD[i].year && stakeHolderId == rD[i].stakeholder_id) {
-
-            //             newArr.push(rD[i])
-
-            //         }
-            //     }
-            // }
             console.log("New array", newArr)
                 //return res.send(newArr)
             if (newArr.length) {
@@ -496,7 +439,10 @@ self.update = async(req, res) => {
                 })
             }
             //console.log("The total employee", totalEmployeeData)
-            let array = arr
+            //let array = arr
+
+
+            //Refine body data with year
             let reqBodyArr = []
             for (i = 0; i < arr.length; i++) {
                 var date = new Date(arr[i].year);
@@ -508,6 +454,10 @@ self.update = async(req, res) => {
                 reqBodyArr.push({ year: yy, female: female, male: male, nationality: nationality })
             }
             //console.log("Array2", reqBodyArr)
+
+
+
+            //Reduce refined body array with their nationality and year, then add to filtered data
             const filteredReqBodyArr = [];
             for (let i = 0; i < reqBodyArr.length; i++) {
                 let existingIndex = -1
@@ -528,6 +478,8 @@ self.update = async(req, res) => {
                         filteredReqBodyArr[existingIndex].female += reqBodyArr[i].female
                 }
             }
+
+            //Refine total employee data with year format
             for (i = 0; i < totalEmployeeData.length; i++) {
                 var date = new Date(totalEmployeeData[i].year);
                 let yy = date.getFullYear()
@@ -536,7 +488,9 @@ self.update = async(req, res) => {
                 let nationality = totalEmployeeData[i].nationality
                 ssyy.push({ year: yy, female: female, male: male, nationality: nationality })
             }
-            // result2 = 
+
+
+            //Reduce refined total employee array with their nationality and year, then add to filteredfrmDBArr
             const filteredfrmDBArr = [];
             for (let i = 0; i < ssyy.length; i++) {
                 let existingIndex = -1
@@ -556,6 +510,8 @@ self.update = async(req, res) => {
             }
             console.log("The final", filteredReqBodyArr);
             console.log("Hello there", filteredfrmDBArr)
+
+            //Check if vary year between filteredReqBodyArr and filteredfrmDBArr
             let diffDataYear = []
             let diffDataNational = []
             for (let i = 0; i < filteredReqBodyArr.length; i++) {
@@ -574,6 +530,8 @@ self.update = async(req, res) => {
 
                 }
             }
+
+            //Check if vary nationality between filteredReqBodyArr and filteredfrmDBArr
             for (let i = 0; i < filteredReqBodyArr.length; i++) {
                 let existingIndex = -1
                 for (let j = 0; j < filteredfrmDBArr.length; j++) {
@@ -591,36 +549,20 @@ self.update = async(req, res) => {
                 }
             }
             if (diffDataYear.length) {
-                let bod = `Sorry! ${diffDataYear} years are not registered at total employee data with this staleholder`
+                let bod = `Sorry! ${diffDataYear} years are not registered at total employee data with this stakeholder`
                 return res.status(400).json({ "message": bod })
             }
             if (diffDataNational.length) {
-                let bod = `Sorry! ${diffDataNational} nationality are not registered at total employee data with this staleholder`
+                let bod = `Sorry! ${diffDataNational} nationality are not registered at total employee data with this stakeholder`
                 return res.status(400).json({ "message": bod })
             }
 
-            let registeredData = await employeeeducation.findAll({
-                where: {
-                    stakeholder_id: stakeHolderId
-                }
-            })
-
-            let rD = []
-            for (i = 0; i < registeredData.length; i++) {
-                var date = new Date(registeredData[i].year);
-                let yy = date.getFullYear()
-                let male = registeredData[i].male
-                let female = registeredData[i].female
-                let nationality = registeredData[i].nationality
-                let stakeholder_id = registeredData[i].stakeholder_id
-                rD.push({ year: yy, female: female, male: male, nationality: nationality, stakeholder_id: stakeholder_id })
-            }
-
-            var arr2 = [];
+            // var arr2 = [];
             for (i = 0; i < filteredReqBodyArr.length; i++) {
                 for (j = 0; j < filteredfrmDBArr.length; j++) {
-
+                    //Comparison between filteredReqBodyArr and filteredfrmDBArr
                     if (filteredReqBodyArr[i].year == filteredfrmDBArr[j].year && filteredReqBodyArr[i].nationality == filteredfrmDBArr[j].nationality) {
+                        //Compare sum of male and female
                         if (filteredReqBodyArr[i].male != filteredfrmDBArr[j].male) {
                             let bod = `Sorry! the ${filteredReqBodyArr[i].nationality} nationality total male employee in ${filteredReqBodyArr[i].year} year was ${filteredfrmDBArr[j].male} but your total male is ${filteredReqBodyArr[i].male}`
                             return res.status(400).json({ "message": bod })

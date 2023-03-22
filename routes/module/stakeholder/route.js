@@ -46,7 +46,7 @@ module.exports = function(express) {
     route.get("/stakeholder-category/", stakeholderCategoryController.getAll);
     route.get("/stakeholder-category/:id", stakeholderCategoryController.get);
     route.get("/stakeholder-category/stakeholder-type/:id", stakeholderCategoryController.getAllCatByTypeId);
-    route.get("/stakeholder-category/staketype/:id", stakeholderCategoryController.getCatByTypeId);
+    // route.get("/stakeholder-category/staketype/:id", stakeholderCategoryController.getCatByTypeId);
     route.get("/stakeholder-category-search", stakeholderCategoryController.search);
     route.post("/stakeholder-category", validateData.stakeholderCategoryValidate, stakeholderCategoryController.save);
     route.put("/stakeholder-category/:id", validateData.stakeholderCategoryValidate, stakeholderCategoryController.update);
@@ -111,7 +111,7 @@ module.exports = function(express) {
     route.get("/employee-age/stakeholder/:id", EmployeeAgeController.getEmployeeAgeByStakeholderId);
     route.get("/employee-age-search", EmployeeAgeController.search);
     route.post("/employee-age", validateData.employeeAgeValidate, EmployeeAgeController.save);
-    route.put("/employee-age/:id", validateData.employeeAgeValidate, EmployeeAgeController.update);
+    route.put("/employee-age", validateData.employeeAgeValidate, EmployeeAgeController.update);
     route.delete("/employee-age/:id", EmployeeAgeController.delete);
     //study level route
     route.get("/study-level/", StudyLevelController.getAll);
@@ -122,6 +122,7 @@ module.exports = function(express) {
     route.delete("/study-level/:id", StudyLevelController.delete);
     //employee education route
     route.get("/employee-education/", EmployeeEducationController.getAll);
+    route.get("/collection/", EmployeeEducationController.getCollectionOfData);
     route.get("/employee-education/:id", EmployeeEducationController.get);
     route.get("/employee-education/stakeholder/:id", EmployeeEducationController.getEmployeeEducationByStakeholderId);
     route.get("/employee-education-search", EmployeeEducationController.search);
@@ -141,7 +142,7 @@ module.exports = function(express) {
     route.get("/work-experience/stakeholder/:id", WorkExperienceController.getWorkExperienceByStakeholderId);
     route.get("/work-experience-search", WorkExperienceController.search);
     route.post("/work-experience", validateData.workExperienceValidate, WorkExperienceController.save);
-    route.put("/work-experience/:id", validateData.workExperienceValidate, WorkExperienceController.update);
+    route.put("/work-experience", validateData.workExperienceValidate, WorkExperienceController.update);
     route.delete("/work-experience/:id", WorkExperienceController.delete);
     //stakeholder training/ support
     route.get("/training/", StakeHolderTrainingController.getAll);
@@ -219,8 +220,10 @@ module.exports = function(express) {
     route.get("/stakeholder-operation-location/:id", OperationlocationController.getByStakeholderId);
     route.get("/stakeholder-operation-location-search", OperationlocationController.search);
     route.post("/stakeholder-operation-location", OperationlocationController.save);
-    route.put("/stakeholder-operation-location/:id", OperationlocationController.update);
+    route.put("/stakeholder-operation-location", OperationlocationController.update);
     route.delete("/stakeholder-operation-location/:id", OperationlocationController.delete);
-
+    //summary
+    route.get("/count/stakeholder/stakeholdertype", stakeholderController.countAllStakeholderWithStakeType);
+    route.get("/count/stakeholder/stakeholdercategory", stakeholderController.countAllStakeholderWithStakeCategory);
     return route;
 };
