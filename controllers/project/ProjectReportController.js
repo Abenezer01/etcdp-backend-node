@@ -116,7 +116,18 @@ self.save = async(req, res) => {
         var lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
         body.end = lastDay
         if (usr) {
+            let plan = await projectplan.findOne({
+                where: {
+                    id: body.projectplan_id
+                }
+            })
+            if(plan){
+                return res.status(404).json({
+                    message: "Plan doesn't exist!"
+                })
+            }
             let data = await projectreport.create(body);
+
             if (data) {
                 let usrID = usr.usrID
                 await saveActionState(data.id, "projectreport", "REGISTER", usrID, req, res)

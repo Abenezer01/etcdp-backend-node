@@ -82,6 +82,8 @@ module.exports = function(express) {
     route.get("/notification/:limit/:page_no", NotificationController.getAll);
     route.get("/unread-notification/:count", NotificationController.unreadNotification);
     route.get("/notification/:id", NotificationController.get);
+
+   
     
     return route;
 };

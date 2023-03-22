@@ -96,7 +96,7 @@ self.getAllCatByTypeId = async(req, res) => {
                 required: false,
             }, ],
             where: {
-                stakeholdertypeId: id
+                stakeholdertype_id: id
             }
         })
         .then(data => {
@@ -148,7 +148,7 @@ self.getCatByTypeId = async(req, res) => {
                 ['createdAt', order]
             ],
             where: {
-                stakeholdertypeId: id
+                stakeholdertype_id: id
             }
         })
         .then(data => {

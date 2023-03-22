@@ -5,6 +5,8 @@
      stakeholder,
      projecttime,
      projectfinance,
+     projectstatus,
+     status,
      Sequelize
  } = require("./../../models");
 
@@ -318,7 +320,7 @@
  self.getProjectDetail = async(req, res) => {
     let id = req.params.id
     try {
-        let [clientStake, consultantStake, contractorStake, pro, finance, time] = await Promise.all([
+        let [clientStake, consultantStake, contractorStake, pro, finance, time, proStatus] = await Promise.all([
             projectstakeholder.findOne({
                 where: {
                     project_id: id,
@@ -351,6 +353,11 @@
                 where: {
                     project_id:id
                 }
+            }),
+            projectstatus.findOne({
+                where: {
+                    project_id: id
+                }
             })
         ])
 
@@ -359,6 +366,7 @@
         let contractor = contractorStake ? await self.getStakeholderName(contractorStake.stakeholder_id): null
         let consultant = consultantStake ? await self.getStakeholderName(consultantStake.stakeholder_id): null
 
+        let stat = proStatus ? await status.findOne({where: {id: proStatus.status_id}}) : null
 
         return res.json({
             project_name : pro ? pro.name : null,
@@ -366,10 +374,10 @@
             contractor,
             consultant,
             main_contract_price_amount: finance ? finance.main_contract_price_amount: null,
-            contract_signing_date: time ? time.contract_signing_date : null
+            time: time,
+            project_status: stat? stat.title: null
 
         })
-add
 
 
     } catch (error) {

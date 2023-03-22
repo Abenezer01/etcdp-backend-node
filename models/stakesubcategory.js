@@ -20,11 +20,11 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue: DataTypes.UUIDV4
         },
         parent_id: DataTypes.UUID,
-        stakecategoryId: {
+        stakecategory_id: {
             type: DataTypes.UUID,
             allowNull: false
         },
-        stakeholdertypeId: {
+        stakeholdertype_id: {
             type: DataTypes.UUID,
             allowNull: false,
         },
