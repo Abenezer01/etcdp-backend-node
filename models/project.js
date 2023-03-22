@@ -19,6 +19,7 @@ module.exports = (sequelize, DataTypes) => {
             primaryKey: true,
             defaultValue: DataTypes.UUIDV4
         },
+        department_id: DataTypes.UUID,
         parent_id: DataTypes.UUID,
         projectcategory_id: {
             type: DataTypes.UUID,

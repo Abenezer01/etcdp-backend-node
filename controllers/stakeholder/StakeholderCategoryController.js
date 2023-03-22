@@ -45,64 +45,72 @@ self.getAll = async(req, res) => {
 }
 
 self.getAllCatByTypeId = async(req, res) => {
-    const { page = process.env.page, size = process.env.size, order = process.env.order, id } = req.query;
+        const { page = process.env.page, size = process.env.size, order = process.env.order } = req.query;
+        const { id } = req.params
+        const { limit, offset } = paginate.getPagination(page, size);
 
-    const { limit, offset } = paginate.getPagination(page, size);
+        try {
+            const { rows, count } = await stakecategory.findAndCountAll({
+                limit,
+                offset,
+                order: [
+                    ['createdAt', order]
+                ],
+                include: [{
+                    model: stakesubcategory,
+                    as: 'stakesubcategories',
+                    required: false,
+                }, ],
+                where: {
+                    stakeholdertypeId: id
+                }
+            });
 
-    try {
-        const { rows, count } = await stakecategory.findAndCountAll({
-            limit,
-            offset,
-            order: [
-                ['createdAt', order]
-            ],
-            include: [{
-                model: stakesubcategory,
-                as: 'stakesubcategories',
-                required: false,
-            }, ],
-            where: {
-                stakeholdertypeId: id
-            }
-        });
+            const response = paginate.getPagingData({ rows, count }, page, limit, count);
 
-        const response = paginate.getPagingData({ rows, count }, page, limit, count);
-
-        res.send(response);
-    } catch (err) {
-        console.error(err);
-        res.status(500).send({
-            message: 'An error occurred while retrieving data.',
-        });
+            res.send(response);
+        } catch (err) {
+            console.error(err);
+            res.status(500).send({
+                message: 'An error occurred while retrieving data.',
+            });
+        }
     }
-}
-self.getCatByTypeId = async(req, res) => {
-    const { page = process.env.page, size = process.env.size, order = process.env.order, id } = req.query;
+    // self.getCatByTypeId = async(req, res) => {
+    //     let id = req.params
+    //     const data = await stakecategory.findAll({
 
-    const { limit, offset } = paginate.getPagination(page, size);
 
-    try {
-        const { rows, count } = await stakecategory.findAndCountAll({
-            limit,
-            offset,
-            order: [
-                ['createdAt', order]
-            ],
-            where: {
-                stakeholdertypeId: id
-            }
-        });
+//         where: {
+//             id: id
+//         },
 
-        const response = paginate.getPagingData({ rows, count }, page, limit, count);
+//     });
+//     return res.send(data)
+//     const { page = process.env.page, size = process.env.size, order = process.env.order } = req.query;
+//     //const id = req.params
+//     const { limit, offset } = paginate.getPagination(page, size);
 
-        res.send(response);
-    } catch (err) {
-        console.error(err);
-        res.status(500).send({
-            message: 'An error occurred while retrieving data.',
-        });
-    }
-}
+//     try {
+//         const { rows, count } = await stakecategory.findAndCountAll({
+
+
+//             where: {
+//                 stakeholdertypeId: id
+//             },
+
+//         });
+//         //return res.send(rows)
+//         const response = paginate.getPagingData({ rows, count }, page, limit, count);
+
+//         res.send(response);
+//     } catch (err) {
+//         console.error(err);
+//         res.status(500).send({
+//             message: err.message,
+//         });
+//     }
+// }
 
 self.get = async(req, res) => {
     try {

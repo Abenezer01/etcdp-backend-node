@@ -47,6 +47,7 @@ self.getByProjectId = async(req, res) => {
             order: [
                 ['createdAt', order]
             ],
+            include: ["status"]
         });
 
         const response = paginate.getPagingData(data, page, limit);

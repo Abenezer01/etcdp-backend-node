@@ -5,9 +5,12 @@
      stakeholder,
      projecttime,
      projectfinance,
+     projectreport,
+     projectplan,
+     sequelize,
      Sequelize
  } = require("./../../models");
-
+ const moment = require('moment');
  const Op = Sequelize.Op;
  const usrData = require("../../utils/userDataFromToken");
  const { saveActionState } = require("../../utils/helper");
@@ -16,9 +19,30 @@
  const dotenv = require('dotenv');
  dotenv.config();
 
- self.getAll = async(req, res) => {
-     const { page = process.env.page, size = process.env.size, order = process.env.order } = req.query;
+ const { notify } = require("../../utils/Notify");
+ const projectstatus = require("../../models/projectstatus");
 
+ self.getAll = async(req, res) => {
+     // test notification
+     //send status
+
+     let pro = await project.findOne({
+         where: {
+             id: "0fdbc117-d374-4f9d-86fa-cdb708cca67f"
+         }
+     })
+
+     notify("REGISTER", "new project is added. check it", "project", "00a340e3-431a-489f-a859-6d0c9d15e894", pro.id, "descr")
+
+     let { page, size, order } = req.query;
+     //console.log("The page", page, size)
+     if (page == null && size == null) {
+         page = process.env.page,
+             size = process.env.size
+     }
+     if (order == null) {
+         order = process.env.order
+     }
      const { limit, offset } = paginate.getPagination(page, size);
 
      try {
@@ -41,6 +65,154 @@
      }
  }
  self.getProjectByTypeId = async(req, res) => {
+     const { page = process.env.page, size = process.env.size, order = process.env.order } = req.query;
+     const { projecttype_id, projectcategory_id, projectsubcategory_id } = req.body
+     const { id } = req.params;
+     try {
+         const filter = [{ projecttype_id: projecttype_id }]
+         if (projectcategory_id) {
+             filter.push({ projectcategory_id: projectcategory_id })
+         }
+         if (projectsubcategory_id) {
+             filter.push({ projectsubcategory_id: projectsubcategory_id })
+         }
+
+         const projectResult = await project.findAll({
+             where: {
+                 [Op.and]: filter
+             },
+             raw: true
+         });
+
+
+
+
+
+
+
+         let uf = []
+         for (const item of projectResult) {
+             const projectID = item.id;
+             if (projectID) {
+                 uf.push(projectID);
+             }
+         }
+
+         let reportData = await projectreport.findAll({
+             where: {
+                 project_id: {
+                     [Sequelize.Op.in]: uf
+                 }
+             }
+         });
+         let planData = await projectplan.findAll({
+             where: {
+                 project_id: {
+                     [Sequelize.Op.in]: uf
+                 }
+             }
+         });
+         const groupedReportData = reportData.reduce((acc, item) => {
+             const { project_id, financial_performance, project_expense, type } = item;
+             acc[project_id] = acc[project_id] || { project_id, financial_performance: 0, project_expense: 0 };
+             acc[project_id].financial_performance += financial_performance;
+             acc[project_id].project_expense += project_expense;
+             return acc;
+         }, {});
+         const groupedPlanData = planData.reduce((acc, item) => {
+             const { project_id, financial_performance, project_expense } = item;
+             acc[project_id] = acc[project_id] || { project_id, financial_performance: 0, project_expense: 0 };
+             acc[project_id].financial_performance += financial_performance;
+             acc[project_id].project_expense += project_expense;
+             return acc;
+         }, {});
+         const reportResult = Object.values(groupedReportData);
+         const planResult = Object.values(groupedPlanData);
+
+         const result = reportResult.map((reportItem) => {
+             const planItem = planResult.find((item) => item.project_id === reportItem.project_id);
+             if (planItem) {
+                 const sv = reportItem.financial_performance - planItem.financial_performance;
+                 const cv = reportItem.financial_performance - reportItem.project_expense;
+                 const cpi = reportItem.project_expense !== 0 ? (reportItem.financial_performance / reportItem.project_expense) * 100 : 0;
+                 const spi = planItem.financial_performance !== 0 ? (reportItem.financial_performance / planItem.financial_performance) * 100 : 0;
+
+                 return {
+                     "project_id": reportItem.project_id,
+                     "sv": sv,
+                     "cv": cv,
+                     "cpi": cpi,
+                     "spi": spi
+                 };
+             }
+         });
+
+         const filteredResult = result.filter((item) => item);
+
+         const { page = process.env.page, size = process.env.size, order = process.env.order } = req.query;
+
+         const { limit, offset } = paginate.getPagination(page, size);
+
+         const projectData = await project.findAndCountAll({
+             limit,
+             offset,
+             where: {
+                 id: {
+                     [Sequelize.Op.in]: uf
+                 }
+             },
+             order: [
+                 ['createdAt', order]
+             ],
+             raw: true
+         });
+         const projectTimeData = await projecttime.findAll({
+             where: {
+                 project_id: {
+                     [Sequelize.Op.in]: uf
+                 }
+             },
+             raw: true
+         });
+
+         const finResult = projectData.rows.map(aElement => {
+             const matchingBElement = filteredResult.find(bElement => bElement.project_id === aElement.id);
+             if (matchingBElement) {
+                 return {
+                     ...aElement,
+                     cv: matchingBElement.cv,
+                     sv: matchingBElement.sv,
+                     cpi: matchingBElement.cpi,
+                     spi: matchingBElement.spi,
+                 };
+             }
+             return aElement;
+         });
+         const finalResult = finResult.map(aElement => {
+             const matchingBElement = projectTimeData.find(bElement => bElement.project_id === aElement.id);
+
+             if (matchingBElement) {
+                 //console.log("the matching", matchingBElement.original_contract_duration)
+                 console.log("The total date", moment().diff(matchingBElement.commencement_date, 'days'))
+                     //moment().diff(commencement, 'days') / contract_duration * 100
+                 return {
+                     ...aElement,
+                     used_time: (moment().diff(matchingBElement.commencement_date, 'days') / matchingBElement.original_contract_duration) * 100
+                 };
+             }
+             return aElement;
+         });
+
+         const response = paginate.getPagingData({ rows: finalResult, count: projectData.count }, page, limit);
+
+         res.send(response);
+     } catch (error) {
+         res.status(500).send({
+             message: error.message || 'Some error occurred while retrieving data.',
+         });
+     }
+ }
+ self.getProjectByTypeIdPast = async(req, res) => {
      const { page = process.env.page, size = process.env.size, order = process.env.order } = req.query;
      const { projecttype_id, projectcategory_id, projectsubcategory_id } = req.body
      const filter = [{ projecttype_id: projecttype_id }]
@@ -196,6 +368,8 @@
              let data = await project.create(body);
              if (data) {
                  let usrID = usr.usrID
+                 data.department_id = usr.departmentID
+                 await data.save()
                  await saveActionState(data.id, "project", "REGISTER", usrID, req, res)
              }
              // let arr = [{ name: "Client", id: body.clientId }, { name: "Consultant", id: body.consultantId }, { name: "Contractor", id: body.contractorId }]
@@ -330,4 +504,36 @@
      }
  }
 
+ self.countAllProjectWithProjectType = async(req, res) => {
+
+     try {
+         let queryString = "SELECT projecttypes.title AS type, COALESCE(COUNT(projects.id), 0) AS total FROM projecttypes LEFT JOIN projects ON projecttypes.id = projects.projecttype_id GROUP BY projecttypes.title;"
+         let projectData = await sequelize.query(
+             queryString, { type: sequelize.QueryTypes.SELECT }
+         );
+
+         res.send(projectData)
+     } catch (error) {
+         res.status(500).json({
+             message: error.message
+         })
+
+     }
+ }
+ self.countAllProjectWithProjectCategory = async(req, res) => {
+
+     try {
+         let queryString = "SELECT projectcategories.title AS category, COALESCE(COUNT(projects.id), 0) AS total FROM projectcategories LEFT JOIN projectholders ON projectcategories.id = projects.projectcategory_id GROUP BY projectcategories.title;"
+         let projectData = await sequelize.query(
+             queryString, { type: sequelize.QueryTypes.SELECT }
+         );
+
+         res.send(projectData)
+     } catch (error) {
+         res.status(500).json({
+             message: error.message
+         })
+
+     }
+ }
  module.exports = self;

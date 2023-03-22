@@ -14,6 +14,9 @@ module.exports = (sequelize, DataTypes) => {
             projectstakeholder.hasMany(models.stakeholder, {
                 foreignKey: 'stakeholder_id'
             });
+            projectstakeholder.hasMany(models.project, {
+                foreignKey: 'project_id'
+            });
         }
     }
     projectstakeholder.init({

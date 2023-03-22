@@ -169,6 +169,19 @@ const projectPlanValidate = async(req, res, next) => {
 
     await validateReply.validateReply(req.body, validationRule, res, next)
 }
+const projectReportValidate = async(req, res, next) => {
+    let param = await validateReply.checkParam(req, res, next)
+    if (param == "failed") {
+        return res.status(400).json({
+            message: "Invalid id"
+        })
+    }
+    const validationRule = {
+        "project_id": "required|string"
+    };
+
+    await validateReply.validateReply(req.body, validationRule, res, next)
+}
 const projectDocumentValidate = async(req, res, next) => {
     let param = await validateReply.checkParam(req, res, next)
     if (param == "failed") {
@@ -539,6 +552,7 @@ module.exports = {
     projectDocumentValidate,
     projectFinanceValidate,
     projectPlanValidate,
+    projectReportValidate,
     projectStakeholderValidate,
     projectStatusValidate,
     projectSubCategoryValidate,

@@ -14,6 +14,8 @@ dotenv.config();
 
 const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
+
+const { Socket } = require("../../utils/WebSocket.js")
 let self = {};
 let TOKEN_KEY = process.env.ACCESS_TOKEN_KEY
 let REFRESH_TOKEN_KEY = process.env.REFRESH_TOKEN_KEY
@@ -79,20 +81,13 @@ self.loginUser = async(request, response) => {
             }
         })
 
-        // const usrRole = await role.findOne({
-        //     where: {
-        //         id: pos.role_id
-        //     }
-        // })
-        // return response.json(usrRole)
-
         const usrPhoto = await photo.findOne({
             where: {
                 model_id: usr.id,
                 type: "USER"
             }
         })
-        let replyUser = { id: usr.id, full_name: usr.full_name, first_name: usr.last_name, middle_name: usr.middle_name, phone: usPhone.phone, gender: usr.gender, avatar: usrPhoto.url, position_id: pos.id, position_name: pos.name}
+        let replyUser = { id: usr.id, full_name: usr.full_name, first_name: usr.last_name, middle_name: usr.middle_name, phone: usPhone.phone, gender: usr.gender, avatar: usrPhoto.url, position_id: pos.id, position_name: pos.name }
 
 
         bcrypt.compare(password, usr.password, function(err, result) {  
@@ -112,6 +107,10 @@ self.loginUser = async(request, response) => {
                         where: { id: usr.id },
                     })
                     .then(result => {
+                        // //send status
+                        Socket.emit("loggedIn", {
+                            message: true
+                        });
                         return response.status(200).json({
                                 userData: replyUser,
                                 accessToken: accessToken,

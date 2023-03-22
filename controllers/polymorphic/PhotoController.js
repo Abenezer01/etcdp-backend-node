@@ -160,7 +160,7 @@ self.serveMultiplePhoto = async(req, res) => {
         });
         let arr = []
         for (const im of img) {
-            arr.push({ path: im.url })
+            arr.push({ id: im.id, path: im.url})
         }
         res.status(200).send(arr);
         // for (i = 0; i < img.length; i++) {
