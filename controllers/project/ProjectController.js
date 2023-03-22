@@ -5,14 +5,11 @@
      stakeholder,
      projecttime,
      projectfinance,
-<<<<<<< HEAD
      projectstatus,
      status,
-=======
      projectreport,
      projectplan,
      sequelize,
->>>>>>> 8b69747e4ef563bb0192fee2a77a925ba94e627d
      Sequelize
  } = require("./../../models");
  const moment = require('moment');
@@ -25,7 +22,6 @@
  dotenv.config();
 
  const { notify } = require("../../utils/Notify");
- const projectstatus = require("../../models/projectstatus");
 
  self.getAll = async(req, res) => {
      // test notification
@@ -431,7 +427,6 @@
 
 
  self.getProjectDetail = async(req, res) => {
-<<<<<<< HEAD
     let id = req.params.id
     try {
         let [clientStake, consultantStake, contractorStake, pro, finance, time, proStatus] = await Promise.all([
@@ -474,45 +469,6 @@
                 }
             })
         ])
-=======
-     let id = req.params.id
-     try {
-         let [clientStake, consultantStake, contractorStake, pro, finance, time] = await Promise.all([
-             projectstakeholder.findOne({
-                 where: {
-                     project_id: id,
-                     title: "Client"
-                 }
-             }),
-             projectstakeholder.findOne({
-                 where: {
-                     project_id: id,
-                     title: "Consultant"
-                 }
-             }),
-             projectstakeholder.findOne({
-                 where: {
-                     project_id: id,
-                     title: "Contractor"
-                 }
-             }),
-             project.findOne({
-                 where: {
-                     id: id
-                 }
-             }),
-             projectfinance.findOne({
-                 where: {
-                     project_id: id
-                 }
-             }),
-             projecttime.findOne({
-                 where: {
-                     project_id: id
-                 }
-             })
-         ])
->>>>>>> 8b69747e4ef563bb0192fee2a77a925ba94e627d
 
 
          let client = clientStake ? await self.getStakeholderName(clientStake.stakeholder_id) : null
@@ -521,7 +477,6 @@
 
         let stat = proStatus ? await status.findOne({where: {id: proStatus.status_id}}) : null
 
-<<<<<<< HEAD
         return res.json({
             project_name : pro ? pro.name : null,
             client,
@@ -532,18 +487,6 @@
             project_status: stat? stat.title: null
 
         })
-=======
-         return res.json({
-             project_name: pro ? pro.name : null,
-             client,
-             contractor,
-             consultant,
-             main_contract_price_amount: finance ? finance.main_contract_price_amount : null,
-             contract_signing_date: time ? time.contract_signing_date : null
-
-         })
-         add
->>>>>>> 8b69747e4ef563bb0192fee2a77a925ba94e627d
 
 
      } catch (error) {
