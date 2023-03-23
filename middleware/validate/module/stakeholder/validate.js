@@ -28,8 +28,8 @@ const stakeholderSubCategoryValidate = async(req, res, next) => {
     }
     const validationRule = {
         "title": "required|string",
-        "stakecategoryId": "required|string",
-        "stakeholdertypeId": "required|string",
+        "stakecategory_id": "required|string",
+        "stakeholdertype_id": "required|string",
     };
 
     await validateReply.validateReply(req.body, validationRule, res, next)

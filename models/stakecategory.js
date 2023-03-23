@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
         static associate(models) {
             // define association here
             stakecategory.hasMany(models.stakesubcategory, {
-                foreignKey: 'stakecategoryId'
+                foreignKey: 'stakecategory_id'
             });
         }
     }
@@ -26,7 +26,7 @@ module.exports = (sequelize, DataTypes) => {
         title: DataTypes.STRING,
         description: DataTypes.TEXT,
         file_id: DataTypes.UUID,
-        stakeholdertypeId: DataTypes.UUID,
+        stakeholdertype_id: DataTypes.UUID,
         revision_no: {
             type: DataTypes.INTEGER
         }

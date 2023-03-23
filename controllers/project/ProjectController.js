@@ -149,7 +149,7 @@
 
          const filteredResult = result.filter((item) => item);
 
-         const { page = process.env.page, size = process.env.size, order = process.env.order } = req.query;
+
 
          const { limit, offset } = paginate.getPagination(page, size);
 

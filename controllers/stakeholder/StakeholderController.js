@@ -133,9 +133,11 @@ self.getStakeholders = async(req, res) => {
         const { rows, count } = await stakeholder.findAndCountAll({
             limit,
             offset,
+            include: ["staketype", "stakecategory"],
             order: [
                 ['createdAt', order]
             ]
+
         });
 
         const response = paginate.getPagingData({ rows, count }, page, limit, count);
@@ -253,7 +255,29 @@ self.update = async(req, res) => {
         })
     }
 }
+self.findAll = async(req, res) => {
+    try {
+        const { id, title, secondID } = req.query
+        if (!id) {
+            return
+        }
+        let filter = [title]
+        if (id) {
+            filter.push(id)
+        } else if (secondID) {
+            filter.push(secondID)
+        }
+        const data = stakeholder.findAll({
+            where: {
+                [Op.and]: filter
+            }
+        })
+        res.send(data)
 
+    } catch (error) {
+        return res.status(500).json({ message: error })
+    }
+}
 self.delete = async(req, res) => {
     try {
         let id = req.params.id;
@@ -272,12 +296,40 @@ self.delete = async(req, res) => {
 self.countAllStakeholderWithStakeType = async(req, res) => {
 
     try {
-        let queryString = "SELECT stakeholdertypes.title AS type, COALESCE(COUNT(stakeholders.id), 0) AS total FROM stakeholdertypes LEFT JOIN stakeholders ON stakeholdertypes.id = stakeholders.stakeholdertype_id GROUP BY stakeholdertypes.title;"
-        let stakeData = await sequelize.query(
-            queryString, { type: sequelize.QueryTypes.SELECT }
+        let queryTypeString = "SELECT stakeholdertypes.title AS type,stakeholdertypes.id AS typeID, COALESCE(COUNT(stakeholders.id), 0) AS total FROM stakeholdertypes LEFT JOIN stakeholders ON stakeholdertypes.id = stakeholders.stakeholdertype_id GROUP BY stakeholdertypes.title;"
+        let stakeTypeData = await sequelize.query(
+            queryTypeString, { type: sequelize.QueryTypes.SELECT }
         );
+        let queryCategoryString = "SELECT stakecategories.title AS category,stakecategories.stakeholdertype_Id AS typeID, COALESCE(COUNT(stakeholders.id), 0) AS total FROM stakecategories LEFT JOIN stakeholders ON stakecategories.id = stakeholders.stakecategory_id GROUP BY stakecategories.title;"
+        let stakeCategoryData = await sequelize.query(
+            queryCategoryString, { type: sequelize.QueryTypes.SELECT }
+        );
+        const Result = [];
+        //return res.send(stakeTypeData)
+        // loop through A
+        for (let i = 0; i < stakeTypeData.length; i++) {
+            const objA = stakeTypeData[i];
+            const categories = [];
 
-        res.send(stakeData)
+            // loop through B to find matching typeIDs
+            for (let j = 0; j < stakeCategoryData.length; j++) {
+                const objB = stakeCategoryData[j];
+
+                if (objA.typeID === objB.typeID) {
+                    categories.push({ category: objB.category, total: objB.total });
+                }
+            }
+
+            // create new object with matching categories
+            const newObj = {
+                type: objA.type,
+                total: objA.total,
+                categories: categories
+            };
+
+            Result.push(newObj);
+        }
+        res.send(Result)
     } catch (error) {
         res.status(500).json({
             message: error.message

@@ -62,7 +62,7 @@ self.getAllCatByTypeId = async(req, res) => {
                     required: false,
                 }, ],
                 where: {
-                    stakeholdertypeId: id
+                    stakeholdertype_id: id
                 }
             });
 

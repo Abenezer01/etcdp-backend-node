@@ -1,7 +1,8 @@
 'use strict';
+/** @type {import('sequelize-cli').Migration} */
 module.exports = {
     async up(queryInterface, Sequelize) {
-        await queryInterface.createTable('stakecategories', {
+        await queryInterface.createTable('stakeholderemails', {
             id: {
                 allowNull: false,
                 primaryKey: true,
@@ -10,41 +11,29 @@ module.exports = {
             parent_id: {
                 type: Sequelize.UUID,
                 references: {
-                    model: 'stakecategories',
+                    model: 'stakeholderemails',
                     key: 'id'
                 },
                 onUpdate: 'CASCADE',
                 onDelete: 'CASCADE'
             },
-            stakeholdertype_id: {
+            stakeholder_id: {
                 type: Sequelize.UUID,
                 allowNull: false,
                 references: {
-                    model: 'stakeholdertypes',
+                    model: 'stakeholders',
                     key: 'id'
                 },
                 onUpdate: 'CASCADE',
                 onDelete: 'CASCADE'
             },
-            title: {
-                type: Sequelize.STRING,
+            email: {
+                type: Sequelize.TEXT,
                 allowNull: false
             },
-            description: {
-                type: Sequelize.TEXT
-            },
-            file_id: {
-                type: Sequelize.UUID,
-                references: {
-                    model: 'files',
-                    key: 'id'
-                },
-                onUpdate: 'CASCADE',
-                onDelete: 'CASCADE'
-
-            },
-            revision_no: {
-                type: Sequelize.INTEGER
+            is_primary: {
+                type: Sequelize.BOOLEAN,
+                allowNull: false
             },
             createdAt: {
                 allowNull: false,
@@ -57,6 +46,6 @@ module.exports = {
         });
     },
     async down(queryInterface, Sequelize) {
-        await queryInterface.dropTable('stakecategories');
+        await queryInterface.dropTable('stakeholderemails');
     }
 };

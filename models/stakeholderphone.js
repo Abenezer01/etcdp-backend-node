@@ -3,7 +3,7 @@ const {
     Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-    class stakesubcategory extends Model {
+    class stakeholderphone extends Model {
         /**
          * Helper method for defining associations.
          * This method is not a part of Sequelize lifecycle.
@@ -13,37 +13,30 @@ module.exports = (sequelize, DataTypes) => {
             // define association here
         }
     }
-    stakesubcategory.init({
+    stakeholderphone.init({
         id: {
             type: DataTypes.UUID,
             primaryKey: true,
             defaultValue: DataTypes.UUIDV4
         },
-        parent_id: DataTypes.UUID,
-        stakecategory_id: {
+        parent_id: {
+            type: DataTypes.UUID
+        },
+        stakeholder_id: {
             type: DataTypes.UUID,
             allowNull: false
         },
-        stakeholdertype_id: {
-            type: DataTypes.UUID,
-            allowNull: false,
-        },
-        title: {
+        phone: {
             type: DataTypes.STRING,
             allowNull: false
         },
-        description: DataTypes.TEXT,
-        file_id: DataTypes.UUID,
-        revision_no: {
-            type: DataTypes.INTEGER
+        is_primary: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false
         }
     }, {
         sequelize,
-        modelName: 'stakesubcategory',
+        modelName: 'stakeholderphone',
     });
-    // stakesubcategory.associate = function(models) {
-
-    //     stakesubcategory.belongsTo(models.stakecategory)
-    // };
-    return stakesubcategory;
+    return stakeholderphone;
 };
