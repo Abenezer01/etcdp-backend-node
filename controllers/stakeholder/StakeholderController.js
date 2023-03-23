@@ -255,29 +255,7 @@ self.update = async(req, res) => {
         })
     }
 }
-self.findAll = async(req, res) => {
-    try {
-        const { id, title, secondID } = req.query
-        if (!id) {
-            return
-        }
-        let filter = [title]
-        if (id) {
-            filter.push(id)
-        } else if (secondID) {
-            filter.push(secondID)
-        }
-        const data = stakeholder.findAll({
-            where: {
-                [Op.and]: filter
-            }
-        })
-        res.send(data)
 
-    } catch (error) {
-        return res.status(500).json({ message: error })
-    }
-}
 self.delete = async(req, res) => {
     try {
         let id = req.params.id;
@@ -300,7 +278,7 @@ self.countAllStakeholderWithStakeType = async(req, res) => {
         let stakeTypeData = await sequelize.query(
             queryTypeString, { type: sequelize.QueryTypes.SELECT }
         );
-        let queryCategoryString = "SELECT stakecategories.title AS category,stakecategories.stakeholdertype_Id AS typeID, COALESCE(COUNT(stakeholders.id), 0) AS total FROM stakecategories LEFT JOIN stakeholders ON stakecategories.id = stakeholders.stakecategory_id GROUP BY stakecategories.title;"
+        let queryCategoryString = "SELECT stakecategories.title AS category,stakecategories.stakeholdertype_Id AS typeID, COALESCE(COUNT(stakeholders.id), 0) AS total FROM stakecategories LEFT JOIN stakeholders ON stakecategories.id = stakeholders.stakecategory_id GROUP BY stakecategories.title,typeID;"
         let stakeCategoryData = await sequelize.query(
             queryCategoryString, { type: sequelize.QueryTypes.SELECT }
         );

@@ -23,6 +23,8 @@ const ConstructionRelatedServiceController = require("../../../controllers/stake
 const StudyProgramController = require("../../../controllers/stakeholder/StudyProgramController")
 const StakeholderServiceController = require("../../../controllers/stakeholder/StakeholderServiceController")
 const OperationlocationController = require("../../../controllers/stakeholder/OperationlocationController")
+const StakeholderEmailController = require("../../../controllers/stakeholder/StakeholderEmailController")
+const StakeholderPhoneController = require("../../../controllers/stakeholder/StakeholderPhoneController")
 const middleware = require("../../../middleware/middleware")
 const validateData = require("../../../middleware/validate/module/stakeholder/validate")
 
@@ -225,5 +227,10 @@ module.exports = function(express) {
     //summary
     route.get("/count/stakeholder/stakeholdertype", stakeholderController.countAllStakeholderWithStakeType);
     route.get("/count/stakeholder/stakeholdercategory", stakeholderController.countAllStakeholderWithStakeCategory);
+    //Stakeholder email and phone
+    route.post("/stakeholder-email", StakeholderEmailController.save);
+    route.post("/stakeholder-phone", StakeholderPhoneController.save);
+    route.get("/stakeholder-email/:id", StakeholderEmailController.getEmailAndPhone);
+    route.put("/stakeholder-email", StakeholderEmailController.update);
     return route;
 };
