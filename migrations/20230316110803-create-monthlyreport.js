@@ -31,7 +31,7 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
-      month: {
+      quarter: {
         type: Sequelize.STRING,
         allowNull: false
       },

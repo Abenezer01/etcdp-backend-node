@@ -5,7 +5,7 @@ const {
 } = require("./../../models");
 const {sentNotification, activityLog, saveActionState} = require("../../utils/helper.js")
 const moment = require('moment')
-const months = require("./../../config/month")
+const months = require("./../../config/quarter")
 const {validateMonthlyReport} = require('../../validator')
 
 let self = {};
@@ -46,7 +46,7 @@ self.save = async (req,res) => {
 			where: {
 				project_id: body.project_id,
 				year: body.year,
-				month: body.month,
+				quarter: body.quarter,
 				is_submitted: false
 			}
 		})
@@ -57,8 +57,12 @@ self.save = async (req,res) => {
 			})
 		}else{
 			let data = await monthlyreport.create(body);
-			let us = req.decoded
-			await saveActionState(data.id, "monthlyreport", "REGISTER", us.id)
+			if(data){
+				let usr = await usrData.userData(req, res)
+				if(usr){
+					await saveActionState(data.id, "monthlyreport", "REGISTER", usr.usrID, req, res)
+				}
+			}
 			return res.json(data)
 		}
 		
@@ -105,7 +109,7 @@ self.delete = async (req,res) => {
 self.getMonthlyProjectReport = async(req, res) => {
 	let id = req.params.id 
 	let year = req.params.year
-	let month = req.params.month 
+	let quarter = req.params.quarter 
 
 	
 	try {
@@ -115,7 +119,7 @@ self.getMonthlyProjectReport = async(req, res) => {
 			where: {
 				project_id: id,
 				year:year,
-				month:month
+				quarter:quarter
 			}
 		})
 		if(!plan){
@@ -127,7 +131,7 @@ self.getMonthlyProjectReport = async(req, res) => {
 				where: {
 					project_id: id,
 					year: year,
-					month: month
+					quarter: quarter
 				}
 			})
 
@@ -137,7 +141,7 @@ self.getMonthlyProjectReport = async(req, res) => {
 				data = await monthlyreport.create({
 						project_id: id,
 						year: year,
-						month: month
+						quarter: quarter
 				})
 				let us = req.decoded
 
