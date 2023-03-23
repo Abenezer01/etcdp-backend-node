@@ -238,8 +238,21 @@ self.getStructure = async(req, res) => {
                 const pos = await position.findOne({
                     where: { department_id: dept.id, is_head: true },
                 });
+                
+                if(pos){
+                    let uspos = await userposition.findOne({
+                        where: {
+                            position_id: pos.id
+                        }
+                    })
+                }
 
-                const head = pos ? await user.findOne({ where: { position_id: pos.id } }) : null;
+                const uspos = pos ? await userposition.findOne({ where: { position_id: pos.id } }) : null;
+                
+
+
+
+                const head = uspos ? await user.findOne({ where: { user_id: uspos.user_id } }) : null;
 
                 return {
                     id: dept.id,
@@ -411,16 +424,10 @@ self.getChildren = async(req, res) => {
                     is_head: true
                 }
             })
+            
+            const uspos = pos ? await userposition.findOne({ where: { position_id: pos.id } }) : null;
+            const head = uspos ? await user.findOne({ where: { user_id: uspos.user_id } }) : null;
 
-
-            let head = null
-            if (pos) {
-                head = await user.findOne({
-                    where: {
-                        position_id: pos.id
-                    }
-                })
-            }
             arr.push({
                 id: dept.id,
                 parentNodeId: dept.parent_department_id,

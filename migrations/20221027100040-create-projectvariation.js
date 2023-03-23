@@ -36,6 +36,15 @@ module.exports = {
             extension_time: {
                 type: Sequelize.INTEGER,
             },
+            extension_time_id: {
+                type: Sequelize.UUID,
+                references: {
+                  model: 'projectextensiontimes',
+                  key: 'id'
+                },
+                onUpdate: 'CASCADE',
+                onDelete: 'CASCADE'
+            },
             justification: {
                 type: Sequelize.TEXT,
             },

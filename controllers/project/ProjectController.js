@@ -132,25 +132,22 @@
          const reportResult = Object.values(groupedReportData);
          const planResult = Object.values(groupedPlanData);
 
-         const result = await Promise.all(reportResult.map(async(reportItem) => {
+         const result = reportResult.map((reportItem) => {
             const planItem = planResult.find((item) => item.project_id === reportItem.project_id);
             if (planItem) {
                 const sv = reportItem.financial_performance - planItem.financial_performance;
                 const cv = reportItem.financial_performance - reportItem.project_expense;
                 const cpi = reportItem.project_expense !== 0 ? (reportItem.financial_performance / reportItem.project_expense) * 100 : 0;
                 const spi = planItem.financial_performance !== 0 ? (reportItem.financial_performance / planItem.financial_performance) * 100 : 0;
-                const proStatus = await projectstatus.findOne({where:{project_id:reportItem.project_id}})
-                let stat = proStatus ? await status.findOne({where: {id: proStatus.status_id}}) : null
                 return {
                     "project_id": reportItem.project_id,
                     "sv": sv,
                     "cv": cv,
                     "cpi": cpi,
                     "spi": spi,
-                    "status": stat.title
                 };
             }
-        }))
+        })
 
          const filteredResult = result.filter((item) => item);
 
@@ -171,6 +168,10 @@
              ],
              raw: true
          });
+
+        
+         let projects = await Promise.all(projectData.rows.map(self.getProjectStatus));
+           
          const projectTimeData = await projecttime.findAll({
              where: {
                  project_id: {
@@ -180,7 +181,7 @@
              raw: true
          });
 
-         const finResult = projectData.rows.map(aElement => {
+         const finResult = projects.map(aElement => {
              const matchingBElement = filteredResult.find(bElement => bElement.project_id === aElement.id);
              if (matchingBElement) {
                  return {
@@ -188,8 +189,7 @@
                      cv: matchingBElement.cv,
                      sv: matchingBElement.sv,
                      cpi: matchingBElement.cpi,
-                     spi: matchingBElement.spi,
-                     status: matchingBElement.status,
+                     spi: matchingBElement.spi
                  };
              }
              return aElement;
@@ -218,6 +218,15 @@
          });
      }
  }
+
+ self.getProjectStatus = async (pro) => {
+    const proStatus = await projectstatus.findOne({
+      order: [['createdAt', 'DESC']],
+      where: { project_id: pro.id }
+    });
+    const stat = proStatus ? await status.findOne({ where: { id: proStatus.status_id } }) : null;
+    return { ...pro, status: stat ? stat.title : null };
+  }
  self.getProjectByTypeIdPast = async(req, res) => {
      const { page = process.env.page, size = process.env.size, order = process.env.order } = req.query;
      const { projecttype_id, projectcategory_id, projectsubcategory_id } = req.body
@@ -632,7 +641,7 @@ self.getProjectData = async(req, res)=> {
 
 
 
-		let totalContractPrice = finance.main_contract_value
+		let total_contract_price = finance.main_contract_price_amount
 
 		let commencement_date = time.commencement_date 
 		let contract_duration = time.original_contract_duration
@@ -689,23 +698,24 @@ self.getProjectData = async(req, res)=> {
          let contractor = contractorStake ? await self.getStakeholderName(contractorStake.stakeholder_id) : null
          let consultant = consultantStake ? await self.getStakeholderName(consultantStake.stakeholder_id) : null
 
+        
 		return res.json({
 			name: pro.name,
 			client,
 			consultant,
 			contractor,
-			contract_duration: time.contract_duration,
-			total_contract_amount: totalContractPrice,
+			contract_duration: time.original_contract_duration,
+			total_contract_amount: total_contract_price,
 			commencement_date,
 			elapsed_time:used_time,
 			completion_date,
-			earned_value,
 			cpi,
 			spi,
 			cv,
 			sv,
 			paid_ipc,
-			planned_financial: plannedFinance,
+			earned_revenue: earned_value,
+			planned_revenue: plannedFinance,
 			actual_cost:actualCost
 		})
 

@@ -27,6 +27,7 @@ module.exports = (sequelize, DataTypes) => {
         justification: DataTypes.TEXT,
         amount: DataTypes.INTEGER,
         extension_time: DataTypes.INTEGER,
+        extension_time_id: DataTypes.UUID,
         remark: DataTypes.TEXT,
         revision_no: DataTypes.INTEGER,
     }, {
