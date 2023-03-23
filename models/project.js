@@ -43,5 +43,38 @@ module.exports = (sequelize, DataTypes) => {
         sequelize,
         modelName: 'project',
     });
+
+    project.associate = function(models) {
+
+        // associations can be defined here
+        project.hasOne(models.projecttime, {
+            foreignKey: 'project_id'
+        });
+        project.hasOne(models.projectfinance, {
+            foreignKey: 'project_id'
+        });
+        project.hasMany(models.projectstakeholder, {
+            foreignKey: 'project_id'
+        });
+        project.hasMany(models.projectvariation, {
+            foreignKey: 'project_id',
+        });
+
+        project.hasMany(models.projectplan, {
+            foreignKey: 'project_id'
+        });
+        project.hasMany(models.projectreport, {
+            foreignKey: 'project_id'
+        });
+        
+        project.hasMany(models.projectstatus, {
+            foreignKey: 'project_id'
+        });
+        project.hasMany(models.payment, {
+            foreignKey: 'project_id'
+        });
+
+    };
+
     return project;
 };

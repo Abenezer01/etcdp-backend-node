@@ -132,23 +132,25 @@
          const reportResult = Object.values(groupedReportData);
          const planResult = Object.values(groupedPlanData);
 
-         const result = reportResult.map((reportItem) => {
-             const planItem = planResult.find((item) => item.project_id === reportItem.project_id);
-             if (planItem) {
-                 const sv = reportItem.financial_performance - planItem.financial_performance;
-                 const cv = reportItem.financial_performance - reportItem.project_expense;
-                 const cpi = reportItem.project_expense !== 0 ? (reportItem.financial_performance / reportItem.project_expense) * 100 : 0;
-                 const spi = planItem.financial_performance !== 0 ? (reportItem.financial_performance / planItem.financial_performance) * 100 : 0;
-
-                 return {
-                     "project_id": reportItem.project_id,
-                     "sv": sv,
-                     "cv": cv,
-                     "cpi": cpi,
-                     "spi": spi
-                 };
-             }
-         });
+         const result = await Promise.all(reportResult.map(async(reportItem) => {
+            const planItem = planResult.find((item) => item.project_id === reportItem.project_id);
+            if (planItem) {
+                const sv = reportItem.financial_performance - planItem.financial_performance;
+                const cv = reportItem.financial_performance - reportItem.project_expense;
+                const cpi = reportItem.project_expense !== 0 ? (reportItem.financial_performance / reportItem.project_expense) * 100 : 0;
+                const spi = planItem.financial_performance !== 0 ? (reportItem.financial_performance / planItem.financial_performance) * 100 : 0;
+                const proStatus = await projectstatus.findOne({where:{project_id:reportItem.project_id}})
+                let stat = proStatus ? await status.findOne({where: {id: proStatus.status_id}}) : null
+                return {
+                    "project_id": reportItem.project_id,
+                    "sv": sv,
+                    "cv": cv,
+                    "cpi": cpi,
+                    "spi": spi,
+                    "status": stat.title
+                };
+            }
+        }))
 
          const filteredResult = result.filter((item) => item);
 
@@ -187,6 +189,7 @@
                      sv: matchingBElement.sv,
                      cpi: matchingBElement.cpi,
                      spi: matchingBElement.spi,
+                     status: matchingBElement.status,
                  };
              }
              return aElement;
@@ -529,7 +532,7 @@
 
      }
  }
- self.countAllProjectWithProjectCategory = async(req, res) => {
+self.countAllProjectWithProjectCategory = async(req, res) => {
 
      try {
          let queryString = "SELECT projectcategories.title AS category, COALESCE(COUNT(projects.id), 0) AS total FROM projectcategories LEFT JOIN projectholders ON projectcategories.id = projects.projectcategory_id GROUP BY projectcategories.title;"
@@ -547,83 +550,64 @@
  }
 
 
- self.getProjectData = async(req, res)=> {
+self.getProjectData = async(req, res)=> {
 
 	let id = req.params.id 
 	try {
+
+        // const projectData = await project.findOne({
+        //     where: {
+        //       id: id,
+        //     },
+        //     include: [
+        //       {
+        //         model: projecttime,
+        //       },
+        //       {
+        //         model: projectfinance,
+        //       },
+        //       {
+        //         model: projectstakeholder,
+        //         where: { title: ["Client", "Consultant", "Contractor"] },
+        //       },
+        //       {
+        //         model: projectvariation,
+        //       },
+        //       {
+        //         model: projectplan,
+        //       },
+        //       {
+        //         model: projectreport,
+        //       },
+        //       {
+        //         model: projectstatus,
+        //       },
+        //       {
+        //         model: payment,
+        //         where: { type: "INTERIM_PAYMENT" },
+        //       },
+        //     ],
+        //   });
+
+        //   return res.json(projectData)
 		
-		let pro =  await project.findOne({
-			where: {
-				id: id,
-			}
-		})
-
 		
-		let time = await projecttime.findOne({
-			where:{
-				project_id: id
-			}
-		})
-		
-
-		let finance = await projectfinance.findOne({
-			where:{
-				project_id: id
-			}
-		})
-		
-
-		let totalContractPrice = finance.main_contract_value
-
-		let commencement_date = time.commencement_date 
-		let contract_duration = time.original_contract_duration
-		let used_time = moment().diff(commencement_date, 'days')
-
-		let extensions = await projectvariation.findAll({
-			where: {
-				project_id: id
-			}
-		})
-
-		let extensionDays = extensions.reduce((total, item) => total + item.extension_time, 0)
-		
-		let completion_date = moment(time.commencement_date).add((contract_duration + extensionDays), 'days')
-		
-		let plans = await projectplan.findAll({
-			where: {
-				project_id: id
-			}
-		})
-		let reports = await projectreport.findAll({
-			where: {
-				project_id: id
-			}
-		})
-
-		let earned_value = reports.reduce((total, item) => total + item.financial_performance, 0)
-
-		let actualCost = reports.reduce((total, item) => total + item.project_expense, 0)
-		let plannedFinance = plans.reduce((total, item) => total + item.financial_performance,0 )
-
-		let actualFinance = reports.reduce((total, item) => total + item.financial_performance, 0)
-		let spi = (actualFinance/(plannedFinance ==0 ? 1 : plannedFinance)) *100;
-        let cpi = (actualFinance/(actualCost ==0 ? 1 : actualCost)) *100;
-
-		let sv = (actualFinance - plannedFinance)
-		let	cv =  (actualFinance - actualCost)
-
-		let interims = await payment.findAll({
-			where: {
-				project_id: id,
-                type: "INTERIM_PAYMENT"
-			}
-		})
-		let paid_ipc = interims.reduce((total, item) => total + item.net_payment, 0)
-
-		
-
-
-        let [clientStake, consultantStake, contractorStake] = await Promise.all([
+        let [pro, time, finance, clientStake, consultantStake, contractorStake] = await Promise.all([
+            project.findOne({
+                where: {
+                    id: id,
+                }
+            }),
+            projecttime.findOne({
+                where:{
+                    project_id: id
+                }
+            }),
+            projectfinance.findOne({
+                where:{
+                    project_id: id
+                }
+            }),
             projectstakeholder.findOne({
                 where: {
                     project_id: id,
@@ -641,28 +625,64 @@
                     project_id: id,
                     title: "Contractor"
                 }
-            }),
-            project.findOne({
-                where: {
-                    id: id
-                }
-            }),
-            projectfinance.findOne({
-                where: {
-                    project_id: id
-                }
-            }),
-            projecttime.findOne({
-                where: {
-                    project_id:id
-                }
-            }),
-            projectstatus.findOne({
-                where: {
-                    project_id: id
-                }
             })
+    
         ])
+
+
+
+
+		let totalContractPrice = finance.main_contract_value
+
+		let commencement_date = time.commencement_date 
+		let contract_duration = time.original_contract_duration
+		let used_time = moment().diff(commencement_date, 'days')
+
+        let extensions = await projectvariation.findAll({
+            where: {
+                project_id: id
+            }
+        })
+		
+
+		let extensionDays = extensions.reduce((total, item) => total + item.extension_time, 0)
+		
+		let completion_date = moment(time.commencement_date).add((contract_duration + extensionDays), 'days')
+		
+
+        let plans = await projectplan.findAll({
+            where: {
+                project_id: id
+            }
+        })
+
+        let reports = await projectreport.findAll({
+            where: {
+                project_id: id
+            }
+        })
+		
+		let earned_value = reports.reduce((total, item) => total + item.financial_performance, 0)
+
+		let actualCost = reports.reduce((total, item) => total + item.project_expense, 0)
+		let plannedFinance = plans.reduce((total, item) => total + item.financial_performance,0 )
+
+		let actualFinance = reports.reduce((total, item) => total + item.financial_performance, 0)
+		let spi = (actualFinance/(plannedFinance ==0 ? 1 : plannedFinance)) *100;
+        let cpi = (actualFinance/(actualCost ==0 ? 1 : actualCost)) *100;
+
+		let sv = (actualFinance - plannedFinance)
+		let	cv =  (actualFinance - actualCost)
+
+		let interims = await  payment.findAll({
+            where: {
+                project_id: id,
+                type: "INTERIM_PAYMENT"
+            }
+        })
+		let paid_ipc = interims.reduce((total, item) => total + item.net_payment, 0)
+
+
 
 
          let client = clientStake ? await self.getStakeholderName(clientStake.stakeholder_id) : null
