@@ -9,6 +9,8 @@
      status,
      projectreport,
      projectplan,
+     projectvariation,
+     payment,
      sequelize,
      Sequelize
  } = require("./../../models");
@@ -543,4 +545,155 @@
 
      }
  }
+
+
+ self.getProjectData = async(req, res)=> {
+
+	let id = req.params.id 
+	try {
+		
+		let pro =  await project.findOne({
+			where: {
+				id: id,
+			}
+		})
+
+		
+		let time = await projecttime.findOne({
+			where:{
+				project_id: id
+			}
+		})
+		
+
+		let finance = await projectfinance.findOne({
+			where:{
+				project_id: id
+			}
+		})
+		
+
+		let totalContractPrice = finance.main_contract_value
+
+		let commencement_date = time.commencement_date 
+		let contract_duration = time.original_contract_duration
+		let used_time = moment().diff(commencement_date, 'days')
+
+		let extensions = await projectvariation.findAll({
+			where: {
+				project_id: id
+			}
+		})
+
+		let extensionDays = extensions.reduce((total, item) => total + item.extension_time, 0)
+		
+		let completion_date = moment(time.commencement_date).add((contract_duration + extensionDays), 'days')
+		
+		let plans = await projectplan.findAll({
+			where: {
+				project_id: id
+			}
+		})
+		let reports = await projectreport.findAll({
+			where: {
+				project_id: id
+			}
+		})
+
+		let earned_value = reports.reduce((total, item) => total + item.financial_performance, 0)
+
+		let actualCost = reports.reduce((total, item) => total + item.project_expense, 0)
+		let plannedFinance = plans.reduce((total, item) => total + item.financial_performance,0 )
+
+		let actualFinance = reports.reduce((total, item) => total + item.financial_performance, 0)
+		let spi = (actualFinance/(plannedFinance ==0 ? 1 : plannedFinance)) *100;
+        let cpi = (actualFinance/(actualCost ==0 ? 1 : actualCost)) *100;
+
+		let sv = (actualFinance - plannedFinance)
+		let	cv =  (actualFinance - actualCost)
+
+		let interims = await payment.findAll({
+			where: {
+				project_id: id,
+                type: "INTERIM_PAYMENT"
+			}
+		})
+		let paid_ipc = interims.reduce((total, item) => total + item.net_payment, 0)
+
+		
+
+
+        let [clientStake, consultantStake, contractorStake] = await Promise.all([
+            projectstakeholder.findOne({
+                where: {
+                    project_id: id,
+                    title: "Client"
+                }
+            }),
+            projectstakeholder.findOne({
+                where: {
+                    project_id: id,
+                    title: "Consultant"
+                }
+            }),
+            projectstakeholder.findOne({
+                where: {
+                    project_id: id,
+                    title: "Contractor"
+                }
+            }),
+            project.findOne({
+                where: {
+                    id: id
+                }
+            }),
+            projectfinance.findOne({
+                where: {
+                    project_id: id
+                }
+            }),
+            projecttime.findOne({
+                where: {
+                    project_id:id
+                }
+            }),
+            projectstatus.findOne({
+                where: {
+                    project_id: id
+                }
+            })
+        ])
+
+
+         let client = clientStake ? await self.getStakeholderName(clientStake.stakeholder_id) : null
+         let contractor = contractorStake ? await self.getStakeholderName(contractorStake.stakeholder_id) : null
+         let consultant = consultantStake ? await self.getStakeholderName(consultantStake.stakeholder_id) : null
+
+		return res.json({
+			name: pro.name,
+			client,
+			consultant,
+			contractor,
+			contract_duration: time.contract_duration,
+			total_contract_amount: totalContractPrice,
+			commencement_date,
+			elapsed_time:used_time,
+			completion_date,
+			earned_value,
+			cpi,
+			spi,
+			cv,
+			sv,
+			paid_ipc,
+			planned_financial: plannedFinance,
+			actual_cost:actualCost
+		})
+
+	} catch (error) {
+		return res.status(500).json({
+			message: error.message
+		})
+	}
+}
+
  module.exports = self;
