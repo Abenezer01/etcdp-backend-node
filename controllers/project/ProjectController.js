@@ -641,7 +641,7 @@ self.getProjectData = async(req, res)=> {
 
 
 
-		let totalContractPrice = finance.main_contract_value
+		let total_contract_price = finance.main_contract_price_amount
 
 		let commencement_date = time.commencement_date 
 		let contract_duration = time.original_contract_duration
@@ -698,23 +698,24 @@ self.getProjectData = async(req, res)=> {
          let contractor = contractorStake ? await self.getStakeholderName(contractorStake.stakeholder_id) : null
          let consultant = consultantStake ? await self.getStakeholderName(consultantStake.stakeholder_id) : null
 
+        
 		return res.json({
 			name: pro.name,
 			client,
 			consultant,
 			contractor,
-			contract_duration: time.contract_duration,
-			total_contract_amount: totalContractPrice,
+			contract_duration: time.original_contract_duration,
+			total_contract_amount: total_contract_price,
 			commencement_date,
 			elapsed_time:used_time,
 			completion_date,
-			earned_value,
 			cpi,
 			spi,
 			cv,
 			sv,
 			paid_ipc,
-			planned_financial: plannedFinance,
+			earned_revenue: earned_value,
+			planned_revenue: plannedFinance,
 			actual_cost:actualCost
 		})
 
