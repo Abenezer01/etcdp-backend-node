@@ -137,6 +137,11 @@ self.servePhoto = async(req, res) => {
             ]
         });
 
+        if(!img){
+            return res.status(404).json({
+                message: "Photo not found!"
+            })
+        }
         const imagePath = path.join(prePath, img.url);
         return res.sendFile(imagePath);
     } catch (error) {

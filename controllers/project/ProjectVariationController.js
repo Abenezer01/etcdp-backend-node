@@ -1,6 +1,7 @@
 const { saveActionState } = require("../../utils/helper");
 const {
     projectvariation,
+    projectextensiontime,
     Sequelize
 } = require("./../../models");
 const usrData = require("../../utils/userDataFromToken");
@@ -129,6 +130,21 @@ self.save = async(req, res) => {
             if (data) {
                 let usrID = usr.usrID
                 await saveActionState(data.id, "projectvariation", "REGISTER", usrID, req, res)
+
+                let extension_days = data.number_of_days 
+                if(extension_days > 0) {
+                    let extension = await projectextensiontime.create({
+                        title: `${data.type} extension`,
+                        project_id: data.project_id,
+                        number_of_days: extension_days,
+                        reason: data.type
+                    })
+                    if(extension) {
+                        data.extension_time_id = extension.id 
+                        await data.save()
+                        await saveActionState(extension.id, "projectextensiontime", "REGISTER", usrID, req, res)
+                    }
+			}
             }
             return res.json(data)
         }

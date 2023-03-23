@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class extensiontime extends Model {
+  class projectextensiontime extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  extensiontime.init({
+  projectextensiontime.init({
     id: {
       type: DataTypes.UUID,
       primaryKey: true,
@@ -39,7 +39,7 @@ module.exports = (sequelize, DataTypes) => {
     },
   }, {
     sequelize,
-    modelName: 'extensiontime',
+    modelName: 'projectextensiontime',
   });
-  return extensiontime;
+  return projectextensiontime;
 };

@@ -25,6 +25,7 @@ const validateData = require("../../../middleware/validate/module/project/valida
 // const ProjectSubCategoryController = require("../../../controllers/project/ProjectSubCategoryController.js")
 const ProjectFinanceController = require("../../../controllers/project/ProjectFinanceController.js")
 const ProjectVariationController = require("../../../controllers/project/ProjectVariationController.js")
+const ProjectExtensionTimeController = require("../../../controllers/project/ProjectExtensionTimeController.js")
 const ProjectTimeController = require("../../../controllers/project/ProjectTimeController.js")
 const ProjectBondController = require("../../../controllers/project/ProjectBondController.js")
 const RoadInfoController = require("../../../controllers/project/RoadInfoController.js")
@@ -271,6 +272,15 @@ module.exports = function(express) {
     route.post("/project-variation", validateData.projectVariationValidate, ProjectVariationController.save);
     route.put("/project-variation/:id", validateData.projectVariationValidate, ProjectVariationController.update);
     route.delete("/project-variation/:id", ProjectVariationController.delete);
+
+    //extensions 
+     route.get("/project-extension-time/", ProjectExtensionTimeController.getAll);
+     route.get("/project-extension-time/:id", ProjectExtensionTimeController.get);
+     route.get("/project/project-extension-time/:id", ProjectExtensionTimeController.getByProjectId);
+     route.get("/project-extension-time-search", ProjectExtensionTimeController.search);
+     route.post("/project-extension-time", validateData.projectExtensionTimeValidate, ProjectExtensionTimeController.save);
+     route.put("/project-extension-time/:id", validateData.projectExtensionTimeValidate, ProjectExtensionTimeController.update);
+     route.delete("/project-extension-time/:id", ProjectExtensionTimeController.delete);
 
     //project time
     route.get("/project-time/", ProjectTimeController.getAll);

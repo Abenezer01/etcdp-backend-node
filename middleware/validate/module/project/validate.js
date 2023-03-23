@@ -129,6 +129,22 @@ const projectVariationValidate = async(req, res, next) => {
 
     await validateReply.validateReply(req.body, validationRule, res, next)
 }
+const projectExtensionTimeValidate = async(req, res, next) => {
+    let param = await validateReply.checkParam(req, res, next)
+    if (param == "failed") {
+        return res.status(400).json({
+            message: "Invalid id"
+        })
+    }
+    const validationRule = {
+        "project_id": "required|string",
+        "number_of_days": "required|integer",
+        "reason": "required|string"
+        
+    };
+
+    await validateReply.validateReply(req.body, validationRule, res, next)
+}
 const projectTimeValidate = async(req, res, next) => {
     let param = await validateReply.checkParam(req, res, next)
     if (param == "failed") {
@@ -560,6 +576,7 @@ module.exports = {
     projectTypeValidate,
     projectValidate,
     projectVariationValidate,
+    projectExtensionTimeValidate,
     constructionResourceValidate,
     buildingEnvelopMaterialValidate,
     buildingDimensionDetailValidate,
