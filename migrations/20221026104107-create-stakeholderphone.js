@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
     async up(queryInterface, Sequelize) {
-        await queryInterface.createTable('useremails', {
+        await queryInterface.createTable('stakeholderphones', {
             id: {
                 allowNull: false,
                 primaryKey: true,
@@ -11,24 +11,24 @@ module.exports = {
             parent_id: {
                 type: Sequelize.UUID,
                 references: {
-                    model: 'useremails',
+                    model: 'stakeholderphones',
                     key: 'id'
                 },
                 onUpdate: 'CASCADE',
                 onDelete: 'CASCADE'
             },
-            user_id: {
+            stakeholder_id: {
                 type: Sequelize.UUID,
                 allowNull: false,
                 references: {
-                    model: 'users',
+                    model: 'stakeholders',
                     key: 'id'
                 },
                 onUpdate: 'CASCADE',
                 onDelete: 'CASCADE'
             },
-            email: {
-                type: Sequelize.STRING,
+            phone: {
+                type: Sequelize.TEXT,
                 allowNull: false
             },
             is_primary: {
@@ -46,6 +46,6 @@ module.exports = {
         });
     },
     async down(queryInterface, Sequelize) {
-        await queryInterface.dropTable('useremails');
+        await queryInterface.dropTable('stakeholderphones');
     }
 };

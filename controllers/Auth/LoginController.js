@@ -81,13 +81,17 @@ self.loginUser = async(request, response) => {
             }
         })
 
-        const usrPhoto = await photo.findOne({
-            where: {
-                model_id: usr.id,
-                type: "USER"
-            }
-        })
-        let replyUser = { id: usr.id, full_name: usr.full_name, first_name: usr.last_name, middle_name: usr.middle_name, phone: usPhone.phone, gender: usr.gender, avatar: usrPhoto.url, position_id: pos.id, position_name: pos.name }
+
+        let replyUser = {
+            id: usr.id,
+            full_name: usr.full_name,
+            first_name: usr.last_name,
+            middle_name: usr.middle_name,
+            phone: usPhone.phone,
+            gender: usr.gender,
+            position_id: pos.id,
+            position_name: pos.name
+        }
 
 
         bcrypt.compare(password, usr.password, function(err, result) {  
