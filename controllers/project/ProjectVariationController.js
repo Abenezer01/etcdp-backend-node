@@ -131,7 +131,7 @@ self.save = async(req, res) => {
                 let usrID = usr.usrID
                 await saveActionState(data.id, "projectvariation", "REGISTER", usrID, req, res)
 
-                let extension_days = data.number_of_days 
+                let extension_days = data.extension_time 
                 if(extension_days > 0) {
                     let extension = await projectextensiontime.create({
                         title: `${data.type} extension`,
