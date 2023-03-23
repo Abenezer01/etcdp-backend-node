@@ -13,7 +13,7 @@ const stakeholderCategoryValidate = async(req, res, next) => {
         })
     }
     const validationRule = {
-        "stakeholdertypeId": "required|string",
+        "stakeholdertype_id": "required|string",
         "title": "required|string"
     };
 

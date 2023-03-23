@@ -209,11 +209,40 @@ const modulemodels = {
     
 }
 
+const mainanalysismodules = {
+    "project": [
+        "project",
+        "projecttype",
+        "projectcategory",
+        "projectsubcategory"
+    ],
+    "stakeholder": [
+        "stakeholder",
+        "stakeholdertype",
+        "stakecategory",
+        "stakesubcategory"
+    ],
+    "document": [
+        "document",
+        "documenttype",
+        "documentcategory",
+        "documentsubcategory"
+    ],
+    "resource": [
+        "resource",
+        "resourcetype",
+        "resourcecategory",
+        "resourcesubcategory"
+    ]
+
+}
+
 module.exports = {
     models,
     modules,
     roleName,
     permissionModules,
     actions,
-    modulemodels
+    modulemodels,
+    mainanalysismodules
 }

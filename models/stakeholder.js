@@ -82,6 +82,10 @@ module.exports = (sequelize, DataTypes) => {
             as: "businessfield",
             foreignKey: "businessfield_id"
         })
+        stakeholder.belongsTo(models.department, {
+            as: "department",
+            foreignKey: "department_id"
+        })
     }
     return stakeholder;
 }

@@ -14,6 +14,7 @@ const stakeholderRoute = require('./routes/module/stakeholder/route')
 
 const resourceRoute = require('./routes/module/construction resource/route')
 const documentRoute = require('./routes/module/document/route')
+const analyticRoute = require('./routes/module/analytic/route')
 const fileRoute = require('./routes/module/file/route')
 
 
@@ -48,6 +49,7 @@ app.use('/api/resources', resourceRoute(express))
 app.use('/api/documents', documentRoute(express))
 app.use('/api/file', fileRoute(express))
 app.use('/api/generics', polymorphicRoute(express))
+app.use('/api/analytics', analyticRoute(express))
 
 
 app.use("/", route_view(express));
