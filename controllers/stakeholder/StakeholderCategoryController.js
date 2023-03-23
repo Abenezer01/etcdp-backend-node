@@ -73,10 +73,11 @@ self.getAllCatByTypeId = async(req, res) => {
                 stakeholdertype_id: id
             }
         })
-    } catch (err) {
-
         const response = paginate.getPagingData(data, page, limit);
         res.send(response);
+    } catch (err) {
+
+
 
         res.status(500).send({
             message: err.message || "Some error occurred while retrieving data."
