@@ -45,47 +45,46 @@ self.getAll = async(req, res) => {
 }
 
 self.getAllCatByTypeId = async(req, res) => {
-
-    let id = req.params.id;
-    let { page, size, order } = req.query;
-    //console.log("The page", page, size)
-    if (page == null && size == null) {
-        page = process.env.page,
-            size = process.env.size
-    }
-    if (order == null) {
-        order = process.env.order
-    }
-    const { limit, offset } = paginate.getPagination(page, size);
-
-    let data = stakecategory.findAndCountAll({
-        limit,
-        offset,
-        order: [
-            ['createdAt', order]
-        ],
-        include: [{
-            model: stakesubcategory,
-            as: 'stakesubcategories',
-            required: false,
-        }, ],
-        where: {
-            stakeholdertype_id: id
+    try {
+        let id = req.params.id;
+        let { page, size, order } = req.query;
+        //console.log("The page", page, size)
+        if (page == null && size == null) {
+            page = process.env.page,
+                size = process.env.size
         }
-    })
+        if (order == null) {
+            order = process.env.order
+        }
+        const { limit, offset } = paginate.getPagination(page, size);
 
-    if (data.length > 0) {
+        let data = stakecategory.findAndCountAll({
+            limit,
+            offset,
+            order: [
+                ['createdAt', order]
+            ],
+            include: [{
+                model: stakesubcategory,
+                as: 'stakesubcategories',
+                required: false,
+            }, ],
+            where: {
+                stakeholdertype_id: id
+            }
+        })
+    } catch (err) {
+
         const response = paginate.getPagingData(data, page, limit);
         res.send(response);
-    } else {
+
         res.status(500).send({
             message: err.message || "Some error occurred while retrieving data."
         });
-
-        const response = paginate.getPagingData({ rows, count }, page, limit, count);
-
-        res.send(response);
     }
+
+
+
 }
 
 self.get = async(req, res) => {
