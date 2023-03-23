@@ -43,7 +43,7 @@ module.exports = (sequelize, DataTypes) => {
         cost_due_to_rework: DataTypes.DOUBLE,
         over_head_cost: DataTypes.DOUBLE,
         year: DataTypes.STRING,
-        month: DataTypes.STRING,
+        quarter: DataTypes.STRING,
         start: {
             type: DataTypes.DATE,
             allowNull: false

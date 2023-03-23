@@ -49,7 +49,7 @@ module.exports = {
             cost_due_to_rework: Sequelize.DOUBLE,
             over_head_cost: Sequelize.DOUBLE,
             year: Sequelize.STRING,
-            month: Sequelize.STRING,
+            quarter: Sequelize.STRING,
             start: {
                 type: Sequelize.DATE,
                 allowNull: false

@@ -129,7 +129,7 @@ module.exports = function(express) {
     route.put("/project-report/:id", validateData.projectReportValidate, ProjectReportController.update);
     route.delete("/project-report/:id", ProjectReportController.delete);
 
-    route.get("/monthly-project-report/:id/:year/:month", ProjectReportController.getMonthlyProjectReport);
+    route.get("/monthly-project-report/:id/:year/:quarter", ProjectReportController.getMonthlyProjectReport);
     route.get("/report/monthly-project-report/:id", ProjectReportController.getByMonthlyId);
     //Project document
     route.get("/project-document", ProjectDocumentController.getAll);

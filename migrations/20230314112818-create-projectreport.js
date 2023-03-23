@@ -92,7 +92,7 @@ module.exports = {
             year: {
                 type: Sequelize.STRING
             },
-            month: {
+            quarter: {
                 type: Sequelize.STRING
             },
             is_summary: {

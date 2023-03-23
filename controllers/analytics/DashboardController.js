@@ -109,22 +109,8 @@ self.getGeneralAnalysis = async(req, res) => {
 self.getGeneralAnalysisCategory = async(req, res) => {
     try {
 
-
-        // let usr = await usrData.userData(req, res)
-
-        // let x = await self.getChildren(usr.departmentID)
-        // return res.json(x)
-
-
-
         let  module = req.params.module
         let id = req.params.id
-
-        // let encrypted = await encrypt(module)
-        // return res.json({
-        //     encrypted,
-        //     decrypted: await decrypt(encrypted)
-        // })
 
 
         const moduleArr = mainanalysismodules[module];
