@@ -88,6 +88,7 @@ self.refreshToken = async(request, response, next) => {
             gender: usr.gender,
             position_id: positionId,
             position_name: pos.name,
+            department_id: usPos.department_id,
             avatar: usPhoto.url
         }
 
