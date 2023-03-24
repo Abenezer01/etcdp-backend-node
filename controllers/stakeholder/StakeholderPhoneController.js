@@ -1,5 +1,4 @@
 const {
-    stakeholderemail,
     stakeholderphone,
     Sequelize
 } = require("../../models");
@@ -16,7 +15,7 @@ self.getAll = async(req, res) => {
     const { limit, offset } = paginate.getPagination(page, size);
 
     try {
-        const { rows, count } = await stakeholderemail.findAndCountAll({
+        const { rows, count } = await stakeholderphone.findAndCountAll({
             limit,
             offset,
             order: [
@@ -36,11 +35,11 @@ self.getAll = async(req, res) => {
 }
 
 
-self.getPrimaryEmail = async(req, res) => {
+self.getPrimaryphone = async(req, res) => {
 
     try {
         let id = req.query;
-        let data = await stakeholderemail.findOne({
+        let data = await stakeholderphone.findOne({
             where: {
                 [Op.and]: [{ stakeholder_id: id }, { is_primary: true }]
             }
@@ -54,32 +53,18 @@ self.getPrimaryEmail = async(req, res) => {
         })
     }
 }
-self.getEmailAndPhone = async(req, res) => {
+self.get = async(req, res) => {
 
     try {
         let id = req.params.id;
-        let emailData = await stakeholderemail.findAll({
+        let data = await stakeholderphone.findAll({
             where: {
-                stakeholder_id: id,
-
-            },
-            order: [
-                ['is_primary', 'DESC'],
-            ]
+                stakeholder_id: id
+            }
         });
-        let phoneData = await stakeholderphone.findAll({
-            where: {
-                stakeholder_id: id,
-
-            },
-            order: [
-                ['is_primary', 'DESC'],
-            ]
-        });
-        const result = { "emails": emailData, "phones": phoneData }
-        return res.send(
-            result ? result : []
-        )
+        return res.status(200).json({
+            data: (data) ? data : []
+        })
     } catch (error) {
         res.status(500).json({
             message: error.message
@@ -89,7 +74,7 @@ self.getEmailAndPhone = async(req, res) => {
 self.search = async(req, res) => {
     try {
         let text = req.query.text;
-        let data = await stakeholderemail.findAll({
+        let data = await stakeholderphone.findAll({
             where: {
                 name: {
                     [Op.like]: "%" + text + "%"
@@ -121,9 +106,9 @@ self.save = async(req, res) => {
             }
             let filt = []
             for (let dat of body) {
-                const allData = await stakeholderemail.findOne({
+                const allData = await stakeholderphone.findOne({
                         where: {
-                            [Op.and]: [{ stakeholder_id: dat.stakeholder_id }, { email: dat.email }, { is_primary: true }]
+                            [Op.and]: [{ stakeholder_id: dat.stakeholder_id }, { phone: dat.phone }, { is_primary: true }]
                         },
                         // raw: true
                     })
@@ -134,7 +119,7 @@ self.save = async(req, res) => {
             }
             let fr = []
             const resu = await Promise.all(body.map(async(bodItem) => {
-                const filteredDat = filt.find((item) => item.email === bodItem.email && item.stakeholder_id === bodItem.stakeholder_id && item.is_primary === bodItem.is_primary);
+                const filteredDat = filt.find((item) => item.phone === bodItem.phone && item.stakeholder_id === bodItem.stakeholder_id && item.is_primary === bodItem.is_primary);
                 if (filteredDat) {
                     return filteredDat
                 }
@@ -148,9 +133,9 @@ self.save = async(req, res) => {
             }
 
             const fin = await Promise.all(body.map(async(item) => {
-                let data = await stakeholderemail.create(item);
+                let data = await stakeholderphone.create(item);
 
-                await saveActionState(data.id, "stakeholderemail", "REGISTER", usr.usrID, req, res)
+                await saveActionState(data.id, "stakeholderphone", "REGISTER", usr.usrID, req, res)
 
                 return data.dataValues
             }))
@@ -168,7 +153,7 @@ self.update = async(req, res) => {
     try {
         let id = req.params.id;
         let body = req.body;
-        let data = await stakeholderemail.update(body, {
+        let data = await stakeholderphone.update(body, {
             where: {
                 id: id
             }
@@ -186,7 +171,7 @@ self.update = async(req, res) => {
 self.delete = async(req, res) => {
     try {
         let id = req.params.id;
-        let data = await stakeholderemail.destroy({
+        let data = await stakeholderphone.destroy({
             where: {
                 id: id
             }
