@@ -57,7 +57,7 @@ self.getByStakeholderId = async(req, res) => {
         const data = await operationlocation.findAndCountAll({
             limit,
             offset,
-            where: { stakeholder_id: id },
+            where: { stakeholder_id: id, status: true },
             order: [
                 ['createdAt', order]
             ]
@@ -101,6 +101,7 @@ self.save = async(req, res) => {
         const arr = [];
 
         for (const location of body) {
+            location.status = true
             const data = await operationlocation.create(location);
             await saveActionState(data.id, "operationlocation", "REGISTER", us, req, res);
             arr.push(data);
@@ -143,11 +144,16 @@ self.update = async(req, res) => {
             return;
         }
         for (const location of body) {
-            await operationlocation.update(location, {
-                where: {
-                    id: location.id,
-                },
-            });
+            if (!location.id && location.status == true) {
+                await operationlocation.create(location)
+            } else if (location.id && location.status == false) {
+                await operationlocation.update(location, {
+                    where: {
+                        id: location.id,
+                    },
+                });
+            }
+
         }
 
         res.json({
