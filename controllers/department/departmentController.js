@@ -492,4 +492,5 @@ self.getDepartmentDashboad = async(req, res) => {
     }
 }
 
+
 module.exports = self;

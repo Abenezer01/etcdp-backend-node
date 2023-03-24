@@ -90,7 +90,8 @@ self.loginUser = async(request, response) => {
             phone: usPhone.phone,
             gender: usr.gender,
             position_id: pos.id,
-            position_name: pos.name
+            position_name: pos.name,
+            department_id: usPos.department_id
         }
 
 
