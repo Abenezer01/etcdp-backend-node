@@ -37,6 +37,7 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue: DataTypes.UUIDV4
         },
         parent_id: DataTypes.UUID,
+        department_id: DataTypes.UUID,
         resourcetype_id: DataTypes.UUID,
         resourcecategory_id: DataTypes.UUID,
         resourcesubcategory_id: DataTypes.UUID,

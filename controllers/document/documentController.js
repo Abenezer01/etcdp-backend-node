@@ -191,6 +191,9 @@ self.save = async(req, res) => {
                     })
                 }
                 let us = usr.usrID
+                //add the department to data 
+                data.department_id = usr.departmentID
+                await data.save()
                 await saveActionState(data.id, "document", "REGISTER", us, req, res)
             }
             return res.json(data)

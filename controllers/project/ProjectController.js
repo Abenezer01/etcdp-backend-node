@@ -20,7 +20,8 @@
  const moment = require('moment');
  const Op = Sequelize.Op;
  const usrData = require("../../utils/userDataFromToken");
- const { saveActionState } = require("../../utils/helper");
+ const { saveActionState, encrypt, decrypt } = require('../../utils/helper')
+
  let self = {};
  const paginate = require("../../utils/pagination");
  const dotenv = require('dotenv');
@@ -393,6 +394,7 @@
              if (data) {
                  let usrID = usr.usrID
                  data.department_id = usr.departmentID
+                 data.name = await encrypt(body.name)
                  await data.save()
                  await saveActionState(data.id, "project", "REGISTER", usrID, req, res)
              }
@@ -573,43 +575,6 @@
      let id = req.params.id
      try {
 
-         // const projectData = await project.findOne({
-         //     where: {
-         //       id: id,
-         //     },
-         //     include: [
-         //       {
-         //         model: projecttime,
-         //       },
-         //       {
-         //         model: projectfinance,
-         //       },
-         //       {
-         //         model: projectstakeholder,
-         //         where: { title: ["Client", "Consultant", "Contractor"] },
-         //       },
-         //       {
-         //         model: projectvariation,
-         //       },
-         //       {
-         //         model: projectplan,
-         //       },
-         //       {
-         //         model: projectreport,
-         //       },
-         //       {
-         //         model: projectstatus,
-         //       },
-         //       {
-         //         model: payment,
-         //         where: { type: "INTERIM_PAYMENT" },
-         //       },
-         //     ],
-         //   });
-
-         //   return res.json(projectData)
-
-
          let [pro, time, finance, clientStake, consultantStake, contractorStake] = await Promise.all([
              project.findOne({
                  where: {
@@ -702,7 +667,7 @@
 
 
 
-
+         //stakeholders
          let client = clientStake ? await self.getStakeholderName(clientStake.stakeholder_id) : null
          let contractor = contractorStake ? await self.getStakeholderName(contractorStake.stakeholder_id) : null
          let consultant = consultantStake ? await self.getStakeholderName(consultantStake.stakeholder_id) : null

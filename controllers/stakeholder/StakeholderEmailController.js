@@ -9,7 +9,8 @@ const dotenv = require('dotenv');
 dotenv.config();
 let self = {};
 const usrData = require("../../utils/userDataFromToken");
-const { saveActionState } = require("../../utils/helper");
+const { saveActionState, encrypt, decrypt } = require('../../utils/helper')
+
 self.getAll = async(req, res) => {
     const { page = process.env.page, size = process.env.size, order = process.env.order } = req.query;
 
@@ -149,9 +150,11 @@ self.save = async(req, res) => {
 
             const fin = await Promise.all(body.map(async(item) => {
                 let data = await stakeholderemail.create(item);
-
-                await saveActionState(data.id, "stakeholderemail", "REGISTER", usr.usrID, req, res)
-
+                if(data){
+                    data.email = await encrypt(item.email)
+                    await data.save()
+                    await saveActionState(data.id, "stakeholderemail", "REGISTER", usr.usrID, req, res)
+                }
                 return data.dataValues
             }))
 

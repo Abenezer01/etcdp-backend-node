@@ -18,7 +18,7 @@ const Op = Sequelize.Op;
 const dotenv = require('dotenv');
 dotenv.config();
 const usrData = require("../../utils/userDataFromToken");
-const { saveActionState, getChildren } = require('../../utils/helper');
+const { saveActionState, getChildren, encrypt, decrypt } = require('../../utils/helper')
 const paginate = require("../../utils/pagination");
 
 const jwt = require("jsonwebtoken");
@@ -206,9 +206,9 @@ self.save = async(req, res) => {
         let body = req.body
         const salt = await bcrypt.genSalt(10);
         var usr = {
-            first_name: body.first_name,
-            last_name: body.last_name,
-            middle_name: body.middle_name,
+            first_name: encrypt(body.first_name),
+            last_name: encrypt(body.last_name),
+            middle_name: encrypt(body.middle_name),
 
             gender: body.gender,
             marital_status: body.marital_status,
@@ -225,7 +225,7 @@ self.save = async(req, res) => {
                 //create position
             let usemail = await useremail.create({
                 user_id: created_user.id,
-                email: body.email,
+                email: encrypt(body.email),
                 is_primary: true
             })
 
@@ -234,7 +234,7 @@ self.save = async(req, res) => {
 
                 let usphone = await userphone.create({
                     user_id: created_user.id,
-                    phone: body.phone,
+                    phone: encrypt(body.phone),
                     is_primary: true
                 })
 

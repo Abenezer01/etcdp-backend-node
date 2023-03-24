@@ -8,7 +8,9 @@ const dotenv = require('dotenv');
 dotenv.config();
 let self = {};
 const usrData = require("../../utils/userDataFromToken");
-const { saveActionState } = require("../../utils/helper");
+const { saveActionState, encrypt, decrypt} = require("../../utils/helper");
+
+
 self.getAll = async(req, res) => {
     const { page = process.env.page, size = process.env.size, order = process.env.order } = req.query;
 
@@ -134,8 +136,13 @@ self.save = async(req, res) => {
 
             const fin = await Promise.all(body.map(async(item) => {
                 let data = await stakeholderphone.create(item);
+                if(data){
+                    data.phone = await encrypt(item.phone)
+                    await data.save()
+                    await saveActionState(data.id, "stakeholderphone", "REGISTER", usr.usrID, req, res)
 
-                await saveActionState(data.id, "stakeholderphone", "REGISTER", usr.usrID, req, res)
+                }
+
 
                 return data.dataValues
             }))
