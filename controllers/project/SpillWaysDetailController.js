@@ -48,7 +48,7 @@ self.getByProjectId = async(req, res) => {
             order: [
                 ['createdAt', order]
             ],
-            include: { model: roadsegment, as: 'roadsegment', attributes: ['id', 'name'] }
+            //include: { model: roadsegment, as: 'roadsegment', attributes: ['id', 'name'] }
         });
 
         const response = paginate.getPagingData(data, page, limit);

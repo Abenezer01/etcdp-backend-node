@@ -66,14 +66,22 @@ module.exports = (sequelize, DataTypes) => {
         project.hasMany(models.projectreport, {
             foreignKey: 'project_id'
         });
-        
+
         project.hasMany(models.projectstatus, {
             foreignKey: 'project_id'
         });
         project.hasMany(models.payment, {
             foreignKey: 'project_id'
         });
-
+        project.belongsTo(models.projectcategory, {
+            foreignKey: 'projectcategory_id'
+        })
+        project.belongsTo(models.projectsubcategory, {
+            foreignKey: 'projectsubcategory_id'
+        })
+        project.belongsTo(models.projecttype, {
+            foreignKey: 'projecttype_id'
+        })
     };
 
     return project;

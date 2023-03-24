@@ -50,6 +50,7 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false
         },
+        license_issued_date: DataTypes.DATE,
         revision_no: {
             type: DataTypes.INTEGER
         }

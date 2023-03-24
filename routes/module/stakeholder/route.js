@@ -230,6 +230,8 @@ module.exports = function(express) {
     //Stakeholder email and phone
     route.post("/stakeholder-email", StakeholderEmailController.save);
     route.post("/stakeholder-phone", StakeholderPhoneController.save);
+    route.put("/stakeholder-email/:id", StakeholderEmailController.update);
+    route.put("/stakeholder-phone/:id", StakeholderPhoneController.update);
     route.get("/stakeholder-email/:id", StakeholderEmailController.getEmailAndPhone);
     route.put("/stakeholder-email", StakeholderEmailController.update);
     return route;
