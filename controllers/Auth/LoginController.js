@@ -1,4 +1,5 @@
 const {
+    actionstate,
     user,
     position,
     role,
@@ -81,6 +82,21 @@ self.loginUser = async(request, response) => {
             }
         })
 
+        //show if it is checked
+
+        let action = await actionstate.findOne({
+            where: {
+                model_id: usr.id,
+                action: "CHECKE"
+            }
+        })
+        let profile_pic = await photo.findOne({
+            where: {
+                model_id: usr.id,
+                type: "USER_PROFILE_PHOTO"
+            }
+        })
+        
 
         let replyUser = {
             id: usr.id,
@@ -91,7 +107,9 @@ self.loginUser = async(request, response) => {
             gender: usr.gender,
             position_id: pos.id,
             position_name: pos.name,
-            department_id: usPos.department_id
+            department_id: usPos.department_id,
+            is_checked: action ? true:false,
+            profile_completed: profile_pic ? true:false
         }
 
 

@@ -1,4 +1,5 @@
 const {
+    actionstate,
     user,
     role,
     position,
@@ -78,6 +79,20 @@ self.refreshToken = async(request, response, next) => {
                 type:"USER"
             }
         })
+
+        let action = await actionstate.findOne({
+            where: {
+                model_id: usr.id,
+                action: "CHECKE"
+            }
+        })
+        let profile_pic = await photo.findOne({
+            where: {
+                model_id: usr.id,
+                type: "USER_PROFILE_PHOTO"
+            }
+        })
+
         replyUser = {
             id: usr.id,
             first_name: usr.first_name,
@@ -89,7 +104,9 @@ self.refreshToken = async(request, response, next) => {
             position_id: positionId,
             position_name: pos.name,
             department_id: usPos.department_id,
-            avatar: usPhoto.url
+            avatar: usPhoto.url,
+            is_checked: action ? true:false,
+            profile_completed: profile_pic ? true:false
         }
 
         if (!usr) {

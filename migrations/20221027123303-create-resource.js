@@ -16,6 +16,15 @@ module.exports = {
                 onUpdate: 'CASCADE',
                 onDelete: 'CASCADE'
             },
+            department_id: {
+                type: Sequelize.UUID,
+                references: {
+                    model: 'departments',
+                    key: 'id'
+                },
+                onUpdate: 'CASCADE',
+                onDelete: 'CASCADE'
+            },
             resourcetype_id: {
                 type: Sequelize.UUID,
                 allowNull: false,

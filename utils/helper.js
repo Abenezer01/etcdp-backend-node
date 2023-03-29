@@ -138,23 +138,37 @@ const getAllChildren = async(arr) => {
 // }
 
 const algorithm = 'aes-256-cbc';
-const key = crypto.randomBytes(32);
-const iv = crypto.randomBytes(16);
+// const key = crypto.randomBytes(32);
+// const iv = crypto.randomBytes(16);
+
+const key = crypto
+  .createHash('sha512')
+  .update("secret_key")
+  .digest('hex')
+  .substring(0, 32)
+const encryptionIV = crypto
+  .createHash('sha512')
+  .update("secret_iv")
+  .digest('hex')
+  .substring(0, 16)
+  
 
 const encrypt = async (text) => {
 
-    const cipher = crypto.createCipheriv(algorithm, key, iv);
-    let encrypted = cipher.update(text, 'utf8', 'hex');
-    encrypted += cipher.final('hex');
-    return encrypted
+    const cipher = crypto.createCipheriv(algorithm, key, encryptionIV)
+    return Buffer.from(
+        cipher.update(text, 'utf8', 'hex') + cipher.final('hex')
+    ).toString('base64')
 }
 
 const decrypt  = async(encrypted) =>{
 
-    const decipher = crypto.createDecipheriv(algorithm, key, iv);
-    let decrypted = decipher.update(encrypted, 'hex', 'utf8');
-    decrypted += decipher.final('utf8');
-    return decrypted
+    const buff = Buffer.from(encrypted, 'base64')
+    const decipher = crypto.createDecipheriv(algorithm, key, encryptionIV)
+    return (
+        decipher.update(buff.toString('utf8'), 'hex', 'utf8') +
+        decipher.final('utf8')
+    ) //
 }
 
 module.exports = {

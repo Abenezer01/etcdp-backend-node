@@ -12,7 +12,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 
-const { saveActionState, getChildren } = require('../../utils/helper');
+const { saveActionState, getChildren, encrypt, decrypt } = require('../../utils/helper')
 
 const Op = Sequelize.Op;
 
@@ -110,17 +110,6 @@ self.getAll = async(req, res) => {
     //             message: err.message || "Some error occurred while retrieving data."
     //         });
     //     });
-
-
-
-
-
-
-
-
-
-
-
 
 
 }
@@ -225,7 +214,11 @@ self.save = async(req, res) => {
         if (usr) {
             req.body.department_id = usr.departmentID
             let data = await stakeholder.create(body);
+
             if (data) {
+                //encrypt trade name 
+                data.trade_name = await encrypt(body.trade_name)
+                data.save()
                 let usrID = usr.usrID
                 saveActionState(data.id, "stakeholder", "REGISTER", usrID, req, res)
             }
