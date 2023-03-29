@@ -24,6 +24,9 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.UUID,
             allowNull: false
         },
+        file_category: {
+            type: DataTypes.STRING
+        },
         file_id: {
             type: DataTypes.UUID,
             allowNull: false

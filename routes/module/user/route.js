@@ -29,6 +29,10 @@ module.exports = function(express) {
     route.get("/disable-user-position/:id", userController.dePosition);
     route.post("/switch-account", userController.switchAccount);
     route.get("/user-positions/:id", userController.getAllUserPositions);
+    route.get("/user-check-status/:id", userController.checkUserStatus);
+
+
+    
 
 
 

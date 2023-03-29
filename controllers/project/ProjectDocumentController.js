@@ -103,6 +103,8 @@ self.save = async(req, res) => {
             if (data) {
                 let usrID = usr.usrID
                 await saveActionState(data.id, "projectdocument", "REGISTER", usrID, req, res)
+                data.file_category = body.type 
+                await data.save()
             }
             return res.json(data)
         }
@@ -147,6 +149,5 @@ self.delete = async(req, res) => {
         })
     }
 }
-
 
 module.exports = self;

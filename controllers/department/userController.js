@@ -118,17 +118,41 @@ self.getAlll = async(req, res) => {
     // let queryString = `SELECT * FROM users as U WHERE U.id=${one};`
 self.getAll = async(req, res) => {
 
+    // let x = await user.findOne({
+    //     where: {
+    //         id: "00a340e3-431a-489f-a859-6d0c9d15e894"
+    //     }
+    // })
+    // return res.json({
+    //     first_name: await decrypt(x.first_name),
+    //     middle_name: await decrypt(x.middle_name),
+    //     last_name: await decrypt(x.last_name)
+    // })
     let data = await user.findAll()
 
-    return res.json(data)
+    let allUser = await Promise.all(data.map(async(item)=> {
+            
+            let first_name = await decrypt(item.first_name)
+            let middle_name = await decrypt(item.middle_name)
+            let last_name = await decrypt(item.last_name)
+
+            item.first_name = first_name
+            item.middle_name = middle_name
+            item.last_name = last_name
+            return item
+           
+        })
+    )
+
+    return res.json(allUser)
         // let one = "12c85269-9dc5-4e89-8d47-62719baea7ed"
         // let queryString = `SELECT first_name FROM users as U WHERE U.id='${one}';`
-    let queryString = "SELECT *  FROM users as U JOIN actionstates as A WHERE U.id=A.model_id AND A.action='REGISTER';"
-    let userData = await sequelize.query(
-        queryString, { type: sequelize.QueryTypes.SELECT }
-    );
+    // let queryString = "SELECT *  FROM users as U JOIN actionstates as A WHERE U.id=A.model_id AND A.action='REGISTER';"
+    // let userData = await sequelize.query(
+    //     queryString, { type: sequelize.QueryTypes.SELECT }
+    // );
 
-    console.log("The user is", userData)
+    // console.log("The user is", userData)
 
 
 
@@ -515,7 +539,7 @@ self.switchAccount = async(req, res) => {
             //position_id === userposition_id
         const userpos = await userposition.findOne({
             where: {
-                id: body.position_id
+                id: body.position_id,
             }
         })
         const pos = await position.findOne({ where: { id: userpos.position_id } })
@@ -523,7 +547,6 @@ self.switchAccount = async(req, res) => {
         const account = await user.findOne({
             where: { id: usr.usrID },
             include: [
-                { model: photo, as: "photo" },
                 { model: userposition, as: "positions" },
             ],
         });
@@ -537,10 +560,31 @@ self.switchAccount = async(req, res) => {
             where: { user_id: account.id, is_primary: true },
         })
 
+        let userphoto = await photo.findOne({
+            where: {
+                model_id: account.id
+            }
+        })
 
         let { id, first_name, middle_name, last_name, gender } = account;
         let { email } = usEmail || {};
         let { phone } = usPhone || {};
+
+         //show if it is checked
+
+         let action = await actionstate.findOne({
+            where: {
+                model_id: usr.usrID,
+                action: "CHECK"
+            }
+        })
+        let profile_pic = await photo.findOne({
+            where: {
+                model_id: usr.usrID,
+                type: "USER_PROFILE_PHOTO"
+            }
+        })
+
 
         let replyUser = {
             id,
@@ -552,9 +596,15 @@ self.switchAccount = async(req, res) => {
             gender,
             position_id: userpos ? userpos.position_id : null,
             position_name: pos ? pos.name : null,
+
+            department_id: userpos.department_id,
+            user_position_id: userpos.id,
+            is_checked: action ? true:false,
+            profile_completed: profile_pic ? true:false,
             // role: usrRole.name,
-            avatar: account.photo.url,
+            avatar: userphoto? userphoto.url: null
         };
+
 
         try {
 
@@ -911,11 +961,17 @@ self.checkUserStatus = async(req, res) => {
             }
         })
 
+        let messageArr = []
 
-        return res.json({
-            is_checked: action ? true:false,
-            profile: profile_pic ? true:false
-        })
+        if(!action){
+            messageArr.push("The account is not checked")
+        }
+
+        if(!profile_pic){
+            messageArr.push("You don't have profile picture")
+        }
+
+        return res.json(messageArr)
 
 
     } catch (error) {
