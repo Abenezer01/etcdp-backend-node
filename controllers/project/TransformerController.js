@@ -40,6 +40,7 @@ self.getByProjectId = async(req, res) => {
     const { page = process.env.page, size = process.env.size, order = process.env.order } = req.query;
 
     const { limit, offset } = paginate.getPagination(page, size);
+
     try {
         const data = await transformer.findAndCountAll({
             limit,

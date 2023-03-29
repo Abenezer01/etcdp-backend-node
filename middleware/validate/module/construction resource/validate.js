@@ -156,11 +156,11 @@ const resourceImageValidate = async(req, res, next) => {
         })
     }
     if (!req.files) {
-        return res.status(402).json({
+        return res.status(412).json({
             message: "There is no image file attached"
         })
     } else if (!req.files.image) {
-        return res.status(402).json({
+        return res.status(412).json({
             message: "There is no image field on file upload"
         })
     } else {

@@ -59,10 +59,11 @@ self.getEmployeeEducationByStakeholderId = async(req, res) => {
     const { page = process.env.page, size = process.env.size, order = process.env.order } = req.query;
 
     const { limit, offset } = paginate.getPagination(page, size);
+    let limiter = { limit, offset }
+    page == -1 ? limiter = {} : limiter
     try {
         const data = await employeeeducation.findAndCountAll({
-            limit,
-            offset,
+            limiter,
             where: { stakeholder_id: id },
             order: [
                 ['createdAt', order]
@@ -193,6 +194,171 @@ self.getCollectionOfData = async(req, res) => {
     }, {});
     res.send(result)
 }
+self.optimizedSaveToImprove = async(req, res) => {
+    try {
+
+        let usr = await usrData.userData(req, res)
+
+        let us = usr.usrID
+        let body = req.body;
+        const arr = body.empEduArr
+            //let ssyy = []
+        console.log("The array", arr[0].stakeholder_id)
+
+
+        let stakeHolderId = arr[0].stakeholder_id
+            // return res.send(stakeHolderId)
+        if (usr) {
+            let totalEmployee = await totalemployee.findAll({
+                where: {
+                    stakeholder_id: stakeHolderId
+                }
+            });
+
+            let totalEmployeeData = totalEmployee;
+            //console.log("The data", totalEmployeeData);
+
+            if (!totalEmployeeData) {
+                return res.status(400).json({
+                    message: "There is no total employee data with this stakeholder id"
+                });
+            }
+
+            let reqBodyArr = arr.map((item) => {
+                const date = new Date(item.year);
+                const yy = date.getFullYear();
+
+                return {
+                    year: yy,
+                    female: item.female,
+                    male: item.male,
+                    nationality: item.nationality,
+                    stakeholder_id: item.stakeholder_id
+                };
+            });
+
+            const filteredReqBodyArr = reqBodyArr.reduce((acc, item) => {
+                let existingItem = acc.find((i) => i.nationality === item.nationality && i.year === item.year);
+
+                if (existingItem) {
+                    existingItem.male += item.male;
+                    existingItem.female += item.female;
+                } else {
+                    acc.push(item);
+                }
+
+                return acc;
+            }, []);
+
+
+
+            const ssyy = totalEmployeeData.map(employee => {
+                const date = new Date(employee.year);
+                const year = date.getFullYear();
+                const { male, female, nationality } = employee;
+                return { year, male, female, nationality };
+            });
+            const filteredfrmDBArr = ssyy.reduce((acc, item) => {
+                let existingItem = acc.find((i) => i.nationality === item.nationality && i.year === item.year);
+
+                if (existingItem) {
+                    existingItem.male += item.male;
+                    existingItem.female += item.female;
+                } else {
+                    acc.push(item);
+                }
+
+                return acc;
+            }, []);
+            const diffDataYear = filteredReqBodyArr
+                .map(obj => obj.year)
+                .filter(year => !filteredfrmDBArr.some(obj => obj.year === year));
+
+
+
+            const diffDataNational = filteredReqBodyArr
+                .map(obj => obj.nationality)
+                .filter(nationality => !filteredfrmDBArr.some(obj => obj.nationality === nationality));
+
+
+
+            if (diffDataYear.length || diffDataNational.length) {
+                let missingYears = diffDataYear.length ? `${diffDataYear} years` : '';
+                let missingNationalities = diffDataNational.length ? `${diffDataNational} nationalities` : '';
+                let bod = `Sorry! ${missingYears} ${missingYears && missingNationalities ? 'and' : ''} ${missingNationalities} are not registered at total employee data with this stakeholder`;
+                return res.status(400).json({ "message": bod });
+            }
+
+
+            const registeredData = await employeeeducation.findAll({
+                where: {
+                    stakeholder_id: stakeHolderId
+                }
+            });
+
+            const rD = registeredData.map(data => ({
+                year: new Date(data.year).getFullYear(),
+                male: data.male,
+                female: data.female,
+                nationality: data.nationality,
+                stakeholder_id: data.stakeholder_id
+            }));
+
+            const bodDate = new Date(req.body.year);
+
+
+            const newArr = filteredReqBodyArr.filter(item => {
+                return rD.some(data => (
+                    data.nationality === item.nationality &&
+                    data.year === item.year &&
+                    data.stakeholder_id === item.stakeholder_id
+                ));
+            });
+
+            if (newArr.length) {
+                return res.status(400).json({ message: "There is already registered data the same with your input data!" })
+            }
+
+            const matchingData = filteredfrmDBArr.find(data => (
+                data.year === filteredReqBodyArr[i].year &&
+                data.nationality === filteredReqBodyArr[i].nationality
+            ));
+
+            if (matchingData) {
+                if (filteredReqBodyArr[i].male !== matchingData.male) {
+                    const bod = `Sorry! the ${filteredReqBodyArr[i].nationality} nationality total male employee in ${filteredReqBodyArr[i].year} year was ${matchingData.male} but your total male is ${filteredReqBodyArr[i].male}`;
+                    return res.status(400).json({ "message": bod });
+                } else if (filteredReqBodyArr[i].female !== matchingData.female) {
+                    const bod = `Sorry! the ${filteredReqBodyArr[i].nationality} nationality total female employee in ${filteredReqBodyArr[i].year} year was ${matchingData.female} but your total female is ${filteredReqBodyArr[i].female}`;
+                    return res.status(400).json({ "message": bod });
+                } else {
+                    const employeeEducationData = arr.map(item => ({
+                        stakeholder_id: item.stakeholder_id,
+                        year: item.year,
+                        domain: item.domain,
+                        studylevel_id: item.studylevel_id,
+                        department_name: item.department_name,
+                        male: item.male,
+                        female: item.female,
+                        nationality: item.nationality
+                    }));
+
+                    const savedData = await employeeeducation.bulkCreate(employeeEducationData);
+                    for (const data of savedData) {
+                        await saveActionState(data.id, "employeeeducation", "REGISTER", us, req, res);
+                    }
+                    return res.status(200).json({ data: savedData });
+                }
+            }
+
+
+        }
+    } catch (error) {
+        res.status(500).json({
+            message: error.message
+        })
+    }
+}
 self.save = async(req, res) => {
     try {
 
@@ -206,16 +372,17 @@ self.save = async(req, res) => {
 
 
         let stakeHolderId = arr[0].stakeholder_id
-
+            // return res.send(stakeHolderId)
         if (usr) {
             let totalEmployee = await totalemployee.findAll({
                 where: {
                     stakeholder_id: stakeHolderId
                 }
             })
+
             let totalEmployeeData = totalEmployee
             console.log("The data", totalEmployeeData)
-            if (!totalEmployeeData.length) {
+            if (!totalEmployeeData) {
                 return res.status(400).json({
                     message: "There is no total employee data with this stakeholder id"
                 })

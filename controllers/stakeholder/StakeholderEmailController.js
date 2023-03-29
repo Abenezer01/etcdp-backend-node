@@ -115,7 +115,7 @@ self.save = async(req, res) => {
             const filteredArray = body.filter(item => item.is_primary === true);
 
             if (filteredArray.length > 1) {
-                return res.status(402).json({
+                return res.status(412).json({
                     message: "There is more than one element with is_primary true."
                 })
 
@@ -143,7 +143,7 @@ self.save = async(req, res) => {
             let removedNullResu = resu.find(item => item != null);
             //return res.send(removedNullResu)
             if (removedNullResu) {
-                return res.status(402).json({
+                return res.status(412).json({
                     message: "There is already registered element with is_primary true data."
                 })
             }
@@ -194,7 +194,9 @@ self.delete = async(req, res) => {
                 id: id
             }
         });
-        return res.json(data)
+        return res.status(200).json({
+            message: "Success"
+        })
     } catch (error) {
         res.status(500).json({
             message: error.message

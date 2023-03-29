@@ -234,5 +234,7 @@ module.exports = function(express) {
     route.put("/stakeholder-phone/:id", StakeholderPhoneController.update);
     route.get("/stakeholder-email/:id", StakeholderEmailController.getEmailAndPhone);
     route.put("/stakeholder-email", StakeholderEmailController.update);
+    route.delete("/stakeholder-email/:id", StakeholderEmailController.delete);
+    route.delete("/stakeholder-phone/:id", StakeholderPhoneController.delete);
     return route;
 };

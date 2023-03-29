@@ -122,6 +122,7 @@ self.save = async(req, res) => {
 const prePath = path.join(__dirname, '..', '..', 'public');
 
 self.servePhoto = async(req, res) => {
+
     try {
         const { id, type } = req.params
 
@@ -136,13 +137,17 @@ self.servePhoto = async(req, res) => {
                 ['createdAt', 'DESC']
             ]
         });
-
-        if(!img){
-            return res.status(404).json({
+        // return res.send(img)
+        if (!img) {
+            return res.status(204).json(undefined)
+        }
+        const imagePath = path.join(prePath, img.url);
+        //return res.send(imagePath)
+        if (!imagePath) {
+            return res.status(412).json({
                 message: "Photo not found!"
             })
         }
-        const imagePath = path.join(prePath, img.url);
         return res.sendFile(imagePath);
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -165,7 +170,7 @@ self.serveMultiplePhoto = async(req, res) => {
         });
         let arr = []
         for (const im of img) {
-            arr.push({ id: im.id, path: im.url})
+            arr.push({ id: im.id, path: im.url })
         }
         res.status(200).send(arr);
         // for (i = 0; i < img.length; i++) {

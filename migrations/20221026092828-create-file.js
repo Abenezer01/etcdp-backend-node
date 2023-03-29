@@ -10,9 +10,6 @@ module.exports = {
             parent_id: {
                 type: Sequelize.UUID
             },
-            project_type: {
-                type: Sequelize.STRING
-            },
             title: {
                 type: Sequelize.STRING,
                 allowNull: false
