@@ -7,6 +7,7 @@ const {
     useremail,
     userphone,
     department,
+    passwordreset,
     photo,
     role,
     sequelize,
@@ -22,6 +23,13 @@ const { saveActionState, getChildren, encrypt, decrypt } = require('../../utils/
 const paginate = require("../../utils/pagination");
 
 const jwt = require("jsonwebtoken");
+
+//emailer
+const uuid  =  require('uuid');
+var nodemailer = require('nodemailer');
+var smtpTransport = require('nodemailer-smtp-transport');
+const emailValidator = require('deep-email-validator');
+
 
 let TOKEN_KEY = process.env.ACCESS_TOKEN_KEY
 let REFRESH_TOKEN_KEY = process.env.REFRESH_TOKEN_KEY
@@ -201,14 +209,31 @@ self.search = async(req, res) => {
     }
 }
 
+self.isEmailValid = async(email) => {
+	try {
+		return emailValidator.validate(email)
+	} catch (error) {
+		return {message: error.message}
+	}
+}
+
 self.save = async(req, res) => {
     try {
         let body = req.body
+
+        //check email is really exist 
+        let val = await self.isEmailValid(body.email)
+		if(!val.valid){
+			return res.status(422).json({
+				message:"The provided email address does not exist!"
+			})
+		}
+
         const salt = await bcrypt.genSalt(10);
         var usr = {
-            first_name: encrypt(body.first_name),
-            last_name: encrypt(body.last_name),
-            middle_name: encrypt(body.middle_name),
+            first_name: await encrypt(body.first_name),
+            last_name: await encrypt(body.last_name),
+            middle_name: await encrypt(body.middle_name),
 
             gender: body.gender,
             marital_status: body.marital_status,
@@ -225,7 +250,7 @@ self.save = async(req, res) => {
                 //create position
             let usemail = await useremail.create({
                 user_id: created_user.id,
-                email: encrypt(body.email),
+                email: await encrypt(body.email),
                 is_primary: true
             })
 
@@ -234,9 +259,55 @@ self.save = async(req, res) => {
 
                 let usphone = await userphone.create({
                     user_id: created_user.id,
-                    phone: encrypt(body.phone),
+                    phone: await encrypt(body.phone),
                     is_primary: true
                 })
+                //email to user 
+                const resetString = uuid.v4() + created_user.id
+				await passwordreset.create({
+					user_id: created_user.id,
+					token: resetString,
+					expiresAt: Date.now() + 3600000,
+					is_used: false
+				})
+
+                //send
+                const redirectUrl = body.redirectUrl
+				const salt = await bcrypt.genSalt();
+				const hashedResetString =  await bcrypt.hash(resetString, salt)
+				var mailOptions = {
+					from: '1space.mia@gmail.com',
+					// from: process.env.AUTH_EMAIL,
+					to: usemail.email,
+					subject: "Setup Password",
+					html: `
+					<p>Your are registered to ONESPACE, click on the link below to fillout your password</p>
+					<p><a href= ${redirectUrl}${created_user.id}/${hashedResetString.replace(/\//g, "slash")}>Link to setup password</a></p>
+					`
+				}
+				
+				var transporter = nodemailer.createTransport(
+					smtpTransport({
+						service: 'gmail',
+						host: 'smtp.gmail.com',
+						secure: false,
+						auth: {
+							user: '1space.mia@gmail.com',
+							pass: 'rjxcwxgyrijvturw'
+						}
+				}));
+
+				transporter.sendMail(mailOptions, function(error, info){
+					if (error) {
+						return res.json("error" + error)
+					} else {
+						return res.json({
+							message: "Email sent successfully"
+						})
+						
+					}
+				});
+
 
                 if (usphone) {
 
@@ -562,5 +633,262 @@ self.getAllUserPositions = async(req, res) => {
 //     } catch (error) {
 //     }
 // }
+self.sendMail = async(req, res) => {
+
+	let body = req.body
+	let email = body.email
+
+	try {
+
+		let us = await user.findOne({
+			where: {
+				email:email
+			}
+		})
+		if(us){
+
+			const redirectUrl = body.redirectUrl
+
+			let preset = await passwordreset.findOne({
+				where: {
+					user_id: us.id,
+					is_used: false
+				}
+			})
+			const resetString = preset.token
+
+			const salt = await bcrypt.genSalt();
+			const hashedResetString =  await bcrypt.hash(resetString, salt)
+			var mailOptions = {
+				from: '1space.mia@gmail.com',
+				// from: process.env.AUTH_EMAIL,
+				to: email,
+				subject: "Setup Password",
+				html: `
+
+				<p>Your EtCDP account is ready, click on the link below to fillout your password</p>
+				<p><a href= ${redirectUrl}${us.id}/${hashedResetString.replace(/\//g, "slash")}>Link to setup password</a></p>
+				`
+			}
+
+
+			var transporter = nodemailer.createTransport(
+				smtpTransport({
+					service: 'gmail',
+					host: 'smtp.gmail.com',
+					secure: false,
+					auth: {
+						user: '1space.mia@gmail.com',
+						pass: 'rjxcwxgyrijvturw'
+					}
+			}));
+
+			transporter.sendMail(mailOptions, function(error, info){
+				if (error) {
+					return res.json("error" + error)
+					console.log(error);
+				} else {
+	
+					return res.json({
+						message: "Email sent successfully"
+					})
+					
+				}
+				});
+		}
+		
+	} catch (error) {
+		return res.status(500).json({
+			message: error.message
+		})
+	}
+}
+
+//password reset and requesting it 
+
+self.requestPasswordReset = async(req, res) => {
+	
+	
+	try {
+
+        const {email, redirectUrl}  = req.body
+		//check if user exist
+
+        let encrypted_email = await encrypt(email)
+    
+        let usemail = await useremail.findOne({
+            where: {
+                email: encrypted_email,
+                is_primary: true
+            }
+        })
+
+    
+        if(!usemail){
+            return res.status(404).json({
+                message: "Email not found!"
+            })
+        }
+
+        //must decrypt email
+
+        let us = await user.findOne({
+            where: {
+                id: usemail.user_id
+            }
+        })
+
+		if(us){
+			
+		
+			const resetString = uuid.v4() + us.id
+
+			let data = await passwordreset.findOne({
+				order: [ [ 'createdAt', 'DESC' ]],
+				where: {
+					user_id: us.id,
+					is_used: false
+				}
+			})
+
+			
+			// if(data){
+			// 	let created_at = moment(data.createdAt)
+			// 	let now = moment()
+			// 	let diffInMinutes = now.diff(created_at, "minutes")
+			// 	if(diffInMinutes < 30){
+			// 		return res.status(500).json({
+			// 			message: `You can only request for password reset in 30 minutes interval!`
+			// 		})
+			// 	}
+				
+			// }
+ 
+			
+			await passwordreset.create({
+				user_id: us.id,
+				token: resetString,
+				expiresAt: Date.now() + 3600000,
+				is_used: false
+			})
+			
+			// sendEmail(us.id, email, redirectUrl, resetString)
+			const salt = await bcrypt.genSalt();
+			const hashedResetString =  await bcrypt.hash(resetString, salt)
+		
+			var mailOptions = {
+				from: '1space.mia@gmail.com',
+				// from: process.env.AUTH_EMAIL,
+				to: email,
+				subject: "Password Reset",
+				html: `
+				<p>Someone just requested to change your EtCDP account's credentials. If this was you, click on the link below to reset them.</p>
+				<p><a href= ${redirectUrl}${us.id}/${hashedResetString.replace(/\//g, "slash")}>Link to reset credentials</a></p>
+				<p>This link will expire within 60 minutes. </p>
+				<p>If you don't want to reset your credentials, just ignore this message and nothing will be changed.</p>`
+				
+			}
+
+
+			var transporter = nodemailer.createTransport(
+				smtpTransport({
+					service: 'gmail',
+					host: 'smtp.gmail.com',
+					secure: false,
+					auth: {
+						user: '1space.mia@gmail.com',
+						pass: 'rjxcwxgyrijvturw'
+					}
+			}));
+
+			transporter.sendMail(mailOptions, function(error, info){
+				if (error) {
+					return res.json("error" + error)
+					console.log(error);
+				} else {
+	
+					return res.json({
+						message: "Password reset link sent to you email"
+					})
+					
+				}
+				});  
+
+		}else{
+			return res.status(404).json({
+				message: 'User not Found!'
+			})
+		}
+		
+	} catch (error) {
+		return res.status(500).json({
+			message: error.message
+		})
+	}
+}
+
+self.resetPassword = async(req, res) => {
+
+	try {
+		let {user_id, resetString, password}  = req.body
+
+		let existing = await passwordreset.findOne({
+			order: [ [ 'createdAt', 'DESC' ]],
+			where: {
+				user_id,
+				is_used: false
+			}
+		})
+
+
+		if(existing){
+			// const expiredAt = existing.expiresAt 
+			// if(expiredAt < Date.now()){
+			// 	return res.status(410).json({
+			// 		message: 'Password reset link has expired.'
+			// 	})
+			// }else{
+
+			const hashedResetString = existing.token 
+			//FYI resetString is the hashed one from the sent letter
+			let hashed = resetString.replace(/slash/g, "/") 
+            // return res.json({
+            //     resetString,
+            //     hashed,
+            //     hashedResetString
+            // })
+           
+			const valid = await bcrypt.compare(hashedResetString, hashed)
+			
+			if(valid){
+				const salt = await bcrypt.genSalt();
+				const pass = await bcrypt.hash(password, salt)				
+				await user.update({password:pass},{
+					where: {
+						id: user_id
+					}
+				})
+				await passwordreset.update({is_used: true},{
+					where: {
+						user_id: existing.user_id,
+						is_used: false
+					}
+				})
+
+				return res.status(200).json({
+					message: 'Password changed successfully'
+				})
+			}else{
+				return res.json({
+					message:"Invalid reset string"
+				})
+			}
+		}
+	} catch (error) {
+		return res.status(500).json({
+			message: error.message
+		})
+	}	
+}
 
 module.exports = self
