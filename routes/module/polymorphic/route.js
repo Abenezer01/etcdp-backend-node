@@ -8,6 +8,7 @@ const NoteController = require("../../../controllers/polymorphic/NoteController.
 const PhotoController = require("../../../controllers/polymorphic/PhotoController.js")
 const ModelMenuController = require("../../../controllers/polymorphic/ModelMenuController.js")
 const NotificationController = require("../../../controllers/polymorphic/NotificationController.js")
+const FileController = require("../../../controllers/polymorphic/FileController")
 const middleware = require("../../../middleware/middleware")
 
 module.exports = function(express) {
@@ -37,8 +38,17 @@ module.exports = function(express) {
     route.get("/multiple/photo/:id", PhotoController.serveMultiplePhoto);
     route.put("/photo/:id", validateData.photoValidate, PhotoController.update);
     route.delete("/photo/:id", PhotoController.delete);
+    //File
+    route.get("/file", FileController.getAll);
+    route.get("/file/:id", FileController.get);
+    route.get("/file/reference/:id", FileController.getMyFiles);
+    route.get("/filter/file", validateData.filterValidate, FileController.getMyFilteredFiles);
+    route.get("/file/filter/type_model", validateData.filterValidate, FileController.getFilesByModelAndType);
+    route.get("/file_search", FileController.search);
+    route.post("/file", validateData.fileValidate, FileController.save);
+    route.put("/file/:id", validateData.fileValidate, FileController.update);
+    route.delete("/file/:id", FileController.delete);
     //reply
-
     route.get("/reply", ReplyController.getAll);
     route.get("/reply/:id", ReplyController.get);
     route.post("/reply", validateData.replyValidate, ReplyController.save);

@@ -39,10 +39,11 @@ self.getByProjectId = async(req, res) => {
     const { page = process.env.page, size = process.env.size, order = process.env.order } = req.query;
 
     const { limit, offset } = paginate.getPagination(page, size);
+    let limiter = { limit, offset }
+    page == -1 ? limiter = {} : limiter
     try {
         const data = await transformertype.findAndCountAll({
-            limit,
-            offset,
+            limiter,
             where: { project_id: id },
             order: [
                 ['createdAt', order]

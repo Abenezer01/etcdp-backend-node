@@ -64,13 +64,15 @@ self.getByHigherInstituteId = async(req, res) => {
         const data = await graduate.findAndCountAll({
             limit,
             offset,
-            where: { stakeholder_id: id },
+            where: { higher_institute_id: id },
             order: [
                 ['createdAt', order]
             ],
             include: ["studyfield", "studyprogram", "studylevel", "studyperiod", "agelevel"]
         });
-
+        // if (!data) {
+        //     return res.status(200).send("No data found")
+        // }
         const response = paginate.getPagingData(data, page, limit);
         res.send(response);
     } catch (error) {
