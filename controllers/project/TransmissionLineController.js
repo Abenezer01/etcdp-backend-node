@@ -43,7 +43,8 @@ self.getByProjectId = async(req, res) => {
     page == -1 ? limiter = {} : limiter
     try {
         const data = await transmissionline.findAndCountAll({
-            limiter,
+            limit: limiter.limit,
+            offset: limiter.offset,
             where: { project_id: id },
             order: [
                 ['createdAt', order]

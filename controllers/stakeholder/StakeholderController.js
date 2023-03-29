@@ -119,9 +119,11 @@ self.getStakeholders = async(req, res) => {
     let { limit, offset } = paginate.getPagination(page, size);
     let limiter = { limit, offset }
     page == -1 ? limiter = {} : limiter
+        //return res.json(limiter.limit)
     try {
         const { rows, count } = await stakeholder.findAndCountAll({
-            limiter,
+            limit: limiter.limit,
+            offset: limiter.offset,
             //include: ["staketype", "stakecategory"],
             attributes: ["id", "trade_name"],
             order: [
