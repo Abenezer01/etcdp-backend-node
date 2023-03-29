@@ -890,5 +890,39 @@ self.resetPassword = async(req, res) => {
 		})
 	}	
 }
+self.checkUserStatus = async(req, res) => {
+    let id = req.params.id
+    try {
+        let data = await user.findOne({
+            where: {
+                id: id
+            }
+        })
+        let action = await actionstate.findOne({
+            where: {
+                model_id: id,
+                action: "CHECK"
+            }
+        })
+        let profile_pic = await photo.findOne({
+            where: {
+                model_id: id,
+                type: "USER_PROFILE_PHOTO"
+            }
+        })
+
+
+        return res.json({
+            is_checked: action ? true:false,
+            profile: profile_pic ? true:false
+        })
+
+
+    } catch (error) {
+        return response.json({
+            message: error.message
+        })
+    }
+}
 
 module.exports = self
