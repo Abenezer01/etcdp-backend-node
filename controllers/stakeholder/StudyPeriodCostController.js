@@ -13,41 +13,29 @@ const { saveActionState, getChildren } = require('../../utils/helper');
 let self = {};
 
 self.getAll = async(req, res) => {
-    let { page, size, order } = req.query;
-    //console.log("The page", page, size)
-    if (page == null && size == null) {
-        page = process.env.page,
-            size = process.env.size
-    }
-    if (order == null) {
-        order = process.env.order
-    }
-    const { limit, offset } = paginate.getPagination(page, size);
-    studyperiodcost.findAndCountAll({
-            limit,
-            offset,
-            order: [
-                ['createdAt', 'ASC']
-            ],
-        })
-        .then(data => {
-            const response = paginate.getPagingData(data, page, limit);
-            res.send(response);
-        })
-        .catch(err => {
-            res.status(500).send({
-                message: err.message || "Some error occurred while retrieving data."
-            });
-        });
-    // try {
-    //     let data = await studyperiodcost.findAll();
-    //     return res.json(data)
+    const { page = process.env.cust_page, size = process.env.size, order = process.env.order } = req.query;
 
-    // } catch (error) {
-    //     res.status(500).json({
-    //         message: error.message
-    //     })
-    // }
+    const { limit, offset } = paginate.getPagination(page, size);
+    let limiter = { limit, offset }
+    page == -1 ? limiter = {} : limiter
+    try {
+        const { rows, count } = await studyperiodcost.findAndCountAll({
+            limit: limiter.limit,
+            offset: limiter.offset,
+            order: [
+                ['createdAt', order]
+            ]
+        });
+
+        const response = paginate.getPagingData({ rows, count }, page, limit, count);
+
+        res.send(response);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send({
+            message: err.message || "Some error occurred while retrieving data."
+        });
+    }
 }
 
 
@@ -69,17 +57,10 @@ self.get = async(req, res) => {
         }
     }
     //include: ["studyfield", "studyprogram", "studylevel"],
+
 self.getByHigherInstituteId = async(req, res) => {
-    let { page, size, order } = req.query;
-    let id = req.params.id;
-    //console.log("The page", page, size)
-    if (page == null && size == null) {
-        page = process.env.page,
-            size = process.env.size
-    }
-    if (order == null) {
-        order = process.env.order
-    }
+    const { page = process.env.page, size = process.env.size, order = process.env.order } = req.query;
+    const { id } = req.params
     const { limit, offset } = paginate.getPagination(page, size);
     studyperiodcost.findAndCountAll({
             limit,
@@ -123,39 +104,7 @@ self.getByHigherInstituteId = async(req, res) => {
 }
 
 
-self.getByHigherInstituteIdd = async(req, res) => {
-    let { page, size, order } = req.query;
-    let id = req.params.id;
-    //console.log("The page", page, size)
-    if (page == null && size == null) {
-        page = process.env.page,
-            size = process.env.size
-    }
-    if (order == null) {
-        order = process.env.order
-    }
-    const { limit, offset } = paginate.getPagination(page, size);
-    studyperiodcost.findAndCountAll({
-            limit,
-            offset,
-            order: [
-                ['createdAt', order]
-            ],
-            where: {
-                higher_institute_id: id
-            },
-            include: ["stakestudyfield", "studyfield", "studyprogram", "studylevel"],
-        })
-        .then(data => {
-            const response = paginate.getPagingData(data, page, limit);
-            res.send(response);
-        })
-        .catch(err => {
-            res.status(500).send({
-                message: err.message || "Some error occurred while retrieving data."
-            });
-        });
-}
+
 self.getByStudyFieldId = async(req, res) => {
     try {
         let fieldId = req.params.id;

@@ -25,7 +25,6 @@ let REFRESH_TOKEN_KEY = process.env.REFRESH_TOKEN_KEY
 let TOKEN_MAX_AGE = process.env.TOKEN_MAX_AGE
 
 self.loginUser = async(request, response) => {
-
     const { email, password } = request.body;
 
     try {
@@ -107,7 +106,8 @@ self.loginUser = async(request, response) => {
 
         let full_name = first_name + " " + middle_name
 
-        
+
+
         let replyUser = {
             id: usr.id,
             full_name: full_name,
@@ -120,8 +120,8 @@ self.loginUser = async(request, response) => {
             position_name: pos.name,
             department_id: usPos.department_id,
             user_position_id: usPos.id,
-            is_checked: action ? true:false,
-            profile_completed: profile_pic ? true:false
+            is_checked: action ? true : false,
+            profile_completed: profile_pic ? true : false
         }
 
 

@@ -31,7 +31,7 @@ self.getAll = async(req, res) => {
     } catch (err) {
         console.error(err);
         res.status(500).send({
-            message: 'An error occurred while retrieving data.',
+            message: err.message || "Some error occurred while retrieving data."
         });
     }
 }
@@ -150,7 +150,7 @@ self.save = async(req, res) => {
 
             const fin = await Promise.all(body.map(async(item) => {
                 let data = await stakeholderemail.create(item);
-                if(data){
+                if (data) {
                     data.email = await encrypt(item.email)
                     await data.save()
                     await saveActionState(data.id, "stakeholderemail", "REGISTER", usr.usrID, req, res)
