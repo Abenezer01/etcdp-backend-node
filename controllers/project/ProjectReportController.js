@@ -273,8 +273,8 @@ self.save = async(req, res) => {
                     id: body.projectplan_id
                 }
             })
-            if(plan){
-                return res.status(404).json({
+            if (!plan) {
+                return res.status(409).json({
                     message: "Plan doesn't exist!"
                 })
             }
