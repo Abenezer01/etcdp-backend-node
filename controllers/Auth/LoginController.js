@@ -17,6 +17,8 @@ const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
 
 const { Socket } = require("../../utils/WebSocket.js")
+const { encrypt, decrypt } = require('../../utils/helper')
+
 let self = {};
 let TOKEN_KEY = process.env.ACCESS_TOKEN_KEY
 let REFRESH_TOKEN_KEY = process.env.REFRESH_TOKEN_KEY
@@ -26,13 +28,15 @@ self.loginUser = async(request, response) => {
     const { email, password } = request.body;
 
     try {
+        
         const usEmail = await useremail.findOne({
             where: {
-                email: email,
+                email: await encrypt(email),
                 is_primary: true
             }
         });
 
+        
         if (!usEmail) {
             return response.status(404).json({
                 message: "User not found!"
@@ -95,14 +99,21 @@ self.loginUser = async(request, response) => {
                 type: "USER_PROFILE_PHOTO"
             }
         })
+        
+        let first_name = await decrypt(usr.first_name)
+        let middle_name = await decrypt(usr.middle_name)
+        let last_name = await decrypt(usr.last_name)
+
+        let full_name = first_name + " " + middle_name
 
 
 
         let replyUser = {
             id: usr.id,
-            full_name: usr.full_name,
-            first_name: usr.last_name,
-            middle_name: usr.middle_name,
+            full_name: full_name,
+            first_name: last_name,
+            middle_name: middle_name,
+            last_name: last_name,
             phone: usPhone.phone,
             gender: usr.gender,
             position_id: pos.id,

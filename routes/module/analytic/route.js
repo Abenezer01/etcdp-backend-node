@@ -10,6 +10,9 @@ module.exports = function(express) {
      route.get("/general-analytics-departments/:module/:id", DashboardController.getGeneralAnalysisDepartments);
      route.get("/general-analytics-departments-by-category/:module/:id", DashboardController.getGeneralAnalysisDepartmentsByCategory);
 
+     route.get("/type-analytics/:module", DashboardController.getModuleTypesAnalysis);
+     route.get("/each-type-analytics/:module/:id", DashboardController.getModuleEachTypesAnalysis);
+
      
 
      

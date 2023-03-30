@@ -187,6 +187,16 @@ self.get = async(req, res) => {
             let temp = data.toJSON()
             temp.email = usEmail ? usEmail.email : null
             temp.phone = usPhone ? usPhone.phone : null
+
+            let first_name = await decrypt(data.first_name)
+            let middle_name = await decrypt(data.middle_name)
+            let last_name = await decrypt(data.last_name)
+
+            temp.first_name = first_name
+            temp.middle_name = middle_name
+            temp.last_name = last_name
+            temp.full_name = first_name + " " + middle_name
+            
             return res.json(temp)
 
         }
@@ -302,7 +312,7 @@ self.save = async(req, res) => {
 				var mailOptions = {
 					from: '1space.mia@gmail.com',
 					// from: process.env.AUTH_EMAIL,
-					to: usemail.email,
+					to: body.email,
 					subject: "Setup Password",
 					html: `
 					<p>Your are registered to ONESPACE, click on the link below to fillout your password</p>
@@ -436,8 +446,22 @@ self.getDepartmentUsers = async(req, res) => {
                 }
             }
         })
+        let allUser = await Promise.all(users.map(async(item)=> {
+            
+            let first_name = await decrypt(item.first_name)
+            let middle_name = await decrypt(item.middle_name)
+            let last_name = await decrypt(item.last_name)
 
-        return res.json(users)
+            item.first_name = first_name
+            item.middle_name = middle_name
+            item.last_name = last_name
+            return item
+           
+        })
+    )
+
+        return res.json(allUser)
+
     } catch (error) {
         return res.status(500).json({
             message: error.message
@@ -588,11 +612,11 @@ self.switchAccount = async(req, res) => {
 
         let replyUser = {
             id,
-            first_name,
-            middle_name,
-            last_name,
-            email,
-            phone,
+            first_name : await decrypt(first_name),
+            middle_name: await decrypt(middle_name),
+            last_name: await decrypt(last_name),
+            email: await decrypt(email),
+            phone: await decrypt(phone),
             gender,
             position_id: userpos ? userpos.position_id : null,
             position_name: pos ? pos.name : null,
@@ -902,14 +926,7 @@ self.resetPassword = async(req, res) => {
 			const hashedResetString = existing.token 
 			//FYI resetString is the hashed one from the sent letter
 			let hashed = resetString.replace(/slash/g, "/") 
-            // return res.json({
-            //     resetString,
-            //     hashed,
-            //     hashedResetString
-            // })
-           
 			const valid = await bcrypt.compare(hashedResetString, hashed)
-			
 			if(valid){
 				const salt = await bcrypt.genSalt();
 				const pass = await bcrypt.hash(password, salt)				
