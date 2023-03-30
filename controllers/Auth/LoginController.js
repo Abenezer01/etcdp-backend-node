@@ -87,7 +87,7 @@ self.loginUser = async(request, response) => {
         let action = await actionstate.findOne({
             where: {
                 model_id: usr.id,
-                action: "CHECKE"
+                action: "CHECK"
             }
         })
         let profile_pic = await photo.findOne({
@@ -98,6 +98,7 @@ self.loginUser = async(request, response) => {
         })
         
 
+        
         let replyUser = {
             id: usr.id,
             full_name: usr.full_name,
@@ -108,6 +109,7 @@ self.loginUser = async(request, response) => {
             position_id: pos.id,
             position_name: pos.name,
             department_id: usPos.department_id,
+            user_position_id: usPos.id,
             is_checked: action ? true:false,
             profile_completed: profile_pic ? true:false
         }

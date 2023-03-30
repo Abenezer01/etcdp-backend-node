@@ -7,7 +7,6 @@ const {
 const usrData = require("./userDataFromToken");
 const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
-const Op = Sequelize.Op;
 
 const saveActionState = async(model_id, model, action, user_id, req, res) => {
     try {

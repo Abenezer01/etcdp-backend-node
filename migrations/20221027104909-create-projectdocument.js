@@ -26,6 +26,9 @@ module.exports = {
                 onUpdate: 'CASCADE',
                 onDelete: 'CASCADE'
             },
+            file_category: {
+                type: Sequelize.STRING
+            },
             file_id: {
                 type: Sequelize.UUID,
                 references: {
