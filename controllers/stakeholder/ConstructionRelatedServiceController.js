@@ -10,14 +10,16 @@ let self = {};
 const usrData = require("../../utils/userDataFromToken");
 const { saveActionState, getChildren } = require('../../utils/helper');
 self.getAll = async(req, res) => {
-    const { page = process.env.page, size = process.env.size, order = process.env.order } = req.query;
+    const { page = process.env.cust_page, size = process.env.size, order = process.env.order } = req.query;
 
     const { limit, offset } = paginate.getPagination(page, size);
+    let limiter = { limit, offset }
+    page == -1 ? limiter = {} : limiter
 
     try {
         const { rows, count } = await constructionrelatedservice.findAndCountAll({
-            limit,
-            offset,
+            limit: limiter.limit,
+            offset: limiter.offset,
             order: [
                 ['createdAt', order]
             ],
@@ -29,7 +31,7 @@ self.getAll = async(req, res) => {
     } catch (err) {
         console.error(err);
         res.status(500).send({
-            message: 'An error occurred while retrieving data.',
+            message: err.message || "Some error occurred while retrieving data."
         });
     }
 }

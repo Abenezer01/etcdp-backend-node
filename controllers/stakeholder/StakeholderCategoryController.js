@@ -39,20 +39,22 @@ self.getAll = async(req, res) => {
     } catch (err) {
         console.error(err);
         res.status(500).send({
-            message: 'An error occurred while retrieving data.',
+            message: err.message || "Some error occurred while retrieving data."
         });
     }
 }
 
 self.getAllCatByTypeId = async(req, res) => {
-    const { page = process.env.page, size = process.env.size, order = process.env.order } = req.query;
+    const { page = process.env.cust_page, size = process.env.size, order = process.env.order } = req.query;
     const { id } = req.params
     const { limit, offset } = paginate.getPagination(page, size);
+    let limiter = { limit, offset }
+    page == -1 ? limiter = {} : limiter
 
     try {
         const { rows, count } = await stakecategory.findAndCountAll({
-            limit,
-            offset,
+            limit: limiter.limit,
+            offset: limiter.offset,
 
             include: [{
                 model: stakesubcategory,

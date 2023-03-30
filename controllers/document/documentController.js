@@ -181,6 +181,7 @@ self.save = async(req, res) => {
             body.attachement = ''
         }
         if (usr) {
+            body.department_id = usr.departmentID
             let data = await document.create(body);
             if (data) {
                 if (pat) {
@@ -191,9 +192,10 @@ self.save = async(req, res) => {
                     })
                 }
                 let us = usr.usrID
-                //add the department to data 
-                data.department_id = usr.departmentID
-                await data.save()
+                    //add the department to data 
+
+
+                //await data.save()
                 await saveActionState(data.id, "document", "REGISTER", us, req, res)
             }
             return res.json(data)

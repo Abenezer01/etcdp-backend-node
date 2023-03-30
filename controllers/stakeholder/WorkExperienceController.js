@@ -12,41 +12,30 @@ const { saveActionState } = require("../../utils/helper");
 let self = {};
 
 self.getAll = async(req, res) => {
-    let { page, size, order } = req.query;
-    //console.log("The page", page, size)
-    if (page == null && size == null) {
-        page = process.env.page,
-            size = process.env.size
-    }
-    if (order == null) {
-        order = process.env.order
-    }
+    const { page = process.env.cust_page, size = process.env.size, order = process.env.order } = req.query;
+
     const { limit, offset } = paginate.getPagination(page, size);
-    workexperience.findAndCountAll({
-            limit,
-            offset,
+    let limiter = { limit, offset }
+    page == -1 ? limiter = {} : limiter
+
+    try {
+        const { rows, count } = await workexperience.findAndCountAll({
+            limit: limiter.limit,
+            offset: limiter.offset,
             order: [
                 ['createdAt', order]
-            ],
-        })
-        .then(data => {
-            const response = paginate.getPagingData(data, page, limit);
-            res.send(response);
-        })
-        .catch(err => {
-            res.status(500).send({
-                message: err.message || "Some error occurred while retrieving data."
-            });
+            ]
         });
-    // try {
-    //     let data = await workexperience.findAll();
-    //     return res.json(data)
 
-    // } catch (error) {
-    //     res.status(500).json({
-    //         message: error.message
-    //     })
-    // }
+        const response = paginate.getPagingData({ rows, count }, page, limit, count);
+
+        res.send(response);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send({
+            message: err.message || "Some error occurred while retrieving data."
+        });
+    }
 }
 
 
@@ -67,53 +56,34 @@ self.get = async(req, res) => {
         })
     }
 }
+
 self.getWorkExperienceByStakeholderId = async(req, res) => {
-    let { page, size, order } = req.query;
-    let id = req.params.id;
-    //console.log("The page", page, size)
-    if (page == null && size == null) {
-        page = process.env.page,
-            size = process.env.size
-    }
-    if (order == null) {
-        order = process.env.order
-    }
+    const { page = process.env.page, size = process.env.size, order = process.env.order } = req.query;
+    const { id } = req.params
     const { limit, offset } = paginate.getPagination(page, size);
-    workexperience.findAndCountAll({
+
+    try {
+        const { rows, count } = await workexperience.findAndCountAll({
             limit,
             offset,
-            order: [
-                ['createdAt', order]
-            ],
             where: {
                 stakeholder_id: id
             },
             include: ["experiencelevel"],
-        })
-        .then(data => {
-            const response = paginate.getPagingData(data, page, limit);
-            res.send(response);
-        })
-        .catch(err => {
-            res.status(500).send({
-                message: err.message || "Some error occurred while retrieving data."
-            });
+            order: [
+                ['createdAt', order]
+            ]
         });
-    // try {
-    //     let id = req.params.id;
-    //     let data = await workexperience.findAll({
-    //         where: {
-    //             stakeholder_id: id
-    //         }
-    //     });
-    //     return res.status(200).json({
-    //         data: (data) ? data : {}
-    //     })
-    // } catch (error) {
-    //     res.status(500).json({
-    //         message: error.message
-    //     })
-    // }
+
+        const response = paginate.getPagingData({ rows, count }, page, limit, count);
+
+        res.send(response);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send({
+            message: err.message || "Some error occurred while retrieving data."
+        });
+    }
 }
 self.search = async(req, res) => {
     try {

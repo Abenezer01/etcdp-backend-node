@@ -8,7 +8,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 let self = {};
 const usrData = require("../../utils/userDataFromToken");
-const { saveActionState, encrypt, decrypt} = require("../../utils/helper");
+const { saveActionState, encrypt, decrypt } = require("../../utils/helper");
 
 
 self.getAll = async(req, res) => {
@@ -31,7 +31,7 @@ self.getAll = async(req, res) => {
     } catch (err) {
         console.error(err);
         res.status(500).send({
-            message: 'An error occurred while retrieving data.',
+            message: err.message || "Some error occurred while retrieving data."
         });
     }
 }
@@ -136,7 +136,7 @@ self.save = async(req, res) => {
 
             const fin = await Promise.all(body.map(async(item) => {
                 let data = await stakeholderphone.create(item);
-                if(data){
+                if (data) {
                     data.phone = await encrypt(item.phone)
                     await data.save()
                     await saveActionState(data.id, "stakeholderphone", "REGISTER", usr.usrID, req, res)
