@@ -27,6 +27,8 @@ const {mainanalysismodules} = require('../../config/master')
 const { encrypt, decrypt } = require('../../utils/helper')
 const Op = Sequelize.Op;
 
+const moment = require('moment')
+
 let self = {};
 
 self.getGeneralAnalysis = async(req, res) => {
@@ -422,6 +424,122 @@ self.getGeneralAnalysisDepartmentsByCategory = async(req, res) => {
         
         return res.status(200).json(first)
         
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message
+        })
+    }
+}
+
+self.getModuleTypesAnalysis = async(req, res) => {
+    
+    let  module = req.params.module
+    try {
+        const moduleArr = mainanalysismodules[module];
+        const Model = moduleArr[0];
+
+        const TypeModel = moduleArr[1];
+
+        let moduletype = await eval(TypeModel).findAll()
+        
+        let year = moment().year()
+        let last_year = (year-1)
+        
+        // return res.json(moment().year())
+
+
+        let arr = await Promise.all(moduletype.map(async(item)=> {
+            
+                let model = await eval(Model).findAndCountAll({
+                    where: {
+                        [`${moduleArr[1]}_id`]: item.id
+                    }
+        
+                })
+
+                let this_year_model = await eval(Model).findAndCountAll({
+                    where: {
+                        [`${moduleArr[1]}_id`]: item.id,
+                        createdAt: {
+                            [Op.gte]: new Date(year, 0, 1), // Start of the year
+                            [Op.lt]: new Date(year + 1, 0, 1), // Start of the next year
+                        }
+                    }
+        
+                })
+                let last_year_model = await eval(Model).findAndCountAll({
+                    where: {
+                        [`${moduleArr[1]}_id`]: item.id,
+                        createdAt: {
+                            [Op.gte]: new Date(last_year, 0, 1), // Start of the year
+                            [Op.lt]: new Date(last_year + 1, 0, 1), // Start of the next year
+                        }
+                    }
+        
+                })
+            
+                let temp = item.toJSON()
+                temp["total"] = model.count
+                temp["this_year"] = this_year_model.count
+                temp["last_year"] = last_year_model.count
+                return temp
+            
+            })
+        )
+
+        return res.json(arr)
+        
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message
+        })
+    }
+}
+
+self.getModuleEachTypesAnalysis = async(req, res) => {
+    
+    try {
+        let  module = req.params.module
+        let id = req.params.id
+
+        const moduleArr = mainanalysismodules[module];
+        
+        const Model = moduleArr[0];
+        const TypeModel = moduleArr[1];
+
+    
+
+        let moduletype = await eval(TypeModel).findOne({
+            where: {
+                id: id
+            }
+        })
+
+        const currentYear = moment().year();
+        const yearArray = Array.from({ length: 5 }, (_, index) => currentYear - (4 - index));
+
+        const queries = yearArray.map(async (yr) => {
+        const stake = await eval(Model).findAndCountAll({
+            where: {
+                [`${moduleArr[1]}_id`]: moduletype.id,
+                createdAt: {
+                    [Op.gte]: new Date(yr, 0, 1), // Start of the year
+                    [Op.lt]: new Date(yr + 1, 0, 1), // Start of the next year
+                },
+            },
+        });
+        
+        return [yr, stake ? stake.count : 0];
+        });
+
+        const results = await Promise.all(queries);
+
+        const obj = Object.fromEntries(results);
+        return res.json({
+            years: Object.keys(obj),
+            series:  Object.values(obj)
+        })
+            
     } catch (error) {
         return res.status(500).json({
             message: error.message

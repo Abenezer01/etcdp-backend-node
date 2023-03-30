@@ -1,6 +1,7 @@
 const { saveActionState } = require("../../utils/helper");
 const {
     projectextensiontime,
+    projectvariation,
     Sequelize
 } = require("./../../models");
 const usrData = require("../../utils/userDataFromToken");
@@ -55,7 +56,8 @@ self.get = async(req, res) => {
     }
 }
 self.getByProjectId = async(req, res) => {
-    let id = req.params.id
+    try {
+        let id = req.params.id
     let { page, size, order } = req.query;
     //console.log("The page", page, size)
     if (page == null && size == null) {
@@ -66,7 +68,8 @@ self.getByProjectId = async(req, res) => {
         order = process.env.order
     }
     const { limit, offset } = paginate.getPagination(page, size);
-    projectextensiontime.findAndCountAll({
+
+    let data =  await projectextensiontime.findAndCountAll({
             limit,
             offset,
             order: [
@@ -76,15 +79,31 @@ self.getByProjectId = async(req, res) => {
                 project_id: id
             }
         })
-        .then(data => {
-            const response = paginate.getPagingData(data, page, limit);
-            res.send(response);
+
+        let withVariation = await Promise.all(data.rows.map(async(item)=> {
+            let variation = await projectvariation.findOne({
+                where: {
+                    extension_time_id: item.id
+                }
+            })
+
+            let temp = item.toJSON()
+            temp.variation_id = variation.id
+            return temp
+           
         })
-        .catch(err => {
-            res.status(500).send({
-                message: err.message || "Some error occurred while retrieving data."
-            });
+     )
+            
+        data.rows = withVariation
+        const response = paginate.getPagingData(data, page, limit);
+
+        res.send(response);
+        
+    } catch (error) {
+        res.status(500).send({
+            message: error.message || "Some error occurred while retrieving data."
         });
+    }
 }
 self.search = async(req, res) => {
     try {
