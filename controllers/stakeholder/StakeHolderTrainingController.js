@@ -23,7 +23,7 @@ self.getAll = async(req, res) => {
             order: [
                 ['createdAt', order]
             ],
-            include: ["studyfield", "studyprogram"],
+            //include: ["studyfield", "studyprogram"],
         });
 
         const response = paginate.getPagingData({ rows, count }, page, limit, count);
@@ -68,7 +68,6 @@ self.getTrainingByStakeholderId = async(req, res) => {
             where: {
                 stakeholder_id: id
             },
-            include: ["studyfield", "studyprogram", "studylevel"],
             order: [
                 ['createdAt', order]
             ],
