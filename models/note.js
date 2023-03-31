@@ -2,6 +2,7 @@
 const {
   Model
 } = require('sequelize');
+const { decrypt, encrypt } = require('../utils/helper');
 module.exports = (sequelize, DataTypes) => {
   class note extends Model {
     /**
@@ -32,7 +33,18 @@ module.exports = (sequelize, DataTypes) => {
     },
     description: {
       type: DataTypes.TEXT,
-      allowNull: false
+      allowNull: false,
+      type: DataTypes.STRING,
+            allowNull: false,
+            get() {
+                const encryptedValue = this.getDataValue("description");
+                const decryptedValue = decrypt(encryptedValue);
+                return decryptedValue;
+              },
+            set(value) {
+                const encryptedValue = encrypt(value);
+                this.setDataValue('description', encryptedValue);
+              }
     }
   }, {
     sequelize,

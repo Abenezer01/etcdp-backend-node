@@ -2,6 +2,7 @@
 const {
     Model
 } = require('sequelize');
+const { encrypt } = require('../utils/helper');
 module.exports = (sequelize, DataTypes) => {
     class project extends Model {
         /**
@@ -32,7 +33,16 @@ module.exports = (sequelize, DataTypes) => {
         projectsubcategory_id: DataTypes.UUID,
         name: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: false,
+            // get() {
+            //     const encryptedValue = this.getDataValue("name");
+            //     const decryptedValue = decrypt(encryptedValue);
+            //     return decryptedValue;
+            //   },
+            // set(value) {
+            //     const encryptedValue = encrypt(value);
+            //     this.setDataValue('name', encryptedValue);
+            //   }
         },
         remark: DataTypes.TEXT,
         contract_no: DataTypes.STRING,

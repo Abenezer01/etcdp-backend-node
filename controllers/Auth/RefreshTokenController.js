@@ -21,7 +21,6 @@ let self = {};
 let ACCESS_TOKEN_KEY = process.env.ACCESS_TOKEN_KEY;
 let REFRESH_TOKEN_KEY = process.env.REFRESH_TOKEN_KEY;
 let TOKEN_MAX_AGE = process.env.TOKEN_MAX_AGE
-const { encrypt, decrypt } = require('../../utils/helper')
 
 
 self.refreshToken = async(request, response, next) => {
@@ -95,19 +94,15 @@ self.refreshToken = async(request, response, next) => {
             }
         })
 
-        let first_name = await decrypt(usr.first_name)
-        let middle_name = await decrypt(usr.middle_name)
-        let last_name = await decrypt(usr.last_name)
-
-        let full_name = first_name + " " + middle_name
+        
 
         
         replyUser = {
             id: usr.id,
-            full_name: full_name,
-            first_name: last_name,
-            middle_name: middle_name,
-            last_name: last_name,
+            full_name: usr.full_name,
+            first_name: usr.first_name,
+            middle_name: usr.middle_name,
+            last_name: usr.last_name,
             email: usEmail ? usEmail.email:null,
             phone: usPhone ? usPhone.phone:null,
             gender: usr.gender,

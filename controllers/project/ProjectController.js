@@ -20,7 +20,7 @@
  const moment = require('moment');
  const Op = Sequelize.Op;
  const usrData = require("../../utils/userDataFromToken");
- const { saveActionState, encrypt, decrypt } = require('../../utils/helper')
+ const { saveActionState } = require('../../utils/helper')
 
  let self = {};
  const paginate = require("../../utils/pagination");
@@ -394,7 +394,6 @@
              if (data) {
                  let usrID = usr.usrID
                  data.department_id = usr.departmentID
-                 data.name = await encrypt(body.name)
                  await data.save()
                  await saveActionState(data.id, "project", "REGISTER", usrID, req, res)
              }

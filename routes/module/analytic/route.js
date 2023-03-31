@@ -11,8 +11,14 @@ module.exports = function(express) {
      route.get("/general-analytics-departments-by-category/:module/:id", DashboardController.getGeneralAnalysisDepartmentsByCategory);
 
      route.get("/type-analytics/:module", DashboardController.getModuleTypesAnalysis);
-     route.get("/each-type-analytics/:module/:id", DashboardController.getModuleEachTypesAnalysis);
+     
 
+     route.get("/each-type-analytics/:module/:id", DashboardController.getModuleEachTypesAnalysis);
+     //not used
+     route.get("/each-category-analytics/:module/:id", DashboardController.getModuleEachCategoriesAnalysis);
+
+     route.get("/type-categories/:module/:id", DashboardController.getCategoriesByTypeId);
+     route.get("/type-sub-categories/:module/:id", DashboardController.getSubCategoriesByModuleCategoryId);
      
 
      

@@ -499,6 +499,7 @@ self.getModuleTypesAnalysis = async(req, res) => {
     }
 }
 
+
 self.getModuleEachTypesAnalysis = async(req, res) => {
     
     try {
@@ -550,5 +551,207 @@ self.getModuleEachTypesAnalysis = async(req, res) => {
     }
 }
 
+self.getModuleEachCategoriesAnalysis = async(req, res) => {
+    
+    try {
+        let  module = req.params.module
+        let id = req.params.id
 
+        const moduleArr = mainanalysismodules[module];
+        
+        const Model = moduleArr[0];
+        const CategoryModel = moduleArr[2];
+
+    
+
+        let modulecategory = await eval(CategoryModel).findOne({
+            where: {
+                id: id
+            }
+        })
+
+        const currentYear = moment().year();
+        const yearArray = Array.from({ length: 5 }, (_, index) => currentYear - (4 - index));
+
+        const queries = yearArray.map(async (yr) => {
+        const stake = await eval(Model).findAndCountAll({
+            where: {
+                [`${moduleArr[2]}_id`]: modulecategory.id,
+                createdAt: {
+                    [Op.gte]: new Date(yr, 0, 1), // Start of the year
+                    [Op.lt]: new Date(yr + 1, 0, 1), // Start of the next year
+                },
+            },
+        });
+        
+        return [yr, stake ? stake.count : 0];
+        });
+
+        const results = await Promise.all(queries);
+
+        const obj = Object.fromEntries(results);
+        return res.json({
+            years: Object.keys(obj),
+            series:  Object.values(obj)
+        })
+            
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message
+        })
+    }
+}
+
+self.getCategoriesByTypeId = async(req,res) => {
+    try{
+
+        let  module = req.params.module
+        let id = req.params.id
+
+        const moduleArr = mainanalysismodules[module];
+        const CategoryModel = moduleArr[2];    
+
+        let modulecategories = await eval(CategoryModel).findAll({
+            where: {
+                [`${moduleArr[1]}_id`]: id,
+            }
+        })
+
+        return res.json(modulecategories)
+    }catch (error) {
+        return res.status(500).json({
+            message: error.message
+        })
+    }
+}
+
+self.getSubCategoriesByModuleCategoryId = async(req,res) => {
+    try{
+
+        let  module = req.params.module
+        let id = req.params.id
+
+        const moduleArr = mainanalysismodules[module];
+        const SubCategoryModel = moduleArr[3];    
+
+        let modulesubcategories = await eval(SubCategoryModel).findAll({
+            where: {
+                [`${moduleArr[2]}_id`]: id,
+            }
+        })
+
+        return res.json(modulesubcategories)
+    }catch (error) {
+        return res.status(500).json({
+            message: error.message
+        })
+    }
+}
+
+self.getGeneralAnalysisSubCategoryDepartments = async(req, res) => {
+    
+    let  module = req.params.module
+    let id = req.params.id
+   
+    try {
+
+        
+        const moduleArr = mainanalysismodules[module];
+
+        const Model = moduleArr[0];
+        const TypeModel = moduleArr[1];
+        const CategoryModel = moduleArr[2];
+        const SubCategoryModel = moduleArr[2];
+        
+        let usr = await usrData.userData(req, res)
+
+        let departments = await self.getChildren(usr.departmentID)
+
+
+        let modulesubcategory = await eval(SubCategoryModel).findOne({
+            where: {
+                id: id
+            }
+        })
+
+    
+        let stake = await eval(Model).findAndCountAll({
+            where: {
+                [`${moduleArr[2]}_id`]: moduletype.id
+            }
+
+        })
+
+        // let str = `${moduleArr[1]}_id`
+
+        let categories = await eval(CategoryModel).findAll({
+            where: {
+                [`${moduleArr[1]}_id`]:moduletype.id
+            }
+        })
+    
+        let categoryelement = [] 
+
+        if(categories.length > 0){
+
+            for(let category of categories){
+                let catestake = await eval(Model).findAll({
+                    where: {
+                        [`${moduleArr[2]}_id`]: category.id
+                    },
+                    include: [{
+                        model: department,
+                        as: "department"
+                    }
+                ],
+                }) 
+
+
+                const countByName = catestake.reduce((acc, obj) => {
+                    const department_id = obj.department_id;
+    
+                    acc[obj.department.name] = (acc[department_id] || 0) + 1;
+                    return acc;
+                  }, {});
+
+                //   const filteredData = data.filter(item => !["EtCDP", "TEST"].includes(item.name));
+                  let existing = Object.keys(countByName)
+                  const filteredData = departments.filter(item => !existing.includes(item.name));
+                  const nameFiltered = filteredData.map((item) => item.name)
+
+                  let remainingObj = {};
+                  
+                  nameFiltered.forEach(element => {
+                    remainingObj[element] = 0;
+                  });
+                  const mergedObj = Object.assign({}, countByName, remainingObj);
+
+                  
+                let deptObj = {}
+
+                deptObj["name"] = category.title
+                deptObj["count"] = catestake.length 
+                deptObj["data"] = Object.keys(mergedObj).length === 0 ? 0 : Object.values(mergedObj)
+
+                categoryelement.push (deptObj) 
+            }
+            
+        }
+        
+        first = {
+            title: moduletype.title,
+            series: categoryelement,
+            departments:  [...new Set(departments.map((item) => item.name))].filter(n=>n),
+            count: stake.count
+        }
+            
+        
+        return res.status(200).json(first)
+        
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message
+        })
+    }
+}
 module.exports = self;

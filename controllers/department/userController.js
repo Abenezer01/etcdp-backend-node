@@ -19,7 +19,6 @@ const Op = Sequelize.Op;
 const dotenv = require('dotenv');
 dotenv.config();
 const usrData = require("../../utils/userDataFromToken");
-const { saveActionState, getChildren, encrypt, decrypt } = require('../../utils/helper')
 const paginate = require("../../utils/pagination");
 
 const jwt = require("jsonwebtoken");
@@ -29,7 +28,8 @@ const uuid  =  require('uuid');
 var nodemailer = require('nodemailer');
 var smtpTransport = require('nodemailer-smtp-transport');
 const emailValidator = require('deep-email-validator');
-
+const { Socket } = require("../../utils/WebSocket");
+const {saveActionState} = require("../../utils/helper")
 
 let TOKEN_KEY = process.env.ACCESS_TOKEN_KEY
 let REFRESH_TOKEN_KEY = process.env.REFRESH_TOKEN_KEY
@@ -118,23 +118,13 @@ self.getAlll = async(req, res) => {
     // let queryString = `SELECT * FROM users as U WHERE U.id=${one};`
 self.getAll = async(req, res) => {
 
-    // let x = await user.findOne({
-    //     where: {
-    //         id: "00a340e3-431a-489f-a859-6d0c9d15e894"
-    //     }
-    // })
-    // return res.json({
-    //     first_name: await decrypt(x.first_name),
-    //     middle_name: await decrypt(x.middle_name),
-    //     last_name: await decrypt(x.last_name)
-    // })
     let data = await user.findAll()
 
     let allUser = await Promise.all(data.map(async(item)=> {
             
-            let first_name = await decrypt(item.first_name)
-            let middle_name = await decrypt(item.middle_name)
-            let last_name = await decrypt(item.last_name)
+            let first_name = item.first_name
+            let middle_name = item.middle_name
+            let last_name = item.last_name
 
             item.first_name = first_name
             item.middle_name = middle_name
@@ -185,17 +175,8 @@ self.get = async(req, res) => {
             })
 
             let temp = data.toJSON()
-            temp.email = usEmail ? await decrypt(usEmail.email) : null
-            temp.phone = usPhone ? await decrypt(usPhone.phone) : null
-
-            let first_name = await decrypt(data.first_name)
-            let middle_name = await decrypt(data.middle_name)
-            let last_name = await decrypt(data.last_name)
-
-            temp.first_name = first_name
-            temp.middle_name = middle_name
-            temp.last_name = last_name
-            temp.full_name = first_name + " " + middle_name
+            temp.email = usEmail ? usEmail.email : null
+            temp.phone = usPhone ? usPhone.phone : null
             
             return res.json(temp)
 
@@ -253,6 +234,7 @@ self.isEmailValid = async(email) => {
 
 self.save = async(req, res) => {
     try {
+        
         let body = req.body
 
         //check email is really exist 
@@ -265,9 +247,9 @@ self.save = async(req, res) => {
 
         const salt = await bcrypt.genSalt(10);
         var usr = {
-            first_name: await encrypt(body.first_name),
-            last_name: await encrypt(body.last_name),
-            middle_name: await encrypt(body.middle_name),
+            first_name: body.first_name,
+            last_name: body.last_name,
+            middle_name: body.middle_name,
 
             gender: body.gender,
             marital_status: body.marital_status,
@@ -284,7 +266,7 @@ self.save = async(req, res) => {
                 //create position
             let usemail = await useremail.create({
                 user_id: created_user.id,
-                email: await encrypt(body.email),
+                email: body.email,
                 is_primary: true
             })
 
@@ -293,7 +275,7 @@ self.save = async(req, res) => {
 
                 let usphone = await userphone.create({
                     user_id: created_user.id,
-                    phone: await encrypt(body.phone),
+                    phone: body.phone,
                     is_primary: true
                 })
                 //email to user 
@@ -446,21 +428,8 @@ self.getDepartmentUsers = async(req, res) => {
                 }
             }
         })
-        let allUser = await Promise.all(users.map(async(item)=> {
-            
-            let first_name = await decrypt(item.first_name)
-            let middle_name = await decrypt(item.middle_name)
-            let last_name = await decrypt(item.last_name)
 
-            item.first_name = first_name
-            item.middle_name = middle_name
-            item.last_name = last_name
-            return item
-           
-        })
-    )
-
-        return res.json(allUser)
+        return res.json(users)
 
     } catch (error) {
         return res.status(500).json({
@@ -612,11 +581,11 @@ self.switchAccount = async(req, res) => {
 
         let replyUser = {
             id,
-            first_name : await decrypt(first_name),
-            middle_name: await decrypt(middle_name),
-            last_name: await decrypt(last_name),
-            email: await decrypt(email),
-            phone: await decrypt(phone),
+            first_name : first_name,
+            middle_name: middle_name,
+            last_name: last_name,
+            email: email,
+            phone: phone,
             gender,
             position_id: userpos ? userpos.position_id : null,
             position_name: pos ? pos.name : null,
@@ -631,28 +600,39 @@ self.switchAccount = async(req, res) => {
 
 
         try {
-
-            let accessToken = null
-            let refreshToken = null
+            
             let us = { id: account.id, department_id: userpos.department_id, position_id: userpos.position_id };
 
-            accessToken = jwt.sign(us,
+            const accessToken = jwt.sign(us,
                 TOKEN_KEY, {
-                    expiresIn: "100h"
+                    expiresIn: "100h",
                 }
             );
-            refreshToken = jwt.sign(us,
+
+            const refreshToken = jwt.sign(us,
                 REFRESH_TOKEN_KEY, {
-                    expiresIn: "100h"
+                    expiresIn: "100h",
                 }
             );
+        
             // update refresh token
-            await user.update({ refresh_token: refreshToken }, { where: { id: id } });
-            return res.status(200).json({
-                userData: replyUser,
-                accessToken: accessToken,
-                refreshToken: refreshToken
-            });
+
+              user.findByPk(us.id).then(u => {
+
+                u.refresh_token = refreshToken
+                return u.save(); // persist the changes to the database
+              })
+              .then(updatedUser => {
+                Socket.emit("loggedIn", {
+                    message: true
+                });
+                
+                return res.status(200).json({
+                    userData: replyUser,
+                    accessToken: accessToken,
+                    refreshToken: refreshToken
+                })
+              })
         } catch (error) {
             return res.status(500).json({ message: error.message });
         }
@@ -787,12 +767,10 @@ self.requestPasswordReset = async(req, res) => {
 
         const {email, redirectUrl}  = req.body
 		//check if user exist
-
-        let encrypted_email = await encrypt(email)
     
         let usemail = await useremail.findOne({
             where: {
-                email: encrypted_email,
+                email: email,
                 is_primary: true
             }
         })
@@ -804,7 +782,6 @@ self.requestPasswordReset = async(req, res) => {
             })
         }
 
-        //must decrypt email
 
         let us = await user.findOne({
             where: {
