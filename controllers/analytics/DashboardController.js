@@ -226,7 +226,7 @@ self.getGeneralAnalysisDepartments = async(req, res) => {
             }
         })
     
-        let categoryelement = {} 
+        let categoryelement = [] 
 
         if(categories.length > 0){
 
@@ -264,16 +264,19 @@ self.getGeneralAnalysisDepartments = async(req, res) => {
 
                   
                 let deptObj = {}
+
+                deptObj["name"] = category.title
                 deptObj["count"] = catestake.length 
-                deptObj["departments"] = Object.keys(mergedObj).length === 0 ? 0 : Object.values(mergedObj)
-                categoryelement[category.title] = Object.keys(deptObj).length === 0 ? 0 : deptObj
+                deptObj["data"] = Object.keys(mergedObj).length === 0 ? 0 : Object.values(mergedObj)
+
+                categoryelement.push (deptObj) 
             }
             
         }
         
         first = {
             title: moduletype.title,
-            list: categoryelement,
+            series: categoryelement,
             departments:  [...new Set(departments.map((item) => item.name))].filter(n=>n),
             count: stake.count
         }

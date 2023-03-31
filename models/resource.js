@@ -50,12 +50,12 @@ module.exports = (sequelize, DataTypes) => {
         sequelize,
         modelName: 'resource',
     });
-    // resource.associate = function(models) {
-    //     // resource.belongsTo(models.address, {
-    //     //     as: "address",
-    //     //     foreignKey: "address_id"
-    //     // })
+    resource.associate = function(models) {
+        resource.belongsTo(models.department, {
+            as: "department",
+            foreignKey: "department_id"
+        })
 
-    // }
+    }
     return resource;
 };

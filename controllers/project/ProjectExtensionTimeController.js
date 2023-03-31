@@ -88,7 +88,8 @@ self.getByProjectId = async(req, res) => {
             })
 
             let temp = item.toJSON()
-            temp.variation_id = variation.id
+            temp.variation_id = variation? variation.id : null
+            temp.type = variation? variation.type : null
             return temp
            
         })
@@ -150,6 +151,21 @@ self.update = async(req, res) => {
                 id: id
             }
         });
+
+        if(data){
+            let extension = await projectextensiontime.findOne({
+                where: {
+                    id: id
+                }
+            })
+            if(extension){
+                await projectvariation.update({extension_time: extension.number_of_days},{
+                        where: {
+                            extension_time_id:extension.id
+                        }
+                    })
+                }
+            }
         return res.json(data)
     } catch (error) {
         res.status(500).json({

@@ -185,8 +185,8 @@ self.get = async(req, res) => {
             })
 
             let temp = data.toJSON()
-            temp.email = usEmail ? usEmail.email : null
-            temp.phone = usPhone ? usPhone.phone : null
+            temp.email = usEmail ? await decrypt(usEmail.email) : null
+            temp.phone = usPhone ? await decrypt(usPhone.phone) : null
 
             let first_name = await decrypt(data.first_name)
             let middle_name = await decrypt(data.middle_name)

@@ -26,6 +26,10 @@ module.exports = (sequelize, DataTypes) => {
                 //as: "documentsubcategory",
                 foreignKey: "documentsubcategory_id"
             })
+            document.belongsTo(models.department, {
+                as: "department",
+                foreignKey: "department_id"
+            })
 
 
         }
