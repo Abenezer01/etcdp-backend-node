@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue: DataTypes.UUIDV4
         },
         parent_id: DataTypes.UUID,
-        category_id: {
+        projectcategory_id: {
             type: DataTypes.UUID,
             allowNull: false
         },
@@ -37,7 +37,7 @@ module.exports = (sequelize, DataTypes) => {
         projectsubcategory.belongsTo(models.projectcategory, {
             as: 'Subcategories',
             foreignKey: {
-                name: "category_id",
+                name: "projectcategory_id",
                 allowNull: false
             }
         })

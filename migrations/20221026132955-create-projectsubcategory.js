@@ -16,7 +16,7 @@ module.exports = {
                 onUpdate: 'CASCADE',
                 onDelete: 'CASCADE'
             },
-            category_id: {
+            projectcategory_id: {
                 type: Sequelize.UUID,
                 allowNull: false,
                 references: {
