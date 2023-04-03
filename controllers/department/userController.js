@@ -1,7 +1,6 @@
 const {
     user,
     address,
-    actionstate,
     position,
     userposition,
     useremail,
@@ -253,6 +252,7 @@ self.isEmailValid = async(email) => {
 
 self.save = async(req, res) => {
     try {
+
         let body = req.body
 
         //check email is really exist 
@@ -280,7 +280,16 @@ self.save = async(req, res) => {
 
         if (created_user) {
             let usr = await usrData.userData(req, res)
-            await saveActionState(created_user.id, "user", "REGISTER", usr.usrID, req, res)
+            await actionstate.create({
+                model_id: created_user.id,
+                model: "user",
+                action: "REGISTER", 
+                user_id: usr.usrID , 
+                position_id: usr.position_id,
+                time: new Date()
+            })git
+
+            // await saveActionState(created_user.id, "user", "REGISTER", usr.usrID, req, res)
                 //create position
             let usemail = await useremail.create({
                 user_id: created_user.id,

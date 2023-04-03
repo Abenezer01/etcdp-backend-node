@@ -2,6 +2,7 @@
 const {
   Model
 } = require('sequelize');
+const { decrypt, encrypt } = require('../utils/helper');
 module.exports = (sequelize, DataTypes) => {
   class useremail extends Model {
     /**
@@ -28,7 +29,17 @@ module.exports = (sequelize, DataTypes) => {
     },
     email: {
       type: DataTypes.UUID,
-      allowNull: false
+      allowNull: false,
+          get() {
+              const encryptedValue = this.getDataValue("email");
+              const decryptedValue = decrypt(encryptedValue);
+              return decryptedValue;
+            },
+          set(value) {
+              const encryptedValue = encrypt(value);
+              this.setDataValue('email', encryptedValue);
+          }
+      
     },
     is_primary: {
       type: DataTypes.BOOLEAN,

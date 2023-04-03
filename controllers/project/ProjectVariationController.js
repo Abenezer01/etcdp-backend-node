@@ -164,6 +164,22 @@ self.update = async(req, res) => {
                 id: id
             }
         });
+
+        if(data){
+            let variation = await projectvariation.findOne({
+                where: {
+                    id: id
+                }
+            })
+            if(variation){
+                await projectextensiontime.update({number_of_days: variation.extension_time},{
+                        where: {
+                            id:variation.extension_time_id
+                        }
+                    })
+                }
+        }
+    
         return res.json(data)
     } catch (error) {
         res.status(500).json({

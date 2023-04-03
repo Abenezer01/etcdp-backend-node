@@ -1,28 +1,25 @@
 const {
+    // department, 
     actionstate,
-    department,
-    userposition,
-    Sequelize
 } = require("../models");
+
 const usrData = require("./userDataFromToken");
-const bcrypt = require('bcryptjs');
 const crypto = require('crypto');
 
-const saveActionState = async(model_id, model, action, user_id, req, res) => {
+const saveActionState = async (model_id, model, action, user_id, req, res) => {
     try {
-        let usr = await usrData.userData(req, res)
-            //test
 
-        // console.log("The position id is", usr.position_id)
-        // return res.send(pos.id)
-        await actionstate.create({
-            model_id,
-            model,
-            action,
-            user_id,
-            position_id: usr.position_id,
-            time: new Date(),
-        })
+        let usr = await usrData.userData(req, res) 
+        let act =  await actionstate.create({
+                model_id,
+                model,
+                action, 
+                user_id: user_id, 
+                position_id: usr.position_id,
+                time: new Date()
+            })
+
+        return res.json(act)
 
     } catch (error) {
         return {
@@ -74,68 +71,7 @@ const getAllChildren = async(arr) => {
         }
         return children;
     }
-    // const getAllChildren = async(arr) => {
-    //     let children = []
-    //     if(arr.length > 0){
-    //         for(var i=0; i<arr.length; i++){
-    //             let dd = await department.findAll({
-    //                 where: {
-    //                     parent_department_id: arr[i].id
-    //                 }
-    //             })
-    //             if(dd.length > 0){
-    //                 let filtered = dd.map((item)=> item.id)
-    //                 children = [...filtered]
-    //                 getAllChildren(dd)
-    //             }
-    //         }
-    //     }
-    // 	return children;
-    // }
-
-
-// const filteredData = async(id, model) => {
-
-//     return "hello";
-//     let firstFam = await d
-
-// }
-
-// const d = async(id, model) => {
-
-//     let other = await eval(model).findAll({
-//         order: [['createdAt', 'DESC']],
-//         where: {
-//             department_id: {
-//                 [Op.in]: exist
-//             }
-//         },
-
-//     })
-
-//     let mine = await eval(model).findAll({
-//         where: {
-//             department_id:id
-//         }
-//     })
-
-//     let otherArr = []
-//     for(let da of other){
-//         let action = await actionstate.findOne({
-//             where: {
-//                 model_id: da.id,
-//                 action: "APPROVE"
-//             }
-//         })
-//         if(action){
-//             otherArr.push(da)
-//         }
-//     }
-
-//     let data = [...mine, ...otherArr]
-//     return data;
-// }
-
+   
 const algorithm = 'aes-256-cbc';
 // const key = crypto.randomBytes(32);
 // const iv = crypto.randomBytes(16);
@@ -152,7 +88,7 @@ const encryptionIV = crypto
   .substring(0, 16)
   
 
-const encrypt = async (text) => {
+const encrypt = (text) => {
 
     const cipher = crypto.createCipheriv(algorithm, key, encryptionIV)
     return Buffer.from(
@@ -160,7 +96,7 @@ const encrypt = async (text) => {
     ).toString('base64')
 }
 
-const decrypt  = async(encrypted) =>{
+const decrypt  = (encrypted) =>{
 
     const buff = Buffer.from(encrypted, 'base64')
     const decipher = crypto.createDecipheriv(algorithm, key, encryptionIV)

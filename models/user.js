@@ -2,7 +2,7 @@
 const {
     Model
 } = require('sequelize');
-const bcrypt = require('bcrypt');
+const { decrypt, encrypt } = require('../utils/helper');
 
 module.exports = (sequelize, DataTypes) => {
     class user extends Model {
@@ -24,21 +24,54 @@ module.exports = (sequelize, DataTypes) => {
         parent_id: DataTypes.UUID,
         first_name: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: false,
+            get() {
+                const encryptedValue = this.getDataValue("first_name");
+                const decryptedValue = decrypt(encryptedValue);
+                return decryptedValue;
+              },
+            set(value) {
+                const encryptedValue = encrypt(value);
+                this.setDataValue('first_name', encryptedValue);
+              }
         },
-        middle_name: DataTypes.STRING,
-        last_name: DataTypes.STRING,
+        middle_name: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            get() {
+                const encryptedValue = this.getDataValue("middle_name");
+                const decryptedValue = decrypt(encryptedValue);
+                return decryptedValue;
+              },
+            set(value) {
+                const encryptedValue = encrypt(value);
+                this.setDataValue('middle_name', encryptedValue);
+              }
+        },
+        last_name: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            get() {
+                const encryptedValue = this.getDataValue("last_name");
+                const decryptedValue = decrypt(encryptedValue);
+                return decryptedValue;
+              },
+            set(value) {
+                const encryptedValue = encrypt(value);
+                this.setDataValue('last_name', encryptedValue);
+              }
+        },
         password: DataTypes.STRING,
         gender: DataTypes.STRING,
         marital_status: DataTypes.BOOLEAN,
-        partner_name: DataTypes.STRING,
+        partner_name:  DataTypes.STRING,
         birth_date: DataTypes.DATE,
-        refresh_token: DataTypes.STRING,
+        refresh_token: DataTypes.TEXT,
         revision_no: DataTypes.INTEGER,
         full_name: {
             type: DataTypes.VIRTUAL,
             get() {
-                return this.first_name + " " + this.middle_name;
+                this.first_name + " " + this.middle_name;
             },
 
         },

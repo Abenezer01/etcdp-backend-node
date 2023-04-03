@@ -2,6 +2,7 @@
 const {
     Model
 } = require('sequelize');
+const { decrypt, encrypt } = require('../utils/helper');
 module.exports = (sequelize, DataTypes) => {
     class stakeholder extends Model {
         /**
@@ -35,7 +36,16 @@ module.exports = (sequelize, DataTypes) => {
         stakesubcategory_id: DataTypes.UUID,
         trade_name: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: false,
+            get() {
+                const encryptedValue = this.getDataValue("trade_name")
+                const decryptedValue = decrypt(encryptedValue);
+                return decryptedValue;
+              },
+            set(value) {
+                const encryptedValue = encrypt(value);
+                this.setDataValue('trade_name', encryptedValue);
+              }
         },
         tin: {
             type: DataTypes.STRING,
