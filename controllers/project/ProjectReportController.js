@@ -335,6 +335,7 @@ self.getMonthlyProjectReport = async(req, res) => {
 
     try {
         let data = null
+        let report = null
         let usr = await usrData.userData(req, res)
 
         let plan = await projectplan.findOne({
@@ -366,12 +367,26 @@ self.getMonthlyProjectReport = async(req, res) => {
                     quarter: quarter
                 })
 
+                report = await projectreport.findOne({
+                    where: {
+                        projectplan_id: data.id
+                    }
+                })
+
+
                 await saveActionState(data.id, "monthlyreport", "REGISTER", usr.usrID, req, res)
             }
 
+            report = await projectreport.findOne({
+                where: {
+                    projectplan_id: plan.id
+                }
+            })
+
             return res.json({
                 data,
-                plan
+                plan,
+                report
             })
         }
 

@@ -1,9 +1,8 @@
 const {
-    department,
-    sequelize
+    // department, 
+    actionstate,
 } = require("../models");
 
-const { actionstate} = require("../models/actionstate")
 const usrData = require("./userDataFromToken");
 const crypto = require('crypto');
 
@@ -15,12 +14,12 @@ const saveActionState = async (model_id, model, action, user_id, req, res) => {
                 model_id,
                 model,
                 action, 
-                user_id: usr.usrID, 
+                user_id: user_id, 
                 position_id: usr.position_id,
                 time: new Date()
             })
 
-        return act
+        return res.json(act)
 
     } catch (error) {
         return {
