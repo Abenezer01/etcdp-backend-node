@@ -4,7 +4,7 @@ const permissionController = require("../../../controllers/department/permission
 const userPhotoController = require("../../../controllers/department/userPhotoController.js")
 const positionController = require("../../../controllers/department/positionController.js")
 const departmentController = require("../../../controllers/department/departmentController.js")
-const TestController = require("../../../controllers/TestController.js")
+    //const TestController = require("../../../controllers/TestController.js")
     //Hr
 const EducationStatusController = require("../../../controllers/department/EducationStatusController.js")
 const ChildController = require("../../../controllers/department/ChildController.js")
@@ -32,7 +32,7 @@ module.exports = function(express) {
     route.get("/user-check-status/:id", userController.checkUserStatus);
 
 
-    
+
 
 
 
@@ -165,7 +165,7 @@ module.exports = function(express) {
     route.get("/contact-person/user/:id", ContactPersonController.getByUserId);
     route.get("/job-experience/user/:id", JobExperienceController.getByUserId);
     //test
-    route.get("/test", TestController.getAll);
+    // route.get("/test", TestController.getAll);
 
     return route;
 };
