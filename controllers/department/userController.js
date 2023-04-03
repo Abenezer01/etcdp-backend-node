@@ -287,7 +287,7 @@ self.save = async(req, res) => {
                 user_id: usr.usrID , 
                 position_id: usr.position_id,
                 time: new Date()
-            })
+            })git
 
             // await saveActionState(created_user.id, "user", "REGISTER", usr.usrID, req, res)
                 //create position
