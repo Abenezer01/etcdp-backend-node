@@ -39,7 +39,7 @@ const projectSubCategoryValidate = async(req, res, next) => {
         })
     }
     const validationRule = {
-        "category_id": "required|string",
+        "projectcategory_id": "required|string",
         "title": "required|string"
     };
 

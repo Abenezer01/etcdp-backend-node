@@ -42,7 +42,7 @@ module.exports = (sequelize, DataTypes) => {
         models.projectcategory.associate = function(models) {
             // associations can be defined here
             projectcategory.hasMany(models.projectsubcategory, {
-                foreignKey: 'category_id',
+                foreignKey: 'projectcategory_id',
                 as: 'Projectsubcategories',
             });
         }

@@ -2,6 +2,7 @@
 const {
     Model
 } = require('sequelize');
+const { Sequelize } = require('.');
 module.exports = (sequelize, DataTypes) => {
     class projectplan extends Model {
         /**
@@ -10,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
          * The `models/index` file will call this method automatically.
          */
         static associate(models) {
+            
             // define association here
         }
     }
@@ -55,6 +57,7 @@ module.exports = (sequelize, DataTypes) => {
         profit: {
             type: DataTypes.DOUBLE
         },
+        file_id: DataTypes.UUID,
         profit_or_loss: {
             type: DataTypes.VIRTUAL,
             get() {
@@ -76,9 +79,20 @@ module.exports = (sequelize, DataTypes) => {
             },
 
         },
+        
     }, {
         sequelize,
         modelName: 'projectplan',
     });
+projectplan.associate = function(models) {
+
+    // associations can be defined here
+    projectplan.belongsTo(models.file, {
+        as: "file",
+        foreignKey: "file_id"
+    })
+
+};
+
     return projectplan;
 };

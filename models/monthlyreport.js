@@ -41,8 +41,8 @@ module.exports = (sequelize, DataTypes) => {
     revised : {
       type: DataTypes.INTEGER,
       defaultValue: 0
-    }
-  }, {
+    },
+    }, {
     sequelize,
     modelName: 'monthlyreport',
   });

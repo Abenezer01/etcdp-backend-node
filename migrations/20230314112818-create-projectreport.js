@@ -109,6 +109,16 @@ module.exports = {
                 type: Sequelize.INTEGER,
                 defaultValue: 0
             },
+            file_id: {
+                type: Sequelize.UUID,
+                references: {
+                    model: 'files',
+                    key: 'id'
+                },
+                onUpdate: 'CASCADE',
+                onDelete: 'CASCADE'
+
+            },
             createdAt: {
                 allowNull: false,
                 type: Sequelize.DATE

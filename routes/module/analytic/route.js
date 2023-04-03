@@ -19,6 +19,11 @@ module.exports = function(express) {
 
      route.get("/type-categories/:module/:id", DashboardController.getCategoriesByTypeId);
      route.get("/category-sub-categories/:module/:id", DashboardController.getSubCategoriesByModuleCategoryId);
+
+     route.get("/sub-category-departments/:module/:id", DashboardController.getGeneralAnalysisSubCategoryDepartments);
+
+
+     
      
 
      

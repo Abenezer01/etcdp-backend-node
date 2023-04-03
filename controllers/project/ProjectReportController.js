@@ -1,6 +1,7 @@
 const {
     projectreport,
     projectplan,
+    file,
     monthlyreport,
     Sequelize
 } = require("../../models");
@@ -80,6 +81,10 @@ self.getByProjectId = async(req, res) => {
             where: {
                 project_id: id
             },
+            include: {
+                model: file,
+                as: "file"
+            }
 
         })
         .then(data => {
@@ -230,7 +235,7 @@ self.getByMonthlyId = async(req, res) => {
         let id = req.params.id;
         let data = await projectreport.findOne({
             where: {
-                monthlyreport_id: id
+                monthlyreport_id: id,
             }
         });
         return res.status(200).json({
@@ -343,13 +348,23 @@ self.getMonthlyProjectReport = async(req, res) => {
                 project_id: id,
                 year: year,
                 quarter: quarter
+            },
+            include: {
+                model: file,
+                as: "file"
             }
         })
+
+
+        
+      
         if (!plan) {
             return res.status(404).json({
                 message: "There is no plan data"
             })
         } else {
+           
+
             data = await monthlyreport.findOne({
                 where: {
                     project_id: id,
@@ -357,6 +372,7 @@ self.getMonthlyProjectReport = async(req, res) => {
                     quarter: quarter
                 }
             })
+
 
             if (!data) {
 
@@ -380,8 +396,13 @@ self.getMonthlyProjectReport = async(req, res) => {
             report = await projectreport.findOne({
                 where: {
                     projectplan_id: plan.id
+                },
+                include: {
+                    model: file,
+                    as: "file"
                 }
             })
+
 
             return res.json({
                 data,

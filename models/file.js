@@ -10,6 +10,10 @@ module.exports = (sequelize, DataTypes) => {
          * The `models/index` file will call this method automatically.
          */
         static associate(models) {
+
+            // file.hasOne(models.projectplan, {
+            //     foreignKey: "file_id"
+            // })
             // define association here
         }
     }

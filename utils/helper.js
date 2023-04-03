@@ -1,7 +1,4 @@
-const {
-    // department, 
-    actionstate,
-} = require("../models");
+const {actionstate} = require('../models/actionstate')
 
 const usrData = require("./userDataFromToken");
 const crypto = require('crypto');
@@ -9,24 +6,23 @@ const crypto = require('crypto');
 const saveActionState = async (model_id, model, action, user_id, req, res) => {
     try {
 
-        let usr = await usrData.userData(req, res) 
-        let act =  await actionstate.create({
-                model_id,
-                model,
-                action, 
-                user_id: user_id, 
-                position_id: usr.position_id,
-                time: new Date()
-            })
 
-        return res.json(act)
+        let usr = await usrData.userData(req, res) 
+        const act = await actionstate.create({
+                    model_id,
+                    model,
+                    action, 
+                    user_id: user_id, 
+                    position_id: usr.position_id,
+                    time: new Date()
+                })
+        return act
 
     } catch (error) {
         return {
             message: error.message
         }
     }
-
 }
 
 

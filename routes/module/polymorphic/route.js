@@ -26,6 +26,7 @@ module.exports = function(express) {
     //action state route
     route.get("/action-state", ActionStateController.getAll);
     route.get("/action-state/:id", ActionStateController.get);
+    route.get("/action/:id", ActionStateController.getLast);
     route.put("/check/:model/:id", ActionStateController.check);
     route.put("/approve/:model/:id", ActionStateController.approve);
     route.put("/authorize/:model/:id", ActionStateController.authorize);

@@ -1,5 +1,6 @@
 const {
     projectplan,
+    file,
     Sequelize
 } = require("../../models");
 const usrData = require("../../utils/userDataFromToken");
@@ -47,6 +48,11 @@ self.getByProjectId = async(req, res) => {
             order: [
                 ['createdAt', order]
             ],
+            include: {
+                    model: file,
+                    as: "file"
+                }
+        
         });
 
         const response = paginate.getPagingData(data, page, limit);

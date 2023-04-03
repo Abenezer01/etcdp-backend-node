@@ -1,6 +1,7 @@
 const {
     user,
     address,
+    actionstate,
     position,
     userposition,
     useremail,
@@ -18,9 +19,10 @@ const Op = Sequelize.Op;
 const dotenv = require('dotenv');
 dotenv.config();
 const usrData = require("../../utils/userDataFromToken");
-const { saveActionState, getChildren, encrypt, decrypt } = require('../../utils/helper')
+const { getChildren, encrypt, decrypt,saveActionState } = require('../../utils/helper')
+const helper=require('../../utils/helper')
 const paginate = require("../../utils/pagination");
-
+const actionHelper=require('../utils/action-helper')
 const jwt = require("jsonwebtoken");
 
 //emailer
@@ -129,21 +131,7 @@ self.getAll = async(req, res) => {
     // })
     let data = await user.findAll()
 
-    let allUser = await Promise.all(data.map(async(item)=> {
-            
-            let first_name = await decrypt(item.first_name)
-            let middle_name = await decrypt(item.middle_name)
-            let last_name = await decrypt(item.last_name)
-
-            item.first_name = first_name
-            item.middle_name = middle_name
-            item.last_name = last_name
-            return item
-           
-        })
-    )
-
-    return res.json(allUser)
+    return res.json(data)
         // let one = "12c85269-9dc5-4e89-8d47-62719baea7ed"
         // let queryString = `SELECT first_name FROM users as U WHERE U.id='${one}';`
     // let queryString = "SELECT *  FROM users as U JOIN actionstates as A WHERE U.id=A.model_id AND A.action='REGISTER';"
@@ -186,15 +174,6 @@ self.get = async(req, res) => {
             let temp = data.toJSON()
             temp.email = usEmail ? usEmail.email : null
             temp.phone = usPhone ? usPhone.phone : null
-
-            let first_name = await decrypt(data.first_name)
-            let middle_name = await decrypt(data.middle_name)
-            let last_name = await decrypt(data.last_name)
-
-            temp.first_name = first_name
-            temp.middle_name = middle_name
-            temp.last_name = last_name
-            temp.full_name = first_name + " " + middle_name
             
             return res.json(temp)
 
@@ -252,6 +231,12 @@ self.isEmailValid = async(email) => {
 
 self.save = async(req, res) => {
     try {
+
+        let rr = await usrData.userData(req, res) 
+
+        await (actionHelper.saveActionState("01a56ef5-9040-42aa-b59a-528980cb76ee","user", "REGISTER", rr.usrID, req, res))
+        
+        return res.json('success')
 
         let body = req.body
 
@@ -430,14 +415,6 @@ self.delete = async(req, res) => {
 self.getDepartmentUsers = async(req, res) => {
     try {
         let id = req.params.id
-            //demo
-
-        // let data = await user.findAll({
-        //     where: {
-        //         department_id: 
-        //     }
-        // })
-        //correct one
 
         let pos = await userposition.findAll({
             attributes: ["user_id"],
@@ -455,21 +432,8 @@ self.getDepartmentUsers = async(req, res) => {
                 }
             }
         })
-        let allUser = await Promise.all(users.map(async(item)=> {
-            
-            let first_name = await decrypt(item.first_name)
-            let middle_name = await decrypt(item.middle_name)
-            let last_name = await decrypt(item.last_name)
 
-            item.first_name = first_name
-            item.middle_name = middle_name
-            item.last_name = last_name
-            return item
-           
-        })
-    )
-
-        return res.json(allUser)
+        return res.json(users)
 
     } catch (error) {
         return res.status(500).json({

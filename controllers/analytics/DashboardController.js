@@ -655,18 +655,14 @@ self.getGeneralAnalysisSubCategoryDepartments = async(req, res) => {
    
     try {
 
-        
         const moduleArr = mainanalysismodules[module];
 
         const Model = moduleArr[0];
-        const TypeModel = moduleArr[1];
-        const CategoryModel = moduleArr[2];
-        const SubCategoryModel = moduleArr[2];
+        const SubCategoryModel = moduleArr[3];
         
         let usr = await usrData.userData(req, res)
 
         let departments = await self.getChildren(usr.departmentID)
-
 
         let modulesubcategory = await eval(SubCategoryModel).findOne({
             where: {
@@ -675,78 +671,45 @@ self.getGeneralAnalysisSubCategoryDepartments = async(req, res) => {
         })
 
     
-        let stake = await eval(Model).findAndCountAll({
+        let models = await eval(Model).findAll({
             where: {
-                [`${moduleArr[2]}_id`]: moduletype.id
+                [`${moduleArr[3]}_id`]: modulesubcategory.id
             }
 
         })
 
-        // let str = `${moduleArr[1]}_id`
+        
 
-        let categories = await eval(CategoryModel).findAll({
-            where: {
-                [`${moduleArr[1]}_id`]:moduletype.id
+        let series = []
+        let deptmap = []
+        
+
+        for(let dept of departments){
+
+            let value =  models.filter(model=> model.department_id === dept.id)
+
+            if(value.length>0){
+            series.push(value.length)
+
+            }else{
+                series.push(0)
+
             }
-        })
-    
-        let categoryelement = [] 
 
-        if(categories.length > 0){
-
-            for(let category of categories){
-                let catestake = await eval(Model).findAll({
-                    where: {
-                        [`${moduleArr[2]}_id`]: category.id
-                    },
-                    include: [{
-                        model: department,
-                        as: "department"
-                    }
-                ],
-                }) 
-
-
-                const countByName = catestake.reduce((acc, obj) => {
-                    const department_id = obj.department_id;
-    
-                    acc[obj.department.name] = (acc[department_id] || 0) + 1;
-                    return acc;
-                  }, {});
-
-                //   const filteredData = data.filter(item => !["EtCDP", "TEST"].includes(item.name));
-                  let existing = Object.keys(countByName)
-                  const filteredData = departments.filter(item => !existing.includes(item.name));
-                  const nameFiltered = filteredData.map((item) => item.name)
-
-                  let remainingObj = {};
-                  
-                  nameFiltered.forEach(element => {
-                    remainingObj[element] = 0;
-                  });
-                  const mergedObj = Object.assign({}, countByName, remainingObj);
-
-                  
-                let deptObj = {}
-
-                deptObj["name"] = category.title
-                deptObj["count"] = catestake.length 
-                deptObj["data"] = Object.keys(mergedObj).length === 0 ? 0 : Object.values(mergedObj)
-
-                categoryelement.push (deptObj) 
-            }
-            
         }
         
-        first = {
-            title: moduletype.title,
-            series: categoryelement,
-            departments:  [...new Set(departments.map((item) => item.name))].filter(n=>n),
-            count: stake.count
-        }
+         deptmap= departments.map((item)=> item.name)
+
+         let first = {}
+
+         first.series = series
+         first.departments = deptmap
+
+         series = []
+         deptmap = []
+
+        return res.json(first)
             
-        
-        return res.status(200).json(first)
         
     } catch (error) {
         return res.status(500).json({

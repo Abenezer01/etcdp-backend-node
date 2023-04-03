@@ -11,10 +11,15 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             // define association here
-            projectreport.belongsTo(models.projectplan, {
-                as: "projectplan",
-                foreignKey: "projectplan_id"
-            })
+            // projectreport.belongsTo(models.projectplan, {
+            //     as: "projectplan",
+            //     foreignKey: "projectplan_id"
+            // }),
+            // projectreport.hasOne(models.file, {
+            //     as: "file",
+            // foreignKey: "file_id"
+
+            // })
         }
     }
     projectreport.init({
@@ -88,9 +93,25 @@ module.exports = (sequelize, DataTypes) => {
             },
 
         },
+        file_id: DataTypes.UUID
     }, {
         sequelize,
         modelName: 'projectreport',
     });
+
+    projectreport.associate = function(models) {
+
+        // associations can be defined here
+        projectreport.belongsTo(models.file, {
+            as: "file",
+            foreignKey: "file_id"
+        })
+        projectreport.belongsTo(models.projectplan, {
+            as: "projectplan",
+            foreignKey: "projectplan_id"
+        })
+
+    };
+
     return projectreport;
 };

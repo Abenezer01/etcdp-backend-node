@@ -71,7 +71,7 @@ module.exports = (sequelize, DataTypes) => {
         full_name: {
             type: DataTypes.VIRTUAL,
             get() {
-                this.first_name + " " + this.middle_name;
+                return this.first_name+" "+ this.middle_name;
             },
 
         },

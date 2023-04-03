@@ -833,4 +833,19 @@ self.getFileData = async(fileableId, fileType) => {
 
     return files;
 }
+
+self.getLast = async(req, res) => {
+    let id = req.params.id
+    try {
+        let data = await actionstate.findAll({
+            where: {
+                model_id:id
+            }
+        })
+
+        return res.json(data.length)
+    } catch (error) {
+        
+    }
+}
 module.exports = self;
