@@ -1,7 +1,5 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+"use strict";
+const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class hydroelectricdam extends Model {
     /**
@@ -13,31 +11,34 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  hydroelectricdam.init({
-    id: {
-      type: DataTypes.UUID,
-      primaryKey: true,
-      defaultValue: DataTypes.UUIDV4
+  hydroelectricdam.init(
+    {
+      id: {
+        type: DataTypes.UUID,
+        primaryKey: true,
+        defaultValue: DataTypes.UUIDV4,
+      },
+      parent_id: DataTypes.UUID,
+      project_id: {
+        type: DataTypes.UUID,
+        allowNull: false,
+      },
+      river_name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      elevation_from_sea_level: DataTypes.STRING,
+      elevation_from_ngl: DataTypes.STRING,
+      dam_type: DataTypes.STRING,
+      dam_volume: DataTypes.STRING,
+      gated_spillway_no: DataTypes.INTEGER,
+      none_gated_spillway_no: DataTypes.INTEGER,
+      revision_no: DataTypes.INTEGER,
     },
-    parent_id: DataTypes.UUID,
-    project_id: {
-      type: DataTypes.UUID,
-      allowNull: false
-    },
-    river_name: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    elevation_from_sea_level: DataTypes.STRING,
-    elevation_from_ngl: DataTypes.STRING,
-    dam_type: DataTypes.STRING,
-    dam_volume: DataTypes.STRING,
-    gated_spillway_no: DataTypes.INTEGER,
-    none_gated_spillway_no: DataTypes.INTEGER,
-    revision_no: DataTypes.INTEGER
-  }, {
-    sequelize,
-    modelName: 'hydroelectricdam',
-  });
+    {
+      sequelize,
+      modelName: "hydroelectricdam",
+    }
+  );
   return hydroelectricdam;
 };

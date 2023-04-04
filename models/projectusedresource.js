@@ -1,7 +1,5 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+"use strict";
+const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class projectusedresource extends Model {
     /**
@@ -13,41 +11,44 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  projectusedresource.init({
-    id: {
-      type: DataTypes.UUID,
-      primaryKey: true,
-      defaultValue: DataTypes.UUIDV4
-    },
-    parent_id: DataTypes.UUID,
-    project_id: {
-      type: DataTypes.UUID,
-      allowNull: false
-    },
-    type: DataTypes.STRING,
-    resourcecategory_id: {
-      type: DataTypes.UUID,
-      allowNull: false
-    },
-    resouresubcategory_id: {
-      type: DataTypes.UUID,
-      allowNull: false
-    },
-    name: {
+  projectusedresource.init(
+    {
+      id: {
+        type: DataTypes.UUID,
+        primaryKey: true,
+        defaultValue: DataTypes.UUIDV4,
+      },
+      parent_id: DataTypes.UUID,
+      project_id: {
+        type: DataTypes.UUID,
+        allowNull: false,
+      },
       type: DataTypes.STRING,
-      allowNull: false
+      resourcecategory_id: {
+        type: DataTypes.UUID,
+        allowNull: false,
+      },
+      resouresubcategory_id: {
+        type: DataTypes.UUID,
+        allowNull: false,
+      },
+      name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      item_specification: DataTypes.STRING,
+      measurement_unit: DataTypes.STRING,
+      quantity: DataTypes.DOUBLE,
+      unit_price: DataTypes.DOUBLE,
+      period_from: DataTypes.DATE,
+      period_until: DataTypes.DATE,
+      data_source_id: DataTypes.UUID,
+      revision_no: DataTypes.INTEGER,
     },
-    item_specification: DataTypes.STRING,
-    measurement_unit: DataTypes.STRING,
-    quantity: DataTypes.DOUBLE,
-    unit_price: DataTypes.DOUBLE,
-    period_from: DataTypes.DATE,
-    period_until: DataTypes.DATE,
-    data_source_id: DataTypes.UUID,
-    revision_no: DataTypes.INTEGER
-  }, {
-    sequelize,
-    modelName: 'projectusedresource',
-  });
+    {
+      sequelize,
+      modelName: "projectusedresource",
+    }
+  );
   return projectusedresource;
 };

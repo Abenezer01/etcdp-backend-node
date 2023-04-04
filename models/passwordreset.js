@@ -1,7 +1,5 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+"use strict";
+const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class passwordreset extends Model {
     /**
@@ -13,30 +11,33 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  passwordreset.init({
-    id: {
-      type: DataTypes.UUID,
-      primaryKey: true,
-      defaultValue: DataTypes.UUIDV4
+  passwordreset.init(
+    {
+      id: {
+        type: DataTypes.UUID,
+        primaryKey: true,
+        defaultValue: DataTypes.UUIDV4,
+      },
+      user_id: {
+        type: DataTypes.UUID,
+        allowNull: false,
+      },
+      token: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      expiresAt: {
+        type: DataTypes.DATE,
+      },
+      is_used: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
     },
-    user_id: {
-      type: DataTypes.UUID,
-      allowNull:false
-    },
-    token: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    expiresAt: {
-      type: DataTypes.DATE
-    },
-    is_used: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false
+    {
+      sequelize,
+      modelName: "passwordreset",
     }
-  }, {
-    sequelize,
-    modelName: 'passwordreset',
-  });
+  );
   return passwordreset;
 };

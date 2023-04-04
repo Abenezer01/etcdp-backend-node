@@ -1,7 +1,5 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+"use strict";
+const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class experiencelevel extends Model {
     /**
@@ -13,22 +11,25 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  experiencelevel.init({
-    id: {
-      type: DataTypes.UUID,
-      primaryKey: true,
-      defaultValue: DataTypes.UUIDV4
+  experiencelevel.init(
+    {
+      id: {
+        type: DataTypes.UUID,
+        primaryKey: true,
+        defaultValue: DataTypes.UUIDV4,
+      },
+      parent_id: DataTypes.UUID,
+      title: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      description: DataTypes.TEXT,
+      revision_no: DataTypes.INTEGER,
     },
-    parent_id: DataTypes.UUID,
-    title: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    description: DataTypes.TEXT,
-    revision_no: DataTypes.INTEGER
-  }, {
-    sequelize,
-    modelName: 'experiencelevel',
-  });
+    {
+      sequelize,
+      modelName: "experiencelevel",
+    }
+  );
   return experiencelevel;
 };

@@ -1,7 +1,5 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+"use strict";
+const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class reply extends Model {
     /**
@@ -13,36 +11,39 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  reply.init({
-    id: {
-      type: DataTypes.UUID,
-      primaryKey: true,
-      defaultValue: DataTypes.UUIDV4
+  reply.init(
+    {
+      id: {
+        type: DataTypes.UUID,
+        primaryKey: true,
+        defaultValue: DataTypes.UUIDV4,
+      },
+      actionstate_id: {
+        type: DataTypes.UUID,
+        allowNull: false,
+      },
+      creator_id: {
+        type: DataTypes.UUID,
+      },
+      content: {
+        type: DataTypes.TEXT,
+        allowNull: false,
+      },
+      type: {
+        type: DataTypes.STRING,
+      },
+      status: {
+        type: DataTypes.STRING,
+      },
+      is_authorized: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
     },
-    actionstate_id: {
-      type: DataTypes.UUID,
-      allowNull: false
-    },
-    creator_id: {
-      type: DataTypes.UUID
-    },
-    content: {
-      type: DataTypes.TEXT,
-      allowNull: false
-    },
-    type: {
-      type: DataTypes.STRING
-    },
-    status: {
-      type: DataTypes.STRING
-    },
-    is_authorized: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false
+    {
+      sequelize,
+      modelName: "reply",
     }
-  }, {
-    sequelize,
-    modelName: 'reply',
-  });
+  );
   return reply;
 };

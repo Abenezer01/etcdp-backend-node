@@ -1,63 +1,63 @@
-'use strict';
+"use strict";
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('waterirrigationdams', {
+    await queryInterface.createTable("waterirrigationdams", {
       id: {
         allowNull: false,
         primaryKey: true,
-        type: Sequelize.UUID
+        type: Sequelize.UUID,
       },
       parent_id: {
         type: Sequelize.UUID,
         references: {
-          model: 'waterirrigationdams',
-          key: 'id'
+          model: "waterirrigationdams",
+          key: "id",
         },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE'
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
       },
       project_id: {
         type: Sequelize.UUID,
         allowNull: false,
         references: {
-          model: 'projects',
-          key: 'id'
+          model: "projects",
+          key: "id",
         },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE'
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
       },
       dam_volume: {
-        type: Sequelize.DOUBLE
+        type: Sequelize.DOUBLE,
       },
       total_capacity: {
-        type: Sequelize.DOUBLE
+        type: Sequelize.DOUBLE,
       },
       active_capacity: {
-        type: Sequelize.DOUBLE
+        type: Sequelize.DOUBLE,
       },
       inactive_capacity: {
-        type: Sequelize.DOUBLE
+        type: Sequelize.DOUBLE,
       },
       catchment_area: {
-        type: Sequelize.DOUBLE
+        type: Sequelize.DOUBLE,
       },
       surface_area: {
-        type: Sequelize.DOUBLE
+        type: Sequelize.DOUBLE,
       },
       revision_no: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
-      }
+        type: Sequelize.DATE,
+      },
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('waterirrigationdams');
-  }
+    await queryInterface.dropTable("waterirrigationdams");
+  },
 };

@@ -1,91 +1,91 @@
-'use strict';
+"use strict";
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('projectusedresources', {
+    await queryInterface.createTable("projectusedresources", {
       id: {
         allowNull: false,
         primaryKey: true,
-        type: Sequelize.UUID
+        type: Sequelize.UUID,
       },
       parent_id: {
         type: Sequelize.UUID,
         references: {
-          model: 'projectusedresources',
-          key: 'id'
+          model: "projectusedresources",
+          key: "id",
         },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE'
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
       },
       project_id: {
         type: Sequelize.UUID,
         references: {
-          model: 'projects',
-          key: 'id'
+          model: "projects",
+          key: "id",
         },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE'
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
       },
       type: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       resourcecategory_id: {
         type: Sequelize.UUID,
         allowNull: false,
         references: {
-          model: 'resourcecategories',
-          key: 'id'
+          model: "resourcecategories",
+          key: "id",
         },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE'
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
       },
       resouresubcategory_id: {
         type: Sequelize.UUID,
         references: {
-          model: 'resourcesubcategories',
-          key: 'id'
+          model: "resourcesubcategories",
+          key: "id",
         },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE'
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
       },
       name: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
       },
       item_specification: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       measurement_unit: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       quantity: {
-        type: Sequelize.DOUBLE
+        type: Sequelize.DOUBLE,
       },
       unit_price: {
-        type: Sequelize.DOUBLE
+        type: Sequelize.DOUBLE,
       },
       period_from: {
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       period_until: {
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       data_source_id: {
-        type: Sequelize.UUID
+        type: Sequelize.UUID,
       },
       revision_no: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
-      }
+        type: Sequelize.DATE,
+      },
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('projectusedresources');
-  }
+    await queryInterface.dropTable("projectusedresources");
+  },
 };

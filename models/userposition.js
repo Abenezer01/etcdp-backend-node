@@ -1,7 +1,5 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+"use strict";
+const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class userposition extends Model {
     /**
@@ -13,48 +11,49 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  userposition.init({
-    id: {
-      type: DataTypes.UUID,
-      primaryKey: true,
-      defaultValue: DataTypes.UUIDV4
+  userposition.init(
+    {
+      id: {
+        type: DataTypes.UUID,
+        primaryKey: true,
+        defaultValue: DataTypes.UUIDV4,
+      },
+      parent_id: {
+        type: DataTypes.UUID,
+      },
+      user_id: {
+        type: DataTypes.UUID,
+        allowNull: false,
+      },
+      department_id: {
+        type: DataTypes.UUID,
+      },
+      position_id: {
+        type: DataTypes.UUID,
+        allowNull: false,
+      },
+      is_primary: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
+      status: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true,
+      },
     },
-    parent_id: {
-      type: DataTypes.UUID
-    },
-    user_id: {
-      type: DataTypes.UUID,
-      allowNull: false
-    },
-    department_id: {
-      type: DataTypes.UUID
-    },
-    position_id: {
-      type: DataTypes.UUID,
-      allowNull: false
-    },
-    is_primary: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false
-    },
-    status: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: true
+    {
+      sequelize,
+      modelName: "userposition",
     }
-  }, {
-    sequelize,
-    modelName: 'userposition',
-  });
+  );
 
-  userposition.associate = function(models) {
-
+  userposition.associate = function (models) {
     userposition.belongsTo(models.position, {
-        foreignKey: 'position_id'
+      foreignKey: "position_id",
     });
     userposition.belongsTo(models.department, {
-        foreignKey: 'department_id'
+      foreignKey: "department_id",
     });
-
-};
+  };
   return userposition;
 };

@@ -1,7 +1,5 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+"use strict";
+const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class contactperson extends Model {
     /**
@@ -13,62 +11,65 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  contactperson.init({
-    id: {
-      type: DataTypes.UUID,
-      primaryKey: true,
-      defaultValue: DataTypes.UUIDV4
-    },
+  contactperson.init(
+    {
+      id: {
+        type: DataTypes.UUID,
+        primaryKey: true,
+        defaultValue: DataTypes.UUIDV4,
+      },
 
-    parent_id: {
-      type: DataTypes.UUID
-    },
-    first_name: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    middle_name: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    last_name: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    gender: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    email: {
-      type: DataTypes.STRING,
-      unique: true,
-      allowNull: false
-    },
-    phone_number: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    employer_company: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    type: {
-      type: DataTypes.STRING,
-      default: 'Emergency Contact'
-    },
-    user_id: {
-      type: DataTypes.UUID,
-      allowNull: false
-    },
-    full_name: {
-      type: DataTypes.VIRTUAL,
-      get() {
-        return this.first_name +" " + this.middle_name;
+      parent_id: {
+        type: DataTypes.UUID,
+      },
+      first_name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      middle_name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      last_name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      gender: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      email: {
+        type: DataTypes.STRING,
+        unique: true,
+        allowNull: false,
+      },
+      phone_number: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      employer_company: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      type: {
+        type: DataTypes.STRING,
+        default: "Emergency Contact",
+      },
+      user_id: {
+        type: DataTypes.UUID,
+        allowNull: false,
+      },
+      full_name: {
+        type: DataTypes.VIRTUAL,
+        get() {
+          return this.first_name + " " + this.middle_name;
+        },
       },
     },
-  }, {
-    sequelize,
-    modelName: 'contactperson',
-  });
+    {
+      sequelize,
+      modelName: "contactperson",
+    }
+  );
   return contactperson;
 };

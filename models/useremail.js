@@ -1,8 +1,9 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
-const { decrypt, encrypt } = require('../utils/helper');
+"use strict";
+const { Model } = require("sequelize");
+const { decrypt, encrypt } = require("../utils/helper");
+const cipherHelper = require("../controllers/utils/cipher-helper");
+
+
 module.exports = (sequelize, DataTypes) => {
   class useremail extends Model {
     /**
@@ -14,40 +15,42 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  useremail.init({
-    id: {
-      type: DataTypes.UUID,
-      primaryKey: true,
-      defaultValue: DataTypes.UUIDV4
+  useremail.init(
+    {
+      id: {
+        type: DataTypes.UUID,
+        primaryKey: true,
+        defaultValue: DataTypes.UUIDV4,
+      },
+      parent_id: {
+        type: DataTypes.UUID,
+      },
+      user_id: {
+        type: DataTypes.UUID,
+        allowNull: false,
+      },
+      email: {
+        type: DataTypes.TEXT,
+        allowNull: false,
+        get() {
+          const encryptedValue = this.getDataValue("email");
+          const decryptedValue = cipherHelper.decrypt(encryptedValue);
+          return decryptedValue;
+        },
+        set(value) {
+          const encryptedValue = cipherHelper.encrypt(value);
+          this.setDataValue("email", encryptedValue);
+        },
+      },
+      is_primary: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
     },
-    parent_id: {
-      type: DataTypes.UUID
-    },
-    user_id: {
-      type: DataTypes.UUID,
-      allowNull: false
-    },
-    email: {
-      type: DataTypes.UUID,
-      allowNull: false,
-          get() {
-              const encryptedValue = this.getDataValue("email");
-              const decryptedValue = decrypt(encryptedValue);
-              return decryptedValue;
-            },
-          set(value) {
-              const encryptedValue = encrypt(value);
-              this.setDataValue('email', encryptedValue);
-          }
-      
-    },
-    is_primary: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false
+    {
+      sequelize,
+      modelName: "useremail",
     }
-  }, {
-    sequelize,
-    modelName: 'useremail',
-  });
+  );
   return useremail;
 };

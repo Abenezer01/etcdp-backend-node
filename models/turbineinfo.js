@@ -1,7 +1,5 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+"use strict";
+const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class turbineinfo extends Model {
     /**
@@ -13,31 +11,34 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  turbineinfo.init({
-    id: {
-      type: DataTypes.UUID,
-      primaryKey: true,
-      defaultValue: DataTypes.UUIDV4
+  turbineinfo.init(
+    {
+      id: {
+        type: DataTypes.UUID,
+        primaryKey: true,
+        defaultValue: DataTypes.UUIDV4,
+      },
+      parent_id: DataTypes.UUID,
+      project_id: {
+        type: DataTypes.UUID,
+        allowNull: false,
+      },
+      turbine_type: DataTypes.STRING,
+      name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      detail: DataTypes.TEXT,
+      generating_capacity: DataTypes.STRING,
+      designed_quantity: DataTypes.STRING,
+      installed_quantity: DataTypes.STRING,
+      functional_quantity: DataTypes.STRING,
+      revision_no: DataTypes.INTEGER,
     },
-    parent_id: DataTypes.UUID,
-    project_id: {
-      type: DataTypes.UUID,
-      allowNull: false
-    },
-    turbine_type: DataTypes.STRING,
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    detail: DataTypes.TEXT,
-    generating_capacity: DataTypes.STRING,
-    designed_quantity: DataTypes.STRING,
-    installed_quantity: DataTypes.STRING,
-    functional_quantity: DataTypes.STRING,
-    revision_no: DataTypes.INTEGER
-  }, {
-    sequelize,
-    modelName: 'turbineinfo',
-  });
+    {
+      sequelize,
+      modelName: "turbineinfo",
+    }
+  );
   return turbineinfo;
 };

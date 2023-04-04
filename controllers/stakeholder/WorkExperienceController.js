@@ -296,7 +296,7 @@ self.save = async(req, res) => {
                                 }
                                 if (body) {
                                     let data = await workexperience.create(body);
-                                    await saveActionState(data.id, "workexperience", "REGISTER", us, req, res)
+                                    await actionHelper.saveActionState(data.id, "workexperience", "REGISTER", us, req, res)
                                     arr2.push(data)
                                 }
                             }

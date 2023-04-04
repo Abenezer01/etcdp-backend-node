@@ -1,7 +1,5 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+"use strict";
+const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class positionpermission extends Model {
     /**
@@ -13,23 +11,26 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  positionpermission.init({
-    id: {
-      type: DataTypes.UUID,
-      primaryKey: true,
-      defaultValue: DataTypes.UUIDV4
+  positionpermission.init(
+    {
+      id: {
+        type: DataTypes.UUID,
+        primaryKey: true,
+        defaultValue: DataTypes.UUIDV4,
+      },
+      position_id: {
+        type: DataTypes.UUID,
+        allowNull: false,
+      },
+      permission_id: {
+        type: DataTypes.UUID,
+        allowNull: false,
+      },
     },
-    position_id: {
-      type: DataTypes.UUID,
-      allowNull: false
-    },
-    permission_id: {
-      type: DataTypes.UUID,
-      allowNull: false
+    {
+      sequelize,
+      modelName: "positionpermission",
     }
-}, {
-    sequelize,
-    modelName: 'positionpermission',
-});
+  );
   return positionpermission;
 };

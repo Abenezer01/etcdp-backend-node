@@ -1,7 +1,5 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+"use strict";
+const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class familystatus extends Model {
     /**
@@ -13,24 +11,27 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  familystatus.init({
-    id: {
-      type: DataTypes.UUID,
-      primaryKey: true,
-      defaultValue: DataTypes.UUIDV4
+  familystatus.init(
+    {
+      id: {
+        type: DataTypes.UUID,
+        primaryKey: true,
+        defaultValue: DataTypes.UUIDV4,
+      },
+      parent_id: {
+        type: DataTypes.UUID,
+      },
+      status: DataTypes.STRING,
+      partner_name: DataTypes.STRING,
+      user_id: {
+        type: DataTypes.UUID,
+        allowNull: false,
+      },
     },
-    parent_id: {
-      type: DataTypes.UUID
-    },
-    status: DataTypes.STRING,
-    partner_name: DataTypes.STRING,
-    user_id: {
-      type: DataTypes.UUID,
-      allowNull: false
+    {
+      sequelize,
+      modelName: "familystatus",
     }
-  }, {
-    sequelize,
-    modelName: 'familystatus',
-  });
+  );
   return familystatus;
 };

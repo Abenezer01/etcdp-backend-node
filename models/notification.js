@@ -1,7 +1,5 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+"use strict";
+const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class notification extends Model {
     /**
@@ -13,40 +11,43 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  notification.init({
-    id: {
-      type: DataTypes.UUID,
-      primaryKey: true,
-      defaultValue: DataTypes.UUIDV4
+  notification.init(
+    {
+      id: {
+        type: DataTypes.UUID,
+        primaryKey: true,
+        defaultValue: DataTypes.UUIDV4,
+      },
+      type: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      subject: {
+        type: DataTypes.STRING,
+      },
+      description: {
+        type: DataTypes.TEXT,
+      },
+      notifiable_type: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      notifiable_id: {
+        type: DataTypes.UUID,
+        allowNull: false,
+      },
+      data: {
+        type: DataTypes.TEXT,
+        allowNull: false,
+      },
+      read_at: {
+        type: DataTypes.DATE,
+      },
     },
-    type: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    subject: {
-      type: DataTypes.STRING
-    },
-    description: {
-      type: DataTypes.TEXT
-    },
-    notifiable_type: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    notifiable_id: {
-      type: DataTypes.UUID,
-      allowNull: false
-    },
-    data: {
-      type: DataTypes.TEXT,
-      allowNull: false
-    },
-    read_at: {
-      type: DataTypes.DATE
+    {
+      sequelize,
+      modelName: "notification",
     }
-  }, {
-    sequelize,
-    modelName: 'notification',
-  });
+  );
   return notification;
 };

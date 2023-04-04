@@ -1,317 +1,341 @@
 const {
-    document,
-    documenttype,
-    documentcategory,
-    documentsubcategory,
-    Sequelize
+  document,
+  documenttype,
+  documentcategory,
+  documentsubcategory,
+  Sequelize,
 } = require("../../models");
 const usrData = require("../../utils/userDataFromToken");
 const { saveActionState } = require("../../utils/helper");
 const Op = Sequelize.Op;
 const paginate = require("../../utils/pagination");
-const dotenv = require('dotenv');
+const dotenv = require("dotenv");
 dotenv.config();
 let self = {};
-const path = require('path');
-const fs = require('fs');
-self.getAll = async(req, res) => {
-    let { page, size, order } = req.query;
-    //console.log("The page", page, size)
-    if (page == null && size == null) {
-        page = process.env.page,
-            size = process.env.size
-        console.log("The page", page, size)
-    }
-    if (order == null) {
-        order = process.env.order
-    }
-    const { limit, offset } = paginate.getPagination(page, size);
-    document.findAndCountAll({
-            limit,
-            offset,
-            order: [
-                ['createdAt', order]
-            ],
-        })
-        .then(data => {
-            const response = paginate.getPagingData(data, page, limit);
-            res.send(response);
-        })
-        .catch(err => {
-            res.status(500).send({
-                message: err.message || "Some error occurred while retrieving data."
-            });
-        });
-    // try {
-    //     let data = await document.findAll();
-    //     return res.json(data)
+const path = require("path");
+const fs = require("fs");
+self.getAll = async (req, res) => {
+  let { page, size, order } = req.query;
+  //console.log("The page", page, size)
+  if (page == null && size == null) {
+    (page = process.env.page), (size = process.env.size);
+    console.log("The page", page, size);
+  }
+  if (order == null) {
+    order = process.env.order;
+  }
+  const { limit, offset } = paginate.getPagination(page, size);
+  document
+    .findAndCountAll({
+      limit,
+      offset,
+      order: [["createdAt", order]],
+    })
+    .then((data) => {
+      const response = paginate.getPagingData(data, page, limit);
+      res.send(response);
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message: err.message || "Some error occurred while retrieving data.",
+      });
+    });
+  // try {
+  //     let data = await document.findAll();
+  //     return res.json(data)
 
-    // } catch (error) {
-    //     res.status(500).json({
-    //         message: error.message
-    //     })
+  // } catch (error) {
+  //     res.status(500).json({
+  //         message: error.message
+  //     })
+  // }
+};
+
+self.get = async (req, res) => {
+  try {
+    let id = req.params.id;
+    let data = await document.findOne({
+      where: {
+        id: id,
+      },
+      include: [
+        {
+          model: documenttype,
+          as: "documenttype",
+          attributes: ["id", "title"],
+        },
+        {
+          model: documentcategory,
+          as: "documentcategory",
+          attributes: ["id", "title"],
+        },
+        {
+          model: documentsubcategory,
+          as: "documentsubcategory",
+          attributes: ["id", "title"],
+        },
+      ],
+    });
+    data.attachement = data.attachement.substr(
+      data.attachement.lastIndexOf("/") + 1
+    );
+    return res.status(200).json({
+      data: data ? data : {},
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+self.filter = async (req, res) => {
+  let { page, size, order } = req.query;
+  const { typeId, categoryId, subcategoryId } = req.query;
+  console.log("The body", req.body);
+  //console.log("The page", page, size)
+  if (page == null && size == null) {
+    (page = process.env.page), (size = process.env.size);
+  }
+  if (order == null) {
+    order = process.env.order;
+  }
+  const filter = () => {
+    if (subcategoryId) {
+      return [
+        { documenttype_id: typeId },
+        { documentcategory_id: categoryId },
+        { documentsubcategory_id: subcategoryId },
+      ];
+    }
+
+    if (categoryId) {
+      return [{ documenttype_id: typeId }, { documentcategory_id: categoryId }];
+    }
+    return [{ documenttype_id: typeId }];
+  };
+  console.log("The filter", filter());
+  const { limit, offset } = paginate.getPagination(page, size);
+  document
+    .findAndCountAll({
+      limit,
+      offset,
+      order: [["createdAt", order]],
+      where: {
+        [Op.and]: filter(),
+      },
+      raw: true,
+    })
+    .then((data) => {
+      const newData = data.rows.map((item) => {
+        // console.log("The item attachement", )
+        return {
+          ...item,
+          attachement: item.attachement.substr(
+            item.attachement.lastIndexOf("/") + 1
+          ),
+        };
+      });
+
+      const response = paginate.getPagingData(
+        { rows: newData, count: data.count },
+        page,
+        limit
+      );
+      res.send(response);
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message: err.message || "Some error occurred while retrieving data.",
+      });
+    });
+};
+self.search = async (req, res) => {
+  try {
+    let text = req.query.text;
+    let data = await document.findAll({
+      where: {
+        name: {
+          [Op.like]: "%" + text + "%",
+        },
+      },
+    });
+    return res.json(data);
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+self.save = async (req, res) => {
+  try {
+    let usr = await usrData.userData(req, res);
+    let body = req.body;
+    const file = req.files;
+    console.log("the file", file);
+    let pat;
+    if (file) {
+      const ext = req.files.attachement.mimetype.split("/")[1];
+      let rand = Math.floor(100000 + Math.random() * 900000);
+      var name = req.files.attachement.name;
+      let parsedName = path.parse(name).name;
+      checkedNew = parsedName.concat(rand);
+      const filePath = path.join(
+        __dirname,
+        "../../public",
+        "documents",
+        checkedNew + "." + `${ext}`
+      );
+      console.log("The file path is ", filePath);
+      var filePathh = filePath.split("public").pop();
+      console.log("The file path is ", filePathh);
+      //return res.send(filePathh)
+
+      body.attachement = filePathh;
+      pat = filePath;
+    }
+    if (!file) {
+      body.attachement = "";
+    }
+    if (usr) {
+      body.department_id = usr.departmentID;
+      let data = await document.create(body);
+      if (data) {
+        if (pat) {
+          const filee = req.files.attachement;
+          filee.mv(pat, (err) => {
+            if (err) return res.status(500).send(err);
+            // res.redirect('/')
+          });
+        }
+        let us = usr.usrID;
+        //add the department to data
+
+        //await data.save()
+        await actionHelper.saveActionState(
+          data.id,
+          "document",
+          "REGISTER",
+          us,
+          req,
+          res
+        );
+      }
+      return res.json(data);
+    }
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+self.getdocument = async (req, res) => {
+  try {
+    let id = req.params.id;
+    let body = req.body;
+    let data = await document.findOne({
+      where: {
+        id: id,
+      },
+    });
+    let prePath = "/home/kaleb/Desktop/etcdp-backend-node/public";
+    let conPath = prePath.concat(data.attachement);
+    return res.download(conPath);
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+self.update = async (req, res) => {
+  try {
+    let id = req.params.id;
+    let usr = await usrData.userData(req, res);
+    let body = req.body;
+    const file = req.files;
+    console.log("the file", file);
+    let pat;
+    if (file) {
+      const ext = req.files.attachement.mimetype.split("/")[1];
+      let rand = Math.floor(100000 + Math.random() * 900000);
+      var name = req.files.attachement.name;
+      let parsedName = path.parse(name).name;
+      checkedNew = parsedName.concat(rand);
+      const filePath = path.join(
+        __dirname,
+        "../../public",
+        "documents",
+        checkedNew + "." + `${ext}`
+      );
+      console.log("The file path is ", filePath);
+      var filePathh = filePath.split("public").pop();
+      console.log("The file path is ", filePathh);
+      //return res.send(filePathh)
+
+      body.attachement = filePathh;
+      pat = filePath;
+    }
+    // if (!file) {
+    //     body.attachement = ''
     // }
-}
 
-
-self.get = async(req, res) => {
-    try {
-        let id = req.params.id;
+    if (usr) {
+      if (pat) {
+        const filee = req.files.attachement;
         let data = await document.findOne({
-            where: {
-                id: id
-            },
-            include: [{ model: documenttype, as: 'documenttype', attributes: ['id', 'title'] },
-                { model: documentcategory, as: 'documentcategory', attributes: ['id', 'title'] },
-                { model: documentsubcategory, as: 'documentsubcategory', attributes: ['id', 'title'] },
-            ]
+          where: {
+            id: id,
+          },
         });
-        data.attachement = data.attachement.substr(data.attachement.lastIndexOf('/') + 1)
-        return res.status(200).json({
+        if (data.attachement) {
+          let f = "/home/kaleb/Desktop/etcdp-backend-node/public";
+          let fc = f + data.attachement;
 
-            data: (data) ? data : {}
-        })
-    } catch (error) {
-        res.status(500).json({
-            message: error.message
-        })
-    }
-}
+          if (fs.existsSync(fc)) {
+            fs.unlink(fc, (err) => {
+              if (err) {
+                throw err;
+              }
 
-self.filter = async(req, res) => {
-    let { page, size, order } = req.query;
-    const { typeId, categoryId, subcategoryId } = req.query
-    console.log("The body", req.body)
-        //console.log("The page", page, size)
-    if (page == null && size == null) {
-        page = process.env.page,
-            size = process.env.size
-    }
-    if (order == null) {
-        order = process.env.order
-    }
-    const filter = () => {
-        if (subcategoryId) {
-            return [{ documenttype_id: typeId },
-                { documentcategory_id: categoryId },
-                { documentsubcategory_id: subcategoryId }
-            ]
-        }
-
-        if (categoryId) {
-            return [{ documenttype_id: typeId },
-                { documentcategory_id: categoryId },
-            ]
-
-        }
-        return [{ documenttype_id: typeId }]
-    }
-    console.log("The filter", filter())
-    const { limit, offset } = paginate.getPagination(page, size);
-    document.findAndCountAll({
-            limit,
-            offset,
-            order: [
-                ['createdAt', order]
-            ],
-            where: {
-                [Op.and]: filter()
-            },
-            raw: true
-        })
-        .then(data => {
-
-            const newData = data.rows.map(item => {
-                // console.log("The item attachement", )
-                return {...item, attachement: item.attachement.substr(item.attachement.lastIndexOf('/') + 1) }
-            })
-
-            const response = paginate.getPagingData({ rows: newData, count: data.count }, page, limit);
-            res.send(response);
-        })
-        .catch(err => {
-            res.status(500).send({
-                message: err.message || "Some error occurred while retrieving data."
+              console.log("Deleted File successfully.");
             });
+          }
+        }
+        console.log("the pattttttt", pat);
+        filee.mv(pat, (err) => {
+          if (err) return res.status(500).send(err);
+          // res.redirect('/')
         });
-}
-self.search = async(req, res) => {
-    try {
-        let text = req.query.text;
-        let data = await document.findAll({
-            where: {
-                name: {
-                    [Op.like]: "%" + text + "%"
-                }
-            }
-        });
-        return res.json(data)
-    } catch (error) {
-        res.status(500).json({
-            message: error.message
-        })
+      }
+      let data = await document.update(body, {
+        where: {
+          id: id,
+        },
+      });
+      return res.json({ message: "Success" });
     }
-}
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
 
-self.save = async(req, res) => {
-    try {
-        let usr = await usrData.userData(req, res)
-        let body = req.body;
-        const file = req.files
-        console.log("the file", file)
-        let pat
-        if (file) {
-
-            const ext = req.files.attachement.mimetype.split("/")[1];
-            let rand = Math.floor(100000 + Math.random() * 900000)
-            var name = req.files.attachement.name;
-            let parsedName = path.parse(name).name;
-            checkedNew = parsedName.concat(rand);
-            const filePath = path.join(__dirname, '../../public', 'documents', checkedNew + '.' +
-                `${ext}`)
-            console.log("The file path is ", filePath)
-            var filePathh = filePath.split("public").pop();
-            console.log("The file path is ", filePathh)
-                //return res.send(filePathh)
-
-            body.attachement = filePathh
-            pat = filePath
-        }
-        if (!file) {
-            body.attachement = ''
-        }
-        if (usr) {
-            body.department_id = usr.departmentID
-            let data = await document.create(body);
-            if (data) {
-                if (pat) {
-                    const filee = req.files.attachement
-                    filee.mv(pat, err => {
-                        if (err) return res.status(500).send(err)
-                            // res.redirect('/')
-                    })
-                }
-                let us = usr.usrID
-                    //add the department to data 
-
-
-                //await data.save()
-                await saveActionState(data.id, "document", "REGISTER", us, req, res)
-            }
-            return res.json(data)
-        }
-    } catch (error) {
-        res.status(500).json({
-            message: error.message
-        })
-    }
-}
-self.getdocument = async(req, res) => {
-    try {
-        let id = req.params.id;
-        let body = req.body;
-        let data = await document.findOne({
-            where: {
-                id: id
-            }
-        });
-        let prePath = "/home/kaleb/Desktop/etcdp-backend-node/public"
-        let conPath = prePath.concat(data.attachement)
-        return res.download(conPath)
-    } catch (error) {
-        res.status(500).json({
-            message: error.message
-        })
-    }
-}
-self.update = async(req, res) => {
-    try {
-        let id = req.params.id
-        let usr = await usrData.userData(req, res)
-        let body = req.body;
-        const file = req.files
-        console.log("the file", file)
-        let pat
-        if (file) {
-
-            const ext = req.files.attachement.mimetype.split("/")[1];
-            let rand = Math.floor(100000 + Math.random() * 900000)
-            var name = req.files.attachement.name;
-            let parsedName = path.parse(name).name;
-            checkedNew = parsedName.concat(rand);
-            const filePath = path.join(__dirname, '../../public', 'documents', checkedNew + '.' +
-                `${ext}`)
-            console.log("The file path is ", filePath)
-            var filePathh = filePath.split("public").pop();
-            console.log("The file path is ", filePathh)
-                //return res.send(filePathh)
-
-            body.attachement = filePathh
-            pat = filePath
-        }
-        // if (!file) {
-        //     body.attachement = ''
-        // }
-
-        if (usr) {
-            if (pat) {
-                const filee = req.files.attachement
-                let data = await document.findOne({
-                    where: {
-                        id: id
-                    },
-                });
-                if (data.attachement) {
-                    let f = "/home/kaleb/Desktop/etcdp-backend-node/public"
-                    let fc = f + data.attachement
-
-                    if (fs.existsSync(fc)) {
-                        fs.unlink(fc, (err) => {
-                            if (err) {
-                                throw err;
-                            }
-
-                            console.log("Deleted File successfully.");
-                        });
-                    }
-
-
-                }
-                console.log("the pattttttt", pat)
-                filee.mv(pat, err => {
-                    if (err) return res.status(500).send(err)
-                        // res.redirect('/')
-                })
-            }
-            let data = await document.update(body, {
-                where: {
-                    id: id
-                },
-            });
-            return res.json({ message: "Success" })
-        }
-    } catch (error) {
-        res.status(500).json({
-            message: error.message
-        })
-    }
-}
-
-self.delete = async(req, res) => {
-    try {
-        let id = req.params.id;
-        let data = await document.destroy({
-            where: {
-                id: id
-            }
-        });
-        return res.json(data)
-    } catch (error) {
-        res.status(500).json({
-            message: error.message
-        })
-    }
-}
-
+self.delete = async (req, res) => {
+  try {
+    let id = req.params.id;
+    let data = await document.destroy({
+      where: {
+        id: id,
+      },
+    });
+    return res.json(data);
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
 
 module.exports = self;
