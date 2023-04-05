@@ -1,104 +1,168 @@
-const { actionstate } = require("../models/actionstate");
+const { resourcecategory, Sequelize } = require("../../models");
+const usrData = require("../../utils/userDataFromToken");
+const { saveActionState } = require("../../utils/helper");
+const Op = Sequelize.Op;
+const paginate = require("../../utils/pagination");
+const dotenv = require("dotenv");
+dotenv.config();
+let self = {};
 
-const usrData = require("./userDataFromToken");
-const crypto = require("crypto");
+self.getAll = async(req, res) => {
+    const {
+        page = process.env.page,
+            size = process.env.size,
+            order = process.env.order,
+    } = req.query;
 
-const saveActionState = async (model_id, model, action, user_id, req, res) => {
-  try {
-    let usr = await usrData.userData(req, res);
-    const act = await actionstate.create({
-      model_id,
-      model,
-      action,
-      user_id: user_id,
-      position_id: usr.position_id,
-      time: new Date(),
-    });
-    return act;
-  } catch (error) {
-    return {
-      message: error.message,
-    };
-  }
-};
+    const { limit, offset } = paginate.getPagination(page, size);
 
-const getChildren = async (id) => {
-  let firstFam = await department.findAll({
-    where: {
-      parent_department_id: id,
-    },
-  });
-  let children = [];
-  console.log("1st output", firstFam);
-  children.push(...firstFam.map((item) => item.id));
+    try {
+        const { rows, count } = await resourcecategory.findAndCountAll({
+            limit,
+            offset,
+            order: [
+                ["createdAt", order]
+            ],
+        });
 
-  let x = await getAllChildren(firstFam);
-  console.log("2nd output", x);
-  return children.concat(x);
-};
+        const response = paginate.getPagingData({ rows, count },
+            page,
+            limit,
+            count
+        );
 
-const getAllChildren = async (arr) => {
-  let children = [];
-  if (arr.length > 0) {
-    let promiseArr = [];
-    for (let i = 0; i < arr.length; i++) {
-      promiseArr.push(
-        department.findAll({
-          where: {
-            parent_department_id: arr[i].id,
-          },
-        })
-      );
+        res.send(response);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send({
+            message: "An error occurred while retrieving data.",
+        });
     }
-    let dd = await Promise.all(promiseArr);
-    console.log("3rd output", dd);
-    dd.forEach((d) => {
-      if (d.length > 0) {
-        let filtered = d.map((item) => item.id);
-        children = children.concat(filtered);
-        getAllChildren(d);
-      }
-    });
-  }
-  return children;
 };
 
-const algorithm = "aes-256-cbc";
-// const key = crypto.randomBytes(32);
-// const iv = crypto.randomBytes(16);
-
-const key = crypto
-  .createHash("sha512")
-  .update("secret_key")
-  .digest("hex")
-  .substring(0, 32);
-const encryptionIV = crypto
-  .createHash("sha512")
-  .update("secret_iv")
-  .digest("hex")
-  .substring(0, 16);
-
-const encrypt = (text) => {
-  const cipher = crypto.createCipheriv(algorithm, key, encryptionIV);
-  return Buffer.from(
-    cipher.update(text, "utf8", "hex") + cipher.final("hex")
-  ).toString("base64");
+self.get = async(req, res) => {
+    try {
+        let id = req.params.id;
+        let data = await resourcecategory.findOne({
+            where: {
+                id: id,
+            },
+        });
+        return res.status(200).json({
+            data: data ? data : {},
+        });
+    } catch (error) {
+        res.status(500).json({
+            message: error.message,
+        });
+    }
 };
 
-const decrypt = (encrypted) => {
-  const buff = Buffer.from(encrypted, "base64");
-  const decipher = crypto.createDecipheriv(algorithm, key, encryptionIV);
-  return (
-    decipher.update(buff.toString("utf8"), "hex", "utf8") +
-    decipher.final("utf8")
-  ); //
+self.search = async(req, res) => {
+    try {
+        let text = req.query.text;
+        let data = await resourcecategory.findAll({
+            where: {
+                name: {
+                    [Op.like]: "%" + text + "%",
+                },
+            },
+        });
+        return res.json(data);
+    } catch (error) {
+        res.status(500).json({
+            message: error.message,
+        });
+    }
+};
+self.getCRCByResourceTypeId = async(req, res) => {
+    const id = req.params.id;
+    const page = req.query.page || process.env.page;
+    const size = req.query.size || process.env.size;
+    const order = req.query.order || process.env.order;
+
+    try {
+        const { limit, offset } = paginate.getPagination(page, size);
+        const data = await resourcecategory.findAndCountAll({
+            limit,
+            offset,
+            order: [
+                ["createdAt", order]
+            ],
+            where: {
+                resourcetype_id: id,
+            },
+            include: ["resourcesubcategories"],
+        });
+        const response = paginate.getPagingData(data, page, limit);
+        res.send(response);
+    } catch (error) {
+        res.status(500).send({
+            message: error.message || "Some error occurred while retrieving data.",
+        });
+    }
+};
+self.save = async(req, res) => {
+    try {
+        let usr = await usrData.userData(req, res);
+        let body = req.body;
+        if (usr) {
+            let data = await resourcecategory.create(body);
+            if (data) {
+                let us = usr.usrID;
+                await actionHelper.saveActionState(
+                    data.id,
+                    "resourcecategory",
+                    "REGISTER",
+                    us,
+                    req,
+                    res
+                );
+            }
+            return res.json(data);
+        }
+    } catch (error) {
+        res.status(500).json({
+            message: error.message,
+        });
+    }
 };
 
-module.exports = {
-  saveActionState,
-  getAllChildren,
-  getChildren,
-  encrypt,
-  decrypt,
-  // filteredData
+self.update = async(req, res) => {
+    try {
+        let id = req.params.id;
+        let body = req.body;
+        let data = await resourcecategory.update(body, {
+            where: {
+                id: id,
+            },
+        });
+        return res.status(200).json({
+            message: "Success",
+        });
+    } catch (error) {
+        res.status(500).json({
+            message: error.message,
+        });
+    }
 };
+
+self.delete = async(req, res) => {
+    try {
+        let id = req.params.id;
+        let data = await resourcecategory.destroy({
+            where: {
+                id: id,
+            },
+        });
+        return res.json(data);
+    } catch (error) {
+        res.status(500).json({
+            message: error.message,
+        });
+    }
+};
+
+
+
+module.exports = self;
