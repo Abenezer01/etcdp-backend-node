@@ -1,4 +1,4 @@
-const { saveActionState } = require("../../utils/helper");
+const actionHelper = require("../utils/action-helper");
 const { position, Sequelize } = require("./../../models");
 const usrData = require("../../utils/userDataFromToken");
 

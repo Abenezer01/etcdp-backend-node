@@ -20,7 +20,6 @@ const {
 const moment = require("moment");
 const Op = Sequelize.Op;
 const usrData = require("../../utils/userDataFromToken");
-const { saveActionState } = require("../../utils/helper");
 const actionHelper = require("../utils/action-helper");
 
 let self = {};

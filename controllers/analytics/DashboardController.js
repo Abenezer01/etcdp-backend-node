@@ -21,9 +21,7 @@ const {
   Sequelize,
 } = require("../../models");
 const usrData = require("../../utils/userDataFromToken");
-const { saveActionState } = require("../../utils/helper");
 const { mainanalysismodules } = require("../../config/master");
-const { encrypt, decrypt } = require("../../utils/helper");
 const actionHelper = require("../utils/action-helper");
 
 const Op = Sequelize.Op;

@@ -3,7 +3,7 @@ const {
   stakesubcategory,
   Sequelize,
 } = require("./../../models");
-const { saveActionState } = require("../../utils/helper");
+const actionHelper = require("../utils/action-helper");
 const usrData = require("../../utils/userDataFromToken");
 const paginate = require("../../utils/pagination");
 const dotenv = require("dotenv");

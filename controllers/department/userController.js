@@ -933,11 +933,11 @@ self.checkUserStatus = async (req, res) => {
     let messageArr = [];
 
     if (!action) {
-      messageArr.push("The account is not checked");
+      messageArr.push("check your profile by clicking on \"Registered\" button");
     }
 
     if (!profile_pic) {
-      messageArr.push("You don't have profile picture");
+      messageArr.push("please  upload your profile picture");
     }
 
     return res.json(messageArr);

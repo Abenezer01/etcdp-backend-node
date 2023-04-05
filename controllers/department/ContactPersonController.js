@@ -1,5 +1,5 @@
 const { contactperson, Sequelize } = require("../../models");
-const { saveActionState } = require("../../utils/helper");
+const actionHelper = require("../utils/action-helper");
 const usrData = require("../../utils/userDataFromToken");
 
 const Op = Sequelize.Op;

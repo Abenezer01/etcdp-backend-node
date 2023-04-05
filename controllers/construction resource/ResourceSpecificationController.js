@@ -1,6 +1,6 @@
 const { resourcespecification, Sequelize } = require("../../models");
 const usrData = require("../../utils/userDataFromToken");
-const { saveActionState } = require("../../utils/helper");
+const actionHelper = require("../utils/action-helper");
 const Op = Sequelize.Op;
 const paginate = require("../../utils/pagination");
 const dotenv = require("dotenv");

@@ -1,7 +1,7 @@
 const { user, resource, image, Sequelize } = require("../../models");
 const path = require("path");
 const usrData = require("../../utils/userDataFromToken");
-const { saveActionState } = require("../../utils/helper");
+const actionHelper = require("../utils/action-helper");
 const fs = require("fs");
 
 const Op = Sequelize.Op;

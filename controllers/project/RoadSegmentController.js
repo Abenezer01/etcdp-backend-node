@@ -1,4 +1,4 @@
-const { saveActionState } = require("../../utils/helper");
+const actionHelper = require("../utils/action-helper");
 const { roadsegment, Sequelize } = require("./../../models");
 const dotenv = require("dotenv");
 const paginate = require("../../utils/pagination");
