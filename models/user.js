@@ -1,6 +1,5 @@
 "use strict";
 const { Model } = require("sequelize");
-const { decrypt, encrypt } = require("../utils/helper");
 const cipherHelper = require("../controllers/utils/cipher-helper");
 
 module.exports = (sequelize, DataTypes) => {
