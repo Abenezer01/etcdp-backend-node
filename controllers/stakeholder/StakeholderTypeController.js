@@ -2,7 +2,7 @@ const { stakeholdertype, actionstate, Sequelize } = require("./../../models");
 const paginate = require("../../utils/pagination");
 const dotenv = require("dotenv");
 dotenv.config();
-const { saveActionState } = require("../../utils/helper");
+const actionHelper = require("../utils/action-helper");
 const Op = Sequelize.Op;
 const usrData = require("../../utils/userDataFromToken");
 let self = {};

@@ -5,7 +5,7 @@ const paginate = require("../../utils/pagination");
 const dotenv = require("dotenv");
 dotenv.config();
 const usrData = require("../../utils/userDataFromToken");
-const { saveActionState } = require("../../utils/helper");
+const actionHelper = require("../utils/action-helper");
 let self = {};
 
 self.getAll = async (req, res) => {

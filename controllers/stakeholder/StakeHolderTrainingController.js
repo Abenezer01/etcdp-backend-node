@@ -2,7 +2,7 @@ const { training, Sequelize } = require("../../models");
 const paginate = require("../../utils/pagination");
 const dotenv = require("dotenv");
 const usrData = require("../../utils/userDataFromToken");
-const { saveActionState } = require("../../utils/helper");
+const actionHelper = require("../utils/action-helper");
 dotenv.config();
 const Op = Sequelize.Op;
 

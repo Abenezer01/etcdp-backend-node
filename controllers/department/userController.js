@@ -926,6 +926,22 @@ self.checkUserStatus = async(req, res) => {
 
         let messageArr = [];
 
+<<<<<<< HEAD
+    if (!action) {
+      messageArr.push("check your profile by clicking on \"Registered\" button");
+    }
+
+    if (!profile_pic) {
+      messageArr.push("please  upload your profile picture");
+    }
+
+    return res.json(messageArr);
+  } catch (error) {
+    return response.json({
+      message: error.message,
+    });
+  }
+=======
         if (!action) {
             messageArr.push("The account is not checked");
         }
@@ -940,6 +956,7 @@ self.checkUserStatus = async(req, res) => {
             message: error.message,
         });
     }
+>>>>>>> 6d43c0548a2109d90889d66dc65646d3227cd000
 };
 
 module.exports = self;

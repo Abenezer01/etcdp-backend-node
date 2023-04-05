@@ -1,4 +1,4 @@
-const { saveActionState } = require("../../utils/helper");
+const actionHelper = require("../utils/action-helper");
 const { ownership, Sequelize } = require("./../../models");
 const paginate = require("../../utils/pagination");
 const dotenv = require("dotenv");

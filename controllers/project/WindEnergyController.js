@@ -1,4 +1,4 @@
-const { saveActionState } = require("../../utils/helper");
+const actionHelper = require("../utils/action-helper");
 const { windenergy, Sequelize } = require("./../../models");
 const usrData = require("../../utils/userDataFromToken");
 const Op = Sequelize.Op;

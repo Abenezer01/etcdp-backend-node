@@ -5,7 +5,7 @@ const dotenv = require("dotenv");
 dotenv.config();
 let self = {};
 const usrData = require("../../utils/userDataFromToken");
-const { saveActionState } = require("../../utils/helper");
+const actionHelper = require("../utils/action-helper");
 
 self.getAll = async (req, res) => {
   const {

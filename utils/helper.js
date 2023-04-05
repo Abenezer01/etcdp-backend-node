@@ -163,7 +163,6 @@ self.delete = async(req, res) => {
     }
 };
 
-module.exports = self;
-};
+
 
 module.exports = self;

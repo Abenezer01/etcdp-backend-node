@@ -5,6 +5,15 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 const usrData = require("../../utils/userDataFromToken");
+<<<<<<< HEAD
+const actionHelper = require("../utils/action-helper");
+self.getAll = async (req, res) => {
+  const {
+    page = process.env.cust_page,
+    size = process.env.size,
+    order = process.env.order,
+  } = req.query;
+=======
 const { saveActionState } = require("../../utils/helper");
 let self = {};
 self.getAll = async(req, res) => {
@@ -13,6 +22,7 @@ self.getAll = async(req, res) => {
             size = process.env.size,
             order = process.env.order,
     } = req.query;
+>>>>>>> 6d43c0548a2109d90889d66dc65646d3227cd000
 
     const { limit, offset } = paginate.getPagination(page, size);
     let limiter = { limit, offset };

@@ -3,7 +3,7 @@ const path = require("path");
 const fs = require("fs");
 const Op = Sequelize.Op;
 const usrData = require("../../utils/userDataFromToken");
-const { saveActionState } = require("../../utils/helper");
+const actionHelper = require("../utils/action-helper");
 let self = {};
 
 self.getAll = async (req, res) => {
