@@ -54,7 +54,7 @@
 
         "nodemailer-smtp-transport": "^2.7.4",
 
-        "sequelize": "^5.22.5",
+        "sequelize": "^6.30.0",
 
         "sequelize-cli": "^6.6.0",
 

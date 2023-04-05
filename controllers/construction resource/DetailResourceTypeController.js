@@ -1,223 +1,241 @@
-const {
-    detailresourcetype,
-    Sequelize
-} = require("../../models");
+const { detailresourcetype, Sequelize } = require("../../models");
 const usrData = require("../../utils/userDataFromToken");
 const { saveActionState } = require("../../utils/helper");
 const Op = Sequelize.Op;
 const paginate = require("../../utils/pagination");
-const dotenv = require('dotenv');
+const dotenv = require("dotenv");
 dotenv.config();
 let self = {};
-const path = require('path');
-const fs = require('fs');
-self.getAll = async(req, res) => {
-    const { page = process.env.page, size = process.env.size, order = process.env.order } = req.query;
+const path = require("path");
+const fs = require("fs");
+self.getAll = async (req, res) => {
+  const {
+    page = process.env.page,
+    size = process.env.size,
+    order = process.env.order,
+  } = req.query;
 
-    const { limit, offset } = paginate.getPagination(page, size);
+  const { limit, offset } = paginate.getPagination(page, size);
 
-    try {
-        const { rows, count } = await detailresourcetype.findAndCountAll({
-            limit,
-            offset,
-            order: [
-                ['createdAt', order]
-            ],
-        });
+  try {
+    const { rows, count } = await detailresourcetype.findAndCountAll({
+      limit,
+      offset,
+      order: [["createdAt", order]],
+    });
 
-        const response = paginate.getPagingData({ rows, count }, page, limit, count);
+    const response = paginate.getPagingData(
+      { rows, count },
+      page,
+      limit,
+      count
+    );
 
-        res.send(response);
-    } catch (err) {
-        console.error(err);
-        res.status(500).send({
-            message: 'An error occurred while retrieving data.',
-        });
-    }
-}
-
-
-self.get = async(req, res) => {
-    try {
-        let id = req.params.id;
-        let data = await detailresourcetype.findOne({
-            where: {
-                id: id
-            }
-        });
-        return res.status(200).json({
-            data: (data) ? data : {}
-        })
-    } catch (error) {
-        res.status(500).json({
-            message: error.message
-        })
-    }
-}
-self.getByResourceId = async(req, res) => {
-    const { id } = req.params;
-    let { page = process.env.page, size = process.env.size, order = process.env.order } = req.query;
-    const { limit, offset } = paginate.getPagination(page, size);
-
-    if (order == null) {
-        order = process.env.order;
-    }
-
-    try {
-        const { count, rows } = await detailresourcetype.findAndCountAll({
-            limit,
-            offset,
-            where: { resource_id: id },
-            order: [
-                ['createdAt', order]
-            ],
-            raw: true
-        });
-
-        const newData = rows.map(item => ({...item, image: item.image.substr(item.image.lastIndexOf('/') + 1) }));
-        const response = paginate.getPagingData({ rows: newData, count }, page, limit);
-        res.send(response);
-    } catch (error) {
-        console.error(error);
-        res.status(500).send({ message: "Some error occurred while retrieving data." });
-    }
+    res.send(response);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send({
+      message: "An error occurred while retrieving data.",
+    });
+  }
 };
 
-self.search = async(req, res) => {
-    try {
-        let text = req.query.text;
-        let data = await detailresourcetype.findAll({
-            where: {
-                name: {
-                    [Op.like]: "%" + text + "%"
-                }
-            }
-        });
-        return res.json(data)
-    } catch (error) {
-        res.status(500).json({
-            message: error.message
-        })
-    }
-}
+self.get = async (req, res) => {
+  try {
+    let id = req.params.id;
+    let data = await detailresourcetype.findOne({
+      where: {
+        id: id,
+      },
+    });
+    return res.status(200).json({
+      data: data ? data : {},
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+self.getByResourceId = async (req, res) => {
+  const { id } = req.params;
+  let {
+    page = process.env.page,
+    size = process.env.size,
+    order = process.env.order,
+  } = req.query;
+  const { limit, offset } = paginate.getPagination(page, size);
 
-self.save = async(req, res) => {
-    try {
-        const { userData } = usrData;
-        let usr = await userData(req, res);
-        let body = req.body;
-        const file = req.files;
-        console.log("the file", file);
-        let pat;
-        if (file) {
-            const ext = req.files.image.mimetype.split("/")[1];
-            let rand = Math.floor(100000 + Math.random() * 900000);
-            var name = req.files.image.name;
-            let parsedName = path.parse(name).name;
-            checkedNew = parsedName.concat(rand);
-            const filePath = path.join(
-                __dirname,
-                "../../public",
-                "images/detailresourcetypeimage",
-                checkedNew + "." + `${ext}`
-            );
-            console.log("The file path is ", filePath);
-            var filePathh = filePath.split("public").pop();
-            console.log("The file path is ", filePathh);
+  if (order == null) {
+    order = process.env.order;
+  }
 
-            body.image = filePathh;
-            pat = filePath;
-        } else {
-            body.image = "";
-        }
+  try {
+    const { count, rows } = await detailresourcetype.findAndCountAll({
+      limit,
+      offset,
+      where: { resource_id: id },
+      order: [["createdAt", order]],
+      raw: true,
+    });
 
-        if (usr) {
-            let data = await detailresourcetype.create(body);
-            if (data) {
-                try {
-                    if (pat) {
-                        const filee = req.files.image;
-                        await filee.mv(pat);
-                    }
-                } catch (err) {
-                    return res.status(500).send(err);
-                }
-                let us = usr.usrID;
-                await saveActionState(
-                    data.id,
-                    "detailresourcetype",
-                    "REGISTER",
-                    us,
-                    req,
-                    res
-                );
-            }
-            return res.json(data);
-        }
-    } catch (error) {
-        res.status(500).json({
-            message: error.message,
-        });
-    }
+    const newData = rows.map((item) => ({
+      ...item,
+      image: item.image.substr(item.image.lastIndexOf("/") + 1),
+    }));
+    const response = paginate.getPagingData(
+      { rows: newData, count },
+      page,
+      limit
+    );
+    res.send(response);
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .send({ message: "Some error occurred while retrieving data." });
+  }
 };
 
-const prePath = path.join(__dirname, '..', '..', 'public');
-self.getImage = async(req, res) => {
-    try {
-        let id = req.params.id;
-        let data = await detailresourcetype.findOne({
-            where: {
-                id: id
-            }
-        })
-        let conPath = prePath.concat(data.image)
-        return res.download(conPath)
-    } catch (error) {
-        res.status(500).json({
-            message: error.message
-        })
+self.search = async (req, res) => {
+  try {
+    let text = req.query.text;
+    let data = await detailresourcetype.findAll({
+      where: {
+        name: {
+          [Op.like]: "%" + text + "%",
+        },
+      },
+    });
+    return res.json(data);
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+self.save = async (req, res) => {
+  try {
+    const { userData } = usrData;
+    let usr = await userData(req, res);
+    let body = req.body;
+    const file = req.files;
+    console.log("the file", file);
+    let pat;
+    if (file) {
+      const ext = req.files.image.mimetype.split("/")[1];
+      let rand = Math.floor(100000 + Math.random() * 900000);
+      var name = req.files.image.name;
+      let parsedName = path.parse(name).name;
+      checkedNew = parsedName.concat(rand);
+      const filePath = path.join(
+        __dirname,
+        "../../public",
+        "images/detailresourcetypeimage",
+        checkedNew + "." + `${ext}`
+      );
+      console.log("The file path is ", filePath);
+      var filePathh = filePath.split("public").pop();
+      console.log("The file path is ", filePathh);
+
+      body.image = filePathh;
+      pat = filePath;
+    } else {
+      body.image = "";
     }
-}
-self.update = async(req, res) => {
-    try {
-        const id = req.params.id;
-        const userData = await usrData.userData(req, res);
-        const { body, files } = req;
-        const file = files && files.image;
 
-        if (userData) {
-            if (file) {
-                const ext = file.mimetype.split("/")[1];
-                const rand = Math.floor(100000 + Math.random() * 900000);
-                const { name } = file;
-                const parsedName = path.parse(name).name;
-                const checkedNew = parsedName.concat(rand);
-                const filePath = path.join(__dirname, "../../public/images/detailresourcetypeimage", checkedNew + "." + ext);
-                const filePathh = filePath.split("public").pop();
-                body.image = filePathh;
-                await file.mv(filePath);
-
-                const data = await detailresourcetype.findOne({ where: { id } });
-                if (data.image) {
-                    const fc = path.join(__dirname, "../../public", data.image);
-                    if (fs.existsSync(fc)) {
-                        fs.unlink(fc, (err) => {
-                            if (err) {
-                                throw err;
-                            }
-                            console.log("Deleted File successfully.");
-                        });
-                    }
-                }
-            }
-
-            await detailresourcetype.update(body, { where: { id } });
-            return res.json({ message: "Success" });
+    if (usr) {
+      let data = await detailresourcetype.create(body);
+      if (data) {
+        try {
+          if (pat) {
+            const filee = req.files.image;
+            await filee.mv(pat);
+          }
+        } catch (err) {
+          return res.status(500).send(err);
         }
-    } catch (error) {
-        res.status(500).json({ message: error.message });
+        let us = usr.usrID;
+        await actionHelper.saveActionState(
+          data.id,
+          "detailresourcetype",
+          "REGISTER",
+          us,
+          req,
+          res
+        );
+      }
+      return res.json(data);
     }
-}
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+const prePath = path.join(__dirname, "..", "..", "public");
+self.getImage = async (req, res) => {
+  try {
+    let id = req.params.id;
+    let data = await detailresourcetype.findOne({
+      where: {
+        id: id,
+      },
+    });
+    let conPath = prePath.concat(data.image);
+    return res.download(conPath);
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+self.update = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const userData = await usrData.userData(req, res);
+    const { body, files } = req;
+    const file = files && files.image;
+
+    if (userData) {
+      if (file) {
+        const ext = file.mimetype.split("/")[1];
+        const rand = Math.floor(100000 + Math.random() * 900000);
+        const { name } = file;
+        const parsedName = path.parse(name).name;
+        const checkedNew = parsedName.concat(rand);
+        const filePath = path.join(
+          __dirname,
+          "../../public/images/detailresourcetypeimage",
+          checkedNew + "." + ext
+        );
+        const filePathh = filePath.split("public").pop();
+        body.image = filePathh;
+        await file.mv(filePath);
+
+        const data = await detailresourcetype.findOne({ where: { id } });
+        if (data.image) {
+          const fc = path.join(__dirname, "../../public", data.image);
+          if (fs.existsSync(fc)) {
+            fs.unlink(fc, (err) => {
+              if (err) {
+                throw err;
+              }
+              console.log("Deleted File successfully.");
+            });
+          }
+        }
+      }
+
+      await detailresourcetype.update(body, { where: { id } });
+      return res.json({ message: "Success" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 
 // self.updatee = async(req, res) => {
 //     try {
@@ -270,7 +288,6 @@ self.update = async(req, res) => {
 //                         });
 //                     }
 
-
 //                 }
 //                 filee.mv(pat, err => {
 //                     if (err) return res.status(500).send(err)
@@ -291,21 +308,20 @@ self.update = async(req, res) => {
 //     }
 // }
 
-self.delete = async(req, res) => {
-    try {
-        let id = req.params.id;
-        let data = await detailresourcetype.destroy({
-            where: {
-                id: id
-            }
-        });
-        return res.json(data)
-    } catch (error) {
-        res.status(500).json({
-            message: error.message
-        })
-    }
-}
-
+self.delete = async (req, res) => {
+  try {
+    let id = req.params.id;
+    let data = await detailresourcetype.destroy({
+      where: {
+        id: id,
+      },
+    });
+    return res.json(data);
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
 
 module.exports = self;

@@ -1,178 +1,178 @@
 const {
-    actionstate,
-    user,
-    position,
-    role,
-    department,
-    photo,
-    useremail,
-    userposition,
-    userphone,
-    Sequelize
+  actionstate,
+  user,
+  position,
+  role,
+  department,
+  photo,
+  useremail,
+  userposition,
+  userphone,
+  Sequelize,
 } = require("../../models");
-const dotenv = require('dotenv');
+const dotenv = require("dotenv");
 dotenv.config();
 
-const bcrypt = require('bcrypt');
+const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 const { Socket } = require("../../utils/WebSocket.js");
-const { encrypt } = require("../../utils/helper");
+
+const cipherHelper = require("../utils/cipher-helper");
+
 const { refreshToken } = require("./RefreshTokenController");
 
 let self = {};
-let TOKEN_KEY = process.env.ACCESS_TOKEN_KEY
-let REFRESH_TOKEN_KEY = process.env.REFRESH_TOKEN_KEY
-let TOKEN_MAX_AGE = process.env.TOKEN_MAX_AGE
+let TOKEN_KEY = process.env.ACCESS_TOKEN_KEY;
+let REFRESH_TOKEN_KEY = process.env.REFRESH_TOKEN_KEY;
+let TOKEN_MAX_AGE = process.env.TOKEN_MAX_AGE;
 
-self.loginUser = async(request, res) => {
-    const { email, password } = request.body;
+self.loginUser = async (request, res) => {
+  const { email, password } = request.body;
 
-    try {
-        const usEmail = await useremail.findOne({
-            where: {
-                email: encrypt(email),
-                is_primary: true
-            }
-        });
-        
-        if (!usEmail) {
-            return res.status(404).json({
-                message: "User not found!"
-            });
-        }
+  try {
+    const usEmail = await useremail.findOne({
+      where: {
+        email: cipherHelper.encrypt(email),
+        is_primary: true,
+      },
+    });
 
-
-        let usr = await user.findOne({
-            where: {
-                id: usEmail.user_id
-            },
-            include: [{
-                model: userposition,
-                as: "positions"
-            }],
-        })
-
-        const [usPos, usPhone] = await Promise.all([
-            userposition.findOne({
-                where: {
-                    user_id: usEmail.user_id,
-                    is_primary: true
-                }
-            }),
-            userphone.findOne({
-                where: {
-                    user_id: usEmail.user_id,
-                    is_primary: true
-                }
-            })
-        ]);
-
-
-        if (!usPos) {
-            return res.status(404).json({
-                message: "User has no primary position!"
-            });
-        }
-
-        if (!usr) {
-            return res.status(401).json({
-                message: "Email address doesn't exit"
-            });
-        }
-
-        const pos = await position.findOne({
-            where: {
-                id: usPos.position_id
-            }
-        })
-
-        //show if it is checked
-
-        let action = await actionstate.findOne({
-            where: {
-                model_id: usr.id,
-                action: "CHECK"
-            }
-        })
-        let profile_pic = await photo.findOne({
-            where: {
-                model_id: usr.id,
-                type: "USER_PROFILE_PHOTO"
-            }
-        })
-        
-    
-
-        let replyUser = {
-            id: usr.id,
-            full_name: usr.full_name,
-            first_name: usr.first_name,
-            middle_name: usr.middle_name,
-            last_name: usr.last_name,
-            phone: usPhone.phone,
-            gender: usr.gender,
-            position_id: pos.id,
-            position_name: pos.name,
-            department_id: usPos.department_id,
-            user_position_id: usPos.id,
-            is_checked: action ? true : false,
-            profile_completed: profile_pic ? true : false
-        }
-
-        const auth = await bcrypt.compareSync(password, usr.password)
-
-        if(auth){
-
-            usrr = { id: usr.id, department_id: pos.department_id, position_id: pos.id }
-
-            const accessToken = jwt.sign(usrr,
-                TOKEN_KEY, {
-                    expiresIn: "100h",
-                }
-            );
-
-            const refreshToken = jwt.sign(usrr,
-                REFRESH_TOKEN_KEY, {
-                    expiresIn: "100h",
-                }
-            );
-            
-            user.findByPk(usr.id).then(u => {
-                u.refresh_token = refreshToken
-                return u.save(); // persist the changes to the database
-              })
-              .then(updatedUser => {
-                Socket.emit("loggedIn", {
-                    message: true
-                });
-                
-                return res.status(200).json({
-                        userData: replyUser,
-                        accessToken: accessToken,
-                        refreshToken: refreshToken
-                    })
-              })
-              .catch(error => {
-                console.error(error);
-              });
-            
-           
-        }else{
-            return res.status(401).json({
-                message: "You are not Authorized"
-            })
-        }
-
-    } catch (error) {
-        console.log("The error is", error)
-
-        return res.status(401).json({
-            message: error == "TypeError: Cannot read properties of null (reading 'position')" ? "Unauthorized! please check your email and password" : error.message
-        })
+    if (!usEmail) {
+      return res.status(404).json({
+        message: "User not found!",
+      });
     }
 
-}
+    let usr = await user.findOne({
+      where: {
+        id: usEmail.user_id,
+      },
+      include: [
+        {
+          model: userposition,
+          as: "positions",
+        },
+      ],
+    });
 
+    const [usPos, usPhone] = await Promise.all([
+      userposition.findOne({
+        where: {
+          user_id: usEmail.user_id,
+          is_primary: true,
+        },
+      }),
+      userphone.findOne({
+        where: {
+          user_id: usEmail.user_id,
+          is_primary: true,
+        },
+      }),
+    ]);
+
+    if (!usPos) {
+      return res.status(404).json({
+        message: "User has no primary position!",
+      });
+    }
+
+    if (!usr) {
+      return res.status(401).json({
+        message: "Email address doesn't exit",
+      });
+    }
+
+    const pos = await position.findOne({
+      where: {
+        id: usPos.position_id,
+      },
+    });
+
+    //show if it is checked
+
+    let action = await actionstate.findOne({
+      where: {
+        model_id: usr.id,
+        action: "CHECK",
+      },
+    });
+    let profile_pic = await photo.findOne({
+      where: {
+        model_id: usr.id,
+        type: "USER_PROFILE_PHOTO",
+      },
+    });
+
+    let replyUser = {
+      id: usr.id,
+      full_name: usr.full_name,
+      first_name: usr.first_name,
+      middle_name: usr.middle_name,
+      last_name: usr.last_name,
+      phone: usPhone.phone,
+      gender: usr.gender,
+      position_id: pos.id,
+      position_name: pos.name,
+      department_id: usPos.department_id,
+      user_position_id: usPos.id,
+      is_checked: action ? true : false,
+      profile_completed: profile_pic ? true : false,
+    };
+
+    const auth = await bcrypt.compareSync(password, usr.password);
+
+    if (auth) {
+      usrr = {
+        id: usr.id,
+        department_id: pos.department_id,
+        position_id: pos.id,
+      };
+
+      const accessToken = jwt.sign(usrr, TOKEN_KEY, {
+        expiresIn: "100h",
+      });
+
+      const refreshToken = jwt.sign(usrr, REFRESH_TOKEN_KEY, {
+        expiresIn: "100h",
+      });
+
+      user
+        .findByPk(usr.id)
+        .then((u) => {
+          u.refresh_token = refreshToken;
+          return u.save(); // persist the changes to the database
+        })
+        .then((updatedUser) => {
+          Socket.emit("loggedIn", {
+            message: true,
+          });
+
+          return res.status(200).json({
+            userData: replyUser,
+            accessToken: accessToken,
+            refreshToken: refreshToken,
+          });
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    } else {
+      return res.status(401).json({
+        message: "You are not Authorized",
+      });
+    }
+  } catch (error) {
+    console.log("The error is", error);
+
+    return res.status(401).json({
+      message:
+        error ==
+        "TypeError: Cannot read properties of null (reading 'position')"
+          ? "Unauthorized! please check your email and password"
+          : error.message,
+    });
+  }
+};
 
 module.exports = self;

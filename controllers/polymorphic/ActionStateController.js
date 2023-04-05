@@ -1,284 +1,269 @@
 const {
-    actionstate,
-    note,
-    user,
-    userposition,
-    position,
-    file,
-    Sequelize
-} = require('../../models')
+  actionstate,
+  note,
+  user,
+  userposition,
+  position,
+  file,
+  Sequelize,
+} = require("../../models");
 
 const Op = Sequelize.Op;
 
 let self = {};
 const usrData = require("../../utils/userDataFromToken");
-const { getAllUserPositions } = require('../department/userController');
-self.getAll = async(req, res) => {
-    try {
-        let data = await actionstate.findAll();
-        return res.status(200).json(data)
+const { getAllUserPositions } = require("../department/userController");
+self.getAll = async (req, res) => {
+  try {
+    let data = await actionstate.findAll();
+    return res.status(200).json(data);
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
 
-    } catch (error) {
-        res.status(500).json({
-            message: error.message
-        })
+self.get = async (req, res) => {
+  let id = req.params.id;
+  try {
+    let data = await actionstate.findOne({
+      where: {
+        id: id,
+
+        model_id: id,
+      },
+    });
+
+    return res.json(data);
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+self.check = async (req, res) => {
+  try {
+    let id = req.params.id;
+    let model = req.params.model;
+
+    let usr = await usrData.userData(req, res);
+
+    if (usr) {
+      let data = await actionstate.findOne({
+        where: {
+          model_id: id,
+          model: model,
+          action: "CHECK",
+        },
+      });
+
+      if (data) {
+        return res.status(400).json({
+          message: "already checked!",
+        });
+      } else {
+        // let action = await actionstate.findOne({
+        //     where: {
+        //         model_id: id,
+        //         action: "REGISTER",
+        //         user_id: usr.usrID
+        //     }
+        // })
+
+        // if (action) {
+        //     return res.status(422).json({
+        //         message: 'You are not allowed to check the data as you are the register'
+        //     })
+        // } else {
+        let action = await actionstate.create({
+          model_id: id,
+          model: model,
+          action: "CHECK",
+          user_id: usr.usrID,
+          position_id: usr.position_id,
+          time: new Date(),
+        });
+
+        return res.json(action);
+        // }
+      }
     }
-}
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+self.approve = async (req, res) => {
+  try {
+    let id = req.params.id;
+    let model = req.params.model;
+    let usr = await usrData.userData(req, res);
 
-self.get = async(req, res) => {
-    let id = req.params.id
-    try {
-        let data = await actionstate.findOne({
-            where: {
+    if (usr) {
+      let data = await actionstate.findOne({
+        where: {
+          model_id: id,
+          model: model,
+          action: "APPROVE",
+        },
+      });
+      if (data) {
+        return res.status(400).json({
+          message: "Already Approve!",
+        });
+      } else {
+        // let action = await actionstate.findAll({
+        //     where: {
+        //         model_id: id,
+        //         action: {
+        //             [Op.in]: ['REGISTSER', 'CHECK']
+        //         },
+        //         user_id: usr.usrID
+        //     }
+        // })
 
-                id: id,
+        // if (action.length != 0) {
+        //     return res.status(422).json({
+        //         message: 'You can not approve as you either register or check the data'
+        //     })
+        // } else {
+        let action = await actionstate.create({
+          model: model.toLowerCase(),
+          model_id: id,
+          action: "APPROVE",
+          user_id: usr.usrID,
+          position_id: usr.position_id,
+          time: new Date(),
+        });
 
-                model_id: id
-
-            }
-        })
-
-        return res.json(data)
-    } catch (error) {
-        return res.status(500).json({
-            message: error.message
-        })
+        return res.status(200).json(action);
+        // }
+      }
     }
-}
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};
 
+self.reject = async (req, res) => {
+  try {
+    let usr = await usrData.userData(req, res);
+    let id = req.params.id;
+    let model = req.params.model;
 
+    let us = {
+      id: usr.usrID,
+    };
+    if (usr) {
+      let data = await actionstate.findOne({
+        where: {
+          id: id,
+          action: "REJECT",
+        },
+      });
+      if (data) {
+        return res.status(400).json({
+          message: "Already Rejected",
+        });
+      } else {
+        // let action = await actionstate.findAll({
+        //     where: {
+        //         model_id: id,
+        //         action: {
+        //             [Op.in]: ['REGISTER', 'CHECK', "APPROVE"]
+        //         },
+        //         user_id: us.id
+        //     }
 
-self.check = async(req, res) => {
+        // })
 
+        // if (action.length != 0) {
+        //     return res.status(422).json({
+        //         message: 'You can not approve as you either register or check or approver the data'
+        //     })
+        // } else {
+        let action = await actionstate.create({
+          model: model.toLowerCase(),
+          model_id: id,
+          action: "REJECT",
+          user_id: us.id,
+          position_id: usr.position_id,
+          time: new Date(),
+        });
 
-    try {
-        let id = req.params.id
-        let model = req.params.model
-
-        let usr = await usrData.userData(req, res)
-
-        if (usr) {
-            let data = await actionstate.findOne({
-                where: {
-                    model_id: id,
-                    model: model,
-                    action: "CHECK"
-                }
-            })
-
-            if (data) {
-                return res.status(400).json({
-                    message: 'already checked!'
-                })
-            } else {
-                // let action = await actionstate.findOne({
-                //     where: {
-                //         model_id: id,
-                //         action: "REGISTER",
-                //         user_id: usr.usrID
-                //     }
-                // })
-
-                // if (action) {
-                //     return res.status(422).json({
-                //         message: 'You are not allowed to check the data as you are the register'
-                //     })
-                // } else {
-                let action = await actionstate.create({
-                    model_id: id,
-                    model: model,
-                    action: "CHECK",
-                    user_id: usr.usrID,
-                    position_id: usr.position_id,
-                    time: new Date()
-                })
-
-                return res.json(action)
-                    // }
-            }
-        }
-
-    } catch (error) {
-        return res.status(500).json({
-            message: error.message
-        })
+        return res.status(200).json(action);
+        // }
+      }
     }
-}
-self.approve = async(req, res) => {
-    try {
-        let id = req.params.id
-        let model = req.params.model
-        let usr = await usrData.userData(req, res)
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};
 
-        if (usr) {
+self.authorize = async (req, res) => {
+  try {
+    let id = req.params.id;
+    let model = req.params.model;
+    let usr = await usrData.userData(req, res);
 
-            let data = await actionstate.findOne({
-                where: {
-                    model_id: id,
-                    model: model,
-                    action: "APPROVE"
-                }
-            })
-            if (data) {
-                return res.status(400).json({
-                    message: "Already Approve!"
-                })
-            } else {
-                // let action = await actionstate.findAll({
-                //     where: {
-                //         model_id: id,
-                //         action: {
-                //             [Op.in]: ['REGISTSER', 'CHECK']
-                //         },
-                //         user_id: usr.usrID
-                //     }
-                // })
+    if (usr) {
+      let data = await actionstate.findOne({
+        where: {
+          model_id: id,
+          action: "AUTHORIZE",
+        },
+      });
 
-                // if (action.length != 0) {
-                //     return res.status(422).json({
-                //         message: 'You can not approve as you either register or check the data'
-                //     })
-                // } else {
-                let action  = await actionstate.create({
-                    model: (model).toLowerCase(),
-                    model_id: id,
-                    action: "APPROVE",
-                    user_id: usr.usrID,
-                    position_id: usr.position_id,
-                    time: new Date()
-                })
+      if (data) {
+        return res.status(400).json({
+          message: "Already Authorized",
+        });
+      } else {
+        // let action = await actionstate.findAll({
+        //     model_id: id,
+        //     action: {
+        //         [Op.in]: ['REGISTSER', 'CHECK', "APPROVE"]
+        //     },
+        //     user_id: us.id
 
-                return res.status(200).json(action)
-                    // }
-            }
-        }
-    } catch (error) {
-        return res.status(500).json({
-            message: error.message
-        })
+        // })
+
+        // if (action.length != 0) {
+        //     return res.status(422).json({
+        //         message: 'You can not approve as you either register or check or approver the data'
+        //     })
+        // } else {
+
+        let action = await actionstate.create({
+          model: model.toLowerCase(),
+          model_id: id,
+          action: "AUTHORIZE",
+          user_id: usr.usrID,
+          position_id: usr.position_id,
+          time: new Date(),
+        });
+
+        return res.status(200).json(action);
+        // }
+      }
     }
-}
-
-self.reject = async(req, res) => {
-    try {
-        let usr = await usrData.userData(req, res)
-        let id = req.params.id
-        let model = req.params.model
-
-        let us = {
-            id: usr.usrID
-        }
-        if (usr) {
-            let data = await actionstate.findOne({
-                where: {
-                    id: id,
-                    action: "REJECT"
-                }
-            })
-            if (data) {
-                return res.status(400).json({
-                    message: "Already Rejected"
-                })
-            } else {
-                // let action = await actionstate.findAll({
-                //     where: {
-                //         model_id: id,
-                //         action: {
-                //             [Op.in]: ['REGISTER', 'CHECK', "APPROVE"]
-                //         },
-                //         user_id: us.id
-                //     }
-
-                // })
-
-                // if (action.length != 0) {
-                //     return res.status(422).json({
-                //         message: 'You can not approve as you either register or check or approver the data'
-                //     })
-                // } else {
-                    let action = await actionstate.create({
-                        model: (model).toLowerCase(),
-                        model_id: id,
-                        action: "REJECT",
-                        user_id: us.id,
-                        position_id: usr.position_id,
-                        time: new Date()
-                    })
-
-                    return res.status(200).json(action)
-                // }
-            }
-        }
-    } catch (error) {
-        return res.status(500).json({
-            message: error.message
-        })
-    }
-}
-
-
-self.authorize = async(req, res) => {
-
-    try {
-
-        let id = req.params.id
-        let model = req.params.model
-        let usr = await usrData.userData(req, res)
-        
-        if (usr) {
-            let data = await actionstate.findOne({
-                where: {
-                    model_id: id,
-                    action: "AUTHORIZE"
-                }
-            })
-
-            if (data) {
-                return res.status(400).json({
-                    message: "Already Authorized"
-                })
-            } else {
-
-                // let action = await actionstate.findAll({
-                //     model_id: id,
-                //     action: {
-                //         [Op.in]: ['REGISTSER', 'CHECK', "APPROVE"]
-                //     },
-                //     user_id: us.id
-
-                // })
-
-                // if (action.length != 0) {
-                //     return res.status(422).json({
-                //         message: 'You can not approve as you either register or check or approver the data'
-                //     })
-                // } else {
-
-                let action = await actionstate.create({
-                    model: (model).toLowerCase(),
-                    model_id: id,
-                    action: "AUTHORIZE",
-                    user_id: usr.usrID,
-                    position_id: usr.position_id,
-                    time: new Date()
-                })
-
-                return res.status(200).json(action)
-                    // }
-
-            }
-        }
-    } catch (error) {
-        return res.status(500).json({
-            message: error.message
-        })
-    }
-}
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};
 
 // self.getModelAction = async(req, res) => {
-//     let id = req.params.id 
+//     let id = req.params.id
 //     try {
-
 
 //         let data = await  actionstate.findAll({
 //             where: {
@@ -288,45 +273,45 @@ self.authorize = async(req, res) => {
 
 //         if(data){
 
-//             let registerUser = null 
-//             let checkUser = null 
-//             let approveUser = null 
-//             let rejectUser = null 
+//             let registerUser = null
+//             let checkUser = null
+//             let approveUser = null
+//             let rejectUser = null
 //             let authorizeUser = null
 
 //             let element = {}
 //             let register = await actionstate.findOne({
 //                 where: {
 //                    model_id: id,
-//                    action: 'REGISTER' 
+//                    action: 'REGISTER'
 //                 }
 //             })
 
 //             let check = await actionstate.findOne({
 //                 where: {
 //                    model_id: id,
-//                    action: 'CHECK' 
+//                    action: 'CHECK'
 //                 }
 //             })
 
 //             let approve = await actionstate.findOne({
 //                 where: {
 //                    model_id: id,
-//                    action: 'APPROVE' 
+//                    action: 'APPROVE'
 //                 }
 //             })
 
 //             let reject = await actionstate.findOne({
 //                 where: {
 //                    model_id: id,
-//                    action: 'REJECT' 
+//                    action: 'REJECT'
 //                 }
 //             })
 
 //             let authorize = await actionstate.findOne({
 //                 where: {
 //                    model_id: id,
-//                    action: 'AUTHORIZE' 
+//                    action: 'AUTHORIZE'
 //                 }
 //             })
 
@@ -337,7 +322,7 @@ self.authorize = async(req, res) => {
 //                     where: {
 //                         id: register.user_id
 //                     }
-//                 }) 
+//                 })
 //                 if(registerUser){
 //                     let userpos = await userposition.findOne({
 
@@ -366,14 +351,12 @@ self.authorize = async(req, res) => {
 //                 //     }
 //                 // })
 
-
 //                 // let regReply = await taskchat.findAndCountAll({
 //                 //     where: {
 //                 //         task_id: register.id,
 //                 //         type: "REGISTERED"
 //                 //     }
-//                 // }) 
-
+//                 // })
 
 //                 element.registeredData = {
 //                         by:register.user_id,
@@ -385,7 +368,6 @@ self.authorize = async(req, res) => {
 //                     }
 //             }
 
-
 //             if(check){
 
 //                 //user info
@@ -394,7 +376,7 @@ self.authorize = async(req, res) => {
 //                     where: {
 //                         id: check.user_id
 //                     }
-//                 }) 
+//                 })
 //                 if(checkUser){
 //                     let userpos = await userposition.findOne({
 //                         where: {
@@ -455,7 +437,7 @@ self.authorize = async(req, res) => {
 //                     where: {
 //                         id: approve.user_id
 //                     }
-//                 }) 
+//                 })
 //                 if(approveUser){
 //                     let userpos = await userposition.findOne({
 //                         where: {
@@ -496,7 +478,6 @@ self.authorize = async(req, res) => {
 //                     }
 //                 })
 
-
 //                 element.approvedData = {
 //                     by:approve.user_id,
 //                     user: approveUser,
@@ -516,7 +497,7 @@ self.authorize = async(req, res) => {
 //                     where: {
 //                         id: authorize.user_id
 //                     }
-//                 }) 
+//                 })
 //                 if(authorizeUser){
 //                     let userpos = await userposition.findOne({
 //                         where: {
@@ -558,7 +539,6 @@ self.authorize = async(req, res) => {
 //                     }
 //                 })
 
-
 //                 element.authorizedData = {
 //                     by:authorize.user_id,
 //                     user: authorizeUser,
@@ -571,8 +551,6 @@ self.authorize = async(req, res) => {
 //                 }
 //             }
 
-
-
 //             if(reject){
 //                 //user info
 //                 rejectUser = await user.findOne({
@@ -580,7 +558,7 @@ self.authorize = async(req, res) => {
 //                     where: {
 //                         id: reject.user_id
 //                     }
-//                 }) 
+//                 })
 //                 if(rejectUser){
 //                     let userpos = await userposition.findOne({
 //                         where: {
@@ -610,7 +588,7 @@ self.authorize = async(req, res) => {
 
 //                 // let rejReply = await taskchat.findAndCountAll({
 //                 //     where: {
-//                 //         task_id: reject.id, 
+//                 //         task_id: reject.id,
 //                 //         type: "REJECTED"
 //                 //     }
 //                 // })
@@ -634,13 +612,9 @@ self.authorize = async(req, res) => {
 //                 }
 //             }
 
-
-
 //             let states = [ ...new Set(data.map((item)=> item.action))].filter(n=>n)
 
-//             let status = null 
-
-
+//             let status = null
 
 //             if(states.includes('REJECT')){
 //                 status = "REJECTED"
@@ -654,8 +628,8 @@ self.authorize = async(req, res) => {
 //                 status = "REGISTERED"
 //             }
 
-//             element.id = id 
-//             element.status = status 
+//             element.id = id
+//             element.status = status
 //             element.descripton
 
 //             return res.json(element)
@@ -671,166 +645,180 @@ self.authorize = async(req, res) => {
 //     }
 // }
 
-//test 
+//test
 
+self.getModelAction = async (req, res) => {
+  const id = req.params.id;
 
-self.getModelAction = async(req, res) => {
-    const id = req.params.id;
-
-    try {
-        const data = await actionstate.findAll({
-            where: {
-                model_id: id
-            }
-        });
-
-        if (data) {
-
-            const register = data.find(item => item.action === 'REGISTER');
-            const check = data.find(item => item.action === 'CHECK');
-            const approve = data.find(item => item.action === 'APPROVE');
-            const reject = data.find(item => item.action === 'REJECT');
-            const authorize = data.find(item => item.action === 'AUTHORIZE');
-
-            const element = {};
-
-            if (register) {
-
-                const registerUser = await self.getUserData(register.user_id, register.id);
-                element.registeredData = {
-                    by: register.user_id,
-                    user: registerUser,
-                    time: register.time,
-                };
-            }
-
-            if (check) {
-                const checkUser = await self.getUserData(check.user_id, check.id);
-                // const checkedFiles = await self.getFileData(check.id, 'CHECK');
-                element.checkedData = {
-                    by: check.user_id,
-                    user: checkUser,
-                    time: check.time,
-                    // files: checkedFiles.rows,
-                    // fileCount: checkedFiles.count,
-                };
-            }
-
-            if (approve) {
-                const approveUser = await self.getUserData(approve.user_id, approve.id);
-                // const approvedFiles = await self.getFileData(approve.id, 'APPROVE');
-                element.approvedData = {
-                    by: approve.user_id,
-                    user: approveUser,
-                    time: approve.time,
-                    //     files: approvedFiles.rows,
-                    //     fileCount: approvedFiles.count,
-                };
-            }
-
-            if (authorize) {
-                const authorizeUser = await self.getUserData(authorize.user_id, authorize.id);
-                // const authorizedFiles = await self.getFileData(authorize.id, 'AUTHORIZE');
-                element.authorizedData = {
-                    by: authorize.user_id,
-                    user: authorizeUser,
-                    time: authorize.time,
-                    // files: authorizedFiles.rows,
-                    // fileCount: authorizedFiles.count,
-                };
-            }
-
-            if (reject) {
-                const rejectUser = await self.getUserData(reject.user_id, reject.id);
-                // const rejectedFiles = await self.getFileData(reject.id, 'REJECT');
-                element.rejectedData = {
-                    by: reject.user_id,
-                    user: rejectUser,
-                    time: reject.time,
-                    // files: rejectedFiles.rows,
-                    // fileCount: rejectedFiles.count,
-                };
-            }
-
-            // do something with element object
-
-            let states = [...new Set(data.map((item) => item.action))].filter(n => n)
-
-            let status = null
-
-
-
-            if (states.includes('REJECT')) {
-                status = "REJECTED"
-            } else if (states.includes("AUTHORIZE")) {
-                status = "AUTHORIZED"
-            } else if (states.includes("APPROVE")) {
-                status = "APPROVED"
-            } else if (states.includes("CHECK")) {
-                status = "CHECKED"
-            } else if (states.includes("REGISTER")) {
-                status = "REGISTERED"
-            }
-
-            element.id = id
-            element.status = status
-            element.descripton
-
-            return res.json(element)
-        }
-    } catch (error) {
-        return res.status(500).json({
-            message: error.message
-        })
-    }
-
-}
-
-
-self.getUserData = async(userId, actionId) => {
-
-    const userObj = await user.findOne({
-        attributes: {
-            exclude: ['password', 'refresh_token']
-        },
-        where: {
-            id: userId
-        }
+  try {
+    const data = await actionstate.findAll({
+      where: {
+        model_id: id,
+      },
     });
 
-    if (!userObj) {
-        return null;
+    if (data) {
+      const register = data.find((item) => item.action === "REGISTER");
+      const check = data.find((item) => item.action === "CHECK");
+      const approve = data.find((item) => item.action === "APPROVE");
+      const reject = data.find((item) => item.action === "REJECT");
+      const authorize = data.find((item) => item.action === "AUTHORIZE");
+
+      const element = {};
+
+      if (register) {
+        const registerUser = await self.getUserData(
+          register.user_id,
+          register.id
+        );
+        element.registeredData = {
+          by: register.user_id,
+          user: registerUser,
+          time: register.time,
+        };
+      }
+
+      if (check) {
+        const checkUser = await self.getUserData(check.user_id, check.id);
+        // const checkedFiles = await self.getFileData(check.id, 'CHECK');
+        element.checkedData = {
+          by: check.user_id,
+          user: checkUser,
+          time: check.time,
+          // files: checkedFiles.rows,
+          // fileCount: checkedFiles.count,
+        };
+      }
+
+      if (approve) {
+        const approveUser = await self.getUserData(approve.user_id, approve.id);
+        // const approvedFiles = await self.getFileData(approve.id, 'APPROVE');
+        element.approvedData = {
+          by: approve.user_id,
+          user: approveUser,
+          time: approve.time,
+          //     files: approvedFiles.rows,
+          //     fileCount: approvedFiles.count,
+        };
+      }
+
+      if (authorize) {
+        const authorizeUser = await self.getUserData(
+          authorize.user_id,
+          authorize.id
+        );
+        // const authorizedFiles = await self.getFileData(authorize.id, 'AUTHORIZE');
+        element.authorizedData = {
+          by: authorize.user_id,
+          user: authorizeUser,
+          time: authorize.time,
+          // files: authorizedFiles.rows,
+          // fileCount: authorizedFiles.count,
+        };
+      }
+
+      if (reject) {
+        const rejectUser = await self.getUserData(reject.user_id, reject.id);
+        // const rejectedFiles = await self.getFileData(reject.id, 'REJECT');
+        element.rejectedData = {
+          by: reject.user_id,
+          user: rejectUser,
+          time: reject.time,
+          // files: rejectedFiles.rows,
+          // fileCount: rejectedFiles.count,
+        };
+      }
+
+      // do something with element object
+
+      let states = [...new Set(data.map((item) => item.action))].filter(
+        (n) => n
+      );
+
+      let status = null;
+
+      if (states.includes("REJECT")) {
+        status = "REJECTED";
+      } else if (states.includes("AUTHORIZE")) {
+        status = "AUTHORIZED";
+      } else if (states.includes("APPROVE")) {
+        status = "APPROVED";
+      } else if (states.includes("CHECK")) {
+        status = "CHECKED";
+      } else if (states.includes("REGISTER")) {
+        status = "REGISTERED";
+      }
+
+      element.id = id;
+      element.status = status;
+      element.descripton;
+
+      return res.json(element);
     }
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};
 
-    const temp = userObj.toJSON();
+self.getUserData = async (userId, actionId) => {
+  const userObj = await user.findOne({
+    attributes: {
+      exclude: ["password", "refresh_token"],
+    },
+    where: {
+      id: userId,
+    },
+  });
 
-    let action = await actionstate.findOne({
-        where: {
-            id: actionId
-        },
-        include: [{
-            model: position,
-            as: "position"
-        }]
-    })
+  if (!userObj) {
+    return null;
+  }
 
+  const temp = userObj.toJSON();
 
-    const primaryPosition = action.position
-    if (primaryPosition) {
-        temp.position_name = primaryPosition.name;
-    }
+  let action = await actionstate.findOne({
+    where: {
+      id: actionId,
+    },
+    include: [
+      {
+        model: position,
+        as: "position",
+      },
+    ],
+  });
 
-    return temp;
-}
+  const primaryPosition = action.position;
+  if (primaryPosition) {
+    temp.position_name = primaryPosition.name;
+  }
 
-self.getFileData = async(fileableId, fileType) => {
-    const files = await file.findAndCountAll({
-        where: {
-            fileable_id: fileableId,
-            file_type: fileType
-        }
+  return temp;
+};
+
+self.getFileData = async (fileableId, fileType) => {
+  const files = await file.findAndCountAll({
+    where: {
+      fileable_id: fileableId,
+      file_type: fileType,
+    },
+  });
+
+  return files;
+};
+
+self.getLast = async (req, res) => {
+  let id = req.params.id;
+  try {
+    let data = await actionstate.findAll({
+      where: {
+        model_id: id,
+      },
     });
 
-    return files;
-}
+    return res.json(data.length);
+  } catch (error) {}
+};
 module.exports = self;

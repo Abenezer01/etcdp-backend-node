@@ -1,7 +1,5 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+"use strict";
+const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class monthlyreport extends Model {
     /**
@@ -13,38 +11,41 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  monthlyreport.init({
-    id: {
-      type: DataTypes.UUID,
-      primaryKey: true,
-      defaultValue: DataTypes.UUIDV4
+  monthlyreport.init(
+    {
+      id: {
+        type: DataTypes.UUID,
+        primaryKey: true,
+        defaultValue: DataTypes.UUIDV4,
+      },
+      parent_id: {
+        type: DataTypes.UUID,
+      },
+      project_id: {
+        type: DataTypes.UUID,
+        allowNull: false,
+      },
+      year: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      quarter: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      is_submitted: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
+      revised: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0,
+      },
     },
-    parent_id: {
-      type: DataTypes.UUID
-    },
-    project_id: {
-      type: DataTypes.UUID,
-      allowNull: false
-    },
-    year: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    quarter: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    is_submitted: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false
-    },
-    revised : {
-      type: DataTypes.INTEGER,
-      defaultValue: 0
+    {
+      sequelize,
+      modelName: "monthlyreport",
     }
-  }, {
-    sequelize,
-    modelName: 'monthlyreport',
-  });
+  );
   return monthlyreport;
 };

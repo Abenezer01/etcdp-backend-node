@@ -1,7 +1,5 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+"use strict";
+const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class reservoirinfo extends Model {
     /**
@@ -13,27 +11,30 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  reservoirinfo.init({
-    id: {
-      type: DataTypes.UUID,
-      primaryKey: true,
-      defaultValue: DataTypes.UUIDV4
+  reservoirinfo.init(
+    {
+      id: {
+        type: DataTypes.UUID,
+        primaryKey: true,
+        defaultValue: DataTypes.UUIDV4,
+      },
+      parent_id: DataTypes.UUID,
+      project_id: {
+        type: DataTypes.UUID,
+        allowNull: false,
+      },
+      dam_volume: DataTypes.STRING,
+      total_capacity: DataTypes.STRING,
+      active_capacity: DataTypes.STRING,
+      inactive_capacity: DataTypes.STRING,
+      catchment_area: DataTypes.DOUBLE,
+      surface_area: DataTypes.DOUBLE,
+      revision_no: DataTypes.INTEGER,
     },
-    parent_id: DataTypes.UUID,
-    project_id: {
-      type: DataTypes.UUID,
-      allowNull: false
-    },
-    dam_volume: DataTypes.STRING,
-    total_capacity: DataTypes.STRING,
-    active_capacity: DataTypes.STRING,
-    inactive_capacity: DataTypes.STRING,
-    catchment_area: DataTypes.DOUBLE,
-    surface_area: DataTypes.DOUBLE,
-    revision_no: DataTypes.INTEGER
-  }, {
-    sequelize,
-    modelName: 'reservoirinfo',
-  });
+    {
+      sequelize,
+      modelName: "reservoirinfo",
+    }
+  );
   return reservoirinfo;
 };

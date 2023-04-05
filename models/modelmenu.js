@@ -1,7 +1,5 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+"use strict";
+const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class modelmenu extends Model {
     /**
@@ -13,28 +11,31 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  modelmenu.init({
-    id: {
-      type: DataTypes.UUID,
-      primaryKey: true,
-      defaultValue: DataTypes.UUIDV4
+  modelmenu.init(
+    {
+      id: {
+        type: DataTypes.UUID,
+        primaryKey: true,
+        defaultValue: DataTypes.UUIDV4,
+      },
+      parent_id: DataTypes.UUID,
+      module_type_id: {
+        type: DataTypes.UUID,
+        allowNull: false,
+      },
+      module: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      model: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
     },
-    parent_id: DataTypes.UUID,
-    module_type_id: {
-      type: DataTypes.UUID,
-      allowNull: false
-    },
-    module: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    model: {
-      type: DataTypes.STRING,
-      allowNull: false
+    {
+      sequelize,
+      modelName: "modelmenu",
     }
-  }, {
-    sequelize,
-    modelName: 'modelmenu',
-  });
+  );
   return modelmenu;
 };

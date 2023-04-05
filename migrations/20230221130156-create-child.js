@@ -1,45 +1,45 @@
-'use strict';
+"use strict";
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('children', {
+    await queryInterface.createTable("children", {
       id: {
         allowNull: false,
         primaryKey: true,
-        type: Sequelize.UUID
+        type: Sequelize.UUID,
       },
       name: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
       },
       sex: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
       },
       birth_date: {
         type: Sequelize.DATE,
-        allowNull: false
+        allowNull: false,
       },
       family_status_id: {
         type: Sequelize.UUID,
         references: {
-          model: 'familystatuses',
-          key: 'id'
+          model: "familystatuses",
+          key: "id",
         },
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE',
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
-      }
+        type: Sequelize.DATE,
+      },
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('children');
-  }
+    await queryInterface.dropTable("children");
+  },
 };

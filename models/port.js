@@ -1,7 +1,5 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+"use strict";
+const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class port extends Model {
     /**
@@ -13,26 +11,29 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  port.init({
-    id: {
-      type: DataTypes.UUID,
-      primaryKey: true,
-      defaultValue: DataTypes.UUIDV4
+  port.init(
+    {
+      id: {
+        type: DataTypes.UUID,
+        primaryKey: true,
+        defaultValue: DataTypes.UUIDV4,
+      },
+      parent_id: DataTypes.UUID,
+      project_id: {
+        type: DataTypes.UUID,
+        allowNull: false,
+      },
+      owner: DataTypes.STRING,
+      operator: DataTypes.STRING,
+      port_type: DataTypes.STRING,
+      site_area: DataTypes.DOUBLE,
+      annual_traffic_size: DataTypes.DOUBLE,
+      revision_no: DataTypes.INTEGER,
     },
-    parent_id: DataTypes.UUID,
-    project_id: {
-      type: DataTypes.UUID,
-      allowNull: false
-    },
-    owner: DataTypes.STRING,
-    operator: DataTypes.STRING,
-    port_type: DataTypes.STRING,
-    site_area: DataTypes.DOUBLE,
-    annual_traffic_size: DataTypes.DOUBLE,
-    revision_no: DataTypes.INTEGER
-  }, {
-    sequelize,
-    modelName: 'port',
-  });
+    {
+      sequelize,
+      modelName: "port",
+    }
+  );
   return port;
 };

@@ -1,7 +1,5 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+"use strict";
+const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class transmissionline extends Model {
     /**
@@ -13,35 +11,38 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  transmissionline.init({
-    id: {
-      type: DataTypes.UUID,
-      primaryKey: true,
-      defaultValue: DataTypes.UUIDV4
+  transmissionline.init(
+    {
+      id: {
+        type: DataTypes.UUID,
+        primaryKey: true,
+        defaultValue: DataTypes.UUIDV4,
+      },
+      parent_id: DataTypes.UUID,
+      project_id: {
+        type: DataTypes.UUID,
+        allowNull: false,
+      },
+      name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      line_type: DataTypes.STRING,
+      transmission_capacity: DataTypes.STRING,
+      transmitting_power: DataTypes.STRING,
+      transmitting_current: DataTypes.STRING,
+      transmitting_voltage: DataTypes.STRING,
+      transmission_towers_number: DataTypes.INTEGER,
+      start_northing: DataTypes.DOUBLE,
+      start_easting: DataTypes.DOUBLE,
+      end_northing: DataTypes.DOUBLE,
+      end_easting: DataTypes.DOUBLE,
+      revision_no: DataTypes.INTEGER,
     },
-    parent_id: DataTypes.UUID,
-    project_id: {
-      type: DataTypes.UUID,
-      allowNull: false
-    },
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    line_type: DataTypes.STRING,
-    transmission_capacity: DataTypes.STRING,
-    transmitting_power: DataTypes.STRING,
-    transmitting_current: DataTypes.STRING,
-    transmitting_voltage: DataTypes.STRING,
-    transmission_towers_number: DataTypes.INTEGER,
-    start_northing: DataTypes.DOUBLE,
-    start_easting: DataTypes.DOUBLE,
-    end_northing: DataTypes.DOUBLE,
-    end_easting: DataTypes.DOUBLE,
-    revision_no: DataTypes.INTEGER
-  }, {
-    sequelize,
-    modelName: 'transmissionline',
-  });
+    {
+      sequelize,
+      modelName: "transmissionline",
+    }
+  );
   return transmissionline;
 };

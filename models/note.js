@@ -1,8 +1,6 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
-const { decrypt, encrypt } = require('../utils/helper');
+"use strict";
+const { Model } = require("sequelize");
+const { decrypt, encrypt } = require("../utils/helper");
 module.exports = (sequelize, DataTypes) => {
   class note extends Model {
     /**
@@ -14,41 +12,44 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  note.init({
-    id: {
-      type: DataTypes.UUID,
-      primaryKey: true,
-      defaultValue: DataTypes.UUIDV4
+  note.init(
+    {
+      id: {
+        type: DataTypes.UUID,
+        primaryKey: true,
+        defaultValue: DataTypes.UUIDV4,
+      },
+      model: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      model_id: {
+        type: DataTypes.UUID,
+        allowNull: false,
+      },
+      user_id: {
+        type: DataTypes.STRING,
+      },
+      description: {
+        type: DataTypes.TEXT,
+        allowNull: false,
+        type: DataTypes.STRING,
+        allowNull: false,
+        get() {
+          const encryptedValue = this.getDataValue("description");
+          const decryptedValue = decrypt(encryptedValue);
+          return decryptedValue;
+        },
+        set(value) {
+          const encryptedValue = encrypt(value);
+          this.setDataValue("description", encryptedValue);
+        },
+      },
     },
-    model: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    model_id: {
-      type: DataTypes.UUID,
-      allowNull: false
-    },
-    user_id: {
-      type: DataTypes.STRING
-    },
-    description: {
-      type: DataTypes.TEXT,
-      allowNull: false,
-      type: DataTypes.STRING,
-            allowNull: false,
-            get() {
-                const encryptedValue = this.getDataValue("description");
-                const decryptedValue = decrypt(encryptedValue);
-                return decryptedValue;
-              },
-            set(value) {
-                const encryptedValue = encrypt(value);
-                this.setDataValue('description', encryptedValue);
-              }
+    {
+      sequelize,
+      modelName: "note",
     }
-  }, {
-    sequelize,
-    modelName: 'note',
-  });
+  );
   return note;
 };

@@ -1,7 +1,5 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+"use strict";
+const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class projectextensiontime extends Model {
     /**
@@ -13,33 +11,36 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  projectextensiontime.init({
-    id: {
-      type: DataTypes.UUID,
-      primaryKey: true,
-      defaultValue: DataTypes.UUIDV4
+  projectextensiontime.init(
+    {
+      id: {
+        type: DataTypes.UUID,
+        primaryKey: true,
+        defaultValue: DataTypes.UUIDV4,
+      },
+      title: {
+        type: DataTypes.STRING,
+      },
+      parent_id: {
+        type: DataTypes.UUID,
+      },
+      project_id: {
+        type: DataTypes.UUID,
+        allowNull: false,
+      },
+      number_of_days: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      reason: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
     },
-    title: {
-      type: DataTypes.STRING
-    },
-    parent_id: {
-      type: DataTypes.UUID
-    },
-    project_id: {
-      type: DataTypes.UUID,
-      allowNull:false
-    },
-    number_of_days: {
-      type: DataTypes.INTEGER,
-      allowNull:false
-    },
-    reason: {
-      type: DataTypes.STRING,
-      allowNull:false
-    },
-  }, {
-    sequelize,
-    modelName: 'projectextensiontime',
-  });
+    {
+      sequelize,
+      modelName: "projectextensiontime",
+    }
+  );
   return projectextensiontime;
 };
