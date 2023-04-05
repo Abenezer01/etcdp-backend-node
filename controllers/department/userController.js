@@ -24,7 +24,7 @@ const paginate = require("../../utils/pagination");
 const jwt = require("jsonwebtoken");
 
 //emailer
-const uuid  =  require('uuid');
+const uuid = require('uuid');
 var nodemailer = require('nodemailer');
 var smtpTransport = require('nodemailer-smtp-transport');
 const emailValidator = require('deep-email-validator');
@@ -129,27 +129,26 @@ self.getAll = async(req, res) => {
     // })
     let data = await user.findAll()
 
-    let allUser = await Promise.all(data.map(async(item)=> {
-            
-            let first_name = await decrypt(item.first_name)
-            let middle_name = await decrypt(item.middle_name)
-            let last_name = await decrypt(item.last_name)
+    let allUser = await Promise.all(data.map(async(item) => {
 
-            item.first_name = first_name
-            item.middle_name = middle_name
-            item.last_name = last_name
-            return item
-           
-        })
-    )
+        let first_name = await decrypt(item.first_name)
+        let middle_name = await decrypt(item.middle_name)
+        let last_name = await decrypt(item.last_name)
+
+        item.first_name = first_name
+        item.middle_name = middle_name
+        item.last_name = last_name
+        return item
+
+    }))
 
     return res.json(allUser)
         // let one = "12c85269-9dc5-4e89-8d47-62719baea7ed"
         // let queryString = `SELECT first_name FROM users as U WHERE U.id='${one}';`
-    // let queryString = "SELECT *  FROM users as U JOIN actionstates as A WHERE U.id=A.model_id AND A.action='REGISTER';"
-    // let userData = await sequelize.query(
-    //     queryString, { type: sequelize.QueryTypes.SELECT }
-    // );
+        // let queryString = "SELECT *  FROM users as U JOIN actionstates as A WHERE U.id=A.model_id AND A.action='REGISTER';"
+        // let userData = await sequelize.query(
+        //     queryString, { type: sequelize.QueryTypes.SELECT }
+        // );
 
     // console.log("The user is", userData)
 
@@ -195,7 +194,7 @@ self.get = async(req, res) => {
             temp.middle_name = middle_name
             temp.last_name = last_name
             temp.full_name = first_name + " " + middle_name
-            
+
             return res.json(temp)
 
         }
@@ -243,11 +242,11 @@ self.search = async(req, res) => {
 }
 
 self.isEmailValid = async(email) => {
-	try {
-		return emailValidator.validate(email)
-	} catch (error) {
-		return {message: error.message}
-	}
+    try {
+        return emailValidator.validate(email)
+    } catch (error) {
+        return { message: error.message }
+    }
 }
 
 self.save = async(req, res) => {
@@ -257,11 +256,11 @@ self.save = async(req, res) => {
 
         //check email is really exist 
         let val = await self.isEmailValid(body.email)
-		if(!val.valid){
-			return res.status(422).json({
-				message:"The provided email address does not exist!"
-			})
-		}
+        if (!val.valid) {
+            return res.status(422).json({
+                message: "The provided email address does not exist!"
+            })
+        }
 
         const salt = await bcrypt.genSalt(10);
         var usr = {
@@ -283,14 +282,14 @@ self.save = async(req, res) => {
             await actionstate.create({
                 model_id: created_user.id,
                 model: "user",
-                action: "REGISTER", 
-                user_id: usr.usrID , 
+                action: "REGISTER",
+                user_id: usr.usrID,
                 position_id: usr.position_id,
                 time: new Date()
-            })git
+            })
 
             // await saveActionState(created_user.id, "user", "REGISTER", usr.usrID, req, res)
-                //create position
+            //create position
             let usemail = await useremail.create({
                 user_id: created_user.id,
                 email: await encrypt(body.email),
@@ -301,55 +300,55 @@ self.save = async(req, res) => {
                 saveActionState(usemail.id, "useremail", "REGISTER", usr.usrID, req, res)
 
                 let usphone = await userphone.create({
-                    user_id: created_user.id,
-                    phone: await encrypt(body.phone),
-                    is_primary: true
-                })
-                //email to user 
+                        user_id: created_user.id,
+                        phone: await encrypt(body.phone),
+                        is_primary: true
+                    })
+                    //email to user 
                 const resetString = uuid.v4() + created_user.id
-				await passwordreset.create({
-					user_id: created_user.id,
-					token: resetString,
-					expiresAt: Date.now() + 3600000,
-					is_used: false
-				})
+                await passwordreset.create({
+                    user_id: created_user.id,
+                    token: resetString,
+                    expiresAt: Date.now() + 3600000,
+                    is_used: false
+                })
 
                 //send
                 const redirectUrl = body.redirectUrl
-				const salt = await bcrypt.genSalt();
-				const hashedResetString =  await bcrypt.hash(resetString, salt)
-				var mailOptions = {
-					from: '1space.mia@gmail.com',
-					// from: process.env.AUTH_EMAIL,
-					to: body.email,
-					subject: "Setup Password",
-					html: `
+                const salt = await bcrypt.genSalt();
+                const hashedResetString = await bcrypt.hash(resetString, salt)
+                var mailOptions = {
+                    from: '1space.mia@gmail.com',
+                    // from: process.env.AUTH_EMAIL,
+                    to: body.email,
+                    subject: "Setup Password",
+                    html: `
 					<p>Your are registered to ONESPACE, click on the link below to fillout your password</p>
 					<p><a href= ${redirectUrl}${created_user.id}/${hashedResetString.replace(/\//g, "slash")}>Link to setup password</a></p>
 					`
-				}
-				
-				var transporter = nodemailer.createTransport(
-					smtpTransport({
-						service: 'gmail',
-						host: 'smtp.gmail.com',
-						secure: false,
-						auth: {
-							user: '1space.mia@gmail.com',
-							pass: 'rjxcwxgyrijvturw'
-						}
-				}));
+                }
 
-				transporter.sendMail(mailOptions, function(error, info){
-					if (error) {
-						return res.json("error" + error)
-					} else {
-						return res.json({
-							message: "Email sent successfully"
-						})
-						
-					}
-				});
+                var transporter = nodemailer.createTransport(
+                    smtpTransport({
+                        service: 'gmail',
+                        host: 'smtp.gmail.com',
+                        secure: false,
+                        auth: {
+                            user: '1space.mia@gmail.com',
+                            pass: 'rjxcwxgyrijvturw'
+                        }
+                    }));
+
+                transporter.sendMail(mailOptions, function(error, info) {
+                    if (error) {
+                        return res.json("error" + error)
+                    } else {
+                        return res.json({
+                            message: "Email sent successfully"
+                        })
+
+                    }
+                });
 
 
                 if (usphone) {
@@ -455,8 +454,8 @@ self.getDepartmentUsers = async(req, res) => {
                 }
             }
         })
-        let allUser = await Promise.all(users.map(async(item)=> {
-            
+        let allUser = await Promise.all(users.map(async(item) => {
+
             let first_name = await decrypt(item.first_name)
             let middle_name = await decrypt(item.middle_name)
             let last_name = await decrypt(item.last_name)
@@ -465,9 +464,8 @@ self.getDepartmentUsers = async(req, res) => {
             item.middle_name = middle_name
             item.last_name = last_name
             return item
-           
-        })
-    )
+
+        }))
 
         return res.json(allUser)
 
@@ -603,9 +601,9 @@ self.switchAccount = async(req, res) => {
         let { email } = usEmail || {};
         let { phone } = usPhone || {};
 
-         //show if it is checked
+        //show if it is checked
 
-         let action = await actionstate.findOne({
+        let action = await actionstate.findOne({
             where: {
                 model_id: usr.usrID,
                 action: "CHECK"
@@ -621,7 +619,7 @@ self.switchAccount = async(req, res) => {
 
         let replyUser = {
             id,
-            first_name : await decrypt(first_name),
+            first_name: await decrypt(first_name),
             middle_name: await decrypt(middle_name),
             last_name: await decrypt(last_name),
             email: await decrypt(email),
@@ -632,10 +630,10 @@ self.switchAccount = async(req, res) => {
 
             department_id: userpos.department_id,
             user_position_id: userpos.id,
-            is_checked: action ? true:false,
-            profile_completed: profile_pic ? true:false,
+            is_checked: action ? true : false,
+            profile_completed: profile_pic ? true : false,
             // role: usrRole.name,
-            avatar: userphoto? userphoto.url: null
+            avatar: userphoto ? userphoto.url : null
         };
 
 
@@ -718,87 +716,87 @@ self.getAllUserPositions = async(req, res) => {
 // }
 self.sendMail = async(req, res) => {
 
-	let body = req.body
-	let email = body.email
+    let body = req.body
+    let email = body.email
 
-	try {
+    try {
 
-		let us = await user.findOne({
-			where: {
-				email:email
-			}
-		})
-		if(us){
+        let us = await user.findOne({
+            where: {
+                email: email
+            }
+        })
+        if (us) {
 
-			const redirectUrl = body.redirectUrl
+            const redirectUrl = body.redirectUrl
 
-			let preset = await passwordreset.findOne({
-				where: {
-					user_id: us.id,
-					is_used: false
-				}
-			})
-			const resetString = preset.token
+            let preset = await passwordreset.findOne({
+                where: {
+                    user_id: us.id,
+                    is_used: false
+                }
+            })
+            const resetString = preset.token
 
-			const salt = await bcrypt.genSalt();
-			const hashedResetString =  await bcrypt.hash(resetString, salt)
-			var mailOptions = {
-				from: '1space.mia@gmail.com',
-				// from: process.env.AUTH_EMAIL,
-				to: email,
-				subject: "Setup Password",
-				html: `
+            const salt = await bcrypt.genSalt();
+            const hashedResetString = await bcrypt.hash(resetString, salt)
+            var mailOptions = {
+                from: '1space.mia@gmail.com',
+                // from: process.env.AUTH_EMAIL,
+                to: email,
+                subject: "Setup Password",
+                html: `
 
 				<p>Your EtCDP account is ready, click on the link below to fillout your password</p>
 				<p><a href= ${redirectUrl}${us.id}/${hashedResetString.replace(/\//g, "slash")}>Link to setup password</a></p>
 				`
-			}
+            }
 
 
-			var transporter = nodemailer.createTransport(
-				smtpTransport({
-					service: 'gmail',
-					host: 'smtp.gmail.com',
-					secure: false,
-					auth: {
-						user: '1space.mia@gmail.com',
-						pass: 'rjxcwxgyrijvturw'
-					}
-			}));
+            var transporter = nodemailer.createTransport(
+                smtpTransport({
+                    service: 'gmail',
+                    host: 'smtp.gmail.com',
+                    secure: false,
+                    auth: {
+                        user: '1space.mia@gmail.com',
+                        pass: 'rjxcwxgyrijvturw'
+                    }
+                }));
 
-			transporter.sendMail(mailOptions, function(error, info){
-				if (error) {
-					return res.json("error" + error)
-					console.log(error);
-				} else {
-	
-					return res.json({
-						message: "Email sent successfully"
-					})
-					
-				}
-				});
-		}
-		
-	} catch (error) {
-		return res.status(500).json({
-			message: error.message
-		})
-	}
+            transporter.sendMail(mailOptions, function(error, info) {
+                if (error) {
+                    return res.json("error" + error)
+                    console.log(error);
+                } else {
+
+                    return res.json({
+                        message: "Email sent successfully"
+                    })
+
+                }
+            });
+        }
+
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message
+        })
+    }
 }
 
 //password reset and requesting it 
 
 self.requestPasswordReset = async(req, res) => {
-	
-	
-	try {
 
-        const {email, redirectUrl}  = req.body
-		//check if user exist
+
+    try {
+
+        const { email, redirectUrl } = req.body
+            //check if user exist
 
         let encrypted_email = await encrypt(email)
-    
+
         let usemail = await useremail.findOne({
             where: {
                 email: encrypted_email,
@@ -806,8 +804,8 @@ self.requestPasswordReset = async(req, res) => {
             }
         })
 
-    
-        if(!usemail){
+
+        if (!usemail) {
             return res.status(404).json({
                 message: "Email not found!"
             })
@@ -821,150 +819,154 @@ self.requestPasswordReset = async(req, res) => {
             }
         })
 
-		if(us){
-			
-		
-			const resetString = uuid.v4() + us.id
+        if (us) {
 
-			let data = await passwordreset.findOne({
-				order: [ [ 'createdAt', 'DESC' ]],
-				where: {
-					user_id: us.id,
-					is_used: false
-				}
-			})
 
-			
-			// if(data){
-			// 	let created_at = moment(data.createdAt)
-			// 	let now = moment()
-			// 	let diffInMinutes = now.diff(created_at, "minutes")
-			// 	if(diffInMinutes < 30){
-			// 		return res.status(500).json({
-			// 			message: `You can only request for password reset in 30 minutes interval!`
-			// 		})
-			// 	}
-				
-			// }
- 
-			
-			await passwordreset.create({
-				user_id: us.id,
-				token: resetString,
-				expiresAt: Date.now() + 3600000,
-				is_used: false
-			})
-			
-			// sendEmail(us.id, email, redirectUrl, resetString)
-			const salt = await bcrypt.genSalt();
-			const hashedResetString =  await bcrypt.hash(resetString, salt)
-		
-			var mailOptions = {
-				from: '1space.mia@gmail.com',
-				// from: process.env.AUTH_EMAIL,
-				to: email,
-				subject: "Password Reset",
-				html: `
+            const resetString = uuid.v4() + us.id
+
+            let data = await passwordreset.findOne({
+                order: [
+                    ['createdAt', 'DESC']
+                ],
+                where: {
+                    user_id: us.id,
+                    is_used: false
+                }
+            })
+
+
+            // if(data){
+            // 	let created_at = moment(data.createdAt)
+            // 	let now = moment()
+            // 	let diffInMinutes = now.diff(created_at, "minutes")
+            // 	if(diffInMinutes < 30){
+            // 		return res.status(500).json({
+            // 			message: `You can only request for password reset in 30 minutes interval!`
+            // 		})
+            // 	}
+
+            // }
+
+
+            await passwordreset.create({
+                user_id: us.id,
+                token: resetString,
+                expiresAt: Date.now() + 3600000,
+                is_used: false
+            })
+
+            // sendEmail(us.id, email, redirectUrl, resetString)
+            const salt = await bcrypt.genSalt();
+            const hashedResetString = await bcrypt.hash(resetString, salt)
+
+            var mailOptions = {
+                from: '1space.mia@gmail.com',
+                // from: process.env.AUTH_EMAIL,
+                to: email,
+                subject: "Password Reset",
+                html: `
 				<p>Someone just requested to change your EtCDP account's credentials. If this was you, click on the link below to reset them.</p>
 				<p><a href= ${redirectUrl}${us.id}/${hashedResetString.replace(/\//g, "slash")}>Link to reset credentials</a></p>
 				<p>This link will expire within 60 minutes. </p>
 				<p>If you don't want to reset your credentials, just ignore this message and nothing will be changed.</p>`
-				
-			}
+
+            }
 
 
-			var transporter = nodemailer.createTransport(
-				smtpTransport({
-					service: 'gmail',
-					host: 'smtp.gmail.com',
-					secure: false,
-					auth: {
-						user: '1space.mia@gmail.com',
-						pass: 'rjxcwxgyrijvturw'
-					}
-			}));
+            var transporter = nodemailer.createTransport(
+                smtpTransport({
+                    service: 'gmail',
+                    host: 'smtp.gmail.com',
+                    secure: false,
+                    auth: {
+                        user: '1space.mia@gmail.com',
+                        pass: 'rjxcwxgyrijvturw'
+                    }
+                }));
 
-			transporter.sendMail(mailOptions, function(error, info){
-				if (error) {
-					return res.json("error" + error)
-					console.log(error);
-				} else {
-	
-					return res.json({
-						message: "Password reset link sent to you email"
-					})
-					
-				}
-				});  
+            transporter.sendMail(mailOptions, function(error, info) {
+                if (error) {
+                    return res.json("error" + error)
+                    console.log(error);
+                } else {
 
-		}else{
-			return res.status(404).json({
-				message: 'User not Found!'
-			})
-		}
-		
-	} catch (error) {
-		return res.status(500).json({
-			message: error.message
-		})
-	}
+                    return res.json({
+                        message: "Password reset link sent to you email"
+                    })
+
+                }
+            });
+
+        } else {
+            return res.status(404).json({
+                message: 'User not Found!'
+            })
+        }
+
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message
+        })
+    }
 }
 
 self.resetPassword = async(req, res) => {
 
-	try {
-		let {user_id, resetString, password}  = req.body
+    try {
+        let { user_id, resetString, password } = req.body
 
-		let existing = await passwordreset.findOne({
-			order: [ [ 'createdAt', 'DESC' ]],
-			where: {
-				user_id,
-				is_used: false
-			}
-		})
+        let existing = await passwordreset.findOne({
+            order: [
+                ['createdAt', 'DESC']
+            ],
+            where: {
+                user_id,
+                is_used: false
+            }
+        })
 
 
-		if(existing){
-			// const expiredAt = existing.expiresAt 
-			// if(expiredAt < Date.now()){
-			// 	return res.status(410).json({
-			// 		message: 'Password reset link has expired.'
-			// 	})
-			// }else{
+        if (existing) {
+            // const expiredAt = existing.expiresAt 
+            // if(expiredAt < Date.now()){
+            // 	return res.status(410).json({
+            // 		message: 'Password reset link has expired.'
+            // 	})
+            // }else{
 
-			const hashedResetString = existing.token 
-			//FYI resetString is the hashed one from the sent letter
-			let hashed = resetString.replace(/slash/g, "/") 
-			const valid = await bcrypt.compare(hashedResetString, hashed)
-			if(valid){
-				const salt = await bcrypt.genSalt();
-				const pass = await bcrypt.hash(password, salt)				
-				await user.update({password:pass},{
-					where: {
-						id: user_id
-					}
-				})
-				await passwordreset.update({is_used: true},{
-					where: {
-						user_id: existing.user_id,
-						is_used: false
-					}
-				})
+            const hashedResetString = existing.token
+                //FYI resetString is the hashed one from the sent letter
+            let hashed = resetString.replace(/slash/g, "/")
+            const valid = await bcrypt.compare(hashedResetString, hashed)
+            if (valid) {
+                const salt = await bcrypt.genSalt();
+                const pass = await bcrypt.hash(password, salt)
+                await user.update({ password: pass }, {
+                    where: {
+                        id: user_id
+                    }
+                })
+                await passwordreset.update({ is_used: true }, {
+                    where: {
+                        user_id: existing.user_id,
+                        is_used: false
+                    }
+                })
 
-				return res.status(200).json({
-					message: 'Password changed successfully'
-				})
-			}else{
-				return res.json({
-					message:"Invalid reset string"
-				})
-			}
-		}
-	} catch (error) {
-		return res.status(500).json({
-			message: error.message
-		})
-	}	
+                return res.status(200).json({
+                    message: 'Password changed successfully'
+                })
+            } else {
+                return res.json({
+                    message: "Invalid reset string"
+                })
+            }
+        }
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message
+        })
+    }
 }
 self.checkUserStatus = async(req, res) => {
     let id = req.params.id
@@ -989,11 +991,11 @@ self.checkUserStatus = async(req, res) => {
 
         let messageArr = []
 
-        if(!action){
+        if (!action) {
             messageArr.push("The account is not checked")
         }
 
-        if(!profile_pic){
+        if (!profile_pic) {
             messageArr.push("You don't have profile picture")
         }
 
