@@ -27,6 +27,13 @@ module.exports = (sequelize, DataTypes) => {
       rebate: DataTypes.DOUBLE,
       remark: DataTypes.TEXT,
       revision_no: DataTypes.INTEGER,
+      price_after_rebate: {
+        type: DataTypes.VIRTUAL,
+        get() {
+          return this.main_contract_value - (this.main_contract_value*(this.rebate/100));
+        },
+        
+      },
     },
     {
       sequelize,

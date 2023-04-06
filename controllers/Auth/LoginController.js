@@ -130,11 +130,11 @@ self.loginUser = async (request, res) => {
       };
 
       const accessToken = jwt.sign(usrr, TOKEN_KEY, {
-        expiresIn: "100h",
+        expiresIn: "1000h",
       });
 
       const refreshToken = jwt.sign(usrr, REFRESH_TOKEN_KEY, {
-        expiresIn: "100h",
+        expiresIn: "1000h",
       });
 
       user

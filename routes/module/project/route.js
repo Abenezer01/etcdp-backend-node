@@ -482,6 +482,8 @@ module.exports = function (express) {
   route.get("/project-search", ProjectController.search);
   route.post("/project/filter/", ProjectController.getProjectByTypeId);
   route.post("/project", validateData.projectValidate, ProjectController.save);
+  route.get("/project-analysis/:id", ProjectController.getProjectAnalysis);
+  
   route.put(
     "/project/:id",
     validateData.projectValidate,

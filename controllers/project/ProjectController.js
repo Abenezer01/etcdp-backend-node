@@ -13,6 +13,8 @@ const {
   projectreport,
   projectplan,
   projectvariation,
+  projectbond,
+  projectextensiontime,
   payment,
   sequelize,
   Sequelize,
@@ -102,31 +104,26 @@ self.getProjectByTypeId = async (req, res) => {
       where: {
         [Op.and]: filter,
       },
-      raw: true,
     });
 
-    let uf = [];
-    for (const item of projectResult) {
-      const projectID = item.id;
-      if (projectID) {
-        uf.push(projectID);
-      }
-    }
+    let proIDs = projectResult.map((item) => item.id);
 
     let reportData = await projectreport.findAll({
       where: {
         project_id: {
-          [Sequelize.Op.in]: uf,
+          [Sequelize.Op.in]: proIDs,
         },
       },
     });
     let planData = await projectplan.findAll({
       where: {
         project_id: {
-          [Sequelize.Op.in]: uf,
+          [Sequelize.Op.in]: proIDs,
         },
       },
     });
+
+
     const groupedReportData = reportData.reduce((acc, item) => {
       const { project_id, financial_performance, project_expense, type } = item;
       acc[project_id] = acc[project_id] || {
@@ -138,6 +135,7 @@ self.getProjectByTypeId = async (req, res) => {
       acc[project_id].project_expense += project_expense;
       return acc;
     }, {});
+    
     const groupedPlanData = planData.reduce((acc, item) => {
       const { project_id, financial_performance, project_expense } = item;
       acc[project_id] = acc[project_id] || {
@@ -191,24 +189,25 @@ self.getProjectByTypeId = async (req, res) => {
       offset,
       where: {
         id: {
-          [Sequelize.Op.in]: uf,
+          [Sequelize.Op.in]: proIDs,
         },
       },
       order: [["createdAt", order]],
-      raw: true,
+      // raw: true,
     });
-
     let projects = await Promise.all(
       projectData.rows.map(self.getProjectStatus)
     );
 
+    // return res.json(projects)
+
     const projectTimeData = await projecttime.findAll({
       where: {
         project_id: {
-          [Sequelize.Op.in]: uf,
+          [Sequelize.Op.in]: proIDs,
         },
       },
-      raw: true,
+      // raw: true,
     });
 
     const finResult = projects.map((aElement) => {
@@ -773,5 +772,215 @@ self.getProjectData = async (req, res) => {
     });
   }
 };
+self.getProjectAnalysis = async(req, res) => {
 
+	let id = req.params.id
+	
+	try {
+
+		let plans = await projectplan.findAll({
+			where: {
+				project_id: id
+			}
+		})
+		let reports = await projectreport.findAll({
+			where: {
+				project_id: id
+			}
+		})
+
+
+		let payments = await payment.findAll({
+			where: {
+				project_id: id,
+        type: "INTERIM_PAYMENT",
+			}
+		})
+
+		let paid = payments.reduce((total, item) => total + item.amount, 0)
+
+		let time = await projecttime.findOne({
+			where: {
+				project_id: id
+			}
+		})
+
+		let extensions = await projectextensiontime.findAll({
+			where: {
+				project_id: id
+			}
+		})
+		let extension_days = extensions.reduce((total, item) => total + item.number_of_days, 0)
+ 
+		let commencement_date = time ? time.commencement_date : null
+
+		let contract_duration = time ? time.original_contract_duration : null
+		let used_time = moment().diff(commencement_date, 'days')
+	
+		let all_duration = extension_days + contract_duration
+
+		let repaid = payments.reduce((total, item) => total + item.advance_repayment, 0)
+
+		let perBond = await projectbond.findOne({
+			where: {
+				project_id: id,
+				type: "PERFORMANCE_BOND"
+			}
+		})
+
+		let advBond = await projectbond.findOne({
+			where: {
+				project_id: id,
+				type: "ADVANCE_BOND"
+			}
+		})
+
+    let bidBond = await projectbond.findOne({
+			where: {
+				project_id: id,
+				type: "BID_BOND"
+			}
+		})
+
+
+		let performance_bond = null
+		let performanceDay = null
+		let performanceMessage = "";
+		let advance_bond = null
+		let advanceMessage = "";
+		let advanceDay= null
+    let bid_bond = null
+		let bidMessage = "";
+		let bidDay= null
+
+    if(bidBond){
+			bid_bond = bidBond.amount
+
+			bidDay = moment().diff(bidBond.expire_date, 'days')
+			if(bidDay < 0){
+				bidMessage = "danger"
+			}else if(bidDay < 40){
+				bidMessage = "warning"
+			}else {
+				bidMessage = "success"
+			}
+			
+		}
+
+		let bidStatus = {
+			days:bidDay,
+			status: bidMessage
+		}
+
+		
+		if(perBond){
+			performance_bond = perBond.amount
+
+			performanceDay = moment().diff(perBond.expire_date, 'days')
+			if(performanceDay < 0){
+				performanceMessage = "danger"
+			}else if(performanceDay < 40){
+				performanceMessage = "warning"
+			}else {
+				performanceMessage = "success"
+			}
+			
+		}
+
+		let performanceStatus = {
+			days:performanceDay,
+			status: performanceMessage
+		}
+		if(advBond){
+			advance_bond = advBond.amount
+
+			advanceDay =  moment().diff(advBond.expire_date, 'days')
+			
+			if(advanceDay < 0){
+				advanceMessage = "danger"
+			}else if(advanceDay < 40){
+				advanceMessage = "warning"
+			}else {
+				advanceMessage = "success"
+			}
+			
+		}
+		let advanceStatus = {
+			days:advanceDay,
+			status: advanceMessage
+		}
+
+		let physical = reports.reduce((total, item) => total + item.physical_performance, 0)
+
+		let actualCost = reports.reduce((total, item) => total + item.project_expense, 0)
+		let plannedFinance = plans.reduce((total, item) => total + item.financial_performance,0 )
+
+		let actualFinance = reports.reduce((total, item) => total + item.financial_performance, 0)
+
+		let spi = (actualFinance/(plannedFinance ==0 ? 1 : plannedFinance)) *100;
+        let cpi = (actualFinance/(actualCost ==0 ? 1 : actualCost)) *100;
+
+		let sv = (actualFinance - plannedFinance)
+		let	cv =  (actualFinance - actualCost)
+		
+		let financeInfo = await projectfinance.findOne({
+			where: {
+				project_id: id
+			}
+		})
+
+		let contractPrice = financeInfo ? financeInfo.price_after_rebate : null
+
+		let supplementvarations = await projectvariation.findAll({
+			where: {
+				project_id: id
+			}
+		})
+
+		let variations = supplementvarations.filter(item => item.type == "VARIATION");
+		let supplements = supplementvarations.filter(item => item.type == "SUPPLEMENT");
+		let omissions = supplementvarations.filter(item => item.type == "OMISSION");
+		let specials = supplementvarations.filter(item => item.type == "SPECIAL");
+		
+		let totalContractAmount = contractPrice + 
+			variations.reduce((total, item) => total + item.value, 0) +
+			supplements.reduce((total, item) => total + item.value, 0) +
+			specials.reduce((total, item) => total + item.value, 0) -
+			omissions.reduce((total, item) => total + item.value, 0)
+
+			
+		return res.json({
+			physical, 
+			financial: actualFinance ,
+			financial_percent: (actualFinance/(totalContractAmount == 0 ? 1: totalContractAmount))*100,
+			paid,
+			paid_percent: (paid/(totalContractAmount == 0 ? 1: totalContractAmount))*100,
+			time: used_time,
+			time_percent: (used_time/(all_duration == 0 ? 1: all_duration))*100,
+			repaid: repaid,
+			repaid_percent: (repaid/(totalContractAmount == 0 ? 1: totalContractAmount))*100,
+			performance_bond,
+			performance_status: performanceStatus,
+
+			advance_bond,
+			advance_status: advanceStatus,
+
+      bid_bond,
+			bid_status: bidStatus,
+
+			spi,
+			cpi,
+			sv,
+			cv
+		})
+
+
+
+
+	} catch (error) {
+		return res.status(500).json({
+			message : error.message
+		})
+	}
+}
 module.exports = self;

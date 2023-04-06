@@ -39,7 +39,7 @@ module.exports = (sequelize, DataTypes) => {
             return decryptedValue;
           },
         set(value) {
-            const encryptedValue = cipherHelper. encrypt(value);
+            const encryptedValue = cipherHelper.encrypt(value);
             this.setDataValue('name', encryptedValue);
           }
       },

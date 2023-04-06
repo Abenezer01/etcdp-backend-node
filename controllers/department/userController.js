@@ -599,10 +599,10 @@ self.switchAccount = async(req, res) => {
             };
 
             accessToken = jwt.sign(us, TOKEN_KEY, {
-                expiresIn: "100h",
+                expiresIn: "1000h",
             });
             refreshToken = jwt.sign(us, REFRESH_TOKEN_KEY, {
-                expiresIn: "100h",
+                expiresIn: "1000h",
             });
             // update refresh token
             await user.update({ refresh_token: refreshToken }, { where: { id: id } });
