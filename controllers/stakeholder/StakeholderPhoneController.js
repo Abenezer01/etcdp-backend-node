@@ -4,8 +4,9 @@ const paginate = require('../../utils/pagination');
 const dotenv = require('dotenv');
 dotenv.config();
 let self = {};
-const usrData = require('../../utils/userDataFromToken');
-const { saveActionState, encrypt, decrypt } = require('../../utils/helper');
+const usrData = require("../../utils/userDataFromToken");
+const actionHelper = require("../utils/action-helper");
+
 
 self.getAll = async (req, res) => {
   const {
@@ -147,8 +148,6 @@ self.save = async (req, res) => {
         body.map(async (item) => {
           let data = await stakeholderphone.create(item);
           if (data) {
-            data.phone = await encrypt(item.phone);
-            await data.save();
             await actionHelper.saveActionState(
               data.id,
               'stakeholderphone',

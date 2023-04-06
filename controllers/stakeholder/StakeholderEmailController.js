@@ -9,7 +9,6 @@ const dotenv = require("dotenv");
 dotenv.config();
 let self = {};
 const usrData = require("../../utils/userDataFromToken");
-const { saveActionState, encrypt, decrypt } = require("../../utils/helper");
 const actionHelper = require("../utils/action-helper");
 
 self.getAll = async (req, res) => {
@@ -158,8 +157,6 @@ self.save = async (req, res) => {
         body.map(async (item) => {
           let data = await stakeholderemail.create(item);
           if (data) {
-            data.email = await encrypt(item.email);
-            await data.save();
             await actionHelper.saveActionState(
               data.id,
               "stakeholderemail",

@@ -1,26 +1,29 @@
 const {
-    project,
-    actionstate,
-    projectstakeholder,
-    stakeholder,
-    projecttime,
-    projectfinance,
-    projectstatus,
-    projectcategory,
-    projectsubcategory,
-    projecttype,
-    status,
-    projectreport,
-    projectplan,
-    projectvariation,
-    payment,
-    sequelize,
-    Sequelize,
+  project,
+  actionstate,
+  projectstakeholder,
+  stakeholder,
+  projecttime,
+  projectfinance,
+  projectstatus,
+  projectcategory,
+  projectsubcategory,
+  projecttype,
+  status,
+  projectreport,
+  projectplan,
+  projectvariation,
+  projectbond,
+  projectextensiontime,
+  payment,
+  sequelize,
+  Sequelize,
 } = require("./../../models");
 const moment = require("moment");
 const Op = Sequelize.Op;
 const usrData = require("../../utils/userDataFromToken");
 const actionHelper = require("../utils/action-helper");
+const cipherHelper = require("../utils/cipher-helper");
 
 let self = {};
 const paginate = require("../../utils/pagination");
@@ -252,7 +255,13 @@ self.getProjectByTypeId = async(req, res) => {
             return aElement;
         });
 
-        const response = paginate.getPagingData({ rows: finalResult, count: projectData.count },
+        //decrypt 
+
+        let pros = finalResult.map((item)=> {
+            item.name = cipherHelper.decrypt(item.name)
+            return item
+        })
+        const response = paginate.getPagingData({ rows: pros, count: projectData.count },
             page,
             limit
         );
@@ -778,4 +787,491 @@ self.getProjectData = async(req, res) => {
     }
 };
 
+self.getProjectDetail = async (req, res) => {
+  let id = req.params.id;
+  try {
+    let [
+      clientStake,
+      consultantStake,
+      contractorStake,
+      pro,
+      finance,
+      time,
+      proStatus,
+    ] = await Promise.all([
+      projectstakeholder.findOne({
+        where: {
+          project_id: id,
+          title: "Client",
+        },
+      }),
+      projectstakeholder.findOne({
+        where: {
+          project_id: id,
+          title: "Consultant",
+        },
+      }),
+      projectstakeholder.findOne({
+        where: {
+          project_id: id,
+          title: "Contractor",
+        },
+      }),
+      project.findOne({
+        where: {
+          id: id,
+        },
+      }),
+      projectfinance.findOne({
+        where: {
+          project_id: id,
+        },
+      }),
+      projecttime.findOne({
+        where: {
+          project_id: id,
+        },
+      }),
+      projectstatus.findOne({
+        where: {
+          project_id: id,
+        },
+      }),
+    ]);
+
+    let client = clientStake
+      ? await self.getStakeholderName(clientStake.stakeholder_id)
+      : null;
+    let contractor = contractorStake
+      ? await self.getStakeholderName(contractorStake.stakeholder_id)
+      : null;
+    let consultant = consultantStake
+      ? await self.getStakeholderName(consultantStake.stakeholder_id)
+      : null;
+
+    let stat = proStatus
+      ? await status.findOne({ where: { id: proStatus.status_id } })
+      : null;
+
+    return res.json({
+      project_name: pro ? pro.name : null,
+      client,
+      contractor,
+      consultant,
+      main_contract_price_amount: finance
+        ? finance.main_contract_price_amount
+        : null,
+      time: time,
+      project_status: stat ? stat.title : null,
+    });
+  } catch (error) {
+    return res.json({
+      message: error.messge,
+    });
+  }
+};
+self.getStakeholderName = async (id) => {
+  try {
+    let data = await stakeholder.findOne({
+      where: {
+        id: id,
+      },
+    });
+
+    return data ? data.trade_name : null;
+  } catch (error) {
+    return {
+      message: error.message,
+    };
+  }
+};
+
+self.countAllProjectWithProjectType = async (req, res) => {
+  try {
+    let queryString =
+      "SELECT projecttypes.title AS type, COALESCE(COUNT(projects.id), 0) AS total FROM projecttypes LEFT JOIN projects ON projecttypes.id = projects.projecttype_id GROUP BY projecttypes.title;";
+    let projectData = await sequelize.query(queryString, {
+      type: sequelize.QueryTypes.SELECT,
+    });
+
+    res.send(projectData);
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+self.countAllProjectWithProjectCategory = async (req, res) => {
+  try {
+    let queryString =
+      "SELECT projectcategories.title AS category, COALESCE(COUNT(projects.id), 0) AS total FROM projectcategories LEFT JOIN projectholders ON projectcategories.id = projects.projectcategory_id GROUP BY projectcategories.title;";
+    let projectData = await sequelize.query(queryString, {
+      type: sequelize.QueryTypes.SELECT,
+    });
+
+    res.send(projectData);
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+self.getProjectData = async (req, res) => {
+  let id = req.params.id;
+  try {
+    let [pro, time, finance, clientStake, consultantStake, contractorStake] =
+      await Promise.all([
+        project.findOne({
+          where: {
+            id: id,
+          },
+        }),
+        projecttime.findOne({
+          where: {
+            project_id: id,
+          },
+        }),
+        projectfinance.findOne({
+          where: {
+            project_id: id,
+          },
+        }),
+        projectstakeholder.findOne({
+          where: {
+            project_id: id,
+            title: "Client",
+          },
+        }),
+        projectstakeholder.findOne({
+          where: {
+            project_id: id,
+            title: "Consultant",
+          },
+        }),
+        projectstakeholder.findOne({
+          where: {
+            project_id: id,
+            title: "Contractor",
+          },
+        }),
+      ]);
+
+    let total_contract_price = finance ? finance.main_contract_price_amount : null;
+
+    let commencement_date = time ? time.commencement_date : null;
+    let contract_duration = time ? time.original_contract_duration : null;
+    let used_time = moment().diff(commencement_date, "days");
+
+    let extensions = await projectvariation.findAll({
+      where: {
+        project_id: id,
+      },
+    });
+
+    let extensionDays = extensions.reduce(
+      (total, item) => total + item.extension_time,
+      0
+    );
+
+    let completion_date = moment(commencement_date).add(
+      contract_duration + extensionDays,
+      "days"
+    );
+
+    let plans = await projectplan.findAll({
+      where: {
+        project_id: id,
+      },
+    });
+
+    let reports = await projectreport.findAll({
+      where: {
+        project_id: id,
+      },
+    });
+
+    let earned_value = reports.reduce(
+      (total, item) => total + item.financial_performance,
+      0
+    );
+
+    let actualCost = reports.reduce(
+      (total, item) => total + item.project_expense,
+      0
+    );
+    let plannedFinance = plans.reduce(
+      (total, item) => total + item.financial_performance,
+      0
+    );
+
+    let actualFinance = reports.reduce(
+      (total, item) => total + item.financial_performance,
+      0
+    );
+    let spi =
+      (actualFinance / (plannedFinance == 0 ? 1 : plannedFinance)) * 100;
+    let cpi = (actualFinance / (actualCost == 0 ? 1 : actualCost)) * 100;
+
+    let sv = actualFinance - plannedFinance;
+    let cv = actualFinance - actualCost;
+
+    let interims = await payment.findAll({
+      where: {
+        project_id: id,
+        type: "INTERIM_PAYMENT",
+      },
+    });
+    let paid_ipc = interims.reduce(
+      (total, item) => total + item.net_payment,
+      0
+    );
+
+    //stakeholders
+    let client = clientStake
+      ? await self.getStakeholderName(clientStake.stakeholder_id)
+      : null;
+    let contractor = contractorStake
+      ? await self.getStakeholderName(contractorStake.stakeholder_id)
+      : null;
+    let consultant = consultantStake
+      ? await self.getStakeholderName(consultantStake.stakeholder_id)
+      : null;
+
+    return res.json({
+      name: pro? pro.name : null,
+      client,
+      consultant,
+      contractor,
+      contract_duration: contract_duration,
+      total_contract_amount: total_contract_price,
+      commencement_date,
+      elapsed_time: used_time,
+      completion_date,
+      cpi,
+      spi,
+      cv,
+      sv,
+      paid_ipc,
+      earned_revenue: earned_value,
+      planned_revenue: plannedFinance,
+      actual_cost: actualCost,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+self.getProjectAnalysis = async(req, res) => {
+
+	let id = req.params.id
+	
+	try {
+
+		let plans = await projectplan.findAll({
+			where: {
+				project_id: id
+			}
+		})
+		let reports = await projectreport.findAll({
+			where: {
+				project_id: id
+			}
+		})
+
+
+		let payments = await payment.findAll({
+			where: {
+				project_id: id,
+        type: "INTERIM_PAYMENT",
+			}
+		})
+
+		let paid = payments.reduce((total, item) => total + item.amount, 0)
+
+		let time = await projecttime.findOne({
+			where: {
+				project_id: id
+			}
+		})
+
+		let extensions = await projectextensiontime.findAll({
+			where: {
+				project_id: id
+			}
+		})
+		let extension_days = extensions.reduce((total, item) => total + item.number_of_days, 0)
+ 
+		let commencement_date = time ? time.commencement_date : null
+
+		let contract_duration = time ? time.original_contract_duration : null
+		let used_time = moment().diff(commencement_date, 'days')
+	
+		let all_duration = extension_days + contract_duration
+
+		let repaid = payments.reduce((total, item) => total + item.advance_repayment, 0)
+
+		let perBond = await projectbond.findOne({
+			where: {
+				project_id: id,
+				type: "PERFORMANCE_BOND"
+			}
+		})
+
+		let advBond = await projectbond.findOne({
+			where: {
+				project_id: id,
+				type: "ADVANCE_BOND"
+			}
+		})
+
+    let bidBond = await projectbond.findOne({
+			where: {
+				project_id: id,
+				type: "BID_BOND"
+			}
+		})
+
+
+		let performance_bond = null
+		let performanceDay = null
+		let performanceMessage = "";
+		let advance_bond = null
+		let advanceMessage = "";
+		let advanceDay= null
+    let bid_bond = null
+		let bidMessage = "";
+		let bidDay= null
+
+    if(bidBond){
+			bid_bond = bidBond.amount
+
+			bidDay = moment().diff(bidBond.expire_date, 'days')
+			if(bidDay < 0){
+				bidMessage = "danger"
+			}else if(bidDay < 40){
+				bidMessage = "warning"
+			}else {
+				bidMessage = "success"
+			}
+			
+		}
+
+		let bidStatus = {
+			days:bidDay,
+			status: bidMessage
+		}
+
+		
+		if(perBond){
+			performance_bond = perBond.amount
+
+			performanceDay = moment().diff(perBond.expire_date, 'days')
+			if(performanceDay < 0){
+				performanceMessage = "danger"
+			}else if(performanceDay < 40){
+				performanceMessage = "warning"
+			}else {
+				performanceMessage = "success"
+			}
+			
+		}
+
+		let performanceStatus = {
+			days:performanceDay,
+			status: performanceMessage
+		}
+		if(advBond){
+			advance_bond = advBond.amount
+
+			advanceDay =  moment().diff(advBond.expire_date, 'days')
+			
+			if(advanceDay < 0){
+				advanceMessage = "danger"
+			}else if(advanceDay < 40){
+				advanceMessage = "warning"
+			}else {
+				advanceMessage = "success"
+			}
+			
+		}
+		let advanceStatus = {
+			days:advanceDay,
+			status: advanceMessage
+		}
+
+		let physical = reports.reduce((total, item) => total + item.physical_performance, 0)
+
+		let actualCost = reports.reduce((total, item) => total + item.project_expense, 0)
+		let plannedFinance = plans.reduce((total, item) => total + item.financial_performance,0 )
+
+		let actualFinance = reports.reduce((total, item) => total + item.financial_performance, 0)
+
+		let spi = (actualFinance/(plannedFinance ==0 ? 1 : plannedFinance)) *100;
+        let cpi = (actualFinance/(actualCost ==0 ? 1 : actualCost)) *100;
+
+		let sv = (actualFinance - plannedFinance)
+		let	cv =  (actualFinance - actualCost)
+		
+		let financeInfo = await projectfinance.findOne({
+			where: {
+				project_id: id
+			}
+		})
+
+		let contractPrice = financeInfo ? financeInfo.price_after_rebate : null
+
+		let supplementvarations = await projectvariation.findAll({
+			where: {
+				project_id: id
+			}
+		})
+
+		let variations = supplementvarations.filter(item => item.type == "VARIATION");
+		let supplements = supplementvarations.filter(item => item.type == "SUPPLEMENT");
+		let omissions = supplementvarations.filter(item => item.type == "OMISSION");
+		let specials = supplementvarations.filter(item => item.type == "SPECIAL");
+		
+		let totalContractAmount = contractPrice + 
+			variations.reduce((total, item) => total + item.value, 0) +
+			supplements.reduce((total, item) => total + item.value, 0) +
+			specials.reduce((total, item) => total + item.value, 0) -
+			omissions.reduce((total, item) => total + item.value, 0)
+
+			
+		return res.json({
+			physical, 
+			financial: actualFinance ,
+			financial_percent: (actualFinance/(totalContractAmount == 0 ? 1: totalContractAmount))*100,
+			paid,
+			paid_percent: (paid/(totalContractAmount == 0 ? 1: totalContractAmount))*100,
+			time: used_time,
+			time_percent: (used_time/(all_duration == 0 ? 1: all_duration))*100,
+			repaid: repaid,
+			repaid_percent: (repaid/(totalContractAmount == 0 ? 1: totalContractAmount))*100,
+			performance_bond,
+			performance_status: performanceStatus,
+
+			advance_bond,
+			advance_status: advanceStatus,
+
+      bid_bond,
+			bid_status: bidStatus,
+
+			spi,
+			cpi,
+			sv,
+			cv
+		})
+
+
+
+
+	} catch (error) {
+		return res.status(500).json({
+			message : error.message
+		})
+	}
+}
 module.exports = self;
