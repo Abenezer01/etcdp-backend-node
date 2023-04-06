@@ -1,6 +1,6 @@
 "use strict";
 const { Model } = require("sequelize");
-const { decrypt, encrypt } = require("../utils/helper");
+const CipherHelper = require('../controllers/utils/cipher-helper')
 module.exports = (sequelize, DataTypes) => {
   class stakeholderphone extends Model {
     /**
@@ -31,11 +31,11 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         get() {
           const encryptedValue = this.getDataValue("phone");
-          const decryptedValue = decrypt(encryptedValue);
+          const decryptedValue = CipherHelper.decrypt(encryptedValue);
           return decryptedValue;
         },
         set(value) {
-          const encryptedValue = encrypt(value);
+          const encryptedValue = CipherHelper.encrypt(value);
           this.setDataValue("phone", encryptedValue);
         },
       },

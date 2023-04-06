@@ -23,6 +23,7 @@ const moment = require("moment");
 const Op = Sequelize.Op;
 const usrData = require("../../utils/userDataFromToken");
 const actionHelper = require("../utils/action-helper");
+const cipherHelper = require("../utils/cipher-helper");
 
 let self = {};
 const paginate = require("../../utils/pagination");
@@ -254,7 +255,13 @@ self.getProjectByTypeId = async(req, res) => {
             return aElement;
         });
 
-        const response = paginate.getPagingData({ rows: finalResult, count: projectData.count },
+        //decrypt 
+
+        let pros = finalResult.map((item)=> {
+            item.name = cipherHelper.decrypt(item.name)
+            return item
+        })
+        const response = paginate.getPagingData({ rows: pros, count: projectData.count },
             page,
             limit
         );
