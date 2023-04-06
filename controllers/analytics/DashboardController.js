@@ -589,60 +589,38 @@ self.getSubCategoriesByModuleCategoryId = async(req, res) => {
     }
 };
 
-self.getGeneralAnalysisSubCategoryDepartments = async(req, res) => {
-    let module = req.params.module;
-    let id = req.params.id;
-
+self.getGeneralAnalysisSubCategoryDepartments = async ({ params: { module, id } }, res) => {
     try {
-        const moduleArr = mainanalysismodules[module];
+      const [Model, , idKey, SubCategoryModel] = mainanalysismodules[module];
+  
+      const { departmentID } = await usrData.userData(req, res);
+      const departments = await self.getChildren(departmentID);
 
-        const Model = moduleArr[0];
-        const SubCategoryModel = moduleArr[3];
-
-        let usr = await usrData.userData(req, res);
-
-        let departments = await self.getChildren(usr.departmentID);
-
-        let modulesubcategory = await eval(SubCategoryModel).findOne({
-            where: {
-                id: id,
-            },
-        });
-
-        let models = await eval(Model).findAll({
-            where: {
-                [`${moduleArr[3]}_id`]: modulesubcategory.id,
-            },
-        });
-
-        let series = [];
-        let deptmap = [];
-
-        for (let dept of departments) {
-            let value = models.filter((model) => model.department_id === dept.id);
-
-            if (value.length > 0) {
-                series.push(value.length);
-            } else {
-                series.push(0);
-            }
-        }
-
-        deptmap = departments.map((item) => item.name);
-
-        let first = {};
-
-        first.series = series;
-        first.departments = deptmap;
-
-        series = [];
-        deptmap = [];
-
-        return res.json(first);
+  
+      const modulesubcategory = await SubCategoryModel.findOne({ where: { id } });
+  
+      const models = await Model.findAll({
+        where: {
+          [`${SubCategoryModel.name}_id`]: modulesubcategory.id,
+        },
+      });
+      
+      const series = departments.map((dept) => {
+        const value = models.filter((model) => model.department_id === dept.id);
+        return value.length > 0 ? value.length : 0;
+      });
+      const deptmap = departments.map((dept) => dept.name);
+  
+      const data = {
+        series,
+        departments: deptmap,
+      };
+  
+      return res.json(data);
     } catch (error) {
-        return res.status(500).json({
-            message: error.message,
-        });
+      console.error(error);
+      return res.status(500).json({ message: 'Internal server error' });
     }
-};
+  };
+  
 module.exports = self;

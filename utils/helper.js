@@ -165,3 +165,40 @@
 
 
 // module.exports = self;
+
+
+
+// let children = []
+// self.getAllChildren = async(arr) => {
+
+// 	for(var i=0; i<arr.length; i++){
+// 		let dd = await department.findAll({
+// 			where: {
+// 				parent_department_id: arr[i].id
+// 			}
+// 		})
+// 		if(dd.length > 0){
+// 			children.concat(dd)
+// 			self.getChildren(dd)
+// 		}
+// 	}
+// 	return children;
+// }
+
+// self.getChildren = async(req, res) => {
+// 	let id = req.params.id
+// 	try {
+// 		let data = await department.findAll({
+// 			where: {
+// 				parent_department_id: id
+// 			}
+// 		})
+// 		let all = await self.getAllChildren(data)
+// 		return res.json(all)
+
+// 	} catch (error) {
+// 		return res.status(500).json({
+// 			message: error.message
+// 		})
+// 	}
+// }
