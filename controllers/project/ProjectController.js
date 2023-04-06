@@ -950,10 +950,10 @@ self.getProjectData = async (req, res) => {
         }),
       ]);
 
-    let total_contract_price = finance.main_contract_price_amount;
+    let total_contract_price = finance ? finance.main_contract_price_amount : null;
 
-    let commencement_date = time.commencement_date;
-    let contract_duration = time.original_contract_duration;
+    let commencement_date = time ? time.commencement_date : null;
+    let contract_duration = time ? time.original_contract_duration : null;
     let used_time = moment().diff(commencement_date, "days");
 
     let extensions = await projectvariation.findAll({
@@ -967,7 +967,7 @@ self.getProjectData = async (req, res) => {
       0
     );
 
-    let completion_date = moment(time.commencement_date).add(
+    let completion_date = moment(commencement_date).add(
       contract_duration + extensionDays,
       "days"
     );
@@ -1032,11 +1032,11 @@ self.getProjectData = async (req, res) => {
       : null;
 
     return res.json({
-      name: pro.name,
+      name: pro? pro.name : null,
       client,
       consultant,
       contractor,
-      contract_duration: time.original_contract_duration,
+      contract_duration: contract_duration,
       total_contract_amount: total_contract_price,
       commencement_date,
       elapsed_time: used_time,
