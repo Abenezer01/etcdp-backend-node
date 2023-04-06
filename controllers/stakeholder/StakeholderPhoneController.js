@@ -1,17 +1,17 @@
-const { stakeholderphone, Sequelize } = require("../../models");
+const { stakeholderphone, Sequelize } = require('../../models');
 const Op = Sequelize.Op;
-const paginate = require("../../utils/pagination");
-const dotenv = require("dotenv");
+const paginate = require('../../utils/pagination');
+const dotenv = require('dotenv');
 dotenv.config();
 let self = {};
-const usrData = require("../../utils/userDataFromToken");
-const { saveActionState, encrypt, decrypt } = require("../../utils/helper");
+const usrData = require('../../utils/userDataFromToken');
+const { saveActionState, encrypt, decrypt } = require('../../utils/helper');
 
 self.getAll = async (req, res) => {
   const {
     page = process.env.page,
     size = process.env.size,
-    order = process.env.order,
+    order = process.env.order
   } = req.query;
 
   const { limit, offset } = paginate.getPagination(page, size);
@@ -20,7 +20,7 @@ self.getAll = async (req, res) => {
     const { rows, count } = await stakeholderphone.findAndCountAll({
       limit,
       offset,
-      order: [["createdAt", order]],
+      order: [['createdAt', order]]
     });
 
     const response = paginate.getPagingData(
@@ -34,7 +34,7 @@ self.getAll = async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).send({
-      message: err.message || "Some error occurred while retrieving data.",
+      message: err.message || 'Some error occurred while retrieving data.'
     });
   }
 };
@@ -44,15 +44,15 @@ self.getPrimaryphone = async (req, res) => {
     let id = req.query;
     let data = await stakeholderphone.findOne({
       where: {
-        [Op.and]: [{ stakeholder_id: id }, { is_primary: true }],
-      },
+        [Op.and]: [{ stakeholder_id: id }, { is_primary: true }]
+      }
     });
     return res.status(200).json({
-      data: data ? data : {},
+      data: data ? data : {}
     });
   } catch (error) {
     res.status(500).json({
-      message: error.message,
+      message: error.message
     });
   }
 };
@@ -61,15 +61,15 @@ self.get = async (req, res) => {
     let id = req.params.id;
     let data = await stakeholderphone.findAll({
       where: {
-        stakeholder_id: id,
-      },
+        stakeholder_id: id
+      }
     });
     return res.status(200).json({
-      data: data ? data : [],
+      data: data ? data : []
     });
   } catch (error) {
     res.status(500).json({
-      message: error.message,
+      message: error.message
     });
   }
 };
@@ -79,14 +79,14 @@ self.search = async (req, res) => {
     let data = await stakeholderphone.findAll({
       where: {
         name: {
-          [Op.like]: "%" + text + "%",
-        },
-      },
+          [Op.like]: '%' + text + '%'
+        }
+      }
     });
     return res.json(data);
   } catch (error) {
     res.status(500).json({
-      message: error.message,
+      message: error.message
     });
   }
 };
@@ -100,7 +100,7 @@ self.save = async (req, res) => {
 
       if (filteredArray.length > 1) {
         return res.status(412).json({
-          message: "There is more than one element with is_primary true.",
+          message: 'There is more than one element with is_primary true.'
         });
       }
       let filt = [];
@@ -110,9 +110,9 @@ self.save = async (req, res) => {
             [Op.and]: [
               { stakeholder_id: dat.stakeholder_id },
               { phone: dat.phone },
-              { is_primary: true },
-            ],
-          },
+              { is_primary: true }
+            ]
+          }
           // raw: true
         });
         //console.log(allData)
@@ -139,7 +139,7 @@ self.save = async (req, res) => {
       if (removedNullResu) {
         return res.status(412).json({
           message:
-            "There is already registered element with is_primary true data.",
+            'There is already registered element with is_primary true data.'
         });
       }
 
@@ -151,8 +151,8 @@ self.save = async (req, res) => {
             await data.save();
             await actionHelper.saveActionState(
               data.id,
-              "stakeholderphone",
-              "REGISTER",
+              'stakeholderphone',
+              'REGISTER',
               usr.usrID,
               req,
               res
@@ -167,7 +167,7 @@ self.save = async (req, res) => {
     }
   } catch (error) {
     res.status(500).json({
-      message: error.message,
+      message: error.message
     });
   }
 };
@@ -177,15 +177,15 @@ self.update = async (req, res) => {
     let body = req.body;
     let data = await stakeholderphone.update(body, {
       where: {
-        id: id,
-      },
+        id: id
+      }
     });
     return res.status(200).json({
-      message: "Success",
+      message: 'Success'
     });
   } catch (error) {
     res.status(500).json({
-      message: error.message,
+      message: error.message
     });
   }
 };
@@ -195,15 +195,15 @@ self.delete = async (req, res) => {
     let id = req.params.id;
     let data = await stakeholderphone.destroy({
       where: {
-        id: id,
-      },
+        id: id
+      }
     });
     return res.status(200).json({
-      message: "Success",
+      message: 'Success'
     });
   } catch (error) {
     res.status(500).json({
-      message: error.message,
+      message: error.message
     });
   }
 };

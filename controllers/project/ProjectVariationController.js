@@ -86,12 +86,15 @@ self.get = async (req, res) => {
 };
 self.getByProjectType = async (req, res) => {
   try {
+    const {
+    order = process.env.order,
+  } = req.query;
     let { type, project_id } = req.query;
     if (!project_id) {
-      res.status(400).json({ message: "Can't get project_id at param" });
+     return  res.status(400).json({ message: "Can't get project_id at param" });
     }
     if (!type) {
-      res.status(400).json({ message: "Can't get type value at param" });
+     return res.status(400).json({ message: "Can't get type value at param" });
     }
     await projectvariation
       .findAll({
@@ -99,6 +102,7 @@ self.getByProjectType = async (req, res) => {
           type: type,
           project_id: project_id,
         },
+         order: [["createdAt", order]],
       })
       .then(function (datas) {
         return res.json({
