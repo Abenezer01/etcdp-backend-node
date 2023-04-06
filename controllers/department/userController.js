@@ -926,20 +926,20 @@ self.checkUserStatus = async(req, res) => {
 
         let messageArr = [];
 
-    if (!action) {
-      messageArr.push("check your profile by clicking on \"Registered\" button");
-    }
+        if (!action) {
+            messageArr.push("check your profile by clicking on \"Registered\" button");
+        }
 
-    if (!profile_pic) {
-      messageArr.push("upload your profile picture");
-    }
+        if (!profile_pic) {
+            messageArr.push("upload your profile picture");
+        }
 
-    return res.json(messageArr);
-  } catch (error) {
-    return response.json({
-      message: error.message,
-    });
-  }
+        return res.json(messageArr);
+    } catch (error) {
+        return response.json({
+            message: error.message,
+        });
+    }
 };
 
 module.exports = self;
