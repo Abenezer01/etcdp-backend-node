@@ -10,7 +10,6 @@ dotenv.config();
 let self = {};
 const usrData = require("../../utils/userDataFromToken");
 const actionHelper = require("../utils/action-helper");
-const cipherHelper = require("../utils/action-helper");
 
 self.getAll = async (req, res) => {
   const {
@@ -158,8 +157,6 @@ self.save = async (req, res) => {
         body.map(async (item) => {
           let data = await stakeholderemail.create(item);
           if (data) {
-            data.email = cipherHelper.encypt(item.email);
-            await data.save();
             await actionHelper.saveActionState(
               data.id,
               "stakeholderemail",
