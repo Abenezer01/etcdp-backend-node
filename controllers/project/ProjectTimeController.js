@@ -1,9 +1,10 @@
 const actionHelper = require("../utils/action-helper");
-const { projecttime, Sequelize } = require("./../../models");
+const { projecttime, projectextensiontime, Sequelize } = require("./../../models");
 const usrData = require("../../utils/userDataFromToken");
 const Op = Sequelize.Op;
 const dotenv = require("dotenv");
 const paginate = require("../../utils/pagination");
+const moment = require('moment')
 dotenv.config();
 let self = {};
 
@@ -48,12 +49,31 @@ self.getByProjectId = async (req, res) => {
 
   const { limit, offset } = paginate.getPagination(page, size);
   try {
-    const data = await projecttime.findAndCountAll({
+    let data = await projecttime.findOne({
       limit,
       offset,
       where: { project_id: id },
       order: [["createdAt", order]],
     });
+    const extensions = await projectextensiontime.findAll({
+      where: {
+        project_id: data.project_id
+      }
+    })
+
+    let extensiondays = extensions.reduce((total, item) => total + item.number_of_days, 0)
+    let commencement_date = data ? data.commencement_date: null
+    let contract_duration = data ? data.original_contract_duration: null
+
+    let revised_completion_date = moment(commencement_date).add(
+      (contract_duration + extensiondays),
+      "days"
+    );
+    
+    data = data.toJSON()
+    data.revised_completion_date = revised_completion_date
+
+    return res.json(data)
 
     const response = paginate.getPagingData(data, page, limit);
     res.send(response);
