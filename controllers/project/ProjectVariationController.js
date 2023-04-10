@@ -38,7 +38,7 @@ self.getAll = async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).send({
-      message: "An error occurred while retrieving data.",
+      message: err.message || "An error occurred while retrieving data.",
     });
   }
 };
@@ -86,15 +86,13 @@ self.get = async (req, res) => {
 };
 self.getByProjectType = async (req, res) => {
   try {
-    const {
-    order = process.env.order,
-  } = req.query;
+    const { order = process.env.order } = req.query;
     let { type, project_id } = req.query;
     if (!project_id) {
-     return  res.status(400).json({ message: "Can't get project_id at param" });
+      return res.status(400).json({ message: "Can't get project_id at param" });
     }
     if (!type) {
-     return res.status(400).json({ message: "Can't get type value at param" });
+      return res.status(400).json({ message: "Can't get type value at param" });
     }
     await projectvariation
       .findAll({
@@ -102,7 +100,7 @@ self.getByProjectType = async (req, res) => {
           type: type,
           project_id: project_id,
         },
-         order: [["createdAt", order]],
+        order: [["createdAt", order]],
       })
       .then(function (datas) {
         return res.json({

@@ -16,11 +16,12 @@ self.getAll = async (req, res) => {
   } = req.query;
 
   const { limit, offset } = paginate.getPagination(page, size);
-
+  let limiter = { limit, offset };
+  page == -1 ? (limiter = {}) : limiter;
   try {
     const { rows, count } = await stakeholderstudyfield.findAndCountAll({
-      limit,
-      offset,
+      limit: limiter.limit,
+      offset: limiter.offset,
       order: [["createdAt", order]],
       include: ["studyfield", "studyprogram"],
     });

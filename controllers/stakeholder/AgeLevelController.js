@@ -1,168 +1,140 @@
-const { projectstatus, Sequelize } = require("../../models");
-const usrData = require("../../utils/userDataFromToken");
-const actionHelper = require("../utils/action-helper");
+const { agelevel, Sequelize } = require("../../models");
 const Op = Sequelize.Op;
 const paginate = require("../../utils/pagination");
 const dotenv = require("dotenv");
 dotenv.config();
+
+const usrData = require("../../utils/userDataFromToken");
+const { saveActionState } = require("../../utils/helper");
 let self = {};
+self.getAll = async (req, res) => {
+  const {
+    page = process.env.cust_page,
+    size = process.env.size,
+    order = process.env.order,
+  } = req.query;
 
-self.getAll = async(req, res) => {
-    const {
-        page = process.env.page,
-            size = process.env.size,
-            order = process.env.order,
-    } = req.query;
+  const { limit, offset } = paginate.getPagination(page, size);
+  let limiter = { limit, offset };
+  page == -1 ? (limiter = {}) : limiter;
 
-    const { limit, offset } = paginate.getPagination(page, size);
+  try {
+    const { rows, count } = await agelevel.findAndCountAll({
+      limit: limiter.limit,
+      offset: limiter.offset,
+      order: [["createdAt", order]],
+    });
 
-    try {
-        const { rows, count } = await projectstatus.findAndCountAll({
-            limit,
-            offset,
-            order: [
-                ["createdAt", order]
-            ],
-        });
+    const response = paginate.getPagingData(
+      { rows, count },
+      page,
+      limit,
+      count
+    );
 
-        const response = paginate.getPagingData({ rows, count },
-            page,
-            limit,
-            count
+    res.send(response);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send({
+      message: err.message || "Some error occurred while retrieving data.",
+    });
+  }
+};
+
+self.get = async (req, res) => {
+  try {
+    let id = req.params.id;
+    let data = await agelevel.findOne({
+      where: {
+        id: id,
+      },
+    });
+    return res.status(200).json({
+      data: data ? data : {},
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+self.search = async (req, res) => {
+  try {
+    let text = req.query.text;
+    let data = await agelevel.findAll({
+      where: {
+        name: {
+          [Op.like]: "%" + text + "%",
+        },
+      },
+    });
+    return res.json(data);
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+self.save = async (req, res) => {
+  try {
+    let usr = await usrData.userData(req, res);
+    let body = req.body;
+    if (usr) {
+      let data = await agelevel.create(body);
+      if (data) {
+        let us = usr.usrID;
+        await actionHelper.saveActionState(
+          data.id,
+          "agelevel",
+          "REGISTER",
+          us,
+          req,
+          res
         );
-
-        res.send(response);
-    } catch (err) {
-        console.error(err);
-        res.status(500).send({
-            message: "An error occurred while retrieving data.",
-        });
+      }
+      return res.json(data);
     }
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
 };
-self.getByProjectId = async(req, res) => {
-    const { id } = req.params;
-    const {
-        page = process.env.page,
-            size = process.env.size,
-            order = process.env.order,
-    } = req.query;
-
-    const { limit, offset } = paginate.getPagination(page, size);
-    try {
-        const data = await projectstatus.findAndCountAll({
-            limit,
-            offset,
-            where: { project_id: id },
-            order: [
-                ["createdAt", order]
-            ],
-            include: ["status"],
-        });
-
-        const response = paginate.getPagingData(data, page, limit);
-        res.send(response);
-    } catch (error) {
-        res.status(500).send({
-            message: error.message || "Some error occurred while retrieving data.",
-        });
-    }
+self.update = async (req, res) => {
+  try {
+    let id = req.params.id;
+    let body = req.body;
+    let data = await agelevel.update(body, {
+      where: {
+        id: id,
+      },
+    });
+    return res.status(200).json({
+      message: "Success",
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
 };
 
-self.get = async(req, res) => {
-    try {
-        let id = req.params.id;
-        let data = await projectstatus.findOne({
-            where: {
-                id: id,
-            },
-        });
-        return res.status(200).json({
-            data: data ? data : {},
-        });
-    } catch (error) {
-        res.status(500).json({
-            message: error.message,
-        });
-    }
-};
-
-self.search = async(req, res) => {
-    try {
-        let text = req.query.text;
-        let data = await projectstatus.findAll({
-            where: {
-                name: {
-                    [Op.like]: "%" + text + "%",
-                },
-            },
-        });
-        return res.json(data);
-    } catch (error) {
-        res.status(500).json({
-            message: error.message,
-        });
-    }
-};
-
-self.save = async(req, res) => {
-    try {
-        let usr = await usrData.userData(req, res);
-        let body = req.body;
-        if (usr) {
-            let data = await projectstatus.create(body);
-            if (data) {
-                let usrID = usr.usrID;
-                await actionHelper.saveActionState(
-                    data.id,
-                    "projectstatus",
-                    "REGISTER",
-                    usrID,
-                    req,
-                    res
-                );
-            }
-            return res.json(data);
-        }
-    } catch (error) {
-        res.status(500).json({
-            message: error.message,
-        });
-    }
-};
-
-self.update = async(req, res) => {
-    try {
-        let id = req.params.id;
-        let body = req.body;
-        let data = await projectstatus.update(body, {
-            where: {
-                id: id,
-            },
-        });
-        return res.status(200).json({
-            message: "Success",
-        });
-    } catch (error) {
-        res.status(500).json({
-            message: error.message,
-        });
-    }
-};
-
-self.delete = async(req, res) => {
-    try {
-        let id = req.params.id;
-        let data = await projectstatus.destroy({
-            where: {
-                id: id,
-            },
-        });
-        return res.json(data);
-    } catch (error) {
-        res.status(500).json({
-            message: error.message,
-        });
-    }
+self.delete = async (req, res) => {
+  try {
+    let id = req.params.id;
+    let data = await agelevel.destroy({
+      where: {
+        id: id,
+      },
+    });
+    return res.json(data);
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
 };
 
 module.exports = self;
