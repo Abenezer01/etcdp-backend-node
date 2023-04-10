@@ -168,4 +168,23 @@ self.delete = async (req, res) => {
   }
 };
 
+self.getProjectYearlyPlans = async(req, res) => {
+
+  const {id, year} = req.params
+  try {
+    
+    let plans = await projectplan.findAll({
+      where: {
+        project_id: id,
+        year: year
+      }
+    })
+
+    return res.json(plans)
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message
+    })
+  }
+}
 module.exports = self;

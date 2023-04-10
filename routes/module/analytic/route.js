@@ -22,9 +22,28 @@ module.exports = function (express) {
     DashboardController.getGeneralAnalysisDepartmentsByCategory
   );
 
+  // route.get(
+  //   "/type-analytics/:module",
+  //   DashboardController.getModuleTypesAnalysis
+  // );
   route.get(
-    "/type-analytics/:module",
-    DashboardController.getModuleTypesAnalysis
+    "/type-analytics/stakeholder",
+    DashboardController.getStakeholderTypesAnalysis
+  );
+  // );
+  route.get(
+    "/type-analytics/project",
+    DashboardController.getProjectTypesAnalysis
+  );
+
+  route.get(
+    "/type-analytics/resource",
+    DashboardController.getResourceTypesAnalysis
+  );
+
+  route.get(
+    "/type-analytics/document",
+    DashboardController.getDocumentTypesAnalysis
   );
 
   route.get(

@@ -17,12 +17,14 @@ const {
     resourcecategory,
     resourcesubcategory,
     department,
+    projecttime,
 
     Sequelize,
 } = require("../../models");
 const usrData = require("../../utils/userDataFromToken");
 const { mainanalysismodules } = require("../../config/master");
 const actionHelper = require("../utils/action-helper");
+const departmentHelper = require("../utils/department-helper");
 
 const Op = Sequelize.Op;
 
@@ -447,6 +449,236 @@ self.getModuleTypesAnalysis = async(req, res) => {
     }
 };
 
+
+self.getStakeholderTypesAnalysis = async(req, res) => {
+    let module = req.params.module;
+    try {
+
+        let stakeholdertypes = await stakeholdertype.findAll();
+
+        let year = moment().year();
+        let last_year = year - 1;
+
+        // return res.json(moment().year())
+
+        let arr = await Promise.all(
+            stakeholdertypes.map(async(item) => {
+                let model = await stakeholder.findAndCountAll({
+                    where: {
+                        stakeholdertype_id: item.id,
+                    },
+                });
+
+                let this_year_model = await stakeholder.findAndCountAll({
+                    where: {
+                        stakeholdertype_id: item.id,
+                        license_issued_date: {
+                            [Op.gte]: new Date(year, 0, 1), // Start of the year
+                            [Op.lt]: new Date(year + 1, 0, 1), // Start of the next year
+                        },
+                    },
+                });
+                let last_year_model = await stakeholder.findAndCountAll({
+                    where: {
+                        stakeholdertype_id: item.id,
+                        license_issued_date: {
+                            [Op.gte]: new Date(last_year, 0, 1), // Start of the year
+                            [Op.lt]: new Date(last_year + 1, 0, 1), // Start of the next year
+                        },
+                    },
+                });
+
+                let temp = item.toJSON();
+                temp["total"] = model.count;
+                temp["this_year"] = this_year_model.count;
+                temp["last_year"] = last_year_model.count;
+                return temp;
+            })
+        );
+
+        return res.json(arr);
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message,
+        });
+    }
+};
+
+self.getProjectTypesAnalysis = async(req, res) => {
+    let module = req.params.module;
+    try {
+
+        let projecttypes = await projecttype.findAll();
+
+        let year = moment().year();
+        let last_year = year - 1;
+
+        // return res.json(moment().year())
+
+        let arr = await Promise.all(
+            projecttypes.map(async(item) => {
+                let model = await project.findAndCountAll({
+                    where: {
+                        projecttype_id: item.id,
+                    }
+                });
+
+                let this_year_model = await project.findAndCountAll({
+                    where: {
+                        projecttype_id: item.id
+                    },
+                    include: [{
+                        model: projecttime,
+                        where: {
+                            commencement_date: {
+                                [Op.gte]: new Date(year, 0, 1), // Start of the year
+                                [Op.lt]: new Date(year + 1, 0, 1), // Start of the next year
+                            }
+                        }
+                    }]
+                });
+                let last_year_model = await project.findAndCountAll({
+                    where: {
+                        projecttype_id: item.id
+                    },
+                    include: [{
+                        model: projecttime,
+                        where: {
+                            commencement_date: {
+                                [Op.gte]: new Date(last_year, 0, 1), // Start of the year
+                                [Op.lt]: new Date(last_year + 1, 0, 1), // Start of the next year
+                            }
+                        }
+                    }]
+                });
+
+                let temp = item.toJSON();
+                temp["total"] = model.count;
+                temp["this_year"] = this_year_model.count;
+                temp["last_year"] = last_year_model.count;
+                return temp;
+            })
+        );
+
+        return res.json(arr);
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message,
+        });
+    }
+};
+
+self.getResourceTypesAnalysis = async(req, res) => {
+    let module = req.params.module;
+    try {
+        let resourcetypes = await projecttype.findAll();
+
+        let year = moment().year();
+        let last_year = year - 1;
+
+        // return res.json(moment().year())
+
+        let arr = await Promise.all(
+            resourcetypes.map(async(item) => {
+                let model = await resource.findAndCountAll({
+                    where: {
+                        resourcetype_id: item.id,
+                    },
+                });
+
+                let this_year_model = await resource.findAndCountAll({
+                    where: {
+                        resourcetype_id: item.id,
+                        createdAt: {
+                            [Op.gte]: new Date(year, 0, 1), // Start of the year
+                            [Op.lt]: new Date(year + 1, 0, 1), // Start of the next year
+                        },
+                    },
+                });
+                let last_year_model = await resource.findAndCountAll({
+                    where: {
+                        resourcetype_id: item.id,
+                        createdAt: {
+                            [Op.gte]: new Date(last_year, 0, 1), // Start of the year
+                            [Op.lt]: new Date(last_year + 1, 0, 1), // Start of the next year
+                        },
+                    },
+                });
+
+                let temp = item.toJSON();
+                temp["total"] = model.count;
+                temp["this_year"] = this_year_model.count;
+                temp["last_year"] = last_year_model.count;
+                return temp;
+            })
+        );
+
+        return res.json(arr);
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message,
+        });
+    }
+};
+
+
+
+self.getDocumentTypesAnalysis = async(req, res) => {
+    let module = req.params.module;
+    try {
+        let documenttypes = await documenttype.findAll();
+
+        let year = moment().year();
+        let last_year = year - 1;
+
+        // return res.json(moment().year())
+
+        let arr = await Promise.all(
+            documenttypes.map(async(item) => {
+                let model = await document.findAndCountAll({
+                    where: {
+                        documenttype_id: item.id,
+                    },
+                });
+
+                let this_year_model = await document.findAndCountAll({
+                    where: {
+                        documenttype_id: item.id,
+                        createdAt: {
+                            [Op.gte]: new Date(year, 0, 1), // Start of the year
+                            [Op.lt]: new Date(year + 1, 0, 1), // Start of the next year
+                        },
+                    },
+                });
+                let last_year_model = await document.findAndCountAll({
+                    where: {
+                        documenttype_id: item.id,
+                        createdAt: {
+                            [Op.gte]: new Date(last_year, 0, 1), // Start of the year
+                            [Op.lt]: new Date(last_year + 1, 0, 1), // Start of the next year
+                        },
+                    },
+                });
+
+                let temp = item.toJSON();
+                temp["total"] = model.count;
+                temp["this_year"] = this_year_model.count;
+                temp["last_year"] = last_year_model.count;
+                return temp;
+            })
+        );
+
+        return res.json(arr);
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message,
+        });
+    }
+};
+
+
+
+
 self.getModuleEachTypesAnalysis = async(req, res) => {
     try {
         let module = req.params.module;
@@ -589,60 +821,49 @@ self.getSubCategoriesByModuleCategoryId = async(req, res) => {
     }
 };
 
-self.getGeneralAnalysisSubCategoryDepartments = async(req, res) => {
-    let module = req.params.module;
-    let id = req.params.id;
+self.getGeneralAnalysisSubCategoryDepartments = async (req, res) => {
 
+    let {module, id} = req.params
     try {
-        const moduleArr = mainanalysismodules[module];
+      const [Model, , , SubCategoryModel] = mainanalysismodules[module];
+  
+      const { departmentID } = await usrData.userData(req, res);
 
-        const Model = moduleArr[0];
-        const SubCategoryModel = moduleArr[3];
-
-        let usr = await usrData.userData(req, res);
-
-        let departments = await self.getChildren(usr.departmentID);
-
-        let modulesubcategory = await eval(SubCategoryModel).findOne({
-            where: {
-                id: id,
-            },
-        });
-
-        let models = await eval(Model).findAll({
-            where: {
-                [`${moduleArr[3]}_id`]: modulesubcategory.id,
-            },
-        });
-
-        let series = [];
-        let deptmap = [];
-
-        for (let dept of departments) {
-            let value = models.filter((model) => model.department_id === dept.id);
-
-            if (value.length > 0) {
-                series.push(value.length);
-            } else {
-                series.push(0);
-            }
+      let rootdepartment = await department.findOne({
+        where: {
+            id: departmentID
         }
-
-        deptmap = departments.map((item) => item.name);
-
-        let first = {};
-
-        first.series = series;
-        first.departments = deptmap;
-
-        series = [];
-        deptmap = [];
-
-        return res.json(first);
+      })
+      let departments = await departmentHelper.getChildren(departmentID);
+      departments.unshift(rootdepartment)
+  
+      const modulesubcategory = await eval(SubCategoryModel).findOne({ where: { id } });
+  
+      const models = await eval(Model).findAll({
+        where: {
+          [`${SubCategoryModel}_id`]: modulesubcategory.id,
+        },
+      });
+      
+      const series = departments.map((dept) => {
+        const value = models.filter((model) => model.department_id === dept.id);
+        return value.length > 0 ? value.length : 0;
+      });
+      const deptmap = departments.map((dept) => dept.name);
+  
+      const data = {
+        series,
+        departments: deptmap,
+      };
+  
+      return res.json(data);
     } catch (error) {
-        return res.status(500).json({
-            message: error.message,
-        });
+      console.error(error);
+      return res.status(500).json({ message: error.message });
     }
-};
+}
+
+
+
+  
 module.exports = self;

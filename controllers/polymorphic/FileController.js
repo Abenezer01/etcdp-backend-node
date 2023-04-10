@@ -1,4 +1,10 @@
-const { file, user, Sequelize } = require("../../models");
+const { 
+  file, 
+  user, 
+  employeeeducation, 
+  employeeage, 
+  workexperience, 
+  Sequelize } = require("../../models");
 const path = require("path");
 const fs = require("fs");
 const Op = Sequelize.Op;
@@ -274,5 +280,108 @@ self.delete = async (req, res) => {
     });
   }
 };
+
+self.linkfiles = async(req, res) => {
+
+  let { model, id} = req.params;
+  try {
+
+    let data = null 
+    switch (model) {
+      case "employeeeducation":
+        data = await employeeeducation.findOne({
+          where: {
+            id: id
+          }
+        });
+        break;
+      case "employeeage":
+        data = await employeeage.findOne({
+          where: {
+            id: id
+          }
+        });
+        break;
+      case "workexperience":
+        data = await workexperience.findOne({
+          where: {
+            id: id
+          }
+        });
+        break;
+    
+      default:
+        return res.status(404).json("Unknown model");
+        break;
+    }
+
+      
+    if (!data) {  
+      return res.json({
+        message: "Not found"
+      });
+    }
+
+    const { stakeholder_id, year, nationality } = data;
+    
+    const models = await eval(model).findAll({
+      where: {
+        stakeholder_id,
+        year,
+        nationality
+      }
+    });
+    
+    if (models.length === 0) {
+      return res.json({
+        message: "No models found"
+      });
+    }
+    
+    const files = await file.findAll({
+      where: {
+        reference_id: id
+      }
+    });
+
+    
+    if (files.length === 0) {
+      return res.json({
+        message: "No files uploaded"
+      });
+    }
+
+    
+    for (const model of models) {
+      for (const doc of files) {
+        let fileobj = {
+          "title": doc.title,
+          "url": doc.url,
+          "type": doc.type,
+          "description": doc.description,
+          "extension": doc.extension,
+          "reference_id": model.id,
+          "size": doc.size,
+        }
+        await file.create(fileobj);
+      }
+    }
+    // models.forEach(model => {
+    //   files.forEach(doc => {
+    //     const tempfile = doc.toJSON();
+    //     tempfile.reference_id = model.id;
+    //     await file.create(tempfile);
+    //   });
+    // });
+    
+    return res.json({
+      message: "Files linked successfully"
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message
+    })
+  }
+}
 
 module.exports = self;

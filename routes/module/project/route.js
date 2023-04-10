@@ -193,7 +193,10 @@ module.exports = function (express) {
     ProjectPlanController.update
   );
   route.delete("/project-plan/:id", ProjectPlanController.delete);
+  route.get("/project-yearly-plans/:id/:year", 
+  ProjectPlanController.getProjectYearlyPlans);
 
+  
   //project report
 
   route.get("/project-report", ProjectReportController.getAll);
@@ -227,6 +230,9 @@ module.exports = function (express) {
     "/report/monthly-project-report/:id",
     ProjectReportController.getByMonthlyId
   );
+  route.get("/project-yearly-reports/:id/:year", 
+  ProjectReportController.getProjectYearlyReports);
+
   //Project document
   route.get("/project-document", ProjectDocumentController.getAll);
   route.get("/project-document/:id", ProjectDocumentController.get);

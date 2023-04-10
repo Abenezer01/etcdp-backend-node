@@ -414,4 +414,23 @@ self.getMonthlyProjectReport = async (req, res) => {
   }
 };
 
+self.getProjectYearlyReports = async(req, res) => {
+
+  const {id, year} = req.params
+  try {
+    
+    let reports = await projectreport.findAll({
+      where: {
+        project_id: id,
+        year: year
+      }
+    })
+
+    return res.json(reports)
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message
+    })
+  }
+}
 module.exports = self;

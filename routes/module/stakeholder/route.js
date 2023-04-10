@@ -268,7 +268,6 @@ module.exports = function (express) {
   route.get("/employee-education-search", EmployeeEducationController.search);
   route.post(
     "/employee-education",
-    validateData.educationValidate,
     EmployeeEducationController.save
   );
   route.put(
@@ -277,6 +276,8 @@ module.exports = function (express) {
     EmployeeEducationController.update
   );
   route.delete("/employee-education/:id", EmployeeEducationController.delete);
+
+  
   //work experience level route
   route.get("/work-experience-level/", WorkExperienceLevelController.getAll);
   route.get("/work-experience-level/:id", WorkExperienceLevelController.get);

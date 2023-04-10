@@ -6,6 +6,7 @@ const Op = Sequelize.Op;
 const usrData = require("../../utils/userDataFromToken");
 const { saveActionState, getChildren } = require("../../utils/helper");
 const actionHelper = require("../utils/action-helper");
+const file = require("../../models/file");
 let self = {};
 
 self.getAll = async (req, res) => {
@@ -206,11 +207,13 @@ self.getCollectionOfData = async (req, res) => {
   res.send(result);
 };
 self.save = async (req, res) => {
+
   try {
     let usr = await usrData.userData(req, res);
 
     let us = usr.usrID;
     let body = req.body;
+
     const arr = body.empEduArr;
     //let ssyy = []
     console.log("The array", arr[0].stakeholder_id);
@@ -374,6 +377,7 @@ self.save = async (req, res) => {
           arr2.push(data);
         }
       });
+      
 
       if (arr2.length > 0) {
         const savedData = await employeeeducation.bulkCreate(arr);
@@ -577,5 +581,6 @@ self.delete = async (req, res) => {
     });
   }
 };
+
 
 module.exports = self;
