@@ -24,6 +24,7 @@ const Op = Sequelize.Op;
 const usrData = require("../../utils/userDataFromToken");
 const actionHelper = require("../utils/action-helper");
 const cipherHelper = require("../utils/cipher-helper");
+const notificationHelper = require("../utils/notification-helper");
 
 let self = {};
 const paginate = require("../../utils/pagination");
@@ -42,7 +43,7 @@ self.getAll = async(req, res) => {
         },
     });
 
-    notify(
+    let x = notificationHelper.notify(
         "REGISTER",
         "new project is added. check it",
         "project",

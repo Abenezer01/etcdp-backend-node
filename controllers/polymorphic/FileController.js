@@ -329,10 +329,12 @@ self.linkfiles = async(req, res) => {
       where: {
         stakeholder_id,
         year,
-        nationality
+        nationality,
+        id: {
+          [Op.ne]: data.id
+        }
       }
     });
-    
     if (models.length === 0) {
       return res.json({
         message: "No models found"
