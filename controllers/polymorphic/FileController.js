@@ -284,14 +284,39 @@ self.delete = async (req, res) => {
 
 self.linkfiles = async(req, res) => {
 
-  let { id, model} = req.params;
+  let { model, id} = req.params;
   try {
 
-    const data = await eval(model).findOne({
-      where: {
-        id: id
-      }
-    });
+    let data = null 
+    switch (model) {
+      case "employeeeducation":
+        data = await employeeeducation.findOne({
+          where: {
+            id: id
+          }
+        });
+        break;
+      case "employeeage":
+        data = await employeeage.findOne({
+          where: {
+            id: id
+          }
+        });
+        break;
+      case "workexperience":
+        data = await workexperience.findOne({
+          where: {
+            id: id
+          }
+        });
+        break;
+    
+      default:
+        return res.status(404).json("Unknown model");
+        break;
+    }
+
+      
     if (!data) {  
       return res.json({
         message: "Not found"
@@ -319,18 +344,27 @@ self.linkfiles = async(req, res) => {
         reference_id: id
       }
     });
+
     
     if (files.length === 0) {
       return res.json({
         message: "No files uploaded"
       });
     }
+
     
     for (const model of models) {
       for (const doc of files) {
-        const tempfile = doc.toJSON();
-        tempfile.reference_id = model.id;
-        await file.create(tempfile);
+        let fileobj = {
+          "title": doc.title,
+          "url": doc.url,
+          "type": doc.type,
+          "description": doc.description,
+          "extension": doc.extension,
+          "reference_id": model.id,
+          "size": doc.size,
+        }
+        await file.create(fileobj);
       }
     }
     // models.forEach(model => {
