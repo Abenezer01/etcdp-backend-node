@@ -73,10 +73,12 @@ self.getByHigherInstituteId = async (req, res) => {
   } = req.query;
   const { id } = req.params;
   const { limit, offset } = paginate.getPagination(page, size);
+  let limiter = { limit, offset };
+  page == -1 ? (limiter = {}) : limiter;
   studyperiodcost
     .findAndCountAll({
-      limit,
-      offset,
+      limit: limiter.limit,
+      offset: limiter.offset,
       order: [["createdAt", order]],
       where: {
         higher_institute_id: id,

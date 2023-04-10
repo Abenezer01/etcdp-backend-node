@@ -82,8 +82,7 @@ self.getFilesByModelAndType = async (req, res) => {
     const { id, type } = req.query;
     let data = await file.findAll({
       where: {
-        reference_id: id,
-        type: type,
+        [Op.and]: [{ reference_id: id }, { type: type }],
       },
     });
     return res.status(200).json({
