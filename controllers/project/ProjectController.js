@@ -31,7 +31,6 @@ const paginate = require("../../utils/pagination");
 const dotenv = require("dotenv");
 dotenv.config();
 
-const { notify } = require("../../utils/Notify");
 
 self.getAll = async (req, res) => {
   // test notification
@@ -43,7 +42,7 @@ self.getAll = async (req, res) => {
     },
   });
 
-  notify(
+  notificationHelper.notify(
     "REGISTER",
     "new project is added. check it",
     "project",
@@ -51,6 +50,14 @@ self.getAll = async (req, res) => {
     pro.id,
     "descr"
   );
+
+    // let x = await checkerHelper.findChecker("projectreport", req, res)
+
+
+    // let act = await actionHelper.saveActionState("d5fbbf5a-776a-46ad-82c8-df91b1988811", "note", "REGISTER", "00a340e3-431a-489f-a859-6d0c9d15e894", req, res)
+
+    // return res.json(act)
+    // return res.json(x)
 
   let { page, size, order } = req.query;
   //console.log("The page", page, size)
@@ -69,13 +76,11 @@ self.getAll = async (req, res) => {
       order: [["createdAt", order]],
     });
 
-    let x = notificationHelper.notify(
-        "REGISTER",
-        "new project is added. check it",
-        "project",
-        "00a340e3-431a-489f-a859-6d0c9d15e894",
-        pro.id,
-        "descr"
+    const response = paginate.getPagingData(
+      { rows, count },
+      page,
+      limit,
+      count
     );
 
     res.send(response);

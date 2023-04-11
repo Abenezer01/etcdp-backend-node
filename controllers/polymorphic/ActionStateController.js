@@ -12,7 +12,7 @@ const Op = Sequelize.Op;
 
 let self = {};
 const usrData = require("../../utils/userDataFromToken");
-const { getAllUserPositions } = require("../department/userController");
+const actorHelper = require("../utils/actor-helper")
 self.getAll = async (req, res) => {
   try {
     let data = await actionstate.findAll();
@@ -86,6 +86,10 @@ self.check = async (req, res) => {
           time: new Date(),
         });
 
+        if(action){
+          await actorHelper.notifyActor(act,'approve', usr.usrID, usr.departmentID)
+        }
+
         return res.json(action);
         // }
       }
@@ -138,7 +142,10 @@ self.approve = async (req, res) => {
           position_id: usr.position_id,
           time: new Date(),
         });
+        if(action){
 
+          await actorHelper.notifyActor(act,'authorize', usr.usrID, usr.departmentID)
+        }
         return res.status(200).json(action);
         // }
       }

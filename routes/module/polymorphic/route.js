@@ -113,7 +113,7 @@ module.exports = function (express) {
     "/unread-notification/:count",
     NotificationController.unreadNotification
   );
-  route.get("/notification/:id", NotificationController.get);
+  route.post("/notification/:id", NotificationController.get);
 
   return route;
 };
