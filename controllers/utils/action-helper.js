@@ -1,7 +1,9 @@
 const { actionstate } = require("../../models");
 const usrData = require("../../utils/userDataFromToken");
 const crypto = require("crypto");
+const actionHelper = require("./actor-helper")
 const self = {};
+
 self.saveActionState = async (model_id, model, action, user_id, req, res) => {
   try {
     let usr = await usrData.userData(req, res);
@@ -13,7 +15,12 @@ self.saveActionState = async (model_id, model, action, user_id, req, res) => {
       position_id: usr.position_id,
       time: new Date(),
     });
-    return act;
+    
+    if(act) {
+      let me = await actionHelper.notifyActor(act,'check', usr.usrID, usr.departmentID)
+      return me
+    }
+
   } catch (error) {
     return {
       message: error.message,

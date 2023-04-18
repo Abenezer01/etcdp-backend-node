@@ -10,6 +10,7 @@ const fs = require("fs");
 const Op = Sequelize.Op;
 const usrData = require("../../utils/userDataFromToken");
 const actionHelper = require("../utils/action-helper");
+const { url } = require("inspector");
 let self = {};
 
 self.getAll = async (req, res) => {
@@ -328,10 +329,12 @@ self.linkfiles = async(req, res) => {
       where: {
         stakeholder_id,
         year,
-        nationality
+        nationality,
+        id: {
+          [Op.ne]: data.id
+        }
       }
     });
-    
     if (models.length === 0) {
       return res.json({
         message: "No models found"
@@ -353,17 +356,26 @@ self.linkfiles = async(req, res) => {
 
     
     for (const model of models) {
-      for (const doc of files) {
-        let fileobj = {
-          "title": doc.title,
-          "url": doc.url,
-          "type": doc.type,
-          "description": doc.description,
-          "extension": doc.extension,
-          "reference_id": model.id,
-          "size": doc.size,
+      for (const doc of files) { 
+        let exists = await file.findOne({
+            where: {
+              reference_id: model.id,
+              url: doc.url
+            }
+        })
+        if(!exists) {
+          let fileobj = {
+            "title": doc.title,
+            "url": doc.url,
+            "type": doc.type,
+            "description": doc.description,
+            "extension": doc.extension,
+            "reference_id": model.id,
+            "size": doc.size,
+          }
+          await file.create(fileobj);
         }
-        await file.create(fileobj);
+        
       }
     }
     // models.forEach(model => {
