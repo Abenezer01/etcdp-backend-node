@@ -29,6 +29,12 @@ module.exports = (sequelize, DataTypes) => {
       commencement_date: DataTypes.DATE,
       original_contract_duration: DataTypes.INTEGER,
       revision_no: DataTypes.INTEGER,
+      current_date: {
+        type: DataTypes.VIRTUAL,
+        get() {
+          return new Date();
+        },
+      },
     },
     {
       sequelize,

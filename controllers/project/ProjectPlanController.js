@@ -53,12 +53,36 @@ self.getByProjectId = async (req, res) => {
       offset,
       where: { project_id: id },
       order: [["createdAt", order]],
-      include: {
-        model: file,
-        as: "file",
-      },
     });
+    // console.log("The data", data.rows);
+    // let planID = [];
+    // for (let l of data.rows) {
+    //   planID.push(l.id);
+    // }
+    // let fle = await file.findAll({
+    //   where: {
+    //     reference_id: {
+    //       [Sequelize.Op.in]: planID,
+    //     },
+    //   },
+    //   raw: true,
+    // });
+    // const finalResult = data.rows.map((aElement) => {
+    //   const matchingBElements = fle.filter(
+    //     (bElement) => bElement.reference_id === aElement.id
+    //   );
 
+    //   if (matchingBElements.length > 0) {
+    //     return {
+    //       ...aElement.dataValues,
+    //       file: matchingBElements,
+    //     };
+    //   }
+
+    //   return aElement;
+    // });
+
+    // return res.json(finalResult);
     const response = paginate.getPagingData(data, page, limit);
     res.send(response);
   } catch (error) {
@@ -124,6 +148,38 @@ self.save = async (req, res) => {
           res
         );
       }
+      let fle = await file.findAll({
+        where: {
+          id: {
+            [Sequelize.Op.in]: body.file_ids,
+          },
+        },
+        raw: true,
+      });
+      console.log("The fle", body.file_type);
+      const fileData = fle.map((f) => ({
+        reference_id: data.id,
+        title: f.title,
+        url: f.url,
+        type: body.file_type,
+        description: f.description,
+        extension: f.extension,
+        size: f.size,
+      }));
+      //return res.send(fileData);
+      for (const dataa of fileData) {
+        let f = await file.create(dataa);
+        await actionHelper.saveActionState(
+          f.id,
+          "file",
+          "REGISTER",
+          usrID,
+          req,
+          res
+        );
+      }
+
+      //console.log("The ll", ll);
       return res.json(data);
     }
   } catch (error) {
@@ -168,23 +224,25 @@ self.delete = async (req, res) => {
   }
 };
 
-self.getProjectYearlyPlans = async(req, res) => {
-
-  const {id, year} = req.params
+self.getProjectYearlyPlans = async (req, res) => {
+  const { id, year } = req.params;
   try {
-    
     let plans = await projectplan.findAll({
       where: {
         project_id: id,
-        year: year
-      }
-    })
+        year: year,
+      },
+      include: {
+        model: file,
+        as: "file",
+      },
+    });
 
-    return res.json(plans)
+    return res.json(plans);
   } catch (error) {
     return res.status(500).json({
-      message: error.message
-    })
+      message: error.message,
+    });
   }
-}
+};
 module.exports = self;
