@@ -399,28 +399,31 @@ self.getArr = async (arr) => {
 
 self.get = async (req, res) => {
   try {
-    let id = req.params.id;
+    const { id } = req.params;
+
     let data = await project.findOne({
-      where: {
-        id: id,
-      },
+      where: { id },
       include: [
-        {
-          model: projectcategory,
-          as: "projectcategory",
-          attributes: ["title"],
-        },
+        { model: projectcategory, as: "projectcategory", attributes: ["title"] },
         { model: projecttype, as: "projecttype", attributes: ["title"] },
-        {
-          model: projectsubcategory,
-          as: "projectsubcategory",
-          attributes: ["title"],
-        },
+        { model: projectsubcategory, as: "projectsubcategory", attributes: ["title"] }
       ],
     });
-    return res.status(200).json({
-      data: data ? data : {},
-    });
+
+    let stat = await projectstatus.findOne({
+      order: [["createdAt", "DESC"]],
+      where: {
+        project_id: id
+      },
+      include: [
+        { model: status, as: "status", attributes: ["title"]},
+      ]
+    })
+
+    data = data.toJSON() 
+    data.projectstatus = stat
+
+return res.status(200).json({ data: data ? data : {} });
   } catch (error) {
     res.status(500).json({
       message: error.message,
@@ -464,6 +467,21 @@ self.save = async (req, res) => {
           req,
           res
         );
+          //add status
+        let prostatus = await projectstatus.create({
+          project_id: data.id,
+          status_id: body.status_id
+        })
+        if(prostatus){
+          await actionHelper.saveActionState(
+            prostatus.id,
+            "projectstatus",
+            "REGISTER",
+            usrID,
+            req,
+            res
+          );
+        }
       }
       // let arr = [{ name: "Client", id: body.clientId }, { name: "Consultant", id: body.consultantId }, { name: "Contractor", id: body.contractorId }]
       // for (let i = 0; i < arr.length; i++) {
@@ -1297,4 +1315,40 @@ self.getProjectAnalysis = async (req, res) => {
     });
   }
 };
+
+self.getFinancialNumbers = async(req, res) => {
+  try {
+    
+    const { id } = req.params;
+
+    const finance = await projectfinance.findOne({ where: { project_id: id } });
+    const supplementvarations = await projectvariation.findAll({ where: { project_id: id } });
+
+    const filterSupplementVariations = (type) => supplementvarations.filter((item) => item.type === type);
+
+    const variations = filterSupplementVariations("VARIATION");
+    const supplements = filterSupplementVariations("SUPPLEMENT");
+    const omissions = filterSupplementVariations("OMISSION");
+    const specials = filterSupplementVariations("SPECIAL");
+
+    const variation_total = variations.reduce((total, item) => total + item.amount, 0);
+    const supplement_total = supplements.reduce((total, item) => total + item.amount, 0);
+    const special_total = specials.reduce((total, item) => total + item.amount, 0);
+    const omission_total = omissions.reduce((total, item) => total + item.amount, 0);
+
+    return res.json({
+      main_contract_price_amount: finance?finance.main_contract_price_amount : null,
+      rebate: finance?finance.rebate : null,
+      price_after_rebate: finance?finance.price_after_rebate : null,
+      variation_total,
+      supplement_total,
+      special_total,
+      omission_total,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message
+    })
+  }
+}
 module.exports = self;

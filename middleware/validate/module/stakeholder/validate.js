@@ -105,6 +105,27 @@ const stakeHolderValidate = async (req, res, next) => {
 
   await validateReply.validateReply(req.body, validationRule, res, next);
 };
+
+const stakeholderContactPersonValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param == "failed") {
+    return res.status(400).json({
+      message: "Invalid id",
+    });
+  }
+  const validationRule = {
+    parent_id: "string",
+    stakeholder_id: "required|string",
+    first_name: "required|string",
+    middle_name: "required|string",
+    last_name: "required|string",
+    gender: "required|string",
+    email: "required|email|string",
+    phone_number: "required|string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
 const stakeHolderInfo = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
   if (param == "failed") {
@@ -433,4 +454,5 @@ module.exports = {
   workExperienceLevelValidate,
   studyProgramValidate,
   StakeholderServiceValidate,
+  stakeholderContactPersonValidate
 };

@@ -51,6 +51,7 @@ module.exports = {
       // },
       refresh_token: Sequelize.TEXT,
       revision_no: Sequelize.INTEGER,
+      lang: Sequelize.STRING,
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

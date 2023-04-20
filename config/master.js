@@ -185,12 +185,13 @@ const modulemodels = {
     "constructionrelatedservice",
   ],
   resource: [
-    "resource",
     "specification",
     "brand",
-    "resourcedetailtype",
+    "resourcetype",
     "quantity",
-    "price",
+    "studyfield",
+    "studylevel",
+    "workexperience"
   ],
   document: ["document"],
   center: ["department", "position", "professional"],
