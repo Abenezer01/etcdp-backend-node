@@ -57,7 +57,7 @@ self.get = async (req, res) => {
     });
   }
 };
-
+self.fi;
 self.filter = async (req, res) => {
   const {
     page = process.env.page,
@@ -75,10 +75,12 @@ self.filter = async (req, res) => {
     filter.push({ resourcesubcategory_id: subcategoryId });
   }
   const { limit, offset } = paginate.getPagination(page, size);
+  let limiter = { limit, offset };
+  page == -1 ? (limiter = {}) : limiter;
   try {
     const result = await resource.findAndCountAll({
-      limit,
-      offset,
+      limit: limiter.limit,
+      offset: limiter.offset,
       order: [["createdAt", order]],
       where: {
         [Op.and]: filter,
