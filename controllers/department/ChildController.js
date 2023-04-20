@@ -1,6 +1,6 @@
-const { child, Sequelize } = require('../../models');
-const actionHelper = require('../utils/action-helper');
-const usrData = require('../../utils/userDataFromToken');
+const { child, Sequelize } = require("../../models");
+const actionHelper = require("../utils/action-helper");
+const usrData = require("../../utils/userDataFromToken");
 
 const Op = Sequelize.Op;
 let self = {};
@@ -11,7 +11,7 @@ self.getAll = async (req, res) => {
     return res.json(data);
   } catch (error) {
     res.status(500).json({
-      message: error.message
+      message: error.message,
     });
   }
 };
@@ -21,15 +21,15 @@ self.get = async (req, res) => {
     let id = req.params.id;
     let data = await child.findOne({
       where: {
-        id: id
-      }
+        id: id,
+      },
     });
     return res.status(200).json({
-      data: data
+      data: data,
     });
   } catch (error) {
     res.status(500).json({
-      message: error.message
+      message: error.message,
     });
   }
 };
@@ -40,14 +40,14 @@ self.search = async (req, res) => {
     let data = await child.findAll({
       where: {
         name: {
-          [Op.like]: '%' + text + '%'
-        }
-      }
+          [Op.like]: "%" + text + "%",
+        },
+      },
     });
     return res.json(data);
   } catch (error) {
     res.status(500).json({
-      message: error.message
+      message: error.message,
     });
   }
 };
@@ -60,8 +60,8 @@ self.save = async (req, res) => {
       let usr = await usrData.userData(req, res);
       await actionHelper.saveActionState(
         data.id,
-        'child',
-        'REGISTER',
+        "child",
+        "REGISTER",
         usr.usrID,
         req,
         res
@@ -70,7 +70,7 @@ self.save = async (req, res) => {
     return res.json(data);
   } catch (error) {
     res.status(500).json({
-      message: error.message
+      message: error.message,
     });
   }
 };
@@ -80,13 +80,13 @@ self.update = async (req, res) => {
     let body = req.body;
     let data = await child.update(body, {
       where: {
-        id: id
-      }
+        id: id,
+      },
     });
     return res.json(data);
   } catch (error) {
     res.status(500).json({
-      message: error.message
+      message: error.message,
     });
   }
 };
@@ -95,13 +95,13 @@ self.delete = async (req, res) => {
     let id = req.params.id;
     let data = await child.destroy({
       where: {
-        id: id
-      }
+        id: id,
+      },
     });
     return res.json(data);
   } catch (error) {
     res.status(500).json({
-      message: error.message
+      message: error.message,
     });
   }
 };
@@ -112,13 +112,13 @@ self.update = async (req, res) => {
     let body = req.body;
     let data = await child.update(body, {
       where: {
-        id: id
-      }
+        id: id,
+      },
     });
     return res.json(data);
   } catch (error) {
     res.status(500).json({
-      message: error.message
+      message: error.message,
     });
   }
 };
@@ -128,13 +128,13 @@ self.delete = async (req, res) => {
     let id = req.params.id;
     let data = await child.destroy({
       where: {
-        id: id
-      }
+        id: id,
+      },
     });
     return res.json(data);
   } catch (error) {
     res.status(500).json({
-      message: error.message
+      message: error.message,
     });
   }
 };
