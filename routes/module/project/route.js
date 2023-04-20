@@ -193,10 +193,11 @@ module.exports = function (express) {
     ProjectPlanController.update
   );
   route.delete("/project-plan/:id", ProjectPlanController.delete);
-  route.get("/project-yearly-plans/:id/:year", 
-  ProjectPlanController.getProjectYearlyPlans);
+  route.get(
+    "/project-yearly-plans/:id/:year",
+    ProjectPlanController.getProjectYearlyPlans
+  );
 
-  
   //project report
 
   route.get("/project-report", ProjectReportController.getAll);
@@ -230,8 +231,10 @@ module.exports = function (express) {
     "/report/monthly-project-report/:id",
     ProjectReportController.getByMonthlyId
   );
-  route.get("/project-yearly-reports/:id/:year", 
-  ProjectReportController.getProjectYearlyReports);
+  route.get(
+    "/project-yearly-reports/:id/:year",
+    ProjectReportController.getProjectYearlyReports
+  );
 
   //Project document
   route.get("/project-document", ProjectDocumentController.getAll);
@@ -489,7 +492,7 @@ module.exports = function (express) {
   route.post("/project/filter/", ProjectController.getProjectByTypeId);
   route.post("/project", validateData.projectValidate, ProjectController.save);
   route.get("/project-analysis/:id", ProjectController.getProjectAnalysis);
-  
+
   route.put(
     "/project/:id",
     validateData.projectValidate,
@@ -621,7 +624,7 @@ module.exports = function (express) {
   );
 
   //project time
-  route.get("/project-time/", ProjectTimeController.getAll);
+  route.get("/project-time", ProjectTimeController.getAll);
   route.get("/project-time/:id", ProjectTimeController.get);
   route.get("/project/project-time/:id", ProjectTimeController.getByProjectId);
   route.get("/project-time-search", ProjectTimeController.search);

@@ -289,6 +289,35 @@ self.save = async (req, res) => {
           res
         );
       }
+      let fle = await file.findAll({
+        where: {
+          id: {
+            [Sequelize.Op.in]: body.file_ids,
+          },
+        },
+        raw: true,
+      });
+      const fileData = fle.map((f) => ({
+        reference_id: data.id,
+        title: f.title,
+        url: f.url,
+        type: body.file_type,
+        description: f.description,
+        extension: f.extension,
+        size: f.size,
+      }));
+
+      for (const data of fileData) {
+        let f = await file.create(data);
+        await actionHelper.saveActionState(
+          f.id,
+          "file",
+          "REGISTER",
+          usrID,
+          req,
+          res
+        );
+      }
       return res.json(data);
     }
   } catch (error) {
@@ -414,23 +443,25 @@ self.getMonthlyProjectReport = async (req, res) => {
   }
 };
 
-self.getProjectYearlyReports = async(req, res) => {
-
-  const {id, year} = req.params
+self.getProjectYearlyReports = async (req, res) => {
+  const { id, year } = req.params;
   try {
-    
     let reports = await projectreport.findAll({
       where: {
         project_id: id,
-        year: year
-      }
-    })
+        year: year,
+      },
+      include: {
+        model: file,
+        as: "file",
+      },
+    });
 
-    return res.json(reports)
+    return res.json(reports);
   } catch (error) {
     return res.status(500).json({
-      message: error.message
-    })
+      message: error.message,
+    });
   }
-}
+};
 module.exports = self;
