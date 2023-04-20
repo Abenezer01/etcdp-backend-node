@@ -3,6 +3,7 @@ const stakeholderSubCategoryController = require("../../../controllers/stakehold
 const stakeholderTypeController = require("../../../controllers/stakeholder/StakeholderTypeController.js");
 const stakeholderInfoController = require("../../../controllers/stakeholder/StakeholderInfoController.js");
 const stakeholderController = require("../../../controllers/stakeholder/StakeholderController.js");
+const StakeholderContactPersonController = require("../../../controllers/stakeholder/StakeholderContactPersonController.js");
 const ownershiptypeController = require("../../../controllers/stakeholder/OwnershiptypeController");
 const BusinessfieldController = require("../../../controllers/stakeholder/BusinessfieldController");
 const CertificateController = require("../../../controllers/stakeholder/CertificateController");
@@ -166,6 +167,24 @@ module.exports = function (express) {
     stakeholderController.update
   );
   route.delete("/stakeholder/:id", stakeholderController.delete);
+
+  //stakeholder contact person
+  route.get("/stakeholder-contact-person", StakeholderContactPersonController.getAll);
+  route.get("/stakeholder-contact-person/:id", StakeholderContactPersonController.get);
+  route.get("/stakeholder-contact-person-search", StakeholderContactPersonController.search);
+  route.post(
+    "/stakeholder-contact-person",
+    validateData.stakeholderContactPersonValidate,
+    StakeholderContactPersonController.save
+  );
+  route.put(
+    "/stakeholder-contact-person/:id",
+    validateData.stakeholderContactPersonValidate,
+    StakeholderContactPersonController.update
+  );
+  route.delete("/stakeholder-contact-person/:id", StakeholderContactPersonController.delete);
+  route.get("/stakeholder-contacts/:id", StakeholderContactPersonController.getByStakeholderId);
+
   //certificate route
   route.get("/certificate/", CertificateController.getAll);
   route.get("/certificate/:id", CertificateController.get);

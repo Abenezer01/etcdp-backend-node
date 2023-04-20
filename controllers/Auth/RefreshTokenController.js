@@ -120,6 +120,7 @@ self.refreshToken = async (request, response, next) => {
       id: userId,
       department_id: departmentId,
       position_id: positionId,
+      lang: usr.lang
     };
     const access_tokener = jwt.sign(payload, ACCESS_TOKEN_KEY, {
       expiresIn: "1000h",

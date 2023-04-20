@@ -78,7 +78,8 @@ module.exports = (sequelize, DataTypes) => {
     });
 
     project.hasMany(models.projectstatus, {
-      foreignKey: "project_id",
+    as: "projectstatus",
+    foreignKey: "project_id",
     });
     project.hasMany(models.payment, {
       foreignKey: "project_id",

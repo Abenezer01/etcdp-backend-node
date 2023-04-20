@@ -596,6 +596,7 @@ self.switchAccount = async(req, res) => {
                 id: account.id,
                 department_id: userpos.department_id,
                 position_id: userpos.position_id,
+                lang: account.lang
             };
 
             accessToken = jwt.sign(us, TOKEN_KEY, {

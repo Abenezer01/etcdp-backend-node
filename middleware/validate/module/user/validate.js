@@ -101,7 +101,7 @@ const contactPersonValidate = async (req, res, next) => {
   }
   const validationRule = {
     parent_id: "string",
-    first_name: "requried|string",
+    first_name: "required|string",
     middle_name: "required|string",
     last_name: "required|string",
     gender: "required|string",
@@ -124,7 +124,7 @@ const jobExperienceValidate = async (req, res, next) => {
   }
   const validationRule = {
     parent_id: "string",
-    company_name: "requried|string",
+    company_name: "required|string",
     department: "required|string",
     position: "required|string",
     role: "required|string",
@@ -145,7 +145,7 @@ const childValidate = async (req, res, next) => {
   }
   const validationRule = {
     name: "required|string",
-    sex: "requried|string",
+    sex: "required|string",
     birth_date: "required|date",
     family_status_id: "string",
   };

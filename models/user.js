@@ -67,6 +67,7 @@ module.exports = (sequelize, DataTypes) => {
       birth_date: DataTypes.DATE,
       refresh_token: DataTypes.TEXT,
       revision_no: DataTypes.INTEGER,
+      lang: DataTypes.STRING,
       full_name: {
         type: DataTypes.VIRTUAL,
         get() {

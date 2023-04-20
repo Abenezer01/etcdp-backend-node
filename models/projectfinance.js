@@ -30,7 +30,7 @@ module.exports = (sequelize, DataTypes) => {
       price_after_rebate: {
         type: DataTypes.VIRTUAL,
         get() {
-          return this.main_contract_value - (this.main_contract_value*(this.rebate/100));
+          return this.main_contract_price_amount - (this.main_contract_price_amount*(this.rebate/100));
         },
         
       },
