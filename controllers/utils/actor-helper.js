@@ -141,8 +141,8 @@ self.actionUserFinder = async (model, action, user_id, department_id) => {
       },
     });
 
-    let userIds = userpos.map((item) => item.id).filter((n) => n);
-    userIds = userIds.filter((element) => element !== user_id);
+    let userIds = userpos.map((item)=> item.user_id).filter(n=>n)
+    userIds = userIds.filter(element => element !== user_id);
 
     return userIds;
   } catch (error) {

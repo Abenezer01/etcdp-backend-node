@@ -8,16 +8,17 @@ const {
 } = require("./../../models");
 const usrData = require("../../utils/userDataFromToken");
 const actionHelper = require("../utils/action-helper");
+const languageHelper = require("../utils/language-helper");
 let master = require("../../config/master");
 
-const i18n = require("i18n");
-const lang = "am";
+const i18n = require('i18n');
+const lang = 'am'
 i18n.configure({
-  locales: ["en", "am", "es"],
-  directory: __dirname + "/../../locales",
-  defaultLocale: lang ? lang : "en",
-  queryParameter: "lang",
-  cookie: "locale",
+  locales: ['en','am', 'es'],
+  directory: __dirname + '/../../locales',
+  defaultLocale: lang?lang:'en',
+  queryParameter: 'lang',
+  cookie: 'locale',
   updateFiles: false, // set this to true if you want i18n to create locale files for missing translations
 });
 const Op = Sequelize.Op;
@@ -520,8 +521,10 @@ self.translateString = async (str, translateTo) => {
 
 self.test = async (req, res) => {
   try {
-    const x = i18n.__("greeting");
-    return res.json(x);
+
+
+    const x = i18n.__('greeting');
+    return res.json(x)
   } catch (error) {
     return res.status(500).json({
       message: error.message,

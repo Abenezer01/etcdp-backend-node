@@ -13,6 +13,7 @@ const ContactPersonController = require("../../../controllers/department/Contact
 const JobExperienceController = require("../../../controllers/department/JobExperienceController.js");
 
 const validateInput = require("../../../middleware/validate/module/user/validate");
+const checkEditable = require("../../../middleware/CheckEditable.js")
 module.exports = function (express) {
   const route = express.Router();
 
@@ -58,7 +59,7 @@ module.exports = function (express) {
   );
   route.put(
     "/department/:id",
-    validateInput.departmentValidate,
+    [validateInput.departmentValidate, checkEditable.checkEditability],
     departmentController.update
   );
   route.delete("/department/:id", departmentController.delete);
