@@ -11,7 +11,16 @@ const actionHelper = require("../utils/action-helper");
 const languageHelper = require("../utils/language-helper");
 let master = require("../../config/master");
 
-
+const i18n = require('i18n');
+const lang = 'am'
+i18n.configure({
+  locales: ['en','am', 'es'],
+  directory: __dirname + '/../../locales',
+  defaultLocale: lang?lang:'en',
+  queryParameter: 'lang',
+  cookie: 'locale',
+  updateFiles: false, // set this to true if you want i18n to create locale files for missing translations
+});
 const Op = Sequelize.Op;
 
 let self = {};
@@ -498,28 +507,29 @@ self.getDepartmentDashboad = async (req, res) => {
   }
 };
 
-self.translateString = async(str, translateTo) => {
+self.translateString = async (str, translateTo) => {
   try {
-    translate.engine = "libre"
-    const translated_string = await translate(str, translateTo)
+    translate.engine = "libre";
+    const translated_string = await translate(str, translateTo);
     return translated_string;
   } catch (error) {
     return {
-      message: error.message
-    }
+      message: error.message,
+    };
   }
-}
+};
 
-self.test = async(req, res) => {
+self.test = async (req, res) => {
   try {
-    const text = await languageHelper.getCustomizedLabel(req, res, 'farewell');
 
-    return res.json(text)
+
+    const x = i18n.__('greeting');
+    return res.json(x)
   } catch (error) {
     return res.status(500).json({
-      message: error.message
-    })
+      message: error.message,
+    });
   }
-}
+};
 
 module.exports = self;
