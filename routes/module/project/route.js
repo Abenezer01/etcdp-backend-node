@@ -504,8 +504,10 @@ module.exports = function (express) {
     ProjectController.getProjectDetail
   );
   route.get("/general-info/:id", ProjectController.getProjectData);
-  route.get("/general-project-finance/:id", ProjectController.getFinancialNumbers);
-  
+  route.get(
+    "/general-project-finance/:id",
+    ProjectController.getFinancialNumbers
+  );
 
   //project category
   route.get("/project-category/", ProjectCategoryController.getAll);

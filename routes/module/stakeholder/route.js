@@ -169,9 +169,18 @@ module.exports = function (express) {
   route.delete("/stakeholder/:id", stakeholderController.delete);
 
   //stakeholder contact person
-  route.get("/stakeholder-contact-person", StakeholderContactPersonController.getAll);
-  route.get("/stakeholder-contact-person/:id", StakeholderContactPersonController.get);
-  route.get("/stakeholder-contact-person-search", StakeholderContactPersonController.search);
+  route.get(
+    "/stakeholder-contact-person",
+    StakeholderContactPersonController.getAll
+  );
+  route.get(
+    "/stakeholder-contact-person/:id",
+    StakeholderContactPersonController.get
+  );
+  route.get(
+    "/stakeholder-contact-person-search",
+    StakeholderContactPersonController.search
+  );
   route.post(
     "/stakeholder-contact-person",
     validateData.stakeholderContactPersonValidate,
@@ -182,8 +191,14 @@ module.exports = function (express) {
     validateData.stakeholderContactPersonValidate,
     StakeholderContactPersonController.update
   );
-  route.delete("/stakeholder-contact-person/:id", StakeholderContactPersonController.delete);
-  route.get("/stakeholder-contacts/:id", StakeholderContactPersonController.getByStakeholderId);
+  route.delete(
+    "/stakeholder-contact-person/:id",
+    StakeholderContactPersonController.delete
+  );
+  route.get(
+    "/stakeholder-contacts/:id",
+    StakeholderContactPersonController.getByStakeholderId
+  );
 
   //certificate route
   route.get("/certificate/", CertificateController.getAll);
@@ -285,10 +300,7 @@ module.exports = function (express) {
     EmployeeEducationController.getEmployeeEducationByStakeholderId
   );
   route.get("/employee-education-search", EmployeeEducationController.search);
-  route.post(
-    "/employee-education",
-    EmployeeEducationController.save
-  );
+  route.post("/employee-education", EmployeeEducationController.save);
   route.put(
     "/employee-education/",
     validateData.educationValidate,
@@ -296,7 +308,6 @@ module.exports = function (express) {
   );
   route.delete("/employee-education/:id", EmployeeEducationController.delete);
 
-  
   //work experience level route
   route.get("/work-experience-level/", WorkExperienceLevelController.getAll);
   route.get("/work-experience-level/:id", WorkExperienceLevelController.get);

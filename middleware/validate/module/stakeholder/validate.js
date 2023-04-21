@@ -121,7 +121,7 @@ const stakeholderContactPersonValidate = async (req, res, next) => {
     last_name: "required|string",
     gender: "required|string",
     email: "required|email|string",
-    phone_number: "required|string"
+    phone_number: "required|string",
   };
 
   await validateReply.validateReply(req.body, validationRule, res, next);
@@ -454,5 +454,5 @@ module.exports = {
   workExperienceLevelValidate,
   studyProgramValidate,
   StakeholderServiceValidate,
-  stakeholderContactPersonValidate
+  stakeholderContactPersonValidate,
 };
