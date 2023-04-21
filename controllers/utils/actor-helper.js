@@ -129,7 +129,7 @@ self.actionUserFinder = async (model,action, user_id, department_id) => {
             return item.id;
           }
         }
-      }));
+    }));
 
     let userpos = await userposition.findAll({
         where: {
@@ -139,7 +139,7 @@ self.actionUserFinder = async (model,action, user_id, department_id) => {
         }
     })
 
-    let userIds = userpos.map((item)=> item.id).filter(n=>n)
+    let userIds = userpos.map((item)=> item.user_id).filter(n=>n)
     userIds = userIds.filter(element => element !== user_id);
 
     return userIds;

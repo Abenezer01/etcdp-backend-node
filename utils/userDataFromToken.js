@@ -11,9 +11,10 @@ const userData = async (req, res, next) => {
   usrID = decodetoken.id;
   departmentID = decodetoken.department_id;
   position_id = decodetoken.position_id;
+  lang = decodetoken.lang;
 
   console.log("This is user id", usrID);
-  return { usrID, departmentID, position_id };
+  return { usrID, departmentID, position_id, lang };
 
   // } catch (error) {
   //     //console.log("Here is the error", error)

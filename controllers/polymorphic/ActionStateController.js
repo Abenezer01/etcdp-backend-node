@@ -87,7 +87,7 @@ self.check = async (req, res) => {
         });
 
         if(action){
-          await actorHelper.notifyActor(act,'approve', usr.usrID, usr.departmentID)
+          await actorHelper.notifyActor(action,'approve', usr.usrID, usr.departmentID)
         }
 
         return res.json(action);
@@ -144,7 +144,7 @@ self.approve = async (req, res) => {
         });
         if(action){
 
-          await actorHelper.notifyActor(act,'authorize', usr.usrID, usr.departmentID)
+          await actorHelper.notifyActor(action,'authorize', usr.usrID, usr.departmentID)
         }
         return res.status(200).json(action);
         // }

@@ -8,18 +8,10 @@ const {
 } = require("./../../models");
 const usrData = require("../../utils/userDataFromToken");
 const actionHelper = require("../utils/action-helper");
+const languageHelper = require("../utils/language-helper");
 let master = require("../../config/master");
 
-const i18n = require('i18n');
-const lang = 'am'
-i18n.configure({
-  locales: ['en','am', 'es'],
-  directory: __dirname + '/../../locales',
-  defaultLocale: lang?lang:'en',
-  queryParameter: 'lang',
-  cookie: 'locale',
-  updateFiles: false, // set this to true if you want i18n to create locale files for missing translations
-});
+
 const Op = Sequelize.Op;
 
 let self = {};
@@ -520,10 +512,9 @@ self.translateString = async(str, translateTo) => {
 
 self.test = async(req, res) => {
   try {
+    const text = await languageHelper.getCustomizedLabel(req, res, 'farewell');
 
-
-    const x = i18n.__('greeting');
-    return res.json(x)
+    return res.json(text)
   } catch (error) {
     return res.status(500).json({
       message: error.message
