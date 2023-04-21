@@ -1,5 +1,5 @@
 const { actionstate } = require("../models");
-const checkEditablity = async (req, res, next) => {
+const checkEditability = async (req, res, next) => {
     const id = req.params.id;
     let data = await actionstate.findOne({
         where: {
@@ -16,5 +16,5 @@ const checkEditablity = async (req, res, next) => {
     next();
 };
 module.exports = {
-    checkEditablity,
+    checkEditability,
 };

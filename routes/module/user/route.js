@@ -59,7 +59,7 @@ module.exports = function (express) {
   );
   route.put(
     "/department/:id",
-    [validateInput.departmentValidate, checkEditable.checkEditablity],
+    [validateInput.departmentValidate, checkEditable.checkEditability],
     departmentController.update
   );
   route.delete("/department/:id", departmentController.delete);
