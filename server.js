@@ -13,7 +13,6 @@ const stakeholderRoute = require("./routes/module/stakeholder/route");
 const resourceRoute = require("./routes/module/construction resource/route");
 const documentRoute = require("./routes/module/document/route");
 const analyticRoute = require("./routes/module/analytic/route");
-
 const route_view = require("./routes/route_view");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
@@ -49,8 +48,9 @@ app.use("/api/departments", departmentRoute(express));
 app.use("/api/accounts", loginRoute(express));
 app.use("/api/projects", projectRoute(express));
 app.use("/api/stakeholders", stakeholderRoute(express));
-app.use("/api/resources", resourceRoute(express));
+app.use("/api/resource", resourceRoute(express));
 app.use("/api/documents", documentRoute(express));
+app.use("/api/resources", resourceRoute(express));
 app.use("/api/generics", polymorphicRoute(express));
 app.use("/api/analytics", analyticRoute(express));
 

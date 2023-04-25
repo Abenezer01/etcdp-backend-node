@@ -9,281 +9,354 @@ const ResourceBrandController = require("../../../controllers/construction resou
 const ResourceQuantityandPriceController = require("../../../controllers/construction resource/ResourceQuantityandPriceController");
 const ResourceSpecificationController = require("../../../controllers/construction resource/ResourceSpecificationController");
 const ResourceImageController = require("../../../controllers/construction resource/ResourceImageController");
+const ResourceStudyFieldController = require("../../../controllers/construction resource/ResourceStudyFieldController");
+const ResourceStudyLevelController = require("../../../controllers/construction resource/ResourceStudyLevelController");
+const ResourceWorkExperienceController = require("../../../controllers/construction resource/ResourceWorkExperienceController");
 const validateData = require("../../../middleware/validate/module/construction resource/validate");
-module.exports = function(express) {
-    const route = express.Router();
+module.exports = function (express) {
+  const route = express.Router();
 
-    //construction resource type controller
-    route.get(
-        "/construction-resource-type",
-        ConstructionResourceTypeController.getAll
-    );
-    route.get(
-        "/construction-resource-type/:id",
-        ConstructionResourceTypeController.get
-    );
-    route.get(
-        "/construction-resource-type_search",
-        ConstructionResourceTypeController.search
-    );
-    route.post(
-        "/construction-resource-type",
-        validateData.constructionResourceTypeValidate,
-        ConstructionResourceTypeController.save
-    );
-    route.put(
-        "/construction-resource-type/:id",
-        validateData.constructionResourceTypeValidate,
-        ConstructionResourceTypeController.update
-    );
-    route.delete(
-        "/construction-resource-type/:id",
-        ConstructionResourceTypeController.delete
-    );
-    //construction resource category controller
-    route.get(
-        "/construction-resource-category",
-        ConstructionResourceCategoryController.getAll
-    );
-    route.get(
-        "/construction-resource-category/:id",
-        ConstructionResourceCategoryController.get
-    );
-    route.get(
-        "/type/construction-resource-category/:id",
-        ConstructionResourceCategoryController.getCRCByResourceTypeId
-    );
-    route.get(
-        "/construction-resource-category_search",
-        ConstructionResourceCategoryController.search
-    );
-    route.post(
-        "/construction-resource-category",
-        validateData.constructionResourceCategoryValidate,
-        ConstructionResourceCategoryController.save
-    );
-    route.put(
-        "/construction-resource-category/:id",
-        validateData.constructionResourceCategoryValidate,
-        ConstructionResourceCategoryController.update
-    );
-    route.delete(
-        "/construction-resource-category/:id",
-        ConstructionResourceCategoryController.delete
-    );
-    //construction resource subcategory controller
-    route.get(
-        "/construction-resource-subcategory",
-        ConstructionResourceSubCategoryController.getAll
-    );
-    route.get(
-        "/construction-resource-subcategory/:id",
-        ConstructionResourceSubCategoryController.get
-    );
-    route.get(
-        "/construction-resource-subcategory_search",
-        ConstructionResourceSubCategoryController.search
-    );
-    route.post(
-        "/construction-resource-subcategory",
-        validateData.constructionResourceSubCategoryValidate,
-        ConstructionResourceSubCategoryController.save
-    );
-    route.put(
-        "/construction-resource-subcategory/:id",
-        validateData.constructionResourceSubCategoryValidate,
-        ConstructionResourceSubCategoryController.update
-    );
-    route.delete(
-        "/construction-resource-subcategory/:id",
-        ConstructionResourceSubCategoryController.delete
-    );
-    //construction resource registration controller
-    route.get("/resource", ConstructionResourceRegistrationController.getAll);
-    route.get("/resource/:id", ConstructionResourceRegistrationController.get);
-    route.get(
-        "/filter/resource",
-        ConstructionResourceRegistrationController.filter
-    );
-    route.get(
-        "/resource_search",
-        ConstructionResourceRegistrationController.search
-    );
-    route.post(
-        "/resource",
-        validateData.constructionResourceValidate,
-        ConstructionResourceRegistrationController.save
-    );
-    route.put(
-        "/resource/:id",
-        validateData.constructionResourceValidate,
-        ConstructionResourceRegistrationController.update
-    );
-    route.delete(
-        "/resource/:id",
-        ConstructionResourceRegistrationController.delete
-    );
-    //construction resource quantity and controller
-    // route.get("/construction-resource-quantity-price", ConstructionResourceQuantityAndPriceController.getAll);
-    // route.get("/construction-resource-quantity-price/:id", ConstructionResourceQuantityAndPriceController.get);
-    // route.get("/construction-resource-quantity-price_search", ConstructionResourceQuantityAndPriceController.search);
-    // route.post("/construction-resource-quantity-price", validateData.constructionResourceQuantityandPriceValidate, ConstructionResourceQuantityAndPriceController.save);
-    // route.put("/construction-resource-quantity-price/:id", validateData.constructionResourceQuantityandPriceValidate, ConstructionResourceQuantityAndPriceController.update);
-    // route.delete("/construction-resource-quantity-price/:id", ConstructionResourceQuantityAndPriceController.delete);
-    //construction resource quantity and controller
-    route.get(
-        "/detail-construction-resource-type",
-        DetailResourceTypeController.getAll
-    );
-    route.get(
-        "/detail-construction-resource-type/:id",
-        DetailResourceTypeController.get
-    );
-    route.get(
-        "/image/detail-construction-resource-type/:id",
-        DetailResourceTypeController.getImage
-    );
-    route.get(
-        "/resource/detail-construction-resource-type/:id",
-        DetailResourceTypeController.getByResourceId
-    );
-    route.get(
-        "/detail-construction-resource-type_search",
-        DetailResourceTypeController.search
-    );
-    route.post(
-        "/detail-construction-resource-type",
-        validateData.detailResourceTypeValidate,
-        DetailResourceTypeController.save
-    );
-    route.put(
-        "/detail-construction-resource-type/:id",
-        DetailResourceTypeController.update
-    );
-    route.delete(
-        "/detail-construction-resource-type/:id",
-        DetailResourceTypeController.delete
-    );
-    //construction resource quantity and controller
-    route.get("/construction-resource-brand", ResourceBrandController.getAll);
-    route.get("/construction-resource-brand/:id", ResourceBrandController.get);
-    route.get(
-        "/image/construction-resource-brand/:id",
-        ResourceBrandController.getImage
-    );
-    route.get(
-        "/resource/construction-resource-brand/:id",
-        ResourceBrandController.getByResourceId
-    );
-    route.get(
-        "/construction-resource-brand_search",
-        ResourceBrandController.search
-    );
-    route.post(
-        "/construction-resource-brand",
-        validateData.resourceBrandValidate,
-        ResourceBrandController.save
-    );
-    route.put(
-        "/construction-resource-brand/:id",
-        validateData.resourceBrandValidate,
-        ResourceBrandController.update
-    );
-    route.delete(
-        "/construction-resource-brand/:id",
-        ResourceBrandController.delete
-    );
-    //construction resource quantity and controller
-    // route.get("/construction-resource-price", ResourcePriceController.getAll);
-    // route.get("/construction-resource-price/:id", ResourcePriceController.get);
-    // route.get("/resource/construction-resource-price/:id", ResourcePriceController.getByResourceId);
-    // route.get("/construction-resource-price_search", ResourcePriceController.search);
-    // route.post("/construction-resource-price", validateData.resourcePriceValidate, ResourcePriceController.save);
-    // route.put("/construction-resource-price/:id", validateData.resourcePriceValidate, ResourcePriceController.update);
-    // route.delete("/construction-resource-price/:id", ResourcePriceController.delete);
-    //construction resource quantity and price controller
-    route.get(
-        "/construction-resource-quantity-price",
-        ResourceQuantityandPriceController.getAll
-    );
-    route.get(
-        "/construction-resource-quantity-price/:id",
-        ResourceQuantityandPriceController.get
-    );
-    route.get(
-        "/project/construction-resource-quantity-price/:id",
-        ResourceQuantityandPriceController.getByProjectId
-    );
-    route.get(
-        "/resource/construction-resource-quantity-price/:id",
-        ResourceQuantityandPriceController.getByResourceId
-    );
-    route.get(
-        "/construction-resource-quantity-price_search",
-        ResourceQuantityandPriceController.search
-    );
-    route.post(
-        "/construction-resource-quantity-price",
-        validateData.resourceQuantityValidate,
-        ResourceQuantityandPriceController.save
-    );
-    route.put(
-        "/construction-resource-quantity-price/:id",
-        validateData.resourceQuantityValidate,
-        ResourceQuantityandPriceController.update
-    );
-    route.delete(
-        "/construction-resource-quantity-price/:id",
-        ResourceQuantityandPriceController.delete
-    );
-    //construction resource quantity and controller
-    route.get(
-        "/construction-resource-specification",
-        ResourceSpecificationController.getAll
-    );
-    route.get(
-        "/construction-resource-specification/:id",
-        ResourceSpecificationController.get
-    );
-    route.get(
-        "/image/construction-resource-specification/:id",
-        ResourceSpecificationController.getImage
-    );
-    route.get(
-        "/resource/construction-resource-specification/:id",
-        ResourceSpecificationController.getByResourceId
-    );
-    route.get(
-        "/construction-resource-specification_search",
-        ResourceSpecificationController.search
-    );
-    route.post(
-        "/construction-resource-specification",
-        validateData.resourceSpecificationValidate,
-        ResourceSpecificationController.save
-    );
-    route.put(
-        "/construction-resource-specification/:id",
-        validateData.resourceSpecificationValidate,
-        ResourceSpecificationController.update
-    );
-    route.delete(
-        "/construction-resource-specification/:id",
-        ResourceSpecificationController.delete
-    );
-    //Resource image
-    route.post(
-        "/resource-image/:id",
-        validateData.resourceImageValidate,
-        ResourceImageController.save
-    );
-    route.get("/resource-image/:id", ResourceImageController.getAll);
-    route.get("/image/resource-image/:id", ResourceImageController.getImage);
-    route.put(
-        "/resource-image/:id",
-        validateData.resourceImageValidate,
-        ResourceImageController.update
-    );
-    route.delete("/resource-image/:id", ResourceImageController.delete);
-    return route;
+  //construction resource type controller
+  route.get(
+    "/construction-resource-type",
+    ConstructionResourceTypeController.getAll
+  );
+  route.get(
+    "/construction-resource-type/:id",
+    ConstructionResourceTypeController.get
+  );
+  route.get(
+    "/construction-resource-type_search",
+    ConstructionResourceTypeController.search
+  );
+  route.post(
+    "/construction-resource-type",
+    validateData.constructionResourceTypeValidate,
+    ConstructionResourceTypeController.save
+  );
+  route.put(
+    "/construction-resource-type/:id",
+    validateData.constructionResourceTypeValidate,
+    ConstructionResourceTypeController.update
+  );
+  route.delete(
+    "/construction-resource-type/:id",
+    ConstructionResourceTypeController.delete
+  );
+  //Resource study field controller
+  route.get("/resource-studyfield", ResourceStudyFieldController.getAll);
+  route.get("/resource-studyfield/:id", ResourceStudyFieldController.get);
+  route.get(
+    "/resource-data/resource-studyfield/:id",
+    ResourceStudyFieldController.getByResourceId
+  );
+  route.get("/resource-studyfield_search", ResourceStudyFieldController.search);
+  route.post(
+    "/resource-studyfield",
+    validateData.resourceStudyFieldValidate,
+    ResourceStudyFieldController.save
+  );
+  route.put(
+    "/resource-studyfield/:id",
+    validateData.resourceStudyFieldValidate,
+    ResourceStudyFieldController.update
+  );
+  route.delete("/resource-studyfield/:id", ResourceStudyFieldController.delete);
+  //Resource study level controller
+  route.get("/resource-studylevel", ResourceStudyLevelController.getAll);
+  route.get("/resource-studylevel/:id", ResourceStudyLevelController.get);
+  route.get(
+    "/resource-data/resource-studylevel/:id",
+    ResourceStudyLevelController.getByResourceId
+  );
+  route.get("/resource-studylevel_search", ResourceStudyLevelController.search);
+  route.post(
+    "/resource-studylevel",
+    validateData.resourceStudyLevelValidate,
+    ResourceStudyLevelController.save
+  );
+  route.put(
+    "/resource-studylevel/:id",
+    validateData.resourceStudyLevelValidate,
+    ResourceStudyLevelController.update
+  );
+  route.delete("/resource-studylevel/:id", ResourceStudyLevelController.delete);
+
+  //Resource work experience controller
+  route.get(
+    "/resource-workexperience",
+    ResourceWorkExperienceController.getAll
+  );
+  route.get(
+    "/resource-workexperience/:id",
+    ResourceWorkExperienceController.get
+  );
+  route.get(
+    "/resource-data/resource-workexperience/:id",
+    ResourceWorkExperienceController.getByResourceId
+  );
+  route.get(
+    "/resource-workexperience_search",
+    ResourceWorkExperienceController.search
+  );
+  route.post(
+    "/resource-workexperience",
+    validateData.resourceWorkExperienceValidate,
+    ResourceWorkExperienceController.save
+  );
+  route.put(
+    "/resource-workexperience/:id",
+    validateData.resourceWorkExperienceValidate,
+    ResourceWorkExperienceController.update
+  );
+  route.delete(
+    "/resource-workexperience/:id",
+    ResourceWorkExperienceController.delete
+  );
+  //construction resource category controller
+  route.get(
+    "/construction-resource-category",
+    ConstructionResourceCategoryController.getAll
+  );
+  route.get(
+    "/construction-resource-category/:id",
+    ConstructionResourceCategoryController.get
+  );
+  route.get(
+    "/type/construction-resource-category/:id",
+    ConstructionResourceCategoryController.getCRCByResourceTypeId
+  );
+  route.get(
+    "/construction-resource-category_search",
+    ConstructionResourceCategoryController.search
+  );
+  route.post(
+    "/construction-resource-category",
+    validateData.constructionResourceCategoryValidate,
+    ConstructionResourceCategoryController.save
+  );
+  route.put(
+    "/construction-resource-category/:id",
+    validateData.constructionResourceCategoryValidate,
+    ConstructionResourceCategoryController.update
+  );
+  route.delete(
+    "/construction-resource-category/:id",
+    ConstructionResourceCategoryController.delete
+  );
+  //construction resource subcategory controller
+  route.get(
+    "/construction-resource-subcategory",
+    ConstructionResourceSubCategoryController.getAll
+  );
+  route.get(
+    "/construction-resource-subcategory/:id",
+    ConstructionResourceSubCategoryController.get
+  );
+  route.get(
+    "/construction-resource-subcategory_search",
+    ConstructionResourceSubCategoryController.search
+  );
+  route.post(
+    "/construction-resource-subcategory",
+    validateData.constructionResourceSubCategoryValidate,
+    ConstructionResourceSubCategoryController.save
+  );
+  route.put(
+    "/construction-resource-subcategory/:id",
+    validateData.constructionResourceSubCategoryValidate,
+    ConstructionResourceSubCategoryController.update
+  );
+  route.delete(
+    "/construction-resource-subcategory/:id",
+    ConstructionResourceSubCategoryController.delete
+  );
+  //construction resource registration controller
+  route.get("/resource", ConstructionResourceRegistrationController.getAll);
+  route.get("/resource/:id", ConstructionResourceRegistrationController.get);
+  route.get(
+    "/filter/resource",
+    ConstructionResourceRegistrationController.filter
+  );
+  route.get(
+    "/resource_search",
+    ConstructionResourceRegistrationController.search
+  );
+  route.post(
+    "/resource",
+    validateData.constructionResourceValidate,
+    ConstructionResourceRegistrationController.save
+  );
+  route.put(
+    "/resource/:id",
+    validateData.constructionResourceValidate,
+    ConstructionResourceRegistrationController.update
+  );
+  route.delete(
+    "/resource/:id",
+    ConstructionResourceRegistrationController.delete
+  );
+  //construction resource quantity and controller
+  // route.get("/construction-resource-quantity-price", ConstructionResourceQuantityAndPriceController.getAll);
+  // route.get("/construction-resource-quantity-price/:id", ConstructionResourceQuantityAndPriceController.get);
+  // route.get("/construction-resource-quantity-price_search", ConstructionResourceQuantityAndPriceController.search);
+  // route.post("/construction-resource-quantity-price", validateData.constructionResourceQuantityandPriceValidate, ConstructionResourceQuantityAndPriceController.save);
+  // route.put("/construction-resource-quantity-price/:id", validateData.constructionResourceQuantityandPriceValidate, ConstructionResourceQuantityAndPriceController.update);
+  // route.delete("/construction-resource-quantity-price/:id", ConstructionResourceQuantityAndPriceController.delete);
+  //construction resource quantity and controller
+  route.get(
+    "/detail-construction-resource-type",
+    DetailResourceTypeController.getAll
+  );
+  route.get(
+    "/detail-construction-resource-type/:id",
+    DetailResourceTypeController.get
+  );
+  route.get(
+    "/image/detail-construction-resource-type/:id",
+    DetailResourceTypeController.getImage
+  );
+  route.get(
+    "/resource/detail-construction-resource-type/:id",
+    DetailResourceTypeController.getByResourceId
+  );
+  route.get(
+    "/detail-construction-resource-type_search",
+    DetailResourceTypeController.search
+  );
+  route.post(
+    "/detail-construction-resource-type",
+    validateData.detailResourceTypeValidate,
+    DetailResourceTypeController.save
+  );
+  route.put(
+    "/detail-construction-resource-type/:id",
+    DetailResourceTypeController.update
+  );
+  route.delete(
+    "/detail-construction-resource-type/:id",
+    DetailResourceTypeController.delete
+  );
+  //construction resource quantity and controller
+  route.get("/construction-resource-brand", ResourceBrandController.getAll);
+  route.get("/construction-resource-brand/:id", ResourceBrandController.get);
+  route.get(
+    "/image/construction-resource-brand/:id",
+    ResourceBrandController.getImage
+  );
+  route.get(
+    "/resource/construction-resource-brand/:id",
+    ResourceBrandController.getByResourceId
+  );
+  route.get(
+    "/construction-resource-brand_search",
+    ResourceBrandController.search
+  );
+  route.post(
+    "/construction-resource-brand",
+    validateData.resourceBrandValidate,
+    ResourceBrandController.save
+  );
+  route.put(
+    "/construction-resource-brand/:id",
+    validateData.resourceBrandValidate,
+    ResourceBrandController.update
+  );
+  route.delete(
+    "/construction-resource-brand/:id",
+    ResourceBrandController.delete
+  );
+  //construction resource quantity and controller
+  // route.get("/construction-resource-price", ResourcePriceController.getAll);
+  // route.get("/construction-resource-price/:id", ResourcePriceController.get);
+  // route.get("/resource/construction-resource-price/:id", ResourcePriceController.getByResourceId);
+  // route.get("/construction-resource-price_search", ResourcePriceController.search);
+  // route.post("/construction-resource-price", validateData.resourcePriceValidate, ResourcePriceController.save);
+  // route.put("/construction-resource-price/:id", validateData.resourcePriceValidate, ResourcePriceController.update);
+  // route.delete("/construction-resource-price/:id", ResourcePriceController.delete);
+  //construction resource quantity and price controller
+  route.get(
+    "/construction-resource-quantity-price",
+    ResourceQuantityandPriceController.getAll
+  );
+  route.get(
+    "/construction-resource-quantity-price/:id",
+    ResourceQuantityandPriceController.get
+  );
+  route.get(
+    "/project/construction-resource-quantity-price/:id",
+    ResourceQuantityandPriceController.getByProjectId
+  );
+  route.get(
+    "/resource/construction-resource-quantity-price/:id",
+    ResourceQuantityandPriceController.getByResourceId
+  );
+  route.get(
+    "/construction-resource-quantity-price_search",
+    ResourceQuantityandPriceController.search
+  );
+  route.post(
+    "/construction-resource-quantity-price",
+    validateData.resourceQuantityValidate,
+    ResourceQuantityandPriceController.save
+  );
+  route.put(
+    "/construction-resource-quantity-price/:id",
+    validateData.resourceQuantityValidate,
+    ResourceQuantityandPriceController.update
+  );
+  route.delete(
+    "/construction-resource-quantity-price/:id",
+    ResourceQuantityandPriceController.delete
+  );
+  //construction resource quantity and controller
+  route.get(
+    "/construction-resource-specification",
+    ResourceSpecificationController.getAll
+  );
+  route.get(
+    "/construction-resource-specification/:id",
+    ResourceSpecificationController.get
+  );
+  route.get(
+    "/image/construction-resource-specification/:id",
+    ResourceSpecificationController.getImage
+  );
+  route.get(
+    "/resource/construction-resource-specification/:id",
+    ResourceSpecificationController.getByResourceId
+  );
+  route.get(
+    "/construction-resource-specification_search",
+    ResourceSpecificationController.search
+  );
+  route.post(
+    "/construction-resource-specification",
+    validateData.resourceSpecificationValidate,
+    ResourceSpecificationController.save
+  );
+  route.put(
+    "/construction-resource-specification/:id",
+    validateData.resourceSpecificationValidate,
+    ResourceSpecificationController.update
+  );
+  route.delete(
+    "/construction-resource-specification/:id",
+    ResourceSpecificationController.delete
+  );
+  //Resource image
+  route.post(
+    "/resource-image/:id",
+    validateData.resourceImageValidate,
+    ResourceImageController.save
+  );
+  route.get("/resource-image/:id", ResourceImageController.getAll);
+  route.get("/image/resource-image/:id", ResourceImageController.getImage);
+  route.put(
+    "/resource-image/:id",
+    validateData.resourceImageValidate,
+    ResourceImageController.update
+  );
+  route.delete("/resource-image/:id", ResourceImageController.delete);
+  return route;
 };

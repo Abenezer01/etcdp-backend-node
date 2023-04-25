@@ -167,6 +167,48 @@ const resourceImageValidate = async (req, res, next) => {
     next();
   }
 };
+const resourceStudyFieldValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param == "failed") {
+    return res.status(400).json({
+      message: "Invalid id",
+    });
+  }
+  const validationRule = {
+    studyfield_id: "required|string",
+    resource_id: "required|string",
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+const resourceStudyLevelValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param == "failed") {
+    return res.status(400).json({
+      message: "Invalid id",
+    });
+  }
+  const validationRule = {
+    studylevel_id: "required|string",
+    resource_id: "required|string",
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+const resourceWorkExperienceValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param == "failed") {
+    return res.status(400).json({
+      message: "Invalid id",
+    });
+  }
+  const validationRule = {
+    workexperience_id: "required|string",
+    resource_id: "required|string",
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
 module.exports = {
   constructionResourceCategoryValidate,
   constructionResourceQuantityandPriceValidate,
@@ -179,4 +221,7 @@ module.exports = {
   resourceQuantityValidate,
   resourceSpecificationValidate,
   resourceImageValidate,
+  resourceStudyFieldValidate,
+  resourceStudyLevelValidate,
+  resourceWorkExperienceValidate,
 };
