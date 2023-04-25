@@ -71,13 +71,18 @@ module.exports = function (express) {
   );
 
   route.get(
-    "/project-type-project-finance/:id",
-    DashboardController.getProjectTypeFinancialInformation
+    "/project-general-financial-analytics",
+    DashboardController.getProjectGeneralFinancialAnalysis
   );
 
   route.get(
     "/project-category-project-finance/:id",
     DashboardController.getProjectCategoryFinancialInformation
+  );
+
+  route.get(
+    "/project-type-departments-project-finance/:id",
+    DashboardController.getProjectTypeFinancialInformationDepartments
   );
 
   
