@@ -9,7 +9,7 @@ const checkEditability = async (req, res, next) => {
     })
 
     if(data){
-        return res.json({
+        return res.status(500).json({
             message: "You can not update this data, It is already checked!"
         })
     }

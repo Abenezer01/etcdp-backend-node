@@ -188,7 +188,7 @@ const modulemodels = {
     "specification",
     "brand",
     "resourcetype",
-    "quantity",
+    "resourcequantityandprice",
     "studyfield",
     "studylevel",
     "workexperience"
