@@ -19,11 +19,11 @@ module.exports = {
       description: {
         type: Sequelize.TEXT,
       },
-      workexperience_id: {
+      workexperiencelevel_id: {
         type: Sequelize.UUID,
         allowNull: false,
         references: {
-          model: "workexperiences",
+          model: "experiencelevels",
           key: "id",
         },
         onUpdate: "CASCADE",

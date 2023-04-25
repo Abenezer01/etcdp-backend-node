@@ -29,7 +29,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
   resourceworkexperience.associate = function (models) {
-    resourceworkexperience.belongsTo(models.workexperience, {
+    resourceworkexperience.belongsTo(models.experiencelevel, {
       as: "workexperience",
       foreignKey: "workexperience_id",
     });
