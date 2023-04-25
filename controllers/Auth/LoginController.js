@@ -127,7 +127,7 @@ self.loginUser = async (request, res) => {
         id: usr.id,
         department_id: pos.department_id,
         position_id: pos.id,
-        lang:usr.lang
+        lang: usr.lang,
       };
 
       const accessToken = jwt.sign(usrr, TOKEN_KEY, {

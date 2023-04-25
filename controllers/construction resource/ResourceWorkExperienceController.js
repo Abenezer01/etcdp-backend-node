@@ -1,4 +1,4 @@
-const { resource, image, Sequelize } = require("../../models");
+const { resourceworkexperience, image, Sequelize } = require("../../models");
 const usrData = require("../../utils/userDataFromToken");
 const actionHelper = require("../utils/action-helper");
 const Op = Sequelize.Op;
@@ -17,7 +17,7 @@ self.getAll = async (req, res) => {
   const { limit, offset } = paginate.getPagination(page, size);
 
   try {
-    const { rows, count } = await resource.findAndCountAll({
+    const { rows, count } = await resourceworkexperience.findAndCountAll({
       limit,
       offset,
       order: [["createdAt", order]],
@@ -42,7 +42,7 @@ self.getAll = async (req, res) => {
 self.get = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await resource.findOne({
+    let data = await resourceworkexperience.findOne({
       where: {
         id: id,
       },
@@ -57,48 +57,45 @@ self.get = async (req, res) => {
     });
   }
 };
-
-self.filter = async (req, res) => {
+self.getByResourceId = async (req, res) => {
   const {
     page = process.env.page,
     size = process.env.size,
     order = process.env.order,
-    typeId,
-    categoryId,
-    subcategoryId,
   } = req.query;
-  const filter = [{ resourcetype_id: typeId }];
-  if (categoryId) {
-    filter.push({ resourcecategory_id: categoryId });
-  }
-  if (subcategoryId) {
-    filter.push({ resourcesubcategory_id: subcategoryId });
-  }
+  const id = req.params.id;
   const { limit, offset } = paginate.getPagination(page, size);
-  let limiter = { limit, offset };
-  page == -1 ? (limiter = {}) : limiter;
+
   try {
-    const result = await resource.findAndCountAll({
-      limit: limiter.limit,
-      offset: limiter.offset,
-      order: [["createdAt", order]],
+    const { rows, count } = await resourceworkexperience.findAndCountAll({
+      limit,
+      offset,
       where: {
-        [Op.and]: filter,
+        resource_id: id,
       },
+      include: ["workexperience"],
+      order: [["createdAt", order]],
     });
-    const pagingData = paginate.getPagingData(result, page, limit);
-    res.send(pagingData);
+
+    const response = paginate.getPagingData(
+      { rows, count },
+      page,
+      limit,
+      count
+    );
+
+    res.send(response);
   } catch (err) {
+    console.error(err);
     res.status(500).send({
-      message: err.message || "Some error occurred while retrieving data.",
+      message: err.message || "An error occurred while retrieving data.",
     });
   }
 };
-
 self.search = async (req, res) => {
   try {
     let text = req.query.text;
-    let data = await resource.findAll({
+    let data = await resourceworkexperience.findAll({
       where: {
         name: {
           [Op.like]: "%" + text + "%",
@@ -118,14 +115,13 @@ self.save = async (req, res) => {
     let usr = await usrData.userData(req, res);
     let body = req.body;
     if (usr) {
-      let data = await resource.create(body);
+      let data = await resourceworkexperience.create(body);
       if (data) {
         let us = usr.usrID;
-        data.department_id = us.departmentID;
         await data.save();
         await actionHelper.saveActionState(
           data.id,
-          "resource",
+          "resourceworkexperience",
           "REGISTER",
           us,
           req,
@@ -145,7 +141,7 @@ self.update = async (req, res) => {
   try {
     let id = req.params.id;
     let body = req.body;
-    let data = await resource.update(body, {
+    let data = await resourceworkexperience.update(body, {
       where: {
         id: id,
       },
@@ -163,7 +159,7 @@ self.update = async (req, res) => {
 self.delete = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await resource.destroy({
+    let data = await resourceworkexperience.destroy({
       where: {
         id: id,
       },

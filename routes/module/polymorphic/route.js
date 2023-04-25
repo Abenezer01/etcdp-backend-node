@@ -62,7 +62,7 @@ module.exports = function (express) {
   route.put("/file/:id", validateData.fileValidate, FileController.update);
   route.delete("/file/:id", FileController.delete);
   route.get("/link-files/:model/:id", FileController.linkfiles);
-  
+
   //reply
   route.get("/reply", ReplyController.getAll);
   route.get("/reply/:id", ReplyController.get);

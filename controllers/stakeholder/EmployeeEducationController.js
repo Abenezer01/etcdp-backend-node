@@ -207,7 +207,6 @@ self.getCollectionOfData = async (req, res) => {
   res.send(result);
 };
 self.save = async (req, res) => {
-
   try {
     let usr = await usrData.userData(req, res);
 
@@ -332,12 +331,10 @@ self.save = async (req, res) => {
       });
 
       if (newArr.length) {
-        return res
-          .status(410)
-          .json({
-            message:
-              "There is already registered data the same with your input data!",
-          });
+        return res.status(410).json({
+          message:
+            "There is already registered data the same with your input data!",
+        });
       }
 
       //return res.send(matchingData)
@@ -377,7 +374,6 @@ self.save = async (req, res) => {
           arr2.push(data);
         }
       });
-      
 
       if (arr2.length > 0) {
         const savedData = await employeeeducation.bulkCreate(arr);
@@ -581,6 +577,5 @@ self.delete = async (req, res) => {
     });
   }
 };
-
 
 module.exports = self;
