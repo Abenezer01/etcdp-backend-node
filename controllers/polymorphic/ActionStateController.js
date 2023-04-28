@@ -13,6 +13,7 @@ const Op = Sequelize.Op;
 let self = {};
 const usrData = require("../../utils/userDataFromToken");
 const actorHelper = require("../utils/actor-helper")
+
 self.getAll = async (req, res) => {
   try {
     let data = await actionstate.findAll();

@@ -18,6 +18,8 @@ const {
     resourcesubcategory,
     department,
     projecttime,
+    projectfinance,
+    projectvariation,
 
     Sequelize,
 } = require("../../models");
@@ -864,6 +866,232 @@ self.getGeneralAnalysisSubCategoryDepartments = async (req, res) => {
 }
 
 
+self.getProjectGeneralFinancialAnalysis = async(req, res) => {
+    try {
+        let projecttypes = await projecttype.findAll()
+
+        let arr  = []
+        for(let type of projecttypes) {
+            let projects = await project.findAll({
+                where: {
+                    projecttype_id: type.id
+                }
+            })
+
+            let proIDs = projects.map((item)=> item.id).filter(n=>n)
+
+            //main contract finance
+
+            let maincontractpriceamount = await projectfinance.findAll({
+                where: {
+                    project_id: {
+                        [Op.in]: proIDs
+                    }
+                }
+            })
+
+            const maincontractpricetotal  = maincontractpriceamount.reduce((total, item) => total + item.main_contract_price_amount, 0);
+
+
+            
+            arr.push({
+                name: type.title,
+                main_contract: maincontractpricetotal
+            })
+
+
+        }
+
+        return res.json(arr)
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message
+        })
+    }
+}
+self.getProjectTypeFinancialInformation = async(req, res) => {
+    try {
+
+        let {id} = req.params
+
+        let projects = await project.findAll({
+            where: {
+                projectcategory_id: id
+            }
+        })
+
+        let proIDs = projects.map((item)=> item.id).filter(n=>n)
+
+        let maincontractpriceamount = await projectfinance.findAll({
+            where: {
+                project_id: {
+                    [Op.in]: proIDs
+                }
+            }
+        })
+
+        const maincontractpricetotal  = maincontractpriceamount.reduce((total, item) => total + item.main_contract_price_amount, 0);
+
+
+        let variationsupplements = await projectvariation.findAll({
+            where: {
+                project_id: {
+                    [Op.in]: proIDs
+                }
+            }
+        })
+        
+        
+        
+        const filterSupplementVariations = (type) => variationsupplements.filter((item) => item.type === type);
+        
+        const variations = filterSupplementVariations("VARIATION");
+        const supplements = filterSupplementVariations("SUPPLEMENT");
+        const omissions = filterSupplementVariations("OMISSION");
+        // const specials = filterSupplementVariations("SPECIAL");
+        
+        const variation_total = variations.reduce((total, item) => total + item.amount, 0);
+        const supplement_total = supplements.reduce((total, item) => total + item.amount, 0);
+        const omission_total = omissions.reduce((total, item) => total + item.amount, 0);
+        // const special_total = specials.reduce((total, item) => total + item.amount, 0);
+        
+        
+        return res.json({
+            main_contract: maincontractpricetotal,
+            supplement: supplement_total,
+            variation: variation_total,
+            omission: omission_total
+        })
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message
+        })
+    }
+}
+
+self.getProjectTypeFinancialInformationDepartments = async(req, res) => {
+    
+    let id = req.params.id;
+
+    try {
+        let usr = await usrData.userData(req, res);
+
+        let departments = await self.getChildren(usr.departmentID);
+
+        let moduletype = await projecttype.findOne({
+            where: {
+                id: id,
+            },
+        });
+
+
+        return res.json({
+            departments,
+            moduletype
+        })
+        let projects = await project.findAndCountAll({
+            where: {
+                projecttype_id: moduletype.id,
+            },
+        });
+
+        // let str = `${moduleArr[1]}_id`
+
+        let categories = await projectcategory.findAll({
+            where: {
+                projecttype_id: moduletype.id,
+            },
+        });
+
+        let categoryelement = [];
+
+        if (categories.length > 0) {
+            for (let category of categories) {
+                let projects = await project.findAll({
+                    where: {
+                        projectcategory_id: category.id,
+                    },
+                    include: [{
+                        model: department,
+                        as: "department",
+                    }, ],
+                });
+
+                let proIDs = projects.map((item)=> item.id).filter(n=>n)
+
+                let maincontractpriceamount = await projectfinance.findAll({
+                    where: {
+                        project_id: {
+                            [Op.in]: proIDs
+                        }
+                    }
+                })
+
+                const maincontractpricetotal  = maincontractpriceamount.reduce((total, item) => total + item.main_contract_price_amount, 0);
+
+
+                let variationsupplements = await projectvariation.findAll({
+                    where: {
+                        project_id: {
+                            [Op.in]: proIDs
+                        }
+                    }
+                })
+        
+                const filterSupplementVariations = (type) => variationsupplements.filter((item) => item.type === type);
+                
+                const variations = filterSupplementVariations("VARIATION");
+                const supplements = filterSupplementVariations("SUPPLEMENT");
+                const omissions = filterSupplementVariations("OMISSION");
+                // const specials = filterSupplementVariations("SPECIAL");
+                
+                const variation_total = variations.reduce((total, item) => total + item.amount, 0);
+                const supplement_total = supplements.reduce((total, item) => total + item.amount, 0);
+                const omission_total = omissions.reduce((total, item) => total + item.amount, 0);
+                
+
+                //   const filteredData = data.filter(item => !["EtCDP", "TEST"].includes(item.name));
+                let existing = Object.keys(countByName);
+                const filteredData = departments.filter(
+                    (item) => !existing.includes(item.name)
+                );
+                const nameFiltered = filteredData.map((item) => item.name);
+
+                let remainingObj = {};
+
+                nameFiltered.forEach((element) => {
+                    remainingObj[element] = 0;
+                });
+                const mergedObj = Object.assign({}, countByName, remainingObj);
+
+                let deptObj = {};
+
+                deptObj["name"] = category.title;
+                deptObj["count"] = catestake.length;
+                deptObj["data"] =
+                    Object.keys(mergedObj).length === 0 ? 0 : Object.values(mergedObj);
+
+                categoryelement.push(deptObj);
+            }
+        }
+
+        first = {
+            title: moduletype.title,
+            series: categoryelement,
+            departments: [...new Set(departments.map((item) => item.name))].filter(
+                (n) => n
+            ),
+            count: stake.count,
+        };
+
+        return res.status(200).json(first);
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message,
+    });
+  
+}
+}
 
   
 module.exports = self;

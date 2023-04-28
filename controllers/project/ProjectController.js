@@ -510,6 +510,16 @@ self.update = async (req, res) => {
         id: id,
       },
     });
+    
+    const proStatus = await projectstatus.findOne({
+      order: [["createdAt", "DESC"]],
+      where: { project_id: id },
+    });
+    let updatedStatus = await projectstatus.update({status_id: body.status_id}, {
+      where: {
+        id: proStatus.id
+      }
+    })
     return res.status(200).json({
       message: "Success",
     });
