@@ -31,7 +31,6 @@ const paginate = require("../../utils/pagination");
 const dotenv = require("dotenv");
 dotenv.config();
 
-
 self.getAll = async (req, res) => {
   // test notification
   //send status
@@ -51,13 +50,12 @@ self.getAll = async (req, res) => {
     "descr"
   );
 
-    // let x = await checkerHelper.findChecker("projectreport", req, res)
+  // let x = await checkerHelper.findChecker("projectreport", req, res)
 
+  // let act = await actionHelper.saveActionState("d5fbbf5a-776a-46ad-82c8-df91b1988811", "note", "REGISTER", "00a340e3-431a-489f-a859-6d0c9d15e894", req, res)
 
-    // let act = await actionHelper.saveActionState("d5fbbf5a-776a-46ad-82c8-df91b1988811", "note", "REGISTER", "00a340e3-431a-489f-a859-6d0c9d15e894", req, res)
-
-    // return res.json(act)
-    // return res.json(x)
+  // return res.json(act)
+  // return res.json(x)
 
   let { page, size, order } = req.query;
   //console.log("The page", page, size)
@@ -404,26 +402,32 @@ self.get = async (req, res) => {
     let data = await project.findOne({
       where: { id },
       include: [
-        { model: projectcategory, as: "projectcategory", attributes: ["title"] },
+        {
+          model: projectcategory,
+          as: "projectcategory",
+          attributes: ["title"],
+        },
         { model: projecttype, as: "projecttype", attributes: ["title"] },
-        { model: projectsubcategory, as: "projectsubcategory", attributes: ["title"] }
+        {
+          model: projectsubcategory,
+          as: "projectsubcategory",
+          attributes: ["title"],
+        },
       ],
     });
 
     let stat = await projectstatus.findOne({
       order: [["createdAt", "DESC"]],
       where: {
-        project_id: id
+        project_id: id,
       },
-      include: [
-        { model: status, as: "status", attributes: ["title"]},
-      ]
-    })
+      include: [{ model: status, as: "status", attributes: ["title"] }],
+    });
 
-    data = data.toJSON() 
-    data.projectstatus = stat
+    data = data.toJSON();
+    data.projectstatus = stat;
 
-return res.status(200).json({ data: data ? data : {} });
+    return res.status(200).json({ data: data ? data : {} });
   } catch (error) {
     res.status(500).json({
       message: error.message,
@@ -467,12 +471,12 @@ self.save = async (req, res) => {
           req,
           res
         );
-          //add status
+        //add status
         let prostatus = await projectstatus.create({
           project_id: data.id,
-          status_id: body.status_id
-        })
-        if(prostatus){
+          status_id: body.status_id,
+        });
+        if (prostatus) {
           await actionHelper.saveActionState(
             prostatus.id,
             "projectstatus",
@@ -910,13 +914,92 @@ self.getStakeholderName = async (id) => {
 
 self.countAllProjectWithProjectType = async (req, res) => {
   try {
-    let queryString =
-      "SELECT projecttypes.title AS type, COALESCE(COUNT(projects.id), 0) AS total FROM projecttypes LEFT JOIN projects ON projecttypes.id = projects.projecttype_id GROUP BY projecttypes.title;";
-    let projectData = await sequelize.query(queryString, {
+    let queryTypeString =
+      "SELECT projecttypes.title AS type,projecttypes.id AS typeID, COALESCE(COUNT(projects.id), 0) AS total FROM projecttypes LEFT JOIN projects ON projecttypes.id = projects.projecttype_id GROUP BY projecttypes.title;";
+    let projectTypeData = await sequelize.query(queryTypeString, {
+      type: sequelize.QueryTypes.SELECT,
+    });
+    let queryCategoryString =
+      "SELECT projectcategories.title AS category,projectcategories.projecttype_Id AS typeID,projectcategories.id AS category_id, COALESCE(COUNT(projects.id), 0) AS total FROM projectcategories LEFT JOIN projects ON projectcategories.id = projects.projectcategory_id GROUP BY projectcategories.title,typeID,category_id;";
+    let projectCategoryData = await sequelize.query(queryCategoryString, {
+      type: sequelize.QueryTypes.SELECT,
+    });
+    let querySubCategoryString =
+      "SELECT projectsubcategories.title AS subcategory,projectsubcategories.projectcategory_id AS category_id, COALESCE(COUNT(projects.id), 0) AS total FROM projectsubcategories LEFT JOIN projects ON projectsubcategories.id = projects.projectsubcategory_id GROUP BY projectsubcategories.title,category_id;";
+    let projectSubCategoryData = await sequelize.query(querySubCategoryString, {
       type: sequelize.QueryTypes.SELECT,
     });
 
-    res.send(projectData);
+    const Result = [];
+
+    //loop through A
+    // for (let i = 0; i < projectTypeData.length; i++) {
+    //   const objA = projectTypeData[i];
+    //   const categories = [];
+
+    //   // loop through B to find matching typeIDs
+    //   for (let j = 0; j < projectCategoryData.length; j++) {
+    //     const objB = projectCategoryData[j];
+
+    //     if (objA.typeID === objB.typeID) {
+    //       categories.push({
+    //         category: objB.category,
+    //         total: objB.total,
+    //         cat_id: objB.category_id,
+    //       });
+    //     }
+    //   }
+    //   //return res.json(objA);
+    //   // create new object with matching categories
+    //   const newObj = {
+    //     type: objA.type,
+    //     total: objA.total,
+    //     categories: categories,
+    //   };
+
+    //   Result.push(newObj);
+    // }
+    for (let i = 0; i < projectTypeData.length; i++) {
+      const objA = projectTypeData[i];
+      const categories = [];
+
+      // loop through projectCategoryData to find matching typeIDs
+      for (let j = 0; j < projectCategoryData.length; j++) {
+        const objB = projectCategoryData[j];
+
+        if (objA.typeID === objB.typeID) {
+          const category = {
+            category: objB.category,
+            total: objB.total,
+            subcategories: [], // add empty array to hold subcategories
+          };
+
+          // loop through projectSubCategoryData to find matching category ids
+          for (let k = 0; k < projectSubCategoryData.length; k++) {
+            const objC = projectSubCategoryData[k];
+
+            if (objB.category_id === objC.category_id) {
+              category.subcategories.push({
+                subcategory: objC.subcategory,
+                total: objC.total,
+              });
+            }
+          }
+
+          categories.push(category);
+        }
+      }
+
+      const newObj = {
+        type: objA.type,
+        total: objA.total,
+        categories: categories,
+      };
+
+      Result.push(newObj);
+    }
+
+    res.send(Result);
   } catch (error) {
     res.status(500).json({
       message: error.message,
@@ -1316,30 +1399,46 @@ self.getProjectAnalysis = async (req, res) => {
   }
 };
 
-self.getFinancialNumbers = async(req, res) => {
+self.getFinancialNumbers = async (req, res) => {
   try {
-    
     const { id } = req.params;
 
     const finance = await projectfinance.findOne({ where: { project_id: id } });
-    const supplementvarations = await projectvariation.findAll({ where: { project_id: id } });
+    const supplementvarations = await projectvariation.findAll({
+      where: { project_id: id },
+    });
 
-    const filterSupplementVariations = (type) => supplementvarations.filter((item) => item.type === type);
+    const filterSupplementVariations = (type) =>
+      supplementvarations.filter((item) => item.type === type);
 
     const variations = filterSupplementVariations("VARIATION");
     const supplements = filterSupplementVariations("SUPPLEMENT");
     const omissions = filterSupplementVariations("OMISSION");
     const specials = filterSupplementVariations("SPECIAL");
 
-    const variation_total = variations.reduce((total, item) => total + item.amount, 0);
-    const supplement_total = supplements.reduce((total, item) => total + item.amount, 0);
-    const special_total = specials.reduce((total, item) => total + item.amount, 0);
-    const omission_total = omissions.reduce((total, item) => total + item.amount, 0);
+    const variation_total = variations.reduce(
+      (total, item) => total + item.amount,
+      0
+    );
+    const supplement_total = supplements.reduce(
+      (total, item) => total + item.amount,
+      0
+    );
+    const special_total = specials.reduce(
+      (total, item) => total + item.amount,
+      0
+    );
+    const omission_total = omissions.reduce(
+      (total, item) => total + item.amount,
+      0
+    );
 
     return res.json({
-      main_contract_price_amount: finance?finance.main_contract_price_amount : null,
-      rebate: finance?finance.rebate : null,
-      price_after_rebate: finance?finance.price_after_rebate : null,
+      main_contract_price_amount: finance
+        ? finance.main_contract_price_amount
+        : null,
+      rebate: finance ? finance.rebate : null,
+      price_after_rebate: finance ? finance.price_after_rebate : null,
       variation_total,
       supplement_total,
       special_total,
@@ -1347,8 +1446,8 @@ self.getFinancialNumbers = async(req, res) => {
     });
   } catch (error) {
     return res.status(500).json({
-      message: error.message
-    })
+      message: error.message,
+    });
   }
-}
+};
 module.exports = self;
