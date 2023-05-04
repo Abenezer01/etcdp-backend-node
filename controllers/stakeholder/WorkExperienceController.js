@@ -10,7 +10,7 @@ const Op = Sequelize.Op;
 const usrData = require("../../utils/userDataFromToken");
 const actionHelper = require("../utils/action-helper");
 let self = {};
-
+const uuid = require("uuid");
 self.getAll = async(req, res) => {
     const { page = process.env.cust_page, size = process.env.size, order = process.env.order } = req.query;
 
@@ -282,7 +282,7 @@ self.save = async(req, res) => {
                             let bod = `Sorry! the ${filteredReqBodyArr[i].nationality} nationality total female employee in ${filteredReqBodyArr[i].year} year was ${filteredfrmDBArr[j].female} but your total female is ${filteredReqBodyArr[i].female}`
                             return res.status(400).json({ "message": bod })
                         } else {
-
+                           
                             for (i = 0; i < arr.length; i++) {
                                 let body = {
                                     stakeholder_id: arr[i].stakeholder_id,
@@ -296,11 +296,24 @@ self.save = async(req, res) => {
                                 }
                                 if (body) {
                                     let data = await workexperience.create(body);
-                                    await actionHelper.saveActionState(data.id, "workexperience", "REGISTER", us, req, res)
                                     arr2.push(data)
                                 }
                             }
-                            return res.status(200).json({ data: arr2 })
+                                let resultIds = arr2
+                                        .map((obj) => obj.id)
+                                        .sort()
+                                        .join("");
+
+                                        const sharedUuid = uuid.v5(resultIds, uuid.NIL);
+                                        await actionHelper.saveActionState(
+                                        sharedUuid,
+                                        "workexperience",
+                                        "REGISTER",
+                                        us,
+                                        req,
+                                        res
+                                        );
+                            return res.status(200).json({ data: arr2,model_id:sharedUuid })
                         }
                     }
 
