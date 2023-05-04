@@ -8,7 +8,7 @@ const { saveActionState, getChildren } = require("../../utils/helper");
 const actionHelper = require("../utils/action-helper");
 const file = require("../../models/file");
 let self = {};
-
+const uuid = require("uuid");
 self.getAll = async (req, res) => {
   const {
     page = process.env.page,
@@ -377,16 +377,21 @@ self.save = async (req, res) => {
 
       if (arr2.length > 0) {
         const savedData = await employeeeducation.bulkCreate(arr);
-        savedData.forEach(async (data) => {
-          await actionHelper.saveActionState(
-            data.id,
-            "employeeeducation",
-            "REGISTER",
-            us,
-            req,
-            res
-          );
-        });
+
+        let resultIds = savedData
+          .map((obj) => obj.id)
+          .sort()
+          .join("");
+
+        const sharedUuid = uuid.v5(resultIds, uuid.NIL);
+        await actionHelper.saveActionState(
+          sharedUuid,
+          "employeeeducation",
+          "REGISTER",
+          us,
+          req,
+          res
+        );
         return res.status(200).json({ data: savedData });
       }
     }
