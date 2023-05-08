@@ -168,6 +168,8 @@ module.exports = function (express) {
   );
   route.delete("/stakeholder/:id", stakeholderController.delete);
 
+  route.get("/general-info/:id", stakeholderController.getStakeholderData);
+
   //stakeholder contact person
   route.get(
     "/stakeholder-contact-person",

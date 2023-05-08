@@ -99,6 +99,11 @@ module.exports = (sequelize, DataTypes) => {
             as: "file",
             foreignKey: "file_id",
         });
+
+        projectplan.hasMany(models.actionstate, {
+            as: "action",
+            foreignKey: "model_id"
+        })
     };
 
     return projectplan;

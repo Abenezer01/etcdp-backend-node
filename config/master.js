@@ -126,7 +126,7 @@ let permissionModules = [
   "projectstakeholder",
   "projectfile",
   "projectplan",
-  "projectresource",
+  "projectusedresource",
   "projectreport",
   "other",
   //forcenter

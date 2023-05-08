@@ -1,0 +1,179 @@
+Create Database DreamHome;
+
+Create Table Branch(branchNo char(4)NOT NULL,
+Street VARCHAR(15) NOT NULL,
+City VARCHAR(15) NOT NULL,
+oPosition VARCHAR(10) NOT NULL,
+Constraint Branch_pk
+Primary key(branchNo));
+
+Create Table Staff(staffNo VARCHAR(5)NOT NULL,
+fName VARCHAR(15)NOT NULL,
+lName VARCHAR(15)NOT NULL,
+position VARCHAR(10)NOT NULL,
+Sex char
+Constraint Staff_SexCHK
+Check (Sex IN ('F','M')),
+BOD DateTIME,
+Salary Decimal(9,2)NOT NULL, 
+branchNo CHAR(4)NOT NULL,
+Constraint Staff_pk
+primary key(StaffNo),
+Constraint Staff_Branch_FK
+Foreign key(branchNo)
+References branch(branchNo));
+
+Create Table PrivateOwner(ownerNo VARCHAR(7)NOT NULL,
+fNAME VARCHAR(15)NOT NULL,
+lNAME VARCHAR(15)NOT NULL,
+address VARCHAR(50)NOT NULL,
+telNo VARCHAR(13)NOT NULL,
+CONSTRAINT privateOwner_PK
+PRIMARY KEY(ownerNo));
+
+CREATE TABLE PropertyForRent(propertyNo VARCHAR(8)NOT NULL,
+street VARCHAR(25)NOT NULL,
+city VARCHAR(15)NOT NULL,
+postcode VARCHAR(8)NOT NULL,
+propertyType VARCHAR(10)NOT NULL,
+rooms SMALLINT NOT NULL,
+rent DECIMAL(5,1)NOT NULL,
+ownerNo VARCHAR(7)NOT NULL,
+staffNo VARCHAR(5),
+branchNo Char(4)NOT NULL,
+CONSTRAINT PropertyForRent_PK
+PRIMARY KEY (propertyNo),
+CONSTRAINT Property_Owner_FK
+FOREIGN KEY(ownerNo)
+REFERENCES PrivateOwner(ownerNo),
+CONSTRAINT Property_Staff_FK
+FOREIGN KEY(staffNo)
+REFERENCES Staff(staffNo),
+CONSTRAINT Property_Branch_FK
+FOREIGN KEY(branchNo)
+REFERENCES Branch(branchNo));
+
+CREATE TABLE Client(clientNo VARCHAR(7)NOT NULL,
+fName VARCHAR(15)NOT NULL,
+lName VARCHAR(15)NOT NULL,
+telNo VARCHAR(13)NOT NULL,
+prefType VARCHAR(10)NOT NULL,
+maxRent DECIMAL(5,1)Not Null,
+CONSTRAINT client_PK
+PRIMARY KEY(clientNo));
+
+CREATE TABLE Viewing(clientNo VARCHAR(7)NOT NULL,
+propertyNo VARCHAR(8)NOT NULL,
+viewDate DATETIME NOT NULL,
+comments VARCHAR(50),
+CONSTRAINT viewing_pk
+primary key(propertyNo,clientNo),
+CONSTRAINT Viewing_Property_FK
+FOREIGN KEY(propertyNo)
+REFERENCES PropertyForRent(propertyNo),
+CONSTRAINT Viewing_client_FK
+FOREIGN KEY(clientNo)
+REFERENCES Client(clientNo));
+
+CREATE TABLE Registration(clientNo VARCHAR(7)NOT NULL,
+branchNo CHAR(4)NOT NULL,
+staffNo VARCHAR(5)NOT NULL,
+dateJoined DATETIME NOT NULL,
+CONSTRAINT registration_PK
+PRIMARY KEY(clientNo,branchNo),
+CONSTRAINT Registration_client_FK
+FOREIGN KEY(clientNo)
+REFERENCES Client(clientNo),
+CONSTRAINT Registration_Branch_FK
+FOREIGN KEY(branchNo)
+REFERENCES Branch(branchNo),
+CONSTRAINT Registration_Staff_FK
+FOREIGN KEY(staffNo)
+REFERENCES Staff(staffNo));
+
+SELECT branchNo,street,city
+from branch
+WHERE city='London'or city='Glasgow';
+
+SELECT *FROM staff
+WHERE salary BETWEEN 20000 AND 30000;
+
+SELECT *FROM staff
+WHERE salary > 20000 AND salary < 30000;
+
+SELECT staffNo,fName,lName,oPosition
+FROM staff
+WHERE oPosition NOT LIKE'%Man%';
+
+select *from oosition;
+
+SELECT propertyNo,viewDate,comments
+FROM Viewing
+WHERE propertyNo='PG36' AND comments IS NULL;
+
+SELECT *From PropertyForRent;
+
+
+SELECT COUNT(*) as count
+FROM PropertyForRent
+WHERE rent>350;
+
+SELECT COUNT(DISTINCT propertyNo)as count
+FROM viewing
+WHERE viewDate BETWEEN '1-may-98'AND'31-may-98';
+
+SELECT COUNT(staffNo)as count,SUM(salary)as sum
+From staff
+WHERE Position='Manager';
+
+SELECT MIN(salary) as min,MAX(salary)as max,AVG(salary)as average
+FROM staff;
+
+select count ('f')as female,count('m') as male
+from staff;
+
+
+select branchNo,COUNT(staffNo)as count,Sum(salary)as sum
+FROM staff
+GROUP BY branchNo
+HAVING COUNT (staffNo)>1
+ORDER BY branchNo;
+
+
+CREATE TABLE Glob (country_id varchar(5)NOT NULL,
+country_name VARCHAR(30)NOT NULL
+CHECK (country_name IN('India','Italy','China')),
+reagion_id VARCHAR(5)NOT NULL);
+
+INSERT INTO Glob VALUES('c001','Addis','R14');
+
+
+CREATE TABLE Job_history(employee_id decimal(6,0)NOT NULL,
+start_date datetime NOT NULL,
+end_date DATETIME NOT NULL
+CHECK(end_date LIKE '__/__/____'),
+department_id decimal(4,0)NOT NULL);
+
+INSERT INTO Job_history VALUES('C002','06/12/1990','23/3/2010','R32');
+
+
+CREATE TABLE Job(job_id VARCHAR(5)NOT NULL primary key,
+job_title VARCHAR(20)NOT NULL DEFAULT ' ',
+min_salary DECIMAL(6,0) NOT NULL DEFAULT 8000,
+max_salary DECIMAL(6,0)DEFAULT NULL);
+
+
+INSERT INTO Glob VALUES('C002','China','R15'),
+('C003','India','R16'),
+('C004','Italy','R17');
+
+ALTER TABLE Glob
+ADD Location VARCHAR(10);
+
+ALTER TABLE Glob
+MODIFY Location INT;
+
+UPDATE Glob
+SET country_name='Italy',
+    Location='NOT_APP'
+WHERE country_id='c002';

@@ -1,5 +1,9 @@
 const {
     stakeholder,
+    stakeholderemail,
+    stakeholderphone,
+    ownership,
+    operationlocation,
     actionstate,
     department,
     sequelize,
@@ -345,4 +349,57 @@ self.countAllStakeholderWithStakeCategory = async(req, res) => {
         });
     }
 };
+
+self.getStakeholderData = async(req, res) => {
+    try {
+        let {id} = req.params
+        let data = await stakeholder.findOne({
+            where: {
+                id: id
+            }
+        })
+
+        if(data){
+            let stakeAddress = await operationlocation.findAll({
+                where: {
+                    stakeholder_id: id
+                }
+            })
+
+            let emails = await stakeholderemail.findOne({
+                where: {
+                    stakeholder_id: id,
+                    is_primary: true
+                }
+            })
+            let phones = await stakeholderphone.findOne({
+                where: {
+                    stakeholder_id: id,
+                    is_primary: true
+                }
+            })
+
+            let stakeOwnership = await ownership.findOne({
+                where: {
+                    id: data.ownership_id
+                }
+            })
+
+            return res.json({
+                name: data.trade_name,
+                license_date: data.license_issued_date,
+                locations: stakeAddress,
+                emails,
+                phones,
+                origin: data.origin,
+                tin: data.tin,
+                ownership_type: stakeOwnership.title
+            })
+        }
+
+        
+    } catch (error) {
+        
+    }
+}
 module.exports = self;

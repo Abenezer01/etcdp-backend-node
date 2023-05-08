@@ -486,6 +486,8 @@ module.exports = function (express) {
   );
   route.delete("/irrigation-capacity/:id", IrrigationCapacityController.delete);
 
+  
+  route.get("/project/cpm", ProjectController.getAllCPMProject);
   route.get("/project/", ProjectController.getAll);
   route.get("/project/:id", ProjectController.get);
   route.get("/project-search", ProjectController.search);
