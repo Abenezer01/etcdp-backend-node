@@ -358,5 +358,10 @@ module.exports = function (express) {
     ResourceImageController.update
   );
   route.delete("/resource-image/:id", ResourceImageController.delete);
+  //Matrix
+  route.get(
+    "/matrix/construction-resource",
+    ConstructionResourceRegistrationController.countAllConstructionResourceWithResourceType
+  );
   return route;
 };

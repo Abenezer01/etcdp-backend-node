@@ -9,7 +9,7 @@ module.exports = {
         type: Sequelize.UUID,
       },
       model_id: {
-        type: Sequelize.UUID,
+        type: Sequelize.UUID(255),
         allowNull: false,
       },
       model: {

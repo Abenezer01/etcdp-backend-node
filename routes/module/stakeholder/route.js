@@ -568,7 +568,7 @@ module.exports = function (express) {
   );
   //summary
   route.get(
-    "/count/stakeholder/stakeholdertype",
+    "/matrix/stakeholder",
     stakeholderController.countAllStakeholderWithStakeType
   );
   route.get(
