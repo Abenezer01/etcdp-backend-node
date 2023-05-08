@@ -510,16 +510,19 @@ self.update = async (req, res) => {
         id: id,
       },
     });
-    
+
     const proStatus = await projectstatus.findOne({
       order: [["createdAt", "DESC"]],
       where: { project_id: id },
     });
-    let updatedStatus = await projectstatus.update({status_id: body.status_id}, {
-      where: {
-        id: proStatus.id
+    let updatedStatus = await projectstatus.update(
+      { status_id: body.status_id },
+      {
+        where: {
+          id: proStatus.id,
+        },
       }
-    })
+    );
     return res.status(200).json({
       message: "Success",
     });
@@ -925,88 +928,72 @@ self.getStakeholderName = async (id) => {
 self.countAllProjectWithProjectType = async (req, res) => {
   try {
     let queryTypeString =
-      "SELECT projecttypes.title AS type,projecttypes.id AS typeID, COALESCE(COUNT(projects.id), 0) AS total FROM projecttypes LEFT JOIN projects ON projecttypes.id = projects.projecttype_id GROUP BY projecttypes.title;";
+      "SELECT projecttypes.title AS name,projecttypes.id AS id, COALESCE(COUNT(projects.id), 0) AS total FROM projecttypes LEFT JOIN projects ON projecttypes.id = projects.projecttype_id GROUP BY projecttypes.title;";
     let projectTypeData = await sequelize.query(queryTypeString, {
       type: sequelize.QueryTypes.SELECT,
     });
     let queryCategoryString =
-      "SELECT projectcategories.title AS category,projectcategories.projecttype_Id AS typeID,projectcategories.id AS category_id, COALESCE(COUNT(projects.id), 0) AS total FROM projectcategories LEFT JOIN projects ON projectcategories.id = projects.projectcategory_id GROUP BY projectcategories.title,typeID,category_id;";
+      "SELECT projectcategories.title AS name,projectcategories.projecttype_Id AS typeID,projectcategories.id AS id, COALESCE(COUNT(projects.id), 0) AS total FROM projectcategories LEFT JOIN projects ON projectcategories.id = projects.projectcategory_id GROUP BY projectcategories.title,typeID,id;";
     let projectCategoryData = await sequelize.query(queryCategoryString, {
       type: sequelize.QueryTypes.SELECT,
     });
     let querySubCategoryString =
-      "SELECT projectsubcategories.title AS subcategory,projectsubcategories.projectcategory_id AS category_id, COALESCE(COUNT(projects.id), 0) AS total FROM projectsubcategories LEFT JOIN projects ON projectsubcategories.id = projects.projectsubcategory_id GROUP BY projectsubcategories.title,category_id;";
+      "SELECT projectsubcategories.id AS id,projectsubcategories.title AS name,projectsubcategories.projectcategory_id AS category_id, COALESCE(COUNT(projects.id), 0) AS total FROM projectsubcategories LEFT JOIN projects ON projectsubcategories.id = projects.projectsubcategory_id GROUP BY projectsubcategories.title,category_id,id;";
     let projectSubCategoryData = await sequelize.query(querySubCategoryString, {
       type: sequelize.QueryTypes.SELECT,
     });
-
+    const { count } = await project.findAndCountAll();
     const Result = [];
-
-    //loop through A
-    // for (let i = 0; i < projectTypeData.length; i++) {
-    //   const objA = projectTypeData[i];
-    //   const categories = [];
-
-    //   // loop through B to find matching typeIDs
-    //   for (let j = 0; j < projectCategoryData.length; j++) {
-    //     const objB = projectCategoryData[j];
-
-    //     if (objA.typeID === objB.typeID) {
-    //       categories.push({
-    //         category: objB.category,
-    //         total: objB.total,
-    //         cat_id: objB.category_id,
-    //       });
-    //     }
-    //   }
-    //   //return res.json(objA);
-    //   // create new object with matching categories
-    //   const newObj = {
-    //     type: objA.type,
-    //     total: objA.total,
-    //     categories: categories,
-    //   };
-
-    //   Result.push(newObj);
-    // }
+    //let Result = {};
+    const parent = {
+      name: "project",
+      id: "382d79ee-2b9d-4919-a7ad-1ada61c1ab28",
+      parentNodeId: null,
+      total: count,
+    };
+    Result.push(parent);
     for (let i = 0; i < projectTypeData.length; i++) {
       const objA = projectTypeData[i];
-      const categories = [];
+      //const categories = [];
 
       // loop through projectCategoryData to find matching typeIDs
       for (let j = 0; j < projectCategoryData.length; j++) {
         const objB = projectCategoryData[j];
 
-        if (objA.typeID === objB.typeID) {
+        if (objA.id === objB.typeID) {
           const category = {
-            category: objB.category,
+            parentNodeId: objA.id,
+            id: objB.id,
+            name: objB.name,
             total: objB.total,
-            subcategories: [], // add empty array to hold subcategories
           };
-
+          Result.push(category);
           // loop through projectSubCategoryData to find matching category ids
           for (let k = 0; k < projectSubCategoryData.length; k++) {
             const objC = projectSubCategoryData[k];
 
-            if (objB.category_id === objC.category_id) {
-              category.subcategories.push({
-                subcategory: objC.subcategory,
+            if (objB.id === objC.category_id) {
+              Result.push({
+                parentNodeId: objB.id,
+                id: objC.id,
+                name: objC.name,
                 total: objC.total,
               });
             }
           }
 
-          categories.push(category);
+          //categories.push(category);
         }
       }
 
-      const newObj = {
-        type: objA.type,
+      const typeNewObj = {
+        parentNodeId: parent.id,
+        id: objA.id,
+        name: objA.name,
         total: objA.total,
-        categories: categories,
       };
-
-      Result.push(newObj);
+      Result.push(typeNewObj);
+      //Result.push(allResult);
     }
 
     res.send(Result);

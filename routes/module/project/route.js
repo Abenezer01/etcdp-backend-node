@@ -906,7 +906,7 @@ module.exports = function (express) {
 
   //summary
   route.get(
-    "/count/project/projecttype",
+    "/matrix/project",
     ProjectController.countAllProjectWithProjectType
   );
   route.get(

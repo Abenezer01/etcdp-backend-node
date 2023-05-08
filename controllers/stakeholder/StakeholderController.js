@@ -280,60 +280,36 @@ self.delete = async (req, res) => {
     });
   }
 };
-self.countAllStakeholderWithStakeType = async (req, res) => {
+self.countAllStakeholderWithStakeTypee = async (req, res) => {
   try {
     let queryTypeString =
-      "SELECT stakeholdertypes.title AS type,stakeholdertypes.id AS typeID, COALESCE(COUNT(projects.id), 0) AS total FROM stakeholdertypes LEFT JOIN projects ON stakeholdertypes.id = projects.projecttype_id GROUP BY stakeholdertypes.title;";
-    let projectTypeData = await sequelize.query(queryTypeString, {
+      "SELECT stakeholdertypes.title AS type,stakeholdertypes.id AS typeID, COALESCE(COUNT(stakeholders.id), 0) AS total FROM stakeholdertypes LEFT JOIN stakeholders ON stakeholdertypes.id = stakeholders.stakeholdertype_id GROUP BY stakeholdertypes.title;";
+    let stakeholderTypeData = await sequelize.query(queryTypeString, {
       type: sequelize.QueryTypes.SELECT,
     });
     let queryCategoryString =
-      "SELECT stakecategories.title AS category,stakecategories.projecttype_Id AS typeID,stakecategories.id AS category_id, COALESCE(COUNT(projects.id), 0) AS total FROM stakecategories LEFT JOIN projects ON stakecategories.id = projects.projectcategory_id GROUP BY stakecategories.title,typeID,category_id;";
-    let projectCategoryData = await sequelize.query(queryCategoryString, {
+      "SELECT stakecategories.title AS category,stakecategories.stakeholdertype_Id AS typeID,stakecategories.id AS category_id, COALESCE(COUNT(stakeholders.id), 0) AS total FROM stakecategories LEFT JOIN stakeholders ON stakecategories.id = stakeholders.stakecategory_id GROUP BY stakecategories.title,typeID,category_id;";
+    let stakeholderCategoryData = await sequelize.query(queryCategoryString, {
       type: sequelize.QueryTypes.SELECT,
     });
     let querySubCategoryString =
-      "SELECT stakesubcategories.title AS subcategory,stakesubcategories.projectcategory_id AS category_id, COALESCE(COUNT(projects.id), 0) AS total FROM stakesubcategories LEFT JOIN projects ON stakesubcategories.id = projects.projectsubcategory_id GROUP BY stakesubcategories.title,category_id;";
-    let projectSubCategoryData = await sequelize.query(querySubCategoryString, {
-      type: sequelize.QueryTypes.SELECT,
-    });
+      "SELECT stakesubcategories.title AS subcategory,stakesubcategories.stakecategory_id AS category_id, COALESCE(COUNT(stakeholders.id), 0) AS total FROM stakesubcategories LEFT JOIN stakeholders ON stakesubcategories.id = stakeholders.stakesubcategory_id GROUP BY stakesubcategories.title,category_id;";
+    let stakeholderSubCategoryData = await sequelize.query(
+      querySubCategoryString,
+      {
+        type: sequelize.QueryTypes.SELECT,
+      }
+    );
 
     const Result = [];
 
-    //loop through A
-    // for (let i = 0; i < projectTypeData.length; i++) {
-    //   const objA = projectTypeData[i];
-    //   const categories = [];
-
-    //   // loop through B to find matching typeIDs
-    //   for (let j = 0; j < projectCategoryData.length; j++) {
-    //     const objB = projectCategoryData[j];
-
-    //     if (objA.typeID === objB.typeID) {
-    //       categories.push({
-    //         category: objB.category,
-    //         total: objB.total,
-    //         cat_id: objB.category_id,
-    //       });
-    //     }
-    //   }
-    //   //return res.json(objA);
-    //   // create new object with matching categories
-    //   const newObj = {
-    //     type: objA.type,
-    //     total: objA.total,
-    //     categories: categories,
-    //   };
-
-    //   Result.push(newObj);
-    // }
-    for (let i = 0; i < projectTypeData.length; i++) {
-      const objA = projectTypeData[i];
+    for (let i = 0; i < stakeholderTypeData.length; i++) {
+      const objA = stakeholderTypeData[i];
       const categories = [];
 
-      // loop through projectCategoryData to find matching typeIDs
-      for (let j = 0; j < projectCategoryData.length; j++) {
-        const objB = projectCategoryData[j];
+      // loop through stakeholderCategoryData to find matching typeIDs
+      for (let j = 0; j < stakeholderCategoryData.length; j++) {
+        const objB = stakeholderCategoryData[j];
 
         if (objA.typeID === objB.typeID) {
           const category = {
@@ -342,9 +318,9 @@ self.countAllStakeholderWithStakeType = async (req, res) => {
             subcategories: [], // add empty array to hold subcategories
           };
 
-          // loop through projectSubCategoryData to find matching category ids
-          for (let k = 0; k < projectSubCategoryData.length; k++) {
-            const objC = projectSubCategoryData[k];
+          // loop through stakeholderSubCategoryData to find matching category ids
+          for (let k = 0; k < stakeholderSubCategoryData.length; k++) {
+            const objC = stakeholderSubCategoryData[k];
 
             if (objB.category_id === objC.category_id) {
               category.subcategories.push({
@@ -365,6 +341,87 @@ self.countAllStakeholderWithStakeType = async (req, res) => {
       };
 
       Result.push(newObj);
+    }
+
+    res.send(Result);
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+self.countAllStakeholderWithStakeType = async (req, res) => {
+  try {
+    let queryTypeString =
+      "SELECT stakeholdertypes.title AS name,stakeholdertypes.id AS id, COALESCE(COUNT(stakeholders.id), 0) AS total FROM stakeholdertypes LEFT JOIN stakeholders ON stakeholdertypes.id = stakeholders.stakeholdertype_id GROUP BY stakeholdertypes.title;";
+    let stakeholderTypeData = await sequelize.query(queryTypeString, {
+      type: sequelize.QueryTypes.SELECT,
+    });
+    let queryCategoryString =
+      "SELECT stakecategories.title AS name,stakecategories.stakeholdertype_Id AS typeID,stakecategories.id AS id, COALESCE(COUNT(stakeholders.id), 0) AS total FROM stakecategories LEFT JOIN stakeholders ON stakecategories.id = stakeholders.stakecategory_id GROUP BY stakecategories.title,typeID,id;";
+    let stakeholderCategoryData = await sequelize.query(queryCategoryString, {
+      type: sequelize.QueryTypes.SELECT,
+    });
+    let querySubCategoryString =
+      "SELECT stakesubcategories.id AS id,stakesubcategories.title AS name,stakesubcategories.stakecategory_id AS category_id, COALESCE(COUNT(stakeholders.id), 0) AS total FROM stakesubcategories LEFT JOIN stakeholders ON stakesubcategories.id = stakeholders.stakesubcategory_id GROUP BY stakesubcategories.title,category_id,id;";
+    let stakeholderSubCategoryData = await sequelize.query(
+      querySubCategoryString,
+      {
+        type: sequelize.QueryTypes.SELECT,
+      }
+    );
+    const { count } = await stakeholder.findAndCountAll();
+    const Result = [];
+    //let Result = {};
+    const parent = {
+      name: "stakeholder",
+      id: "382d79ee-2b9d-4919-a7ad-1ada61c1ab28",
+      parentNodeId: null,
+      total: count,
+    };
+    Result.push(parent);
+    for (let i = 0; i < stakeholderTypeData.length; i++) {
+      const objA = stakeholderTypeData[i];
+      //const categories = [];
+
+      // loop through stakeholderCategoryData to find matching typeIDs
+      for (let j = 0; j < stakeholderCategoryData.length; j++) {
+        const objB = stakeholderCategoryData[j];
+
+        if (objA.id === objB.typeID) {
+          const category = {
+            parentNodeId: objA.id,
+            id: objB.id,
+            name: objB.name,
+            total: objB.total,
+          };
+          Result.push(category);
+          // loop through stakeholderSubCategoryData to find matching category ids
+          for (let k = 0; k < stakeholderSubCategoryData.length; k++) {
+            const objC = stakeholderSubCategoryData[k];
+
+            if (objB.id === objC.category_id) {
+              Result.push({
+                parentNodeId: objB.id,
+                id: objC.id,
+                name: objC.name,
+                total: objC.total,
+              });
+            }
+          }
+
+          //categories.push(category);
+        }
+      }
+
+      const typeNewObj = {
+        parentNodeId: parent.id,
+        id: objA.id,
+        name: objA.name,
+        total: objA.total,
+      };
+      Result.push(typeNewObj);
+      //Result.push(allResult);
     }
 
     res.send(Result);
