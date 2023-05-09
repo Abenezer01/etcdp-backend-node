@@ -1,4 +1,8 @@
-const { stakeholderstudyfield, Sequelize } = require("../../models");
+const {
+  stakeholderstudyfield,
+  actionstate,
+  Sequelize,
+} = require("../../models");
 const paginate = require("../../utils/pagination");
 const dotenv = require("dotenv");
 dotenv.config();
@@ -6,6 +10,8 @@ const Op = Sequelize.Op;
 const usrData = require("../../utils/userDataFromToken");
 const { saveActionState, getChildren } = require("../../utils/helper");
 const actionHelper = require("../utils/action-helper");
+const { getModelAction } = require("../polymorphic/ActionStateController");
+//const getModelAction = require("../polymorphic/ActionStateController");
 let self = {};
 
 self.getAll = async (req, res) => {
@@ -79,9 +85,18 @@ self.getStakeholderStudyFieldByStakeholderId = async (req, res) => {
       include: ["studyfield", "studyprogram", "studylevel"],
       order: [["createdAt", order]],
     });
-
+    console.log("The status", rows[0].id);
+    let newData = await Promise.all(
+      rows.map(async (item) => {
+        //console.log("The item id", item.dataValues);
+        return {
+          ...item.dataValues,
+          status: await actionHelper.getAction(item.dataValues.id),
+        };
+      })
+    );
     const response = paginate.getPagingData(
-      { rows, count },
+      { rows: newData, count },
       page,
       limit,
       count

@@ -48,15 +48,27 @@ self.getByProjectId = async (req, res) => {
 
   const { limit, offset } = paginate.getPagination(page, size);
   try {
-    const data = await constructionresource.findAndCountAll({
+    const { rows, count } = await constructionresource.findAndCountAll({
       limit,
       offset,
       where: { project_id: id },
       include: { model: resource, as: "resource" },
       order: [["createdAt", order]],
     });
-
-    const response = paginate.getPagingData(data, page, limit);
+    let newData = await Promise.all(
+      rows.map(async (item) => {
+        //console.log("The item id", item.dataValues);
+        return {
+          ...item.dataValues,
+          status: await actionHelper.getAction(item.dataValues.id),
+        };
+      })
+    );
+    const response = paginate.getPagingData(
+      { rows: newData, count },
+      page,
+      limit
+    );
     res.send(response);
   } catch (error) {
     res.status(500).send({

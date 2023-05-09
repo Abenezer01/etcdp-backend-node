@@ -68,7 +68,7 @@ self.getByHigherInstituteId = async (req, res) => {
 
   const { limit, offset } = paginate.getPagination(page, size);
   try {
-    const data = await graduate.findAndCountAll({
+    const { rows, count } = await graduate.findAndCountAll({
       limit,
       offset,
       where: { higher_institute_id: id },
@@ -84,7 +84,20 @@ self.getByHigherInstituteId = async (req, res) => {
     // if (!data) {
     //     return res.status(200).send("No data found")
     // }
-    const response = paginate.getPagingData(data, page, limit);
+    let newData = await Promise.all(
+      rows.map(async (item) => {
+        //console.log("The item id", item.dataValues);
+        return {
+          ...item.dataValues,
+          status: await actionHelper.getAction(item.dataValues.id),
+        };
+      })
+    );
+    const response = paginate.getPagingData(
+      { rows: newData, count },
+      page,
+      limit
+    );
     res.send(response);
   } catch (error) {
     res.status(500).send({

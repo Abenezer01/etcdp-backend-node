@@ -3,6 +3,7 @@ const {
   documenttype,
   documentcategory,
   documentsubcategory,
+  sequelize,
   Sequelize,
 } = require("../../models");
 const usrData = require("../../utils/userDataFromToken");
@@ -242,6 +243,87 @@ self.getdocument = async (req, res) => {
     let prePath = "/home/kaleb/Desktop/etcdp-backend-node/public";
     let conPath = prePath.concat(data.attachement);
     return res.download(conPath);
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+self.countAllDocumentWithDocumentType = async (req, res) => {
+  try {
+    let queryTypeString =
+      "SELECT documenttypes.title AS name,documenttypes.id AS id, COALESCE(COUNT(documents.id), 0) AS total FROM documenttypes LEFT JOIN documents ON documenttypes.id = documents.documenttype_id GROUP BY documenttypes.title;";
+    let documentTypeData = await sequelize.query(queryTypeString, {
+      type: sequelize.QueryTypes.SELECT,
+    });
+    let queryCategoryString =
+      "SELECT documentcategories.title AS name,documentcategories.documenttype_Id AS typeID,documentcategories.id AS id, COALESCE(COUNT(documents.id), 0) AS total FROM documentcategories LEFT JOIN documents ON documentcategories.id = documents.documentcategory_id GROUP BY documentcategories.title,typeID,id;";
+    let documentCategoryData = await sequelize.query(queryCategoryString, {
+      type: sequelize.QueryTypes.SELECT,
+    });
+    let querySubCategoryString =
+      "SELECT documentsubcategories.id AS id,documentsubcategories.title AS name,documentsubcategories.documentcategory_id AS category_id, COALESCE(COUNT(documents.id), 0) AS total FROM documentsubcategories LEFT JOIN documents ON documentsubcategories.id = documents.documentsubcategory_id GROUP BY documentsubcategories.title,category_id,id;";
+    let documentSubCategoryData = await sequelize.query(
+      querySubCategoryString,
+      {
+        type: sequelize.QueryTypes.SELECT,
+      }
+    );
+    const { count } = await document.findAndCountAll();
+    const Result = [];
+    //let Result = {};
+    const parent = {
+      name: "document",
+      id: "382d79ee-2b9d-4919-a7ad-1ada61c1ab28",
+      parentNodeId: null,
+      total: count,
+    };
+    Result.push(parent);
+    for (let i = 0; i < documentTypeData.length; i++) {
+      const objA = documentTypeData[i];
+      //const categories = [];
+
+      // loop through documentCategoryData to find matching typeIDs
+      for (let j = 0; j < documentCategoryData.length; j++) {
+        const objB = documentCategoryData[j];
+
+        if (objA.id === objB.typeID) {
+          const category = {
+            parentNodeId: objA.id,
+            id: objB.id,
+            name: objB.name,
+            total: objB.total,
+          };
+          Result.push(category);
+          // loop through documentSubCategoryData to find matching category ids
+          for (let k = 0; k < documentSubCategoryData.length; k++) {
+            const objC = documentSubCategoryData[k];
+
+            if (objB.id === objC.category_id) {
+              Result.push({
+                parentNodeId: objB.id,
+                id: objC.id,
+                name: objC.name,
+                total: objC.total,
+              });
+            }
+          }
+
+          //categories.push(category);
+        }
+      }
+
+      const typeNewObj = {
+        parentNodeId: parent.id,
+        id: objA.id,
+        name: objA.name,
+        total: objA.total,
+      };
+      Result.push(typeNewObj);
+      //Result.push(allResult);
+    }
+
+    res.send(Result);
   } catch (error) {
     res.status(500).json({
       message: error.message,

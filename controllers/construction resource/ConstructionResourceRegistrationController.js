@@ -78,7 +78,7 @@ self.filter = async (req, res) => {
   let limiter = { limit, offset };
   page == -1 ? (limiter = {}) : limiter;
   try {
-    const result = await resource.findAndCountAll({
+    const { rows, count } = await resource.findAndCountAll({
       limit: limiter.limit,
       offset: limiter.offset,
       order: [["createdAt", order]],
@@ -86,7 +86,21 @@ self.filter = async (req, res) => {
         [Op.and]: filter,
       },
     });
-    const pagingData = paginate.getPagingData(result, page, limit);
+    let newData = await Promise.all(
+      rows.map(async (item) => {
+        //console.log("The item id", item.dataValues);
+        return {
+          ...item.dataValues,
+          status: await actionHelper.getAction(item.dataValues.id),
+        };
+      })
+    );
+
+    const pagingData = paginate.getPagingData(
+      { rows: newData, count },
+      page,
+      limit
+    );
     res.send(pagingData);
   } catch (err) {
     res.status(500).send({

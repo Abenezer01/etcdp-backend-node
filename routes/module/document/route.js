@@ -79,6 +79,10 @@ module.exports = function (express) {
     DocumentController.update
   );
   route.delete("/document/:id", DocumentController.delete);
-
+  //summary
+  route.get(
+    "/matrix/document",
+    DocumentController.countAllDocumentWithDocumentType
+  );
   return route;
 };

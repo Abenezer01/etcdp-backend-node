@@ -102,9 +102,17 @@ self.getByHigherInstituteId = async (req, res) => {
         }
       }
       //console.log("The array", arr)
-
+      let newData = await Promise.all(
+        arr.map(async (item) => {
+          //console.log("The item id", item.dataValues);
+          return {
+            ...item,
+            status: await actionHelper.getAction(item.id),
+          };
+        })
+      );
       const response = paginate.getPagingData(
-        { rows: arr, count: data.count },
+        { rows: newData, count: data.count },
         page,
         limit
       );
