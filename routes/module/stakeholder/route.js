@@ -571,10 +571,10 @@ module.exports = function (express) {
     "/matrix/stakeholder",
     stakeholderController.countAllStakeholderWithStakeType
   );
-  route.get(
-    "/count/stakeholder/stakeholdercategory",
-    stakeholderController.countAllStakeholderWithStakeCategory
-  );
+  // route.get(
+  //   "/count/stakeholder/stakeholdercategory",
+  //   stakeholderController.countAllStakeholderWithStakeCategory
+  // );
   //Stakeholder email and phone
   route.post("/stakeholder-email", StakeholderEmailController.save);
   route.post("/stakeholder-phone", StakeholderPhoneController.save);

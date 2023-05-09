@@ -9,6 +9,9 @@ const __PLAN_URL = 'https://backend.api.onespace.et/api/integrations/plans'
 const __REPORT_URL = 'https://backend.api.onespace.et/api/integrations/reports'
 
 
+// const __FINANCIAL_PLAN_URL = 'https://backend.api.onespace.et/api/integrations/reports'
+
+
 const self = {}
 
 self.cpmAPI = (callback) => {

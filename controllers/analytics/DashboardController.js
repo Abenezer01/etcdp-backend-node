@@ -979,10 +979,7 @@ self.getProjectTypeFinancialInformation = async(req, res) => {
             }
         })
 
-
-
         
-
         let proIDs = projects.map((item)=> item.id).filter(n=>n)
 
         let maincontractpriceamount = await projectfinance.findAll({
@@ -1556,6 +1553,80 @@ self.getProjectAnnualCostAndScheduleVariances = async(req, res) => {
         })
     }
 }
+
+self.getAllProjectAnnualFinancial = async(req, res) => {
+    try {
+        let {id,year, attr} = req.params
+
+        // let projects = await project.findAll({
+        //     where: {
+        //         projecttype_id: id
+        //     }
+        // })
+
+        // let proIDs = projects.map((item)=> item.id)
+
+        // let plans = await projectplan.findAll({
+        //     where: {
+        //         year: Number(year),
+        //         project_id: {
+        //             [Op.in]: proIDs
+        //         }
+        //     }
+        // })
+
+        // let reports = await projectreport.findAll({
+        //     where: {
+        //         year: Number(year),
+        //         project_id: {
+        //             [Op.in]: proIDs
+        //         }
+        //     }
+        // })
+
+        const plans = await apiHelper.getExternalData('plan')
+        const reports = await apiHelper.getExternalData('report')
+
+
+        let months  = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+
+        let planned = months.map((month) => {
+            let eachArr = plans.filter((plan)=> plan.month===month.toString())
+            
+            let attrValue = eachArr.reduce((total, item)=> total+item[attr], 0)
+            
+            return attrValue
+        })
+
+        let actual = months.map((month) => {
+            let eachArr = reports.filter((report)=> report.month===month.toString())
+            
+            let attrValue = eachArr.reduce((total, item)=> total+item[attr], 0)
+            
+            return attrValue
+        })
+
+        let performanceArr = [
+            {
+                name: 'Planned',
+                data: planned
+            },
+            {
+                name: 'Actual',
+                data: actual
+            }
+        ]
+
+        return res.json(performanceArr)
+
+        
+    } catch (error) {
+        return res.status(500).json({
+            message: error.mesage
+        })
+    }
+}
+
 
 
 module.exports = self;

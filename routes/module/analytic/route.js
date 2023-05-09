@@ -75,10 +75,10 @@ module.exports = function (express) {
     DashboardController.getProjectGeneralFinancialAnalysis
   );
 
-  // route.get(
-  //   "/project-type-project-finance/:id",
-  //   DashboardController.getProjectTypeFinancialInformation
-  // );
+  route.get(
+    "/project-type-project-finance/:id",
+    DashboardController.getProjectTypeFinancialInformation
+  );
   // route.get(
   //   "/project-category-project-finance/:id",
   //   DashboardController.getProjectCategoryFinancialInformation
@@ -121,6 +121,13 @@ module.exports = function (express) {
     "/project-annual-financial-performance/:id/:year/:attr",
     DashboardController.getProjectYearlyPerformance
   );
+
+  route.get(
+    "/cpm-annual-financial-performance/:id/:year/:attr",
+    DashboardController.getAllProjectAnnualFinancial
+  );
+  // all-projects-yearly-financial/:year/:attr"
+  
 
   route.get(
     "/project-annual-cost-schedule-variance/:id/:year",
