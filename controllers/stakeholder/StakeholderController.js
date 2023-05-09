@@ -1,9 +1,13 @@
 const {
-  stakeholder,
-  actionstate,
-  department,
-  sequelize,
-  Sequelize,
+    stakeholder,
+    stakeholderemail,
+    stakeholderphone,
+    ownership,
+    operationlocation,
+    actionstate,
+    department,
+    sequelize,
+    Sequelize,
 } = require("./../../models");
 const jwt = require("jsonwebtoken");
 const paginate = require("../../utils/pagination");
@@ -431,19 +435,57 @@ self.countAllStakeholderWithStakeType = async (req, res) => {
     });
   }
 };
-self.countAllStakeholderWithStakeCategory = async (req, res) => {
-  try {
-    let queryString =
-      "SELECT stakecategories.title AS category, COALESCE(COUNT(stakeholders.id), 0) AS total FROM stakecategories LEFT JOIN stakeholders ON stakecategories.id = stakeholders.stakecategory_id GROUP BY stakecategories.title;";
-    let stakeData = await sequelize.query(queryString, {
-      type: sequelize.QueryTypes.SELECT,
-    });
 
-    res.send(stakeData);
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
-};
+self.getStakeholderData = async(req, res) => {
+    try {
+        let {id} = req.params
+        let data = await stakeholder.findOne({
+            where: {
+                id: id
+            }
+        })
+
+        if(data){
+            let stakeAddress = await operationlocation.findAll({
+                where: {
+                    stakeholder_id: id
+                }
+            })
+
+            let emails = await stakeholderemail.findOne({
+                where: {
+                    stakeholder_id: id,
+                    is_primary: true
+                }
+            })
+            let phones = await stakeholderphone.findOne({
+                where: {
+                    stakeholder_id: id,
+                    is_primary: true
+                }
+            })
+
+            let stakeOwnership = await ownership.findOne({
+                where: {
+                    id: data.ownership_id
+                }
+            })
+
+            return res.json({
+                name: data.trade_name,
+                license_date: data.license_issued_date,
+                locations: stakeAddress,
+                emails,
+                phones,
+                origin: data.origin,
+                tin: data.tin,
+                ownership_type: stakeOwnership.title
+            })
+        }
+
+        
+    } catch (error) {
+        
+    }
+}
 module.exports = self;

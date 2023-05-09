@@ -3,6 +3,7 @@ const {
   actionstate,
   projectstakeholder,
   stakeholder,
+  user,
   projecttime,
   projectfinance,
   projectstatus,
@@ -25,30 +26,63 @@ const usrData = require("../../utils/userDataFromToken");
 const actionHelper = require("../utils/action-helper");
 const cipherHelper = require("../utils/cipher-helper");
 const notificationHelper = require("../utils/notification-helper");
+const apiHelper = require("../utils/API-helper")
+const fetch = require('node-fetch')
+
 
 let self = {};
 const paginate = require("../../utils/pagination");
 const dotenv = require("dotenv");
 dotenv.config();
 
+
+self.getAllCPMProject = async(req, res) => {
+  try {
+
+    const cpmProjects = await apiHelper.getExternalData('project')
+    let projects = await project.findAll()
+    const mergedData = cpmProjects.concat(projects)
+
+    return res.json(mergedData)
+
+    //stakeholder
+    // const cpmStakeholders = await apiHelper.getExternalData('stakeholder')
+    // let stakeholders = await stakeholder.findAll()
+    // const mergedData = cpmStakeholders.concat(stakeholders)
+
+    // return res.json(mergedData)
+
+    //users
+    // const cpmUsers = await apiHelper.getExternalData('user')
+    // let users = await user.findAll()
+    // const mergedData = cpmUsers.concat(users)
+
+    // return res.json(mergedData)
+
+  } catch (error) {
+    return res.json({
+      message: error.message
+    })
+  }
+}
 self.getAll = async (req, res) => {
   // test notification
   //send status
 
-  let pro = await project.findOne({
-    where: {
-      id: "0fdbc117-d374-4f9d-86fa-cdb708cca67f",
-    },
-  });
+  // let pro = await project.findOne({
+  //   where: {
+  //     id: "0fdbc117-d374-4f9d-86fa-cdb708cca67f",
+  //   },
+  // });
 
-  notificationHelper.notify(
-    "REGISTER",
-    "new project is added. check it",
-    "project",
-    "00a340e3-431a-489f-a859-6d0c9d15e894",
-    pro.id,
-    "descr"
-  );
+  // notificationHelper.notify(
+  //   "REGISTER",
+  //   "new project is added. check it",
+  //   "project",
+  //   "00a340e3-431a-489f-a859-6d0c9d15e894",
+  //   pro.id,
+  //   "descr"
+  // );
 
   // let x = await checkerHelper.findChecker("projectreport", req, res)
 

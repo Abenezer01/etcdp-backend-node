@@ -76,14 +76,62 @@ module.exports = function (express) {
   );
 
   // route.get(
+  //   "/project-type-project-finance/:id",
+  //   DashboardController.getProjectTypeFinancialInformation
+  // );
+  // route.get(
   //   "/project-category-project-finance/:id",
   //   DashboardController.getProjectCategoryFinancialInformation
   // );
+
 
   route.get(
     "/project-type-departments-project-finance/:id",
     DashboardController.getProjectTypeFinancialInformationDepartments
   );
+
+  route.get(
+    "/project-type-categories-finance/:id",
+    DashboardController.getProjectTypeCategoriesFinancialAnalysis
+  );
+
+  route.get(
+    "/project-category-location-information/:id",
+    DashboardController.getProjectCategoryLocationInformation
+  );
+  
+
+  route.get(
+    "/stakeholder-category-location-information/:id",
+    DashboardController.getStakeholderCategoryLocationInformation
+  );
+  
+  
+  route.get(
+    "/project-annual-plan-analysis/:id/:year",
+    DashboardController.getProjectYearlyFinancialPlan
+  );
+
+  route.get(
+    "/project-annual-report-analysis/:id/:year",
+    DashboardController.getProjectYearlyFinancialReport
+  );
+
+  route.get(
+    "/project-annual-financial-performance/:id/:year/:attr",
+    DashboardController.getProjectYearlyPerformance
+  );
+
+  route.get(
+    "/project-annual-cost-schedule-variance/:id/:year",
+    DashboardController.getProjectAnnualCostAndScheduleVariances
+  );
+
+
+  
+  
+
+  
 
   //  route.get("/note/:id", DashboardController.get);
   //  route.put("/note/:id", DashboardController.update);
