@@ -68,6 +68,7 @@ const {
   roadsegment,
   role,
   rolepermission,
+  salary,
   solarenergy,
   specification,
   spillwayinfo,

@@ -1481,4 +1481,74 @@ self.getFinancialNumbers = async (req, res) => {
     });
   }
 };
+
+self.getContractTimeAnalysis = async(req, res) => {
+	let id = req.params.id 
+	try {
+		
+		let time = await projecttime.findOne({
+			where: {
+				project_id: id
+			}
+		})
+
+		let plans = await projectplan.findAll({
+			where: {
+				project_id: id
+			}
+		})
+
+		let reports = await projectreport.findAll({
+			where: {
+				project_id: id
+			}
+		})
+		
+		let plannedRevenue = plans.reduce((total, item) => total+ item.financial_performance, 0)
+		let actualRevenue = reports.reduce((total, item) => total + item.financial_performance, 0)
+/**
+ * completion_date: moment(time.commencement_date).add(total_time)
+ */
+		let extensions = await projectextensiontime.findAll({
+			where: {
+				project_id: time.project_id
+			}
+		})
+
+		let extension = extensions.reduce((total, item)=> total + item.number_of_days, 0)
+
+		let totalTime = extension + time.original_contract_duration
+		let completion_time = moment(time.commencement_date).add(totalTime, 'days')
+		let remaining_day = completion_time.diff(moment(), 'days')
+
+		let status;
+		if(remaining_day < 0){
+			status = "OVERDUE"
+		}else{
+			if(remaining_day <=40 ){
+				status = "ALERT"
+			}else{
+				status = "ACTIVE"
+			}extension
+		}
+		return res.json({
+			contract_signing_date : time.contract_signing_date,
+			site_handover_date: time.site_handover_date,
+			mobilization_days: time.mobilization_days,
+			commencement_date: time.commencement_date,
+			contract_duration: time.original_contract_duration,
+			extension_time : extension,
+			extension_count: extensions.length,
+			total_time: totalTime,
+			completion_time,
+			remaining_day,
+			status,
+			spi: (actualRevenue/(plannedRevenue == 0 ? 1:plannedRevenue)*100)
+		})
+	} catch (error) {
+		return res.status(500).json({
+			message: error.message
+		})
+	}
+}
 module.exports = self;

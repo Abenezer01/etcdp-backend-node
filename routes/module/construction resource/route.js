@@ -12,6 +12,8 @@ const ResourceImageController = require("../../../controllers/construction resou
 const ResourceStudyFieldController = require("../../../controllers/construction resource/ResourceStudyFieldController");
 const ResourceStudyLevelController = require("../../../controllers/construction resource/ResourceStudyLevelController");
 const ResourceWorkExperienceController = require("../../../controllers/construction resource/ResourceWorkExperienceController");
+
+const SalaryController = require("../../../controllers/construction resource/SalaryController");
 const validateData = require("../../../middleware/validate/module/construction resource/validate");
 module.exports = function (express) {
   const route = express.Router();
@@ -362,6 +364,36 @@ module.exports = function (express) {
   route.get(
     "/matrix/construction-resource",
     ConstructionResourceRegistrationController.countAllConstructionResourceWithResourceType
+  );
+
+
+  //salary controller
+  route.get(
+    "/salary",
+    SalaryController.getAll
+  );
+  route.get(
+    "/salary/:id",
+    SalaryController.get
+  );
+  route.get(
+    "/resource/salary/:id",
+    SalaryController.getByResourceId
+  );
+
+  route.post(
+    "/salary",
+    validateData.salaryValidate,
+    SalaryController.save
+  );
+  route.put(
+    "/salary/:id",
+    validateData.salaryValidate,
+    SalaryController.update
+  );
+  route.delete(
+    "/salary/:id",
+    SalaryController.delete
   );
   return route;
 };

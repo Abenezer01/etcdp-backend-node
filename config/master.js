@@ -94,6 +94,7 @@ let models = [
   "specification",
   "brand",
   "resourcedetailtype",
+  "salary"
 ];
 
 let modules = [
@@ -191,7 +192,8 @@ const modulemodels = {
     "resourcequantityandprice",
     "studyfield",
     "studylevel",
-    "workexperience"
+    "workexperience",
+    "salary"
   ],
   document: ["document"],
   center: ["department", "position", "professional"],
