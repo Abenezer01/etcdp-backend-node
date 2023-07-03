@@ -114,6 +114,7 @@ self.getByStakeholderId = async (req, res) => {
       acc[project_id].project_expense += project_expense;
       return acc;
     }, {});
+  
     const groupedPlanData = planData.reduce((acc, item) => {
       const { project_id, financial_performance, project_expense } = item;
       acc[project_id] = acc[project_id] || {
@@ -125,9 +126,10 @@ self.getByStakeholderId = async (req, res) => {
       acc[project_id].project_expense += project_expense;
       return acc;
     }, {});
+   
     const reportResult = Object.values(groupedReportData);
     const planResult = Object.values(groupedPlanData);
-
+    
     const result = reportResult.map((reportItem) => {
       const planItem = planResult.find(
         (item) => item.project_id === reportItem.project_id
@@ -158,9 +160,9 @@ self.getByStakeholderId = async (req, res) => {
         };
       }
     });
-
+   
     const filteredResult = result.filter((item) => item);
-
+   // return res.json(filteredResult)
     const {
       page = process.env.page,
       size = process.env.size,
