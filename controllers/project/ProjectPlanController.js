@@ -132,11 +132,30 @@ self.save = async (req, res) => {
   try {
     let usr = await usrData.userData(req, res);
     let body = req.body;
+    let found  = await projectplan.findOne({
+      where: {
+        project_id: body.project_id,
+        year: body.year,
+        quarter: body.quarter
+      }
+    })
+
+
+    if(found) {
+      return res.status(422).json({
+        message: "Plan aready exist!"
+      })
+    }
+
     var date = new Date(body.start);
     var lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
     body.end = lastDay;
+    
+
     if (usr) {
+     
       let data = await projectplan.create(body);
+
       if (data) {
         let usrID = usr.usrID;
         await actionHelper.saveActionState(

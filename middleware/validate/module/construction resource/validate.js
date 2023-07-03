@@ -209,6 +209,24 @@ const resourceWorkExperienceValidate = async (req, res, next) => {
 
   await validateReply.validateReply(req.body, validationRule, res, next);
 };
+
+const salaryValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param == "failed") {
+    return res.status(400).json({
+      message: "Invalid id",
+    });
+  }
+  const validationRule = {
+    resource_id: "required|string",
+    min_pay: "required",
+    max_pay: "required",
+    salary_type: "string",
+    year: "required|date"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
 module.exports = {
   constructionResourceCategoryValidate,
   constructionResourceQuantityandPriceValidate,
@@ -224,4 +242,5 @@ module.exports = {
   resourceStudyFieldValidate,
   resourceStudyLevelValidate,
   resourceWorkExperienceValidate,
+  salaryValidate
 };

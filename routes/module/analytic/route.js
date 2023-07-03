@@ -123,7 +123,7 @@ module.exports = function (express) {
   );
 
   route.get(
-    "/cpm-annual-financial-performance/:id/:year/:attr",
+    "/project-annual-financial-performance/:id/:year/:attr/cpm",
     DashboardController.getAllProjectAnnualFinancial
   );
   // all-projects-yearly-financial/:year/:attr"

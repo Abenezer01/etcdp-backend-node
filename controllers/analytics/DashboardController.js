@@ -1244,6 +1244,8 @@ self.getProjectYearlyFinancialPlan = async(req, res) => {
     try {
         let {id, year} = req.params
 
+        
+
         let projects = await project.findAll({
             where: {
                 projecttype_id: id
@@ -1379,64 +1381,106 @@ self.getProjectYearlyFinancialReport = async(req, res) => {
 self.getProjectYearlyPerformance = async(req, res) => {
     try {
         let {id,year, attr} = req.params
+        let cpm = req.query.cpm
+        if(cpm==Boolean(true)){
+            const cpmplans = await apiHelper.getExternalData('plan')
+            const cpmreports = await apiHelper.getExternalData('report')
 
-        let projects = await project.findAll({
-            where: {
-                projecttype_id: id
-            }
-        })
 
-        let proIDs = projects.map((item)=> item.id)
+            plans = cpmplans.filter((item) => item.year === year.toString())
+            reports = cpmreports.filter((item) => item.year === year.toString())
 
-        let plans = await projectplan.findAll({
-            where: {
-                year: Number(year),
-                project_id: {
-                    [Op.in]: proIDs
+            let months  = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+
+            let planned = months.map((month) => {
+                let eachArr = plans.filter((plan)=> plan.month===month.toString())
+                
+                let attrValue = eachArr.reduce((total, item)=> total+item[attr], 0)
+                
+                return attrValue
+            })
+
+            let actual = months.map((month) => {
+                let eachArr = reports.filter((report)=> report.month===month.toString())
+                
+                let attrValue = eachArr.reduce((total, item)=> total+item[attr], 0)
+                
+                return attrValue
+            })
+
+            let performanceArr = [
+                {
+                    name: 'Planned',
+                    data: planned
+                },
+                {
+                    name: 'Actual',
+                    data: actual
                 }
-            }
-        })
+            ]
 
-        let reports = await projectreport.findAll({
-            where: {
-                year: Number(year),
-                project_id: {
-                    [Op.in]: proIDs
+            return res.json(performanceArr)
+        }else{
+            
+       
+            let projects = await project.findAll({
+                where: {
+                    projecttype_id: id
                 }
-            }
-        })
+            })
+
+            let proIDs = projects.map((item)=> item.id)
+
+            let plans = await projectplan.findAll({
+                where: {
+                    year: Number(year),
+                    project_id: {
+                        [Op.in]: proIDs
+                    }
+                }
+            })
+
+            let reports = await projectreport.findAll({
+                where: {
+                    year: Number(year),
+                    project_id: {
+                        [Op.in]: proIDs
+                    }
+                }
+            })
 
 
-        let quarters  = [1, 2, 3, 4]
+            let quarters  = [1, 2, 3, 4]
 
-        let planned = quarters.map((qua) => {
-            let eachArr = plans.filter((plan)=> plan.quarter===qua.toString())
-            
-            let attrValue = eachArr.reduce((total, item)=> total+item[attr], 0)
-            
-            return attrValue
-        })
+            let planned = quarters.map((qua) => {
+                let eachArr = plans.filter((plan)=> plan.quarter===qua.toString())
+                
+                let attrValue = eachArr.reduce((total, item)=> total+item[attr], 0)
+                
+                return attrValue
+            })
 
-        let actual = quarters.map((qua) => {
-            let eachArr = reports.filter((report)=> report.quarter===qua.toString())
-            
-            let attrValue = eachArr.reduce((total, item)=> total+item[attr], 0)
-            
-            return attrValue
-        })
+            let actual = quarters.map((qua) => {
+                let eachArr = reports.filter((report)=> report.quarter===qua.toString())
+                
+                let attrValue = eachArr.reduce((total, item)=> total+item[attr], 0)
+                
+                return attrValue
+            })
 
-        let performanceArr = [
-            {
-                name: 'Planned',
-                data: planned
-            },
-            {
-                name: 'Actual',
-                data: actual
-            }
-        ]
+            let performanceArr = [
+                {
+                    name: 'Planned',
+                    data: planned
+                },
+                {
+                    name: 'Actual',
+                    data: actual
+                }
+            ]
 
-        return res.json(performanceArr)
+            return res.json(performanceArr)
+        }
 
         
     } catch (error) {
@@ -1558,6 +1602,7 @@ self.getAllProjectAnnualFinancial = async(req, res) => {
     try {
         let {id,year, attr} = req.params
 
+
         // let projects = await project.findAll({
         //     where: {
         //         projecttype_id: id
@@ -1584,9 +1629,12 @@ self.getAllProjectAnnualFinancial = async(req, res) => {
         //     }
         // })
 
-        const plans = await apiHelper.getExternalData('plan')
-        const reports = await apiHelper.getExternalData('report')
+        const cpmplans = await apiHelper.getExternalData('plan')
+        const cpmreports = await apiHelper.getExternalData('report')
 
+
+        plans = cpmplans.filter((item) => item.year === year.toString())
+        reports = cpmreports.filter((item) => item.year === year.toString())
 
         let months  = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
 

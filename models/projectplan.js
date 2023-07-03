@@ -55,6 +55,7 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.DOUBLE,
         },
         file_id: DataTypes.UUID,
+        remark: DataTypes.TEXT,
         profit_or_loss: {
             type: DataTypes.VIRTUAL,
             get() {
