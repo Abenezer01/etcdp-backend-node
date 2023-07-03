@@ -220,13 +220,13 @@ self.save = async(req, res) => {
 
         let body = req.body;
 
-        //check email is really exist
-        let val = await self.isEmailValid(body.email);
-        if (!val.valid) {
-            return res.status(422).json({
-                message: "The provided email address does not exist!",
-            });
-        }
+        //check email is really exist -- consider the domain inclusiveness like eiabc.edu.et
+        // let val = await self.isEmailValid(body.email);
+        // if (!val.valid) {
+        //     return res.status(422).json({
+        //         message: "The provided email address does not exist!",
+        //     });
+        // }
 
         const salt = await bcrypt.genSalt(10);
         var usr = {
@@ -239,6 +239,7 @@ self.save = async(req, res) => {
             partner_name: body.partner_name,
             birth_date: body.birth_date,
             revision_no: body.revision_no,
+            lang: "en"
             // password: await bcrypt.hash(body.password, salt)
         };
         created_user = await user.create(usr);
@@ -740,7 +741,7 @@ self.requestPasswordReset = async(req, res) => {
         const { email, redirectUrl } = req.body;
         //check if user exist
 
-        let encrypted_email = await encrypt(email);
+        let encrypted_email = cipherHelper.encrypt(email);
 
         let usemail = await useremail.findOne({
             where: {
@@ -942,5 +943,47 @@ self.checkUserStatus = async(req, res) => {
         });
     }
 };
+self.changeLanguage = async(req, res) =>{
+    try {
 
+        let body = req.body 
+        let lang = body.lang
+
+
+        // let users = await user.findAll()
+        // for(let u of users){
+        //     let ux = await user.update({lang:lang}, {
+        //         where: {
+        //             id:u.id
+        //         }
+        //     })
+        // }
+        // return res.status(200).json({
+        //     message: "Language changed successfully!"
+        // })
+
+
+        let usr = await usrData.userData(req, res);
+        let us = await user.update({lang:lang}, {
+            where: {
+                id:usr.usrID
+            }
+        })
+
+        if(us){
+            return res.status(200).json({
+                message: "Language changed successfully!"
+            })
+        }else{
+            return res.status(500).json({
+                message: "Try Again!"
+            })
+        }
+        
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message
+        })
+    }
+} 
 module.exports = self;

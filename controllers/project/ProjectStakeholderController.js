@@ -10,6 +10,8 @@ const {
 const moment = require("moment");
 const usrData = require("../../utils/userDataFromToken");
 const actionHelper = require("../utils/action-helper");
+const cipherHelper = require("../utils/cipher-helper");
+
 const Op = Sequelize.Op;
 const paginate = require("../../utils/pagination");
 const dotenv = require("dotenv");
@@ -140,13 +142,13 @@ self.getByStakeholderId = async (req, res) => {
         const cpi =
           reportItem.project_expense !== 0
             ? (reportItem.financial_performance / reportItem.project_expense) *
-              100
+            100
             : 0;
         const spi =
           planItem.financial_performance !== 0
             ? (reportItem.financial_performance /
-                planItem.financial_performance) *
-              100
+              planItem.financial_performance) *
+            100
             : 0;
 
         return {
@@ -180,6 +182,9 @@ self.getByStakeholderId = async (req, res) => {
       order: [["createdAt", order]],
       raw: true,
     });
+
+
+    // return res.json(final)
     const projectTimeData = await projecttime.findAll({
       where: {
         project_id: {
@@ -218,6 +223,7 @@ self.getByStakeholderId = async (req, res) => {
         //moment().diff(commencement, 'days') / contract_duration * 100
         return {
           ...aElement,
+          name: cipherHelper.decrypt(aElement.name),
           used_time:
             (moment().diff(matchingBElement.commencement_date, "days") /
               matchingBElement.original_contract_duration) *
