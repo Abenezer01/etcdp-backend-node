@@ -31,7 +31,7 @@ module.exports = (sequelize, DataTypes) => {
       coverage_area: DataTypes.DOUBLE,
       no_of_families_coverage: DataTypes.DOUBLE,
       service_period: DataTypes.DATE,
-      Inauguration_date: DataTypes.DATE,
+      inauguration_date: DataTypes.DATE,
       revision_no: DataTypes.INTEGER,
     },
     {

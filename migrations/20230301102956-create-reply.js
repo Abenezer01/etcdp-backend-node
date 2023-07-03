@@ -16,6 +16,7 @@ module.exports = {
         },
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
+        allowNull: false
       },
       creator_id: {
         type: Sequelize.UUID,
@@ -25,6 +26,7 @@ module.exports = {
         },
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
+        allowNull: false
       },
       content: {
         type: Sequelize.TEXT,
