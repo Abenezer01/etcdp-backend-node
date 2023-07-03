@@ -9,12 +9,15 @@ module.exports = {
       },
       url: {
         type: Sequelize.STRING,
+        allowNull: false
       },
       model_id: {
         type: Sequelize.UUID,
+        allowNull: false
       },
       type: {
         type: Sequelize.STRING,
+        allowNull: false
       },
       createdAt: {
         allowNull: false,
