@@ -44,6 +44,12 @@ module.exports = {
       branch_address: {
         type: Sequelize.STRING,
       },
+      percent: {
+        type: Sequelize.DOUBLE,
+      }, 
+      institution_type: {
+        type: Sequelize.DOUBLE,
+      },
       phone: {
         type: Sequelize.STRING,
       },

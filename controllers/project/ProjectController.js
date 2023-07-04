@@ -986,40 +986,29 @@ self.countAllProjectWithProjectType = async (req, res) => {
       total: count,
     };
     Result.push(parent);
-    for (let i = 0; i < projectTypeData.length; i++) {
-      const objA = projectTypeData[i];
-      //const categories = [];
-
-      // loop through projectCategoryData to find matching typeIDs
-      for (let j = 0; j < projectCategoryData.length; j++) {
-        const objB = projectCategoryData[j];
-
-        if (objA.id === objB.typeID) {
-          const category = {
-            parentNodeId: objA.id,
-            id: objB.id,
-            name: objB.name,
-            total: objB.total,
-          };
-          Result.push(category);
-          // loop through projectSubCategoryData to find matching category ids
-          for (let k = 0; k < projectSubCategoryData.length; k++) {
-            const objC = projectSubCategoryData[k];
-
-            if (objB.id === objC.category_id) {
-              Result.push({
-                parentNodeId: objB.id,
-                id: objC.id,
-                name: objC.name,
-                total: objC.total,
-              });
-            }
-          }
-
-          //categories.push(category);
-        }
-      }
-
+    projectTypeData.forEach(objA => {
+      const matchingCategories = projectCategoryData.filter(objB => objA.id === objB.typeID);
+    
+      matchingCategories.forEach(objB => {
+        const category = {
+          parentNodeId: objA.id,
+          id: objB.id,
+          name: objB.name,
+          total: objB.total,
+        };
+        Result.push(category);
+    
+        const matchingSubCategories = projectSubCategoryData.filter(objC => objB.id === objC.category_id);
+        matchingSubCategories.forEach(objC => {
+          Result.push({
+            parentNodeId: objB.id,
+            id: objC.id,
+            name: objC.name,
+            total: objC.total,
+          });
+        });
+      });
+    
       const typeNewObj = {
         parentNodeId: parent.id,
         id: objA.id,
@@ -1027,8 +1016,7 @@ self.countAllProjectWithProjectType = async (req, res) => {
         total: objA.total,
       };
       Result.push(typeNewObj);
-      //Result.push(allResult);
-    }
+    });
 
     res.send(Result);
   } catch (error) {
