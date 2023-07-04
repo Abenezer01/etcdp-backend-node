@@ -217,6 +217,7 @@ module.exports = function (express) {
   route.get("/contact-person/user/:id", ContactPersonController.getByUserId);
   route.get("/job-experience/user/:id", JobExperienceController.getByUserId);
   //test
+  route.post("/change-language", userController.changeLanguage);
   route.get("/test", departmentController.test);
 
   return route;

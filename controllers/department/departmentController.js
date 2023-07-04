@@ -11,16 +11,18 @@ const actionHelper = require("../utils/action-helper");
 const languageHelper = require("../utils/language-helper");
 let master = require("../../config/master");
 
+const { EtDatetime, ETC, BahireHasab, ConvertToEthiopic } = require('abushakir')
+
 const i18n = require('i18n');
-const lang = 'am'
-i18n.configure({
-  locales: ['en','am', 'es'],
-  directory: __dirname + '/../../locales',
-  defaultLocale: lang?lang:'en',
-  queryParameter: 'lang',
-  cookie: 'locale',
-  updateFiles: false, // set this to true if you want i18n to create locale files for missing translations
-});
+// const lang = 'en'
+// i18n.configure({
+//   locales: ['en','am', 'es'],
+//   directory: __dirname + '/../../locales',
+//   defaultLocale: lang?lang:'en',
+//   queryParameter: 'lang',
+//   cookie: 'locale',
+//   updateFiles: false, // set this to true if you want i18n to create locale files for missing translations
+// });
 const Op = Sequelize.Op;
 
 let self = {};
@@ -519,17 +521,88 @@ self.translateString = async (str, translateTo) => {
   }
 };
 
-self.test = async (req, res) => {
-  try {
+self.test = async(req, res) => {
+  try{
+    
+    const test = new ETC(2015, 10, 1);
+    const testg = new Date(test.moment)
 
+    // return res.json(testg)
+    const me = new Date('2023-05-03').getTime()
+    const gregorian1 = Date.now();
+    const ethiopian1  = new EtDatetime(me);
 
-    const x = i18n.__('greeting');
-    return res.json(x)
-  } catch (error) {
-    return res.status(500).json({
-      message: error.message,
-    });
-  }
-};
+    return res.json({
+      me,
+      gregorian1,
+      ethiopian1
+    })
+    const ethiopian = new EtDatetime();
+    const gregorian = new Date(ethiopian.moment);
+    // const x = i18n.__('greeting');
+    // return res.json(x)
+
+    const now = new EtDatetime(); // => 2012-07-28 17:18:31.466
+    const nowDate = now.date; // => {year: 2012, month: 7, day: 28}
+    const nowTIme = now.time; // => {h: 17, m: 18, s: 31}
+    
+    // const covidFirstConfirmedEpoch = new EtDatetime(covidFirstConfirmed.moment);
+    //
+
+    const ethiopianCalendar = new ETC(2015, 10, 1);
+///
+    let months = ethiopianCalendar.monthDays(true, true); // Iterable Object of the given month
+    let monthDays = ethiopianCalendar.monthDays(); // => [2012, 7, 1, 1]
+    // [year, month, dateNumber, dateNameIndex], Monday as First weekday
+
+    const nextmonth = ethiopianCalendar.nextMonth; // => ETC instance of nextMonth, same year
+    const previousmonth = ethiopianCalendar.prevYear; // => ETC instance of prevYear, same month
+    /**
+     * Bahire Hasab Module [BahireHasab]
+     */
+    const bh = new BahireHasab(2016);
+    //  let bh: BahireHasab = new BahireHasab(); // Get's the current year
+
+    let evan = bh.getEvangelist(true); // => ሉቃስ
+
+    let holiday = bh.getSingleBealOrTsom('ትንሳኤ'); // {month: ሚያዝያ, date: 20}
+
+    const allFastings = bh.allAtswamat; // => List of All fasting and Movable holidays
+
+    /**
+     * Arabic or English number (1,2,3...) to Ethiopic or GE'EZ number Convertor
+     */
+    const testNums = [1, 10, 15, 20, 25, 78, 105, 333, 450, 600, 1000, 1001, 1010, 1056, 1200, 2013, 9999, 10000];
+    let arr = []
+    for (const num of testNums) {
+      let eachConv = ConvertToEthiopic(num) // [፩, ፲, ፲፭, ፳, ፳፭, ፸፰, ፻፭, ፫፻፴፫, ፬፻፶, ፮፻, ፲፻, ፲፻፩, ፲፻፲, ፲፻፶፮, ፲፪፻, ፳፻፲፫, ፺፱፻፺፱, ፻፻]
+      arr.push(eachConv)
+    }
+
+    return res.json({
+      gc: new Date(gregorian1).toISOString(),
+      ec: ethiopian1.toIso8601String(),
+      ethiopian: ethiopian.toIso8601String(),
+      gregorian: gregorian.toISOString(),
+      now, 
+      nowDate, 
+      nowTIme, 
+      ethiopianCalendar, 
+      months, 
+      monthDays, 
+      nextmonth, 
+      previousmonth, 
+      bh, 
+      evan, 
+      holiday, 
+      allFastings, 
+      arr
+  })
+} catch (error) {
+  return res.status(500).json({
+    message: error.message
+  })
+}
+}
 
 module.exports = self;
