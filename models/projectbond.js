@@ -29,6 +29,8 @@ module.exports = (sequelize, DataTypes) => {
       issuing_institute: DataTypes.STRING,
       institute_branch: DataTypes.STRING,
       branch_address: DataTypes.STRING,
+      percent: DataTypes.DOUBLE,
+      institution_type:DataTypes.STRING,
       phone: DataTypes.STRING,
       amount: DataTypes.INTEGER,
       remark: DataTypes.TEXT,
