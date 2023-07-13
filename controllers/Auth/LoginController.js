@@ -47,6 +47,7 @@ self.loginUser = async (request, res) => {
     let usr = await user.findOne({
       where: {
         id: usEmail.user_id,
+        is_activated: true
       },
       include: [
         {

@@ -68,6 +68,10 @@ module.exports = (sequelize, DataTypes) => {
       refresh_token: DataTypes.TEXT,
       revision_no: DataTypes.INTEGER,
       lang: DataTypes.STRING,
+      is_activated: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true
+      },
       full_name: {
         type: DataTypes.VIRTUAL,
         get() {

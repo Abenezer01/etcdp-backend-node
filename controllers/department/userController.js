@@ -122,9 +122,13 @@ self.getAll = async(req, res) => {
     //     middle_name: await decrypt(x.middle_name),
     //     last_name: await decrypt(x.last_name)
     // })
-    let data = await user.findAll();
+    let data = await user.findAll({
+        where: {
+            is_activated: 1
+        }
+    });
 
-    return res.json(data);
+    return res.json(data.length);
     // let one = "12c85269-9dc5-4e89-8d47-62719baea7ed"
     // let queryString = `SELECT first_name FROM users as U WHERE U.id='${one}';`
     // let queryString = "SELECT *  FROM users as U JOIN actionstates as A WHERE U.id=A.model_id AND A.action='REGISTER';"
@@ -986,4 +990,40 @@ self.changeLanguage = async(req, res) =>{
         })
     }
 } 
+self.getActivated = async(req, res) => {
+    try {
+        let {id} = req.params
+        let data = await user.update({is_activated: true}, {
+            where: {
+                id: id
+            }
+        })
+
+        return res.json({
+            message: "Account activated successfully"
+        })
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message
+        })
+    }
+}
+self.accountDeactivated = async(req, res) => {
+    try {
+        let {id} = req.params
+        let data = await user.update({is_activated: false}, {
+            where: {
+                id: id
+            }
+        })
+
+        return res.json({
+            message: "Account deactivated successfully"
+        })
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message
+        })
+    }
+}
 module.exports = self;
