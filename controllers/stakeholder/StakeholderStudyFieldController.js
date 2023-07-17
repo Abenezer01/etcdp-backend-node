@@ -85,7 +85,8 @@ self.getStakeholderStudyFieldByStakeholderId = async (req, res) => {
       include: ["studyfield", "studyprogram", "studylevel"],
       order: [["createdAt", order]],
     });
-    console.log("The status", rows[0].id);
+
+    // console.log("The status", rows[0].id);
     let newData = await Promise.all(
       rows.map(async (item) => {
         //console.log("The item id", item.dataValues);

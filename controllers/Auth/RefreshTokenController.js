@@ -44,6 +44,7 @@ self.refreshToken = async (request, response, next) => {
       ],
       where: {
         id: userId,
+        is_activated: true
       },
     });
 
