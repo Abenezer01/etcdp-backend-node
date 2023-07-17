@@ -57,7 +57,7 @@ module.exports = {
         type: Sequelize.STRING,
       },
       date: {
-        type: Sequelize.DATE,
+        type: Sequelize.DATETIME,
       },
       datasource: {
         type: Sequelize.STRING,
