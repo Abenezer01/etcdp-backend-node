@@ -167,16 +167,16 @@ self.save = async (req, res) => {
         }
       });
 
-      // if (doc) {
-      //   const usrID = usr.usrID;
-      //   let ac = await actionHelper.saveActionState(
-      //     doc.id,
-      //     "file",
-      //     "REGISTER",
-      //     usrID,
-      //     req,
-      //     res
-      //   );
+      if (doc) {
+        const usrID = usr.usrID;
+        let ac = await actionHelper.saveActionState(
+          doc.id,
+          "file",
+          "REGISTER",
+          usrID,
+          req,
+          res
+        );}
       //   return res.json(ac);
       // }
 
