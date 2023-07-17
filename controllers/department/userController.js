@@ -990,7 +990,7 @@ self.changeLanguage = async(req, res) =>{
         })
     }
 } 
-self.getActivated = async(req, res) => {
+self.activateAccount = async(req, res) => {
     try {
         let {id} = req.params
         let data = await user.update({is_activated: true}, {
@@ -1008,7 +1008,7 @@ self.getActivated = async(req, res) => {
         })
     }
 }
-self.accountDeactivated = async(req, res) => {
+self.deactivateAccount = async(req, res) => {
     try {
         let {id} = req.params
         let data = await user.update({is_activated: false}, {

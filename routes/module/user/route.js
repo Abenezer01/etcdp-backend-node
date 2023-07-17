@@ -26,6 +26,10 @@ module.exports = function (express) {
   route.delete("/user/:id", userController.delete);
   route.get("/department-users/:id", userController.getDepartmentUsers);
 
+  route.put("/account-activate/:id", validateInput.createUser, userController.activateAccount);
+  route.put("/account-deactivate/:id", validateInput.createUser, userController.deactivateAccount);
+
+
   route.post("/assign-user-position", userController.assignPosition);
   route.get("/disable-user-position/:id", userController.dePosition);
   route.post("/switch-account", userController.switchAccount);
