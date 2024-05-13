@@ -17,6 +17,7 @@ const route_view = require("./routes/route_view");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const fileUpload = require("express-fileupload");
+const cipherHelper = require("./controllers/utils/cipher-helper");
 
 let app = express();
 app.use(fileUpload());
@@ -57,6 +58,7 @@ app.use("/api/analytics", analyticRoute(express));
 app.use("/", route_view(express));
 
 app.listen(7500, () => {
+  console.log('email', cipherHelper.encrypt('abebe@gmail.com'))
   console.log("Success running on  7500");
 });
 

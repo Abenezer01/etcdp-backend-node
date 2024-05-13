@@ -38,6 +38,9 @@ module.exports = function (express) {
 
   //position route
   route.get("/position", positionController.getAll);
+  route.get("/position-permissions", positionController.givePositionPermissions);
+
+  
   route.get("/position/:id", positionController.get);
   route.get("/position_search", positionController.search);
   route.post(

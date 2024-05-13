@@ -6,6 +6,7 @@ const userData = async (req, res, next) => {
   // try {
 
   const userTokenn = req.headers.authorization;
+  // const [, userTokenn] = tokenString.split(' ');
   let decodetoken;
   decodetoken = jwt.verify(userTokenn, ACCESS_TOKEN_KEY);
   usrID = decodetoken.id;

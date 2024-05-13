@@ -195,12 +195,23 @@ const modulemodels = {
     "workexperience",
     "salary"
   ],
-  document: ["document"],
-  center: ["department", "position", "professional"],
+  document: [
+    "document"
+  ],
+  center: [
+    "department", 
+    "position", 
+    "professional"
+  ],
 };
 
 const mainanalysismodules = {
-  project: ["project", "projecttype", "projectcategory", "projectsubcategory"],
+  project: [
+    "project", 
+    "projecttype", 
+    "projectcategory", 
+    "projectsubcategory"
+  ],
   stakeholder: [
     "stakeholder",
     "stakeholdertype",

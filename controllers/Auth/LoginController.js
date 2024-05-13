@@ -38,6 +38,7 @@ self.loginUser = async (request, res) => {
       },
     });
 
+
     if (!usEmail) {
       return res.status(404).json({
         message: "User not found!",
@@ -118,7 +119,8 @@ self.loginUser = async (request, res) => {
       department_id: usPos.department_id,
       user_position_id: usPos.id,
       is_checked: action ? true : false,
-      profile_completed: profile_pic ? true : false,
+      profile_completed: true,
+      // profile_completed: profile_pic ? true : false,
     };
 
     const auth = await bcrypt.compareSync(password, usr.password);

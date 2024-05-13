@@ -65,19 +65,19 @@ self.check = async (req, res) => {
           message: "already checked!",
         });
       } else {
-        // let action = await actionstate.findOne({
-        //     where: {
-        //         model_id: id,
-        //         action: "REGISTER",
-        //         user_id: usr.usrID
-        //     }
-        // })
+        let action = await actionstate.findOne({
+            where: {
+                model_id: id,
+                action: "REGISTER",
+                user_id: usr.usrID
+            }
+        })
 
-        // if (action) {
-        //     return res.status(422).json({
-        //         message: 'You are not allowed to check the data as you are the register'
-        //     })
-        // } else {
+        if (action) {
+            return res.status(422).json({
+                message: 'You are not allowed to check the data as you are the register'
+            })
+        } else {
         let action = await actionstate.create({
           model_id: id,
           model: model,
@@ -92,7 +92,7 @@ self.check = async (req, res) => {
         }
 
         return res.json(action);
-        // }
+        }
       }
     }
   } catch (error) {
@@ -120,21 +120,21 @@ self.approve = async (req, res) => {
           message: "Already Approve!",
         });
       } else {
-        // let action = await actionstate.findAll({
-        //     where: {
-        //         model_id: id,
-        //         action: {
-        //             [Op.in]: ['REGISTSER', 'CHECK']
-        //         },
-        //         user_id: usr.usrID
-        //     }
-        // })
+        let action = await actionstate.findAll({
+            where: {
+                model_id: id,
+                action: {
+                    [Op.in]: ['REGISTSER', 'CHECK']
+                },
+                user_id: usr.usrID
+            }
+        })
 
-        // if (action.length != 0) {
-        //     return res.status(422).json({
-        //         message: 'You can not approve as you either register or check the data'
-        //     })
-        // } else {
+        if (action.length != 0) {
+            return res.status(422).json({
+                message: 'You can not approve as you either register or check the data'
+            })
+        } else {
         let action = await actionstate.create({
           model: model.toLowerCase(),
           model_id: id,
@@ -148,7 +148,7 @@ self.approve = async (req, res) => {
           await actorHelper.notifyActor(action,'authorize', usr.usrID, usr.departmentID)
         }
         return res.status(200).json(action);
-        // }
+        }
       }
     }
   } catch (error) {
@@ -179,22 +179,22 @@ self.reject = async (req, res) => {
           message: "Already Rejected",
         });
       } else {
-        // let action = await actionstate.findAll({
-        //     where: {
-        //         model_id: id,
-        //         action: {
-        //             [Op.in]: ['REGISTER', 'CHECK', "APPROVE"]
-        //         },
-        //         user_id: us.id
-        //     }
+        let action = await actionstate.findAll({
+            where: {
+                model_id: id,
+                action: {
+                    [Op.in]: ['REGISTER', 'CHECK', "APPROVE"]
+                },
+                user_id: us.id
+            }
 
-        // })
+        })
 
-        // if (action.length != 0) {
-        //     return res.status(422).json({
-        //         message: 'You can not approve as you either register or check or approver the data'
-        //     })
-        // } else {
+        if (action.length != 0) {
+            return res.status(422).json({
+                message: 'You can not approve as you either register or check or approver the data'
+            })
+        } else {
         let action = await actionstate.create({
           model: model.toLowerCase(),
           model_id: id,
@@ -205,7 +205,7 @@ self.reject = async (req, res) => {
         });
 
         return res.status(200).json(action);
-        // }
+        }
       }
     }
   } catch (error) {
@@ -234,20 +234,20 @@ self.authorize = async (req, res) => {
           message: "Already Authorized",
         });
       } else {
-        // let action = await actionstate.findAll({
-        //     model_id: id,
-        //     action: {
-        //         [Op.in]: ['REGISTSER', 'CHECK', "APPROVE"]
-        //     },
-        //     user_id: us.id
+        let action = await actionstate.findAll({
+            model_id: id,
+            action: {
+                [Op.in]: ['REGISTSER', 'CHECK', "APPROVE"]
+            },
+            user_id: us.id
 
-        // })
+        })
 
-        // if (action.length != 0) {
-        //     return res.status(422).json({
-        //         message: 'You can not approve as you either register or check or approver the data'
-        //     })
-        // } else {
+        if (action.length != 0) {
+            return res.status(422).json({
+                message: 'You can not approve as you either register or check or approver the data'
+            })
+        } else {
 
         let action = await actionstate.create({
           model: model.toLowerCase(),
@@ -259,7 +259,7 @@ self.authorize = async (req, res) => {
         });
 
         return res.status(200).json(action);
-        // }
+        }
       }
     }
   } catch (error) {

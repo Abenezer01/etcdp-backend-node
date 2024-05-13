@@ -48,7 +48,7 @@ module.exports = {
         type: Sequelize.DOUBLE,
       }, 
       institution_type: {
-        type: Sequelize.DOUBLE,
+        type: Sequelize.STRING,
       },
       phone: {
         type: Sequelize.STRING,

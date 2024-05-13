@@ -128,7 +128,7 @@ self.getAll = async(req, res) => {
         }
     });
 
-    return res.json(data.length);
+    return res.json(data);
     // let one = "12c85269-9dc5-4e89-8d47-62719baea7ed"
     // let queryString = `SELECT first_name FROM users as U WHERE U.id='${one}';`
     // let queryString = "SELECT *  FROM users as U JOIN actionstates as A WHERE U.id=A.model_id AND A.action='REGISTER';"

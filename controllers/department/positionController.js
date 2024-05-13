@@ -1,6 +1,7 @@
 const actionHelper = require("../utils/action-helper");
-const { position, Sequelize } = require("./../../models");
+const { position, permission, positionpermission, Sequelize } = require("./../../models");
 const usrData = require("../../utils/userDataFromToken");
+
 
 const Op = Sequelize.Op;
 
@@ -146,4 +147,23 @@ self.getDepartmentPositions = async (req, res) => {
   }
 };
 
+self.givePositionPermissions = async(req, res) => {
+  
+  try {
+     let permissions = await permission.findAll();
+     
+      for(let per of permissions) {
+        let data = await positionpermission.create({
+          permission_id: per.id,
+          position_id: "8a0a21ce-45a8-462b-a07d-3d55ed3ab089"
+        })
+      }
+      return res.json("All permissions are granted to Admin");
+
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message
+    })
+  }
+}
 module.exports = self;
