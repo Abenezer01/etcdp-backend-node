@@ -1,4 +1,4 @@
-                                                                       const {
+const {
     note,
     stakeholder,
     stakeholdertype,
@@ -130,7 +130,7 @@ self.getGeneralAnalysisCategory = async(req, res) => {
 
         let stake = await eval(Model).findAndCountAll({
             where: {
-                [`${moduleArr[2]}_id`]: modulecategory.id,
+                [`${moduleArr[2]}_id`]:  .id,
             },
         });
 
