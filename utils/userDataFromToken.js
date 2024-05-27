@@ -6,6 +6,9 @@ const userData = async (req, res, next) => {
   // try {
 
   const userTokenn = req.headers.authorization;
+  // if (!userTokenn) {
+  //   return res.status(401).json({ error: "Authorization token is missing" });
+  // }
   // const [, userTokenn] = tokenString.split(' ');
   let decodetoken;
   decodetoken = jwt.verify(userTokenn, ACCESS_TOKEN_KEY);
@@ -16,15 +19,9 @@ const userData = async (req, res, next) => {
 
   console.log("This is user id", usrID);
   return { usrID, departmentID, position_id, lang };
-
-  // } catch (error) {
-  //     //console.log("Here is the error", error)
-  //     return res.status(500).json({
-  //         message: error.message
-  //     })
-
-  // }
 };
 module.exports = {
   userData,
 };
+
+

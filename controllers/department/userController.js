@@ -1,5 +1,5 @@
 const {
-    user,
+    User,
     address,
     actionstate,
     position,
@@ -45,7 +45,7 @@ let TOKEN_MAX_AGE = process.env.TOKEN_MAX_AGE;
 
 let self = {};
 self.getAlll = async(req, res) => {
-    let userData = await user.findAll();
+    let userData = await User.findAll();
 
     console.log("The datas are", userData[0].id);
     let otherArr = [];
@@ -57,7 +57,7 @@ self.getAlll = async(req, res) => {
             where: {
                 model_id: act.id,
                 action: "REGISTER",
-                model: "user",
+                model: "User",
             },
         });
         if (dd) {
@@ -74,7 +74,7 @@ self.getAlll = async(req, res) => {
     const { limit, offset } = paginate.getPagination(Number(page), Number(size));
     let usr = [];
     for (let ar of arr) {
-        let ll = await user.findAndCountAll({
+        let ll = await User.findAndCountAll({
             attributes: ["id"],
             where: {
                 id: ar.id,
@@ -92,7 +92,7 @@ self.getAlll = async(req, res) => {
         }
     }
     console.log("Hey", uf);
-    let dat = await user.findAndCountAll({
+    let dat = await User.findAndCountAll({
         limit: limit,
         offset: offset,
         order: [
@@ -112,7 +112,7 @@ self.getAlll = async(req, res) => {
 // let one = "Ss"
 // let queryString = `SELECT * FROM users as U WHERE U.id=${one};`
 self.getAll = async(req, res) => {
-    // let x = await user.findOne({
+    // let x = await User.findOne({
     //     where: {
     //         id: "00a340e3-431a-489f-a859-6d0c9d15e894"
     //     }
@@ -122,7 +122,7 @@ self.getAll = async(req, res) => {
     //     middle_name: await decrypt(x.middle_name),
     //     last_name: await decrypt(x.last_name)
     // })
-    let data = await user.findAll({
+    let data = await User.findAll({
         where: {
             is_activated: 1
         }
@@ -144,7 +144,7 @@ self.getAll = async(req, res) => {
 self.get = async(req, res) => {
     try {
         let id = req.params.id;
-        let data = await user.findOne({
+        let data = await User.findOne({
             where: {
                 id: id,
             },
@@ -181,7 +181,7 @@ self.get = async(req, res) => {
 self.search = async(req, res) => {
     try {
         let text = req.params.key;
-        let data = await user.findAll({
+        let data = await User.findAll({
             where: {
                 first_name: {
                     like: "%" + text + "%",
@@ -246,20 +246,20 @@ self.save = async(req, res) => {
             lang: "en"
             // password: await bcrypt.hash(body.password, salt)
         };
-        created_user = await user.create(usr);
+        created_user = await User.create(usr);
 
         if (created_user) {
             let usr = await usrData.userData(req, res);
             await actionstate.create({
                 model_id: created_user.id,
-                model: "user",
+                model: "User",
                 action: "REGISTER",
                 user_id: usr.usrID,
                 position_id: usr.position_id,
                 time: new Date(),
             });
 
-            // await actionHelper.saveActionState(created_user.id, "user", "REGISTER", usr.usrID, req, res)
+            // await actionHelper.saveActionState(created_user.id, "User", "REGISTER", usr.usrID, req, res)
             //create position
             let usemail = await useremail.create({
                 user_id: created_user.id,
@@ -383,7 +383,7 @@ self.update = async(req, res) => {
     try {
         let id = req.params.id;
         let body = req.body;
-        let data = await user.update(body, {
+        let data = await User.update(body, {
             where: {
                 id: id,
             },
@@ -399,7 +399,7 @@ self.update = async(req, res) => {
 self.delete = async(req, res) => {
     try {
         let id = req.params.id;
-        let data = await user.destroy({
+        let data = await User.destroy({
             where: {
                 id: id,
             },
@@ -425,7 +425,7 @@ self.getDepartmentUsers = async(req, res) => {
 
         let userId = [...new Set(pos.map((item) => item.user_id))].filter((n) => n);
 
-        let users = await user.findAll({
+        let users = await User.findAll({
             where: {
                 id: {
                     [Op.in]: userId,
@@ -536,7 +536,7 @@ self.switchAccount = async(req, res) => {
         });
         const pos = await position.findOne({ where: { id: userpos.position_id } });
 
-        const account = await user.findOne({
+        const account = await User.findOne({
             where: { id: usr.usrID },
             include: [{ model: userposition, as: "positions" }],
         });
@@ -611,7 +611,7 @@ self.switchAccount = async(req, res) => {
                 expiresIn: "1000h",
             });
             // update refresh token
-            await user.update({ refresh_token: refreshToken }, { where: { id: id } });
+            await User.update({ refresh_token: refreshToken }, { where: { id: id } });
             return res.status(200).json({
                 userData: replyUser,
                 accessToken: accessToken,
@@ -675,7 +675,7 @@ self.sendMail = async(req, res) => {
     let email = body.email;
 
     try {
-        let us = await user.findOne({
+        let us = await User.findOne({
             where: {
                 email: email,
             },
@@ -762,7 +762,7 @@ self.requestPasswordReset = async(req, res) => {
 
         //must decrypt email
 
-        let us = await user.findOne({
+        let us = await User.findOne({
             where: {
                 id: usemail.user_id,
             },
@@ -882,7 +882,7 @@ self.resetPassword = async(req, res) => {
             if (valid) {
                 const salt = await bcrypt.genSalt();
                 const pass = await bcrypt.hash(password, salt);
-                await user.update({ password: pass }, {
+                await User.update({ password: pass }, {
                     where: {
                         id: user_id,
                     },
@@ -912,7 +912,7 @@ self.resetPassword = async(req, res) => {
 self.checkUserStatus = async(req, res) => {
     let id = req.params.id;
     try {
-        let data = await user.findOne({
+        let data = await User.findOne({
             where: {
                 id: id,
             },
@@ -954,9 +954,9 @@ self.changeLanguage = async(req, res) =>{
         let lang = body.lang
 
 
-        // let users = await user.findAll()
+        // let users = await User.findAll()
         // for(let u of users){
-        //     let ux = await user.update({lang:lang}, {
+        //     let ux = await User.update({lang:lang}, {
         //         where: {
         //             id:u.id
         //         }
@@ -968,7 +968,7 @@ self.changeLanguage = async(req, res) =>{
 
 
         let usr = await usrData.userData(req, res);
-        let us = await user.update({lang:lang}, {
+        let us = await User.update({lang:lang}, {
             where: {
                 id:usr.usrID
             }
@@ -993,7 +993,7 @@ self.changeLanguage = async(req, res) =>{
 self.activateAccount = async(req, res) => {
     try {
         let {id} = req.params
-        let data = await user.update({is_activated: true}, {
+        let data = await User.update({is_activated: true}, {
             where: {
                 id: id
             }
@@ -1011,7 +1011,7 @@ self.activateAccount = async(req, res) => {
 self.deactivateAccount = async(req, res) => {
     try {
         let {id} = req.params
-        let data = await user.update({is_activated: false}, {
+        let data = await User.update({is_activated: false}, {
             where: {
                 id: id
             }

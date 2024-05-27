@@ -1,6 +1,6 @@
 const {
   actionstate,
-  user,
+  User,
   role,
   position,
   userposition,
@@ -35,7 +35,7 @@ self.refreshToken = async (request, response, next) => {
     positionId = decodetoken.position_id;
     departmentId = decodetoken.department_id;
 
-    let usr = await user.findOne({
+    let usr = await User.findOne({
       include: [
         {
           model: userposition,
@@ -130,7 +130,7 @@ self.refreshToken = async (request, response, next) => {
     const refreshtokener = jwt.sign(payload, REFRESH_TOKEN_KEY, {
       expiresIn: "1000h",
     });
-    await user
+    await User
       .update(
         {
           refresh_token: refreshtokener,

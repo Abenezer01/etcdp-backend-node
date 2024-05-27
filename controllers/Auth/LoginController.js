@@ -1,6 +1,6 @@
 const {
   actionstate,
-  user,
+  User,
   position,
   role,
   department,
@@ -45,7 +45,7 @@ self.loginUser = async (request, res) => {
       });
     }
 
-    let usr = await user.findOne({
+    let usr = await User.findOne({
       where: {
         id: usEmail.user_id,
         is_activated: true
@@ -141,7 +141,7 @@ self.loginUser = async (request, res) => {
         expiresIn: "1000h",
       });
 
-      user
+      User
         .findByPk(usr.id)
         .then((u) => {
           u.refresh_token = refreshToken;

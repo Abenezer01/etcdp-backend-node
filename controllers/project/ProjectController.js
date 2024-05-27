@@ -3,7 +3,7 @@ const {
   actionstate,
   projectstakeholder,
   stakeholder,
-  user,
+  User,
   projecttime,
   projectfinance,
   projectstatus,
@@ -54,7 +54,7 @@ self.getAllCPMProject = async(req, res) => {
 
     //users
     // const cpmUsers = await apiHelper.getExternalData('user')
-    // let users = await user.findAll()
+    // let users = await User.findAll()
     // const mergedData = cpmUsers.concat(users)
 
     // return res.json(mergedData)

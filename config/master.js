@@ -81,7 +81,7 @@ let models = [
   "transmissiontype",
   "transmissionline",
   "turbineinfo",
-  "user",
+  "User",
   "useremai",
   "userphone",
   "userposition",

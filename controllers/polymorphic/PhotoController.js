@@ -1,4 +1,4 @@
-const { photo, Sequelize } = require("../../models");
+const {User, photo, Sequelize } = require("../../models");
 const path = require("path");
 
 const fs = require("fs");
@@ -181,7 +181,7 @@ self.update = async (req, res) => {
     });
   }
   try {
-    let userData = await user.findOne({
+    let userData = await User.findOne({
       attributes: ["photo_id"],
       include: [
         {

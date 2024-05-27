@@ -92,7 +92,7 @@ const {
   transmissionline,
   transmissiontype,
   turbineinfo,
-  user,
+  User,
   useremai,
   userphone,
   userposition,

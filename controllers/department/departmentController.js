@@ -1,7 +1,7 @@
 const {
   department,
   position,
-  user,
+  User,
   userposition,
   actionstate,
   Sequelize,
@@ -250,7 +250,7 @@ self.getStructure = async (req, res) => {
           (n) => n
         );
 
-        const staffs = await user.findAndCountAll({
+        const staffs = await User.findAndCountAll({
           where: {
             id: {
               [Op.in]: userId,
@@ -275,7 +275,7 @@ self.getStructure = async (req, res) => {
           : null;
 
         const head = uspos
-          ? await user.findOne({ where: { user_id: uspos.user_id } })
+          ? await User.findOne({ where: { user_id: uspos.user_id } })
           : null;
 
         return {
@@ -319,7 +319,7 @@ self.getDepartmentHead = async (req, res) => {
         });
 
         if (userpos) {
-          let usr = await user.findOne({
+          let usr = await User.findOne({
             attributes: ["full_name", "first_name", "middle_name", "last_name"],
             where: {
               id: userpos.user_id,
@@ -430,7 +430,7 @@ self.getChildren = async (req, res) => {
         (n) => n
       );
 
-      let staffs = await user.findAndCountAll({
+      let staffs = await User.findAndCountAll({
         where: {
           id: {
             [Op.in]: userId,
@@ -449,7 +449,7 @@ self.getChildren = async (req, res) => {
         ? await userposition.findOne({ where: { position_id: pos.id } })
         : null;
       const head = uspos
-        ? await user.findOne({ where: { user_id: uspos.user_id } })
+        ? await User.findOne({ where: { user_id: uspos.user_id } })
         : null;
 
       arr.push({

@@ -1,4 +1,4 @@
-const { user, Sequelize } = require("../../models");
+const { User, Sequelize } = require("../../models");
 
 const jwt = require("jsonwebtoken");
 let self = {};
@@ -10,7 +10,7 @@ self.logout = async (request, response) => {
     // const claims = atob(tokenn.split('.')[1])
     // response.status(200).json(decoded)
     usrID = decoded.id;
-    user
+    User
       .update(
         {
           refresh_token: "",

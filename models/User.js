@@ -3,7 +3,7 @@ const { Model } = require("sequelize");
 const cipherHelper = require("../controllers/utils/cipher-helper");
 
 module.exports = (sequelize, DataTypes) => {
-  class user extends Model {
+  class User extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  user.init(
+  User.init(
     {
       id: {
         type: DataTypes.UUID,
@@ -81,21 +81,21 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "user",
+      modelName: "User",
     }
   );
 
-  user.associate = function (models) {
+  User.associate = function (models) {
     // associations can be defined here
-    user.hasMany(models.actionstate, {
+    User.hasMany(models.actionstate, {
       foreignKey: "model_id",
       as: "users",
     });
-    user.hasMany(models.userposition, {
+    User.hasMany(models.userposition, {
       foreignKey: "user_id",
       as: "positions",
     });
   };
 
-  return user;
+  return User;
 };

@@ -1,7 +1,7 @@
 const {
   actionstate,
   note,
-  user,
+  User,
   userposition,
   position,
   file,
@@ -325,7 +325,7 @@ self.authorize = async (req, res) => {
 
 //             if(register){
 //                 //user info
-//                 registerUser = await user.findOne({
+//                 registerUser = await User.findOne({
 //                     attributes: { exclude: ['password', 'refresh_token'] },
 //                     where: {
 //                         id: register.user_id
@@ -379,7 +379,7 @@ self.authorize = async (req, res) => {
 //             if(check){
 
 //                 //user info
-//                 checkUser = await user.findOne({
+//                 checkUser = await User.findOne({
 //                     attributes: { exclude: ['password', 'refresh_token'] },
 //                     where: {
 //                         id: check.user_id
@@ -440,7 +440,7 @@ self.authorize = async (req, res) => {
 
 //             if(approve){
 //                 //user info
-//                 approveUser = await user.findOne({
+//                 approveUser = await User.findOne({
 //                     attributes: { exclude: ['password', 'refresh_token'] },
 //                     where: {
 //                         id: approve.user_id
@@ -500,7 +500,7 @@ self.authorize = async (req, res) => {
 //             //authorize
 //             if(authorize){
 //                 //user info
-//                 authorizeUser = await user.findOne({
+//                 authorizeUser = await User.findOne({
 //                     attributes: { exclude: ['password', 'refresh_token'] },
 //                     where: {
 //                         id: authorize.user_id
@@ -561,7 +561,7 @@ self.authorize = async (req, res) => {
 
 //             if(reject){
 //                 //user info
-//                 rejectUser = await user.findOne({
+//                 rejectUser = await User.findOne({
 //                     attributes: { exclude: ['password', 'refresh_token'] },
 //                     where: {
 //                         id: reject.user_id
@@ -771,7 +771,7 @@ self.getModelAction = async (req, res) => {
 };
 
 self.getUserData = async (userId, actionId) => {
-  const userObj = await user.findOne({
+  const userObj = await User.findOne({
     attributes: {
       exclude: ["password", "refresh_token"],
     },

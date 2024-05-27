@@ -1,4 +1,4 @@
-const { photo, user, Sequelize } = require("../../models");
+const { photo, User, Sequelize } = require("../../models");
 const path = require("path");
 
 const fs = require("fs");
@@ -117,7 +117,7 @@ self.save = async (req, res) => {
     });
 
     console.log("The photo id is: ", photoData.id);
-    await user.update(
+    await User.update(
       {
         photo_id: photoData.id,
       },
@@ -140,7 +140,7 @@ self.save = async (req, res) => {
 self.getUserPhoto = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await user.findOne({
+    let data = await User.findOne({
       where: {
         id: id,
       },
@@ -170,7 +170,7 @@ self.update = async (req, res) => {
     });
   }
   try {
-    let userData = await user.findOne({
+    let userData = await User.findOne({
       attributes: ["photo_id"],
       include: [
         {

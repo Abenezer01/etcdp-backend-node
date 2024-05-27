@@ -1,4 +1,4 @@
-const { reply, user, Sequelize } = require("../../models");
+const { reply, Sequelize } = require("../../models");
 const usrData = require("../../utils/userDataFromToken");
 const actionHelper = require("../utils/action-helper");
 const Op = Sequelize.Op;

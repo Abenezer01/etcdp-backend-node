@@ -1,6 +1,5 @@
 const {
   file,
-  user,
   employeeeducation,
   employeeage,
   workexperience,

@@ -1,4 +1,4 @@
-const { user, resource, image, Sequelize } = require("../../models");
+const { User, resource, image, Sequelize } = require("../../models");
 const path = require("path");
 const usrData = require("../../utils/userDataFromToken");
 const actionHelper = require("../utils/action-helper");

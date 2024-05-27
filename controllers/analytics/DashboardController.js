@@ -130,7 +130,7 @@ self.getGeneralAnalysisCategory = async(req, res) => {
 
         let stake = await eval(Model).findAndCountAll({
             where: {
-                [`${moduleArr[2]}_id`]:  .id,
+                [`${moduleArr[2]}_id`]:  Model.id,
             },
         });
 
