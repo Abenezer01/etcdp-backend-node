@@ -34,6 +34,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "ReferenceDocument",
+      tableName: "referencedocuments"
     }
   );
   return ReferenceDocument;

@@ -40,6 +40,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "ProjectExtensionTime",
+      tableName: "projectextensiontimes"
     }
   );
   return ProjectExtensionTime;

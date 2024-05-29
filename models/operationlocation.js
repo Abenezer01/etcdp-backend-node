@@ -30,6 +30,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "OperationLocation",
+      tableName: "operationlocations"
     }
   );
   //   OperationLocation.associate = function (models) {

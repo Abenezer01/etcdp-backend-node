@@ -39,6 +39,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "DocumentSubCategory",
+      tableName: "documentsubcategories"
     }
   );
   // DocumentSubCategory.associate = function(models) {

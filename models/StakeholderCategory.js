@@ -33,6 +33,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "StakeholderCategory",
+      tableName: "stakecategories"
     }
   );
   // StakeholderCategory.associate = function(models) {

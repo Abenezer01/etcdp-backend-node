@@ -26,6 +26,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "ResourceStudyField",
+      tableName: "resourcestudyfields"
     }
   );
   ResourceStudyField.associate = function (models) {

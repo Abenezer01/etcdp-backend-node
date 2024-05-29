@@ -42,6 +42,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "TransmissionLine",
+      tableName: "transmissionlines"
     }
   );
   return TransmissionLine;

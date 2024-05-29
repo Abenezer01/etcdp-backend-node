@@ -41,6 +41,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "RoadLayer",
+      tableName: "roadlayers"
     }
   );
   return RoadLayer;

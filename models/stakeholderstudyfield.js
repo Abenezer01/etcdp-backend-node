@@ -28,6 +28,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "StakeholderStudyField",
+      tableName: "stakeholderstudyfields"
     }
   );
   StakeholderStudyField.associate = function (models) {

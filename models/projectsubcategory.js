@@ -32,6 +32,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "ProjectSubCategory",
+      tableName: "projectsubcategories"
     }
   );
   ProjectSubCategory.associate = (models) => {

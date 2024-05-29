@@ -60,6 +60,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'StakeholderContactPerson',
+    tableName: "stakeholdercontactpeople"
   });
   return StakeholderContactPerson;
 };

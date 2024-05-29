@@ -30,6 +30,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "TransformerType",
+      tableName: "transformertypes"
     }
   );
   return TransformerType;

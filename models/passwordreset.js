@@ -37,6 +37,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "PasswordReset",
+      tableName: "passwordresets"
     }
   );
   return PasswordReset;

@@ -93,6 +93,7 @@ module.exports = (sequelize, DataTypes) => {
     }, {
         sequelize,
         modelName: "ProjectPlan",
+        tableName: "projectplans"
     });
     ProjectPlan.associate = function(models) {
         // associations can be defined here

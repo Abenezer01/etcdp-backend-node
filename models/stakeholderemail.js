@@ -47,6 +47,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "StakeholderEmail",
+      tableName: "stakeholderemails"
     }
   );
   return StakeholderEmail;

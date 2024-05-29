@@ -69,6 +69,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "Graduate",
+      tableName: "graduates"
     }
   );
   Graduate.associate = function (models) {

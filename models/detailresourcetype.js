@@ -32,6 +32,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "DetailResourceType",
+      tableName: "detailresourcetypes"
     }
   );
   return DetailResourceType;

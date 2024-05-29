@@ -55,6 +55,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "Document",
+      tableName: "documents"
     }
   );
   // Document.associate = function(models) {

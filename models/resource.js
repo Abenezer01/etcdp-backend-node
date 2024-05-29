@@ -47,6 +47,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "Resource",
+      tableName: "resources"
     }
   );
   Resource.associate = function (models) {
