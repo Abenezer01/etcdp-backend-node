@@ -1,6 +1,6 @@
 const {
-    totalemployee,
-    workexperience,
+    TotalEmployee,
+    WorkExperience,
     Sequelize
 } = require("../../models");
 const paginate = require("../../utils/pagination");
@@ -19,7 +19,7 @@ self.getAll = async(req, res) => {
     page == -1 ? limiter = {} : limiter
 
     try {
-        const { rows, count } = await workexperience.findAndCountAll({
+        const { rows, count } = await WorkExperience.findAndCountAll({
             limit: limiter.limit,
             offset: limiter.offset,
             order: [
@@ -42,7 +42,7 @@ self.getAll = async(req, res) => {
 self.get = async(req, res) => {
     try {
         let id = req.params.id;
-        let data = await workexperience.findOne({
+        let data = await WorkExperience.findOne({
             where: {
                 id: id
             }
@@ -63,7 +63,7 @@ self.getWorkExperienceByStakeholderId = async(req, res) => {
     const { limit, offset } = paginate.getPagination(page, size);
 
     try {
-        const { rows, count } = await workexperience.findAndCountAll({
+        const { rows, count } = await WorkExperience.findAndCountAll({
             limit,
             offset,
             where: {
@@ -88,7 +88,7 @@ self.getWorkExperienceByStakeholderId = async(req, res) => {
 self.search = async(req, res) => {
     try {
         let text = req.query.text;
-        let data = await workexperience.findAll({
+        let data = await WorkExperience.findAll({
             where: {
                 name: {
                     [Op.like]: "%" + text + "%"
@@ -118,7 +118,7 @@ self.save = async(req, res) => {
         let stakeHolderId = arr[0].stakeholder_id
 
         if (usr) {
-            let totalEmployee = await totalemployee.findAll({
+            let totalEmployee = await TotalEmployee.findAll({
                 where: {
                     stakeholder_id: stakeHolderId
                 }
@@ -232,7 +232,7 @@ self.save = async(req, res) => {
                 return res.status(400).json({ "message": bod })
             }
 
-            let registeredData = await workexperience.findAll({
+            let registeredData = await WorkExperience.findAll({
                 where: {
                     stakeholder_id: stakeHolderId
                 }
@@ -295,7 +295,7 @@ self.save = async(req, res) => {
                                     nationality: arr[i].nationality
                                 }
                                 if (body) {
-                                    let data = await workexperience.create(body);
+                                    let data = await WorkExperience.create(body);
                                     arr2.push(data)
                                 }
                             }
@@ -307,7 +307,7 @@ self.save = async(req, res) => {
                                         const sharedUuid = uuid.v5(resultIds, uuid.NIL);
                                         await actionHelper.saveActionState(
                                         sharedUuid,
-                                        "workexperience",
+                                        "WorkExperience",
                                         "REGISTER",
                                         us,
                                         req,
@@ -341,7 +341,7 @@ self.update = async(req, res) => {
         let stakeHolderId = arr[0].stakeholder_id
 
         if (usr) {
-            let totalEmployee = await totalemployee.findAll({
+            let totalEmployee = await TotalEmployee.findAll({
                 where: {
                     stakeholder_id: stakeHolderId
                 }
@@ -457,7 +457,7 @@ self.update = async(req, res) => {
                 return res.status(400).json({ "message": bod })
             }
 
-            let registeredData = await workexperience.findAll({
+            let registeredData = await WorkExperience.findAll({
                 where: {
                     stakeholder_id: stakeHolderId
                 }
@@ -500,7 +500,7 @@ self.update = async(req, res) => {
                                     nationality: arr[i].nationality
                                 }
                                 if (body) {
-                                    await workexperience.update(body, {
+                                    await WorkExperience.update(body, {
                                         where: {
                                             id: body.id
                                         }
@@ -524,7 +524,7 @@ self.update = async(req, res) => {
 self.delete = async(req, res) => {
     try {
         let id = req.params.id;
-        let data = await workexperience.destroy({
+        let data = await WorkExperience.destroy({
             where: {
                 id: id
             }

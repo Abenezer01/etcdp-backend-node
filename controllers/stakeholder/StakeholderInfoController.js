@@ -1,5 +1,5 @@
 const actionHelper = require("../utils/action-helper");
-const { stakeholderinfo, Sequelize } = require("./../../models");
+const { StakeholderInfo, Sequelize } = require("./../../models");
 const usrData = require("../../utils/userDataFromToken");
 const paginate = require("../../utils/pagination");
 const dotenv = require("dotenv");
@@ -18,7 +18,7 @@ self.getAll = async (req, res) => {
   const { limit, offset } = paginate.getPagination(page, size);
 
   try {
-    const { rows, count } = await stakeholderinfo.findAndCountAll({
+    const { rows, count } = await StakeholderInfo.findAndCountAll({
       limit,
       offset,
       order: [["createdAt", order]],
@@ -43,7 +43,7 @@ self.getAll = async (req, res) => {
 self.get = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await stakeholderinfo.findOne({
+    let data = await StakeholderInfo.findOne({
       where: {
         id: id,
       },
@@ -69,7 +69,7 @@ self.getStakeInfoByStakeHolderId = async (req, res) => {
   //     order = process.env.order
   // }
   // const { limit, offset } = paginate.getPagination(page, size);
-  // stakeholderinfo.findAndCountAll({
+  // StakeholderInfo.findAndCountAll({
   //         limit,
   //         offset,
   //         order: [
@@ -90,7 +90,7 @@ self.getStakeInfoByStakeHolderId = async (req, res) => {
   //     });
   try {
     let id = req.params.id;
-    let data = await stakeholderinfo.findOne({
+    let data = await StakeholderInfo.findOne({
       where: {
         stakeholder_id: id,
       },
@@ -107,7 +107,7 @@ self.getStakeInfoByStakeHolderId = async (req, res) => {
 self.search = async (req, res) => {
   try {
     let text = req.query.text;
-    let data = await stakeholderinfo.findAll({
+    let data = await StakeholderInfo.findAll({
       where: {
         name: {
           [Op.like]: "%" + text + "%",
@@ -127,12 +127,12 @@ self.save = async (req, res) => {
     let usr = await usrData.userData(req, res);
     let body = req.body;
     if (usr) {
-      let data = await stakeholderinfo.create(body);
+      let data = await StakeholderInfo.create(body);
       if (data) {
         let us = usr.usrID;
         actionHelper.saveActionState(
           data.id,
-          "stakeholderinfo",
+          "StakeholderInfo",
           "REGISTER",
           us,
           req,
@@ -152,7 +152,7 @@ self.update = async (req, res) => {
   try {
     let id = req.params.id;
     let body = req.body;
-    let data = await stakeholderinfo.update(body, {
+    let data = await StakeholderInfo.update(body, {
       where: {
         id: id,
       },
@@ -170,7 +170,7 @@ self.update = async (req, res) => {
 self.delete = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await stakeholderinfo.destroy({
+    let data = await StakeholderInfo.destroy({
       where: {
         id: id,
       },

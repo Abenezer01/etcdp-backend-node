@@ -1,4 +1,4 @@
-const { totalemployee, Sequelize } = require("./../../models");
+const { TotalEmployee, Sequelize } = require("./../../models");
 const paginate = require("../../utils/pagination");
 const dotenv = require("dotenv");
 dotenv.config();
@@ -18,7 +18,7 @@ self.getAll = async (req, res) => {
   const { limit, offset } = paginate.getPagination(page, size);
 
   try {
-    const { rows, count } = await totalemployee.findAndCountAll({
+    const { rows, count } = await TotalEmployee.findAndCountAll({
       limit,
       offset,
       order: [["createdAt", order]],
@@ -41,7 +41,7 @@ self.getAll = async (req, res) => {
 };
 self.getTotalEmployeeAllYears = async (req, res) => {
   try {
-    let data = await totalemployee.findAll({
+    let data = await TotalEmployee.findAll({
       attributes: ["id", "nationality", "year"],
     });
     return res.json(data);
@@ -54,7 +54,7 @@ self.getTotalEmployeeAllYears = async (req, res) => {
 self.get = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await totalemployee.findOne({
+    let data = await TotalEmployee.findOne({
       where: {
         id: id,
       },
@@ -79,7 +79,7 @@ self.getTotalEmployeeWithStakeholderId = async (req, res) => {
   const { limit, offset } = paginate.getPagination(page, size);
 
   try {
-    const { rows, count } = await totalemployee.findAndCountAll({
+    const { rows, count } = await TotalEmployee.findAndCountAll({
       limit,
       offset,
       where: {
@@ -106,7 +106,7 @@ self.getTotalEmployeeWithStakeholderId = async (req, res) => {
 self.search = async (req, res) => {
   try {
     let text = req.query.text;
-    let data = await totalemployee.findAll({
+    let data = await TotalEmployee.findAll({
       where: {
         name: {
           [Op.like]: "%" + text + "%",
@@ -126,7 +126,7 @@ self.save = async (req, res) => {
     let usr = await usrData.userData(req, res);
     let body = req.body;
     let stakeHolderId = body.stakeholder_id;
-    let totalEmployee = await totalemployee.findAll({
+    let totalEmployee = await TotalEmployee.findAll({
       where: {
         stakeholder_id: stakeHolderId,
       },
@@ -170,12 +170,12 @@ self.save = async (req, res) => {
         });
     }
     if (usr) {
-      let data = await totalemployee.create(body);
+      let data = await TotalEmployee.create(body);
       if (data) {
         let us = usr.usrID;
         await actionHelper.saveActionState(
           data.id,
-          "totalemployee",
+          "TotalEmployee",
           "REGISTER",
           us,
           req,
@@ -195,7 +195,7 @@ self.update = async (req, res) => {
   try {
     let id = req.params.id;
     let body = req.body;
-    let data = await totalemployee.update(body, {
+    let data = await TotalEmployee.update(body, {
       where: {
         id: id,
       },
@@ -213,7 +213,7 @@ self.update = async (req, res) => {
 self.delete = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await totalemployee.destroy({
+    let data = await TotalEmployee.destroy({
       where: {
         id: id,
       },

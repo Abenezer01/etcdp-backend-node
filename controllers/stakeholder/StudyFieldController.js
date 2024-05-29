@@ -1,4 +1,4 @@
-const { studyfield, Sequelize } = require("../../models");
+const { StudyField, Sequelize } = require("../../models");
 const paginate = require("../../utils/pagination");
 const dotenv = require("dotenv");
 dotenv.config();
@@ -20,7 +20,7 @@ self.getAll = async (req, res) => {
   page == -1 ? (limiter = {}) : limiter;
 
   try {
-    const { rows, count } = await studyfield.findAndCountAll({
+    const { rows, count } = await StudyField.findAndCountAll({
       limit: limiter.limit,
       offset: limiter.offset,
       order: [["createdAt", order]],
@@ -45,7 +45,7 @@ self.getAll = async (req, res) => {
 
 self.getStudyFieldById = async (req, res) => {
   let id = req.params.id;
-  studyfield
+  StudyField
     .findOne({
       where: {
         id: id,
@@ -64,7 +64,7 @@ self.getStudyFieldById = async (req, res) => {
 self.get = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await studyfield.findOne({
+    let data = await StudyField.findOne({
       where: {
         id: id,
       },
@@ -82,7 +82,7 @@ self.get = async (req, res) => {
 self.search = async (req, res) => {
   try {
     let text = req.query.text;
-    let data = await studyfield.findAll({
+    let data = await StudyField.findAll({
       where: {
         name: {
           [Op.like]: "%" + text + "%",
@@ -102,12 +102,12 @@ self.save = async (req, res) => {
     let usr = await usrData.userData(req, res);
     let body = req.body;
     if (usr) {
-      let data = await studyfield.create(body);
+      let data = await StudyField.create(body);
       if (data) {
         let usrID = usr.usrID;
         await actionHelper.saveActionState(
           data.id,
-          "studyfield",
+          "StudyField",
           "REGISTER",
           usrID,
           req,
@@ -127,7 +127,7 @@ self.update = async (req, res) => {
   try {
     let id = req.params.id;
     let body = req.body;
-    let data = await studyfield.update(body, {
+    let data = await StudyField.update(body, {
       where: {
         id: id,
       },
@@ -145,7 +145,7 @@ self.update = async (req, res) => {
 self.delete = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await studyfield.destroy({
+    let data = await StudyField.destroy({
       where: {
         id: id,
       },

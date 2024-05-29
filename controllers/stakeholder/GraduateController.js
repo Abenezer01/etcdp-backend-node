@@ -1,4 +1,4 @@
-const { graduate, stakeholderstudyfield, Sequelize } = require("../../models");
+const { Graduate, StakeholderStudyField, Sequelize } = require("../../models");
 
 const Op = Sequelize.Op;
 const paginate = require("../../utils/pagination");
@@ -18,7 +18,7 @@ self.getAll = async (req, res) => {
   const { limit, offset } = paginate.getPagination(page, size);
 
   try {
-    const { rows, count } = await graduate.findAndCountAll({
+    const { rows, count } = await Graduate.findAndCountAll({
       limit,
       offset,
       order: [["createdAt", order]],
@@ -43,7 +43,7 @@ self.getAll = async (req, res) => {
 self.get = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await graduate.findOne({
+    let data = await Graduate.findOne({
       where: {
         id: id,
       },
@@ -68,7 +68,7 @@ self.getByHigherInstituteId = async (req, res) => {
 
   const { limit, offset } = paginate.getPagination(page, size);
   try {
-    const { rows, count } = await graduate.findAndCountAll({
+    const { rows, count } = await Graduate.findAndCountAll({
       limit,
       offset,
       where: { higher_institute_id: id },
@@ -109,7 +109,7 @@ self.getByHigherInstituteId = async (req, res) => {
 self.search = async (req, res) => {
   try {
     let text = req.query.text;
-    let data = await graduate.findAll({
+    let data = await Graduate.findAll({
       where: {
         name: {
           [Op.like]: "%" + text + "%",
@@ -129,7 +129,7 @@ self.save = async (req, res) => {
     let usr = await usrData.userData(req, res);
     let body = req.body;
     let studyFieldId = body.stake_study_field_id;
-    let studyData = await stakeholderstudyfield.findOne({
+    let studyData = await StakeholderStudyField.findOne({
       where: {
         id: studyFieldId,
       },
@@ -155,12 +155,12 @@ self.save = async (req, res) => {
     //console.log("The final data", da)
 
     if (usr) {
-      let data = await graduate.create(da);
+      let data = await Graduate.create(da);
       if (data) {
         let us = usr.usrID;
         await actionHelper.saveActionState(
           data.id,
-          "graduate",
+          "Graduate",
           "REGISTER",
           us,
           req,
@@ -180,7 +180,7 @@ self.update = async (req, res) => {
   try {
     let id = req.params.id;
     let body = req.body;
-    let data = await graduate.update(body, {
+    let data = await Graduate.update(body, {
       where: {
         id: id,
       },
@@ -198,7 +198,7 @@ self.update = async (req, res) => {
 self.delete = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await graduate.destroy({
+    let data = await Graduate.destroy({
       where: {
         id: id,
       },

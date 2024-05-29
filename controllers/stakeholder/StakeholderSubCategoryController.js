@@ -1,6 +1,6 @@
 const {
-  stakecategory,
-  stakesubcategory,
+  StakeholderCategory,
+  StakeholderSubCategory,
   Sequelize,
 } = require("./../../models");
 const actionHelper = require("../utils/action-helper");
@@ -22,7 +22,7 @@ self.getAll = async (req, res) => {
   const { limit, offset } = paginate.getPagination(page, size);
 
   try {
-    const { rows, count } = await stakesubcategory.findAndCountAll({
+    const { rows, count } = await StakeholderSubCategory.findAndCountAll({
       limit,
       offset,
       order: [["createdAt", order]],
@@ -48,7 +48,7 @@ self.getAll = async (req, res) => {
 self.get = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await stakesubcategory.findOne({
+    let data = await StakeholderSubCategory.findOne({
       where: {
         id: id,
       },
@@ -66,7 +66,7 @@ self.get = async (req, res) => {
 self.search = async (req, res) => {
   try {
     let text = req.query.text;
-    let data = await stakesubcategory.findAll({
+    let data = await StakeholderSubCategory.findAll({
       where: {
         name: {
           [Op.like]: "%" + text + "%",
@@ -90,7 +90,7 @@ self.save = async (req, res) => {
     let body = req.body;
     if (usr) {
       req.body.department_id = usr.departmentID;
-      let data = await stakesubcategory.create(body);
+      let data = await StakeholderSubCategory.create(body);
       if (data) {
         let us = usr.usrID;
         await actionHelper.saveActionState(
@@ -115,7 +115,7 @@ self.update = async (req, res) => {
   try {
     let id = req.params.id;
     let body = req.body;
-    let data = await stakesubcategory.update(body, {
+    let data = await StakeholderSubCategory.update(body, {
       where: {
         id: id,
       },
@@ -133,7 +133,7 @@ self.update = async (req, res) => {
 self.delete = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await stakesubcategory.destroy({
+    let data = await StakeholderSubCategory.destroy({
       where: {
         id: id,
       },

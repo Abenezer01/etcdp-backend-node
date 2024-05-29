@@ -1,4 +1,4 @@
-const { stakeholdertype, actionstate, Sequelize } = require("./../../models");
+const { StakeholderType, ActionState, Sequelize } = require("./../../models");
 const paginate = require("../../utils/pagination");
 const dotenv = require("dotenv");
 dotenv.config();
@@ -17,7 +17,7 @@ self.getAll = async (req, res) => {
   const { limit, offset } = paginate.getPagination(page, size);
 
   try {
-    const { rows, count } = await stakeholdertype.findAndCountAll({
+    const { rows, count } = await StakeholderType.findAndCountAll({
       limit,
       offset,
       order: [["createdAt", order]],
@@ -42,7 +42,7 @@ self.getAll = async (req, res) => {
 self.get = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await stakeholdertype.findOne({
+    let data = await StakeholderType.findOne({
       where: {
         id: id,
       },
@@ -60,7 +60,7 @@ self.get = async (req, res) => {
 self.search = async (req, res) => {
   try {
     let text = req.query.text;
-    let data = await stakeholdertype.findAll({
+    let data = await StakeholderType.findAll({
       where: {
         name: {
           [Op.like]: "%" + text + "%",
@@ -80,12 +80,12 @@ self.save = async (req, res) => {
     let usr = await usrData.userData(req, res);
     let body = req.body;
     if (usr) {
-      let data = await stakeholdertype.create(body);
+      let data = await StakeholderType.create(body);
       if (data) {
         let us = usr.usrID;
         await actionHelper.saveActionState(
           data.id,
-          "stakeholdertype",
+          "StakeholderType",
           "REGISTER",
           us,
           req,
@@ -105,7 +105,7 @@ self.update = async (req, res) => {
   try {
     let id = req.params.id;
     let body = req.body;
-    let data = await stakeholdertype.update(body, {
+    let data = await StakeholderType.update(body, {
       where: {
         id: id,
       },
@@ -123,7 +123,7 @@ self.savefile = async (req, res) => {
   try {
     let id = req.params.id;
     let body = req.body;
-    let data = await stakeholdertype.update(
+    let data = await StakeholderType.update(
       {
         file_id: body.file_id,
       },
@@ -143,7 +143,7 @@ self.savefile = async (req, res) => {
 self.delete = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await stakeholdertype.destroy({
+    let data = await StakeholderType.destroy({
       where: {
         id: id,
       },

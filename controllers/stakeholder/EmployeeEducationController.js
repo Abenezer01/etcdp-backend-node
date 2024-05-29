@@ -1,4 +1,4 @@
-const { employeeeducation, totalemployee, Sequelize } = require("../../models");
+const { EmployeeEducation, TotalEmployee, Sequelize } = require("../../models");
 const paginate = require("../../utils/pagination");
 const dotenv = require("dotenv");
 dotenv.config();
@@ -19,7 +19,7 @@ self.getAll = async (req, res) => {
   const { limit, offset } = paginate.getPagination(page, size);
 
   try {
-    const { rows, count } = await employeeeducation.findAndCountAll({
+    const { rows, count } = await EmployeeEducation.findAndCountAll({
       limit,
       offset,
       order: [["createdAt", order]],
@@ -44,7 +44,7 @@ self.getAll = async (req, res) => {
 self.get = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await employeeeducation.findOne({
+    let data = await EmployeeEducation.findOne({
       where: {
         id: id,
       },
@@ -70,7 +70,7 @@ self.getEmployeeEducationByStakeholderId = async (req, res) => {
   let limiter = { limit, offset };
   page == -1 ? (limiter = {}) : limiter;
   try {
-    const data = await employeeeducation.findAndCountAll({
+    const data = await EmployeeEducation.findAndCountAll({
       limit: limiter.limit,
       offset: limiter.offset,
       where: { stakeholder_id: id },
@@ -90,7 +90,7 @@ self.getEmployeeEducationByStakeholderId = async (req, res) => {
 self.search = async (req, res) => {
   try {
     let text = req.query.text;
-    let data = await employeeeducation.findAll({
+    let data = await EmployeeEducation.findAll({
       where: {
         name: {
           [Op.like]: "%" + text + "%",
@@ -120,7 +120,7 @@ self.search = async (req, res) => {
 //         let stakeHolderId = arr[0].stakeholder_id
 
 //         if (usr) {
-//             let totalEmployee = await totalemployee.findOne({
+//             let totalEmployee = await TotalEmployee.findOne({
 //                 where: {
 //                     stakeholder_id: stakeHolderId
 //                 }
@@ -155,8 +155,8 @@ self.search = async (req, res) => {
 //                     quantity: arr[i].quantity
 //                 }
 //                 if (body) {
-//                     let data = await employeeeducation.create(body);
-//                     await actionHelper.saveActionState(data.id, "employeeeducation", "REGISTER", us)
+//                     let data = await EmployeeEducation.create(body);
+//                     await actionHelper.saveActionState(data.id, "EmployeeEducation", "REGISTER", us)
 //                     arr2.push(data)
 //                 }
 //             }
@@ -171,7 +171,7 @@ self.search = async (req, res) => {
 //     }
 // }
 self.getCollectionOfData = async (req, res) => {
-  let registeredData = await employeeeducation.findAll();
+  let registeredData = await EmployeeEducation.findAll();
 
   let rD = [];
   for (i = 0; i < registeredData.length; i++) {
@@ -220,7 +220,7 @@ self.save = async (req, res) => {
     let stakeHolderId = arr[0].stakeholder_id;
     // return res.send(stakeHolderId)
     if (usr) {
-      let totalEmployee = await totalemployee.findAll({
+      let totalEmployee = await TotalEmployee.findAll({
         where: {
           stakeholder_id: stakeHolderId,
         },
@@ -305,7 +305,7 @@ self.save = async (req, res) => {
         return res.status(400).json({ message: bod });
       }
 
-      const registeredData = await employeeeducation.findAll({
+      const registeredData = await EmployeeEducation.findAll({
         where: {
           stakeholder_id: stakeHolderId,
         },
@@ -376,7 +376,7 @@ self.save = async (req, res) => {
       });
 
       if (arr2.length > 0) {
-        const savedData = await employeeeducation.bulkCreate(arr);
+        const savedData = await EmployeeEducation.bulkCreate(arr);
 
         let resultIds = savedData
           .map((obj) => obj.id)
@@ -386,7 +386,7 @@ self.save = async (req, res) => {
         const sharedUuid = uuid.v5(resultIds, uuid.NIL);
         await actionHelper.saveActionState(
           sharedUuid,
-          "employeeeducation",
+          "EmployeeEducation",
           "REGISTER",
           us,
           req,
@@ -414,7 +414,7 @@ self.update = async (req, res) => {
     let stakeHolderId = arr[0].stakeholder_id;
     // return res.send(stakeHolderId)
     if (usr) {
-      let totalEmployee = await totalemployee.findAll({
+      let totalEmployee = await TotalEmployee.findAll({
         where: {
           stakeholder_id: stakeHolderId,
         },
@@ -550,7 +550,7 @@ self.update = async (req, res) => {
             nationality: arr[i].nationality,
           };
           if (body) {
-            await employeeeducation.update(body, {
+            await EmployeeEducation.update(body, {
               where: {
                 id: body.id,
               },
@@ -570,7 +570,7 @@ self.update = async (req, res) => {
 self.delete = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await employeeeducation.destroy({
+    let data = await EmployeeEducation.destroy({
       where: {
         id: id,
       },

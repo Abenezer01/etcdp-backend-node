@@ -1,11 +1,11 @@
 const {
-    stakeholder,
-    stakeholderemail,
-    stakeholderphone,
-    ownership,
-    operationlocation,
-    actionstate,
-    department,
+    Stakeholder,
+    StakeholderEmail,
+    StakeholderPhone,
+    Ownership,
+    OperationLocation,
+    ActionState,
+    Department,
     sequelize,
     Sequelize,
 } = require("./../../models");
@@ -41,7 +41,7 @@ self.getAll = async (req, res) => {
     //     let department_id = us.department_id;
     //     let exist = await getChildren(department_id);
     //     console.log("The exist", exist);
-    //     let other = await stakeholder.findAll({
+    //     let other = await Stakeholder.findAll({
     //         order: [
     //             ["createdAt", "DESC"]
     //         ],
@@ -51,7 +51,7 @@ self.getAll = async (req, res) => {
     //             },
     //         },
     //     });
-    //     let mine = await stakeholder.findAll({
+    //     let mine = await Stakeholder.findAll({
     //         limit,
     //         offset,
     //         order: [
@@ -64,7 +64,7 @@ self.getAll = async (req, res) => {
     //     let otherArr = [];
     //     console.log("The other is", other);
     //     for (let da of other) {
-    //         let action = await actionstate.findOne({
+    //         let action = await ActionState.findOne({
     //             where: {
     //                 model_id: da.id,
     //                 action: "APPROVE",
@@ -87,7 +87,7 @@ self.getAll = async (req, res) => {
   //     order = process.env.order
   // }
   // const { limit, offset } = paginate.getPagination(page, size);
-  // stakeholder.findAndCountAll({
+  // Stakeholder.findAndCountAll({
   //         limit,
   //         offset,
   //         order: [
@@ -116,7 +116,7 @@ self.getStakeholders = async (req, res) => {
   page == -1 ? (limiter = {}) : limiter;
   //return res.json(limiter.limit)
   try {
-    const { rows, count } = await stakeholder.findAndCountAll({
+    const { rows, count } = await Stakeholder.findAndCountAll({
       limit: limiter.limit,
       offset: limiter.offset,
       //include: ["staketype", "stakecategory"],
@@ -142,16 +142,16 @@ self.getStakeholders = async (req, res) => {
 self.get = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await stakeholder.findOne({
+    let data = await Stakeholder.findOne({
       where: {
         id: id,
       },
       include: [
-        "staketype",
-        "stakecategory",
-        "stakesubcategory",
-        "ownership",
-        "businessfield",
+        "StakeholderType",
+        "StakeholderCategory",
+        "StakeholderSubCategory",
+        "Ownership",
+        "BusinessField",
       ],
     });
     return res.status(200).json({
@@ -184,7 +184,7 @@ self.getStakeHolderByTypeId = async (req, res) => {
   const { limit, offset } = paginate.getPagination(page, size);
 
   try {
-    const data = await stakeholder.findAndCountAll({
+    const data = await Stakeholder.findAndCountAll({
       limit,
       offset,
       order: [["createdAt", order]],
@@ -205,7 +205,7 @@ self.getStakeHolderByTypeId = async (req, res) => {
 self.search = async (req, res) => {
   try {
     let text = req.query.text;
-    let data = await stakeholder.findAll({
+    let data = await Stakeholder.findAll({
       where: {
         name: {
           [Op.like]: "%" + text + "%",
@@ -226,7 +226,7 @@ self.save = async (req, res) => {
     let body = req.body;
     if (usr) {
       req.body.department_id = usr.departmentID;
-      let data = await stakeholder.create(body);
+      let data = await Stakeholder.create(body);
 
       if (data) {
         data.trade_name = body.trade_name;
@@ -234,7 +234,7 @@ self.save = async (req, res) => {
         let usrID = usr.usrID;
         actionHelper.saveActionState(
           data.id,
-          "stakeholder",
+          "Stakeholder",
           "REGISTER",
           usrID,
           req,
@@ -254,7 +254,7 @@ self.update = async (req, res) => {
   try {
     let id = req.params.id;
     let body = req.body;
-    let data = await stakeholder.update(body, {
+    let data = await Stakeholder.update(body, {
       where: {
         id: id,
       },
@@ -272,7 +272,7 @@ self.update = async (req, res) => {
 self.delete = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await stakeholder.destroy({
+    let data = await Stakeholder.destroy({
       where: {
         id: id,
       },
@@ -374,11 +374,11 @@ self.countAllStakeholderWithStakeType = async (req, res) => {
         type: sequelize.QueryTypes.SELECT,
       }
     );
-    const { count } = await stakeholder.findAndCountAll();
+    const { count } = await Stakeholder.findAndCountAll();
     const Result = [];
     //let Result = {};
     const parent = {
-      name: "stakeholder",
+      name: "Stakeholder",
       id: "382d79ee-2b9d-4919-a7ad-1ada61c1ab28",
       parentNodeId: null,
       total: count,
@@ -439,33 +439,33 @@ self.countAllStakeholderWithStakeType = async (req, res) => {
 self.getStakeholderData = async(req, res) => {
     try {
         let {id} = req.params
-        let data = await stakeholder.findOne({
+        let data = await Stakeholder.findOne({
             where: {
                 id: id
             }
         })
 
         if(data){
-            let stakeAddress = await operationlocation.findAll({
+            let stakeAddress = await OperationLocation.findAll({
                 where: {
                     stakeholder_id: id
                 }
             })
 
-            let emails = await stakeholderemail.findOne({
+            let emails = await StakeholderEmail.findOne({
                 where: {
                     stakeholder_id: id,
                     is_primary: true
                 }
             })
-            let phones = await stakeholderphone.findOne({
+            let phones = await StakeholderPhone.findOne({
                 where: {
                     stakeholder_id: id,
                     is_primary: true
                 }
             })
 
-            let stakeOwnership = await ownership.findOne({
+            let stakeOwnership = await Ownership.findOne({
                 where: {
                     id: data.ownership_id
                 }

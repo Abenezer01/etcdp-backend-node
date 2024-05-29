@@ -1,7 +1,7 @@
 const {
-  studyperiodcost,
-  stakeholderstudyfield,
-  studyfield,
+  StudyPeriodCost,
+  StakeholderStudyField,
+  StudyField,
   Sequelize,
 } = require("../../models");
 const paginate = require("../../utils/pagination");
@@ -24,7 +24,7 @@ self.getAll = async (req, res) => {
   let limiter = { limit, offset };
   page == -1 ? (limiter = {}) : limiter;
   try {
-    const { rows, count } = await studyperiodcost.findAndCountAll({
+    const { rows, count } = await StudyPeriodCost.findAndCountAll({
       limit: limiter.limit,
       offset: limiter.offset,
       order: [["createdAt", order]],
@@ -49,7 +49,7 @@ self.getAll = async (req, res) => {
 self.get = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await studyperiodcost.findOne({
+    let data = await StudyPeriodCost.findOne({
       where: {
         id: id,
       },
@@ -63,7 +63,7 @@ self.get = async (req, res) => {
     });
   }
 };
-//include: ["studyfield", "studyprogram", "studylevel"],
+//include: ["StudyField", "studyprogram", "studylevel"],
 
 self.getByHigherInstituteId = async (req, res) => {
   const {
@@ -75,7 +75,7 @@ self.getByHigherInstituteId = async (req, res) => {
   const { limit, offset } = paginate.getPagination(page, size);
   let limiter = { limit, offset };
   page == -1 ? (limiter = {}) : limiter;
-  studyperiodcost
+  StudyPeriodCost
     .findAndCountAll({
       limit: limiter.limit,
       offset: limiter.offset,
@@ -90,7 +90,7 @@ self.getByHigherInstituteId = async (req, res) => {
       let arr = [];
       for (let dat of data.rows) {
         //console.log("The id is: ", dat.stakestudyfield.studyfield_id)
-        const studyData = await studyfield.findOne({
+        const studyData = await StudyField.findOne({
           where: {
             id: dat.stakestudyfield.studyfield_id,
           },
@@ -98,7 +98,7 @@ self.getByHigherInstituteId = async (req, res) => {
 
         if (studyData) {
           //console.log("Study data", {...studyData.dataValues, ...dat.dataValues })
-          arr.push({ studyfield: studyData.dataValues, ...dat.dataValues });
+          arr.push({ StudyField: studyData.dataValues, ...dat.dataValues });
         }
       }
       //console.log("The array", arr)
@@ -146,7 +146,7 @@ self.getByStudyFieldId = async (req, res) => {
 self.search = async (req, res) => {
   try {
     let text = req.query.text;
-    let data = await studyperiodcost.findAll({
+    let data = await StudyPeriodCost.findAll({
       where: {
         name: {
           [Op.like]: "%" + text + "%",
@@ -166,11 +166,11 @@ self.save = async (req, res) => {
     let usr = await usrData.userData(req, res);
     let body = req.body;
     let studyFieldId = body.stake_study_field_id;
-    let studyData = await stakeholderstudyfield.findOne({
+    let studyData = await StakeholderStudyField.findOne({
       where: {
         id: studyFieldId,
       },
-      include: ["studyfield"],
+      include: ["StudyField"],
     });
     //console.log("Study data", studyData.studyfield_id)
     //body.study_field_id = studyData.studyfield_id
@@ -185,12 +185,12 @@ self.save = async (req, res) => {
       studyfield_id: studyData.studyfield_id,
     };
     if (usr) {
-      let data = await studyperiodcost.create(da);
+      let data = await StudyPeriodCost.create(da);
       if (data) {
         let us = usr.usrID;
         await actionHelper.saveActionState(
           data.id,
-          "studyperiodcost",
+          "StudyPeriodCost",
           "REGISTER",
           us,
           req,
@@ -210,7 +210,7 @@ self.update = async (req, res) => {
   try {
     let id = req.params.id;
     let body = req.body;
-    let data = await studyperiodcost.update(body, {
+    let data = await StudyPeriodCost.update(body, {
       where: {
         id: id,
       },
@@ -228,7 +228,7 @@ self.update = async (req, res) => {
 self.delete = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await studyperiodcost.destroy({
+    let data = await StudyPeriodCost.destroy({
       where: {
         id: id,
       },

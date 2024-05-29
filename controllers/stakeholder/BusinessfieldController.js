@@ -1,4 +1,4 @@
-const { businessfield, Sequelize } = require("../../models");
+const { BusinessField, Sequelize } = require("../../models");
 
 const paginate = require("../../utils/pagination");
 const usrData = require("../../utils/userDataFromToken");
@@ -20,7 +20,7 @@ self.getAll = async (req, res) => {
   page == -1 ? (limiter = {}) : limiter;
 
   try {
-    const { rows, count } = await businessfield.findAndCountAll({
+    const { rows, count } = await BusinessField.findAndCountAll({
       limit: limiter.limit,
       offset: limiter.offset,
       order: [["createdAt", order]],
@@ -45,7 +45,7 @@ self.getAll = async (req, res) => {
 self.get = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await businessfield.findOne({
+    let data = await BusinessField.findOne({
       where: {
         id: id,
       },
@@ -63,7 +63,7 @@ self.get = async (req, res) => {
 self.search = async (req, res) => {
   try {
     let text = req.query.text;
-    let data = await businessfield.findAll({
+    let data = await BusinessField.findAll({
       where: {
         name: {
           [Op.like]: "%" + text + "%",
@@ -83,12 +83,12 @@ self.save = async (req, res) => {
     let usr = await usrData.userData(req, res);
     let body = req.body;
     if (usr) {
-      let data = await businessfield.create(body);
+      let data = await BusinessField.create(body);
       if (data) {
         let us = usr.usrID;
         await actionHelper.saveActionState(
           data.id,
-          "businessfield",
+          "BusinessField",
           "REGISTER",
           us,
           req,
@@ -108,7 +108,7 @@ self.update = async (req, res) => {
   try {
     let id = req.params.id;
     let body = req.body;
-    let data = await businessfield.update(body, {
+    let data = await BusinessField.update(body, {
       where: {
         id: id,
       },
@@ -126,7 +126,7 @@ self.update = async (req, res) => {
 self.delete = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await businessfield.destroy({
+    let data = await BusinessField.destroy({
       where: {
         id: id,
       },

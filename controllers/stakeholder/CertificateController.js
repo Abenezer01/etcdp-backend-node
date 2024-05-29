@@ -1,4 +1,4 @@
-const { certificate, Sequelize } = require("../../models");
+const { Certificate, Sequelize } = require("../../models");
 
 const Op = Sequelize.Op;
 const dotenv = require("dotenv");
@@ -18,7 +18,7 @@ self.getAll = async (req, res) => {
   const { limit, offset } = paginate.getPagination(page, size);
 
   try {
-    const { rows, count } = await certificate.findAndCountAll({
+    const { rows, count } = await Certificate.findAndCountAll({
       limit,
       offset,
       order: [["createdAt", order]],
@@ -43,7 +43,7 @@ self.getAll = async (req, res) => {
 self.get = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await certificate.findOne({
+    let data = await Certificate.findOne({
       where: {
         id: id,
       },
@@ -67,7 +67,7 @@ self.getCertificateWithStakeholderId = async (req, res) => {
 
   const { limit, offset } = paginate.getPagination(page, size);
   try {
-    const data = await certificate.findAndCountAll({
+    const data = await Certificate.findAndCountAll({
       limit,
       offset,
       where: { stakeholder_id: id },
@@ -86,7 +86,7 @@ self.getCertificateWithStakeholderId = async (req, res) => {
 self.search = async (req, res) => {
   try {
     let text = req.query.text;
-    let data = await certificate.findAll({
+    let data = await Certificate.findAll({
       where: {
         name: {
           [Op.like]: "%" + text + "%",
@@ -106,12 +106,12 @@ self.save = async (req, res) => {
     let usr = await usrData.userData(req, res);
     let body = req.body;
     if (usr) {
-      let data = await certificate.create(body);
+      let data = await Certificate.create(body);
       if (data) {
         let us = usr.usrID;
         await actionHelper.saveActionState(
           data.id,
-          "certificate",
+          "Certificate",
           "REGISTER",
           us,
           req,
@@ -131,7 +131,7 @@ self.update = async (req, res) => {
   try {
     let id = req.params.id;
     let body = req.body;
-    let data = await certificate.update(body, {
+    let data = await Certificate.update(body, {
       where: {
         id: id,
       },
@@ -149,7 +149,7 @@ self.update = async (req, res) => {
 self.delete = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await certificate.destroy({
+    let data = await Certificate.destroy({
       where: {
         id: id,
       },

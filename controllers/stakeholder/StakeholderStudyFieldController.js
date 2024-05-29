@@ -1,6 +1,6 @@
 const {
-  stakeholderstudyfield,
-  actionstate,
+  StakeholderStudyField,
+  ActionState,
   Sequelize,
 } = require("../../models");
 const paginate = require("../../utils/pagination");
@@ -25,7 +25,7 @@ self.getAll = async (req, res) => {
   let limiter = { limit, offset };
   page == -1 ? (limiter = {}) : limiter;
   try {
-    const { rows, count } = await stakeholderstudyfield.findAndCountAll({
+    const { rows, count } = await StakeholderStudyField.findAndCountAll({
       limit: limiter.limit,
       offset: limiter.offset,
       order: [["createdAt", order]],
@@ -51,7 +51,7 @@ self.getAll = async (req, res) => {
 self.get = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await stakeholderstudyfield.findOne({
+    let data = await StakeholderStudyField.findOne({
       where: {
         id: id,
       },
@@ -76,7 +76,7 @@ self.getStakeholderStudyFieldByStakeholderId = async (req, res) => {
   const { limit, offset } = paginate.getPagination(page, size);
 
   try {
-    const { rows, count } = await stakeholderstudyfield.findAndCountAll({
+    const { rows, count } = await StakeholderStudyField.findAndCountAll({
       limit,
       offset,
       where: {
@@ -114,7 +114,7 @@ self.getStakeholderStudyFieldByStakeholderId = async (req, res) => {
 self.search = async (req, res) => {
   try {
     let text = req.query.text;
-    let data = await stakeholderstudyfield.findAll({
+    let data = await StakeholderStudyField.findAll({
       where: {
         name: {
           [Op.like]: "%" + text + "%",
@@ -134,12 +134,12 @@ self.save = async (req, res) => {
     let usr = await usrData.userData(req, res);
     let body = req.body;
     if (usr) {
-      let data = await stakeholderstudyfield.create(body);
+      let data = await StakeholderStudyField.create(body);
       if (data) {
         let usrID = usr.usrID;
         await actionHelper.saveActionState(
           data.id,
-          "stakeholderstudyfield",
+          "StakeholderStudyField",
           "REGISTER",
           usrID,
           req,
@@ -159,7 +159,7 @@ self.update = async (req, res) => {
   try {
     let id = req.params.id;
     let body = req.body;
-    let data = await stakeholderstudyfield.update(body, {
+    let data = await StakeholderStudyField.update(body, {
       where: {
         id: id,
       },
@@ -177,7 +177,7 @@ self.update = async (req, res) => {
 self.delete = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await stakeholderstudyfield.destroy({
+    let data = await StakeholderStudyField.destroy({
       where: {
         id: id,
       },

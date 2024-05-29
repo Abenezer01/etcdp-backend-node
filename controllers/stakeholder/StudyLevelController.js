@@ -1,4 +1,4 @@
-const { studylevel, Sequelize } = require("../../models");
+const { StudyLevel, Sequelize } = require("../../models");
 const paginate = require("../../utils/pagination");
 const dotenv = require("dotenv");
 dotenv.config();
@@ -19,7 +19,7 @@ self.getAll = async (req, res) => {
   let limiter = { limit, offset };
   page == -1 ? (limiter = {}) : limiter;
   try {
-    const { rows, count } = await studylevel.findAndCountAll({
+    const { rows, count } = await StudyLevel.findAndCountAll({
       limit: limiter.limit,
       offset: limiter.offset,
       order: [["createdAt", order]],
@@ -44,7 +44,7 @@ self.getAll = async (req, res) => {
 self.get = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await studylevel.findOne({
+    let data = await StudyLevel.findOne({
       where: {
         id: id,
       },
@@ -62,7 +62,7 @@ self.get = async (req, res) => {
 self.search = async (req, res) => {
   try {
     let text = req.query.text;
-    let data = await studylevel.findAll({
+    let data = await StudyLevel.findAll({
       where: {
         name: {
           [Op.like]: "%" + text + "%",
@@ -82,12 +82,12 @@ self.save = async (req, res) => {
     let usr = await usrData.userData(req, res);
     let body = req.body;
     if (usr) {
-      let data = await studylevel.create(body);
+      let data = await StudyLevel.create(body);
       if (data) {
         let us = usr.usrID;
         await actionHelper.saveActionState(
           data.id,
-          "studylevel",
+          "StudyLevel",
           "REGISTER",
           us,
           req,
@@ -107,7 +107,7 @@ self.update = async (req, res) => {
   try {
     let id = req.params.id;
     let body = req.body;
-    let data = await studylevel.update(body, {
+    let data = await StudyLevel.update(body, {
       where: {
         id: id,
       },
@@ -125,7 +125,7 @@ self.update = async (req, res) => {
 self.delete = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await studylevel.destroy({
+    let data = await StudyLevel.destroy({
       where: {
         id: id,
       },

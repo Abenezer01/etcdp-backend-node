@@ -1,4 +1,4 @@
-const { totalemployee, employeeage, Sequelize } = require("../../models");
+const { TotalEmployee, EmployeeAge, Sequelize } = require("../../models");
 
 const Op = Sequelize.Op;
 const paginate = require("../../utils/pagination");
@@ -19,7 +19,7 @@ self.getAll = async (req, res) => {
   const { limit, offset } = paginate.getPagination(page, size);
 
   try {
-    const { rows, count } = await employeeage.findAndCountAll({
+    const { rows, count } = await EmployeeAge.findAndCountAll({
       limit,
       offset,
       order: [["createdAt", order]],
@@ -44,7 +44,7 @@ self.getAll = async (req, res) => {
 self.get = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await employeeage.findOne({
+    let data = await EmployeeAge.findOne({
       where: {
         id: id,
       },
@@ -68,7 +68,7 @@ self.getEmployeeAgeByStakeholderId = async (req, res) => {
 
   const { limit, offset } = paginate.getPagination(page, size);
   try {
-    const data = await employeeage.findAndCountAll({
+    const data = await EmployeeAge.findAndCountAll({
       limit,
       offset,
       where: { stakeholder_id: id },
@@ -87,7 +87,7 @@ self.getEmployeeAgeByStakeholderId = async (req, res) => {
 self.search = async (req, res) => {
   try {
     let text = req.query.text;
-    let data = await employeeage.findAll({
+    let data = await EmployeeAge.findAll({
       where: {
         name: {
           [Op.like]: "%" + text + "%",
@@ -115,7 +115,7 @@ self.save = async (req, res) => {
     let stakeHolderId = arr[0].stakeholder_id;
     // return res.send(stakeHolderId)
     if (usr) {
-      let totalEmployee = await totalemployee.findAll({
+      let totalEmployee = await TotalEmployee.findAll({
         where: {
           stakeholder_id: stakeHolderId,
         },
@@ -200,7 +200,7 @@ self.save = async (req, res) => {
         return res.status(400).json({ message: bod });
       }
 
-      const registeredData = await employeeage.findAll({
+      const registeredData = await EmployeeAge.findAll({
         where: {
           stakeholder_id: stakeHolderId,
         },
@@ -271,7 +271,7 @@ self.save = async (req, res) => {
       });
 
       if (arr2.length > 0) {
-        const savedData = await employeeage.bulkCreate(arr);
+        const savedData = await EmployeeAge.bulkCreate(arr);
         let resultIds = savedData
           .map((obj) => obj.id)
           .sort()
@@ -280,7 +280,7 @@ self.save = async (req, res) => {
         const sharedUuid = uuid.v5(resultIds, uuid.NIL);
         await actionHelper.saveActionState(
           sharedUuid,
-          "employeeage",
+          "EmployeeAge",
           "REGISTER",
           us,
           req,
@@ -309,7 +309,7 @@ self.update = async (req, res) => {
     let stakeHolderId = arr[0].stakeholder_id;
     // return res.send(stakeHolderId)
     if (usr) {
-      let totalEmployee = await totalemployee.findAll({
+      let totalEmployee = await TotalEmployee.findAll({
         where: {
           stakeholder_id: stakeHolderId,
         },
@@ -445,7 +445,7 @@ self.update = async (req, res) => {
             nationality: arr[i].nationality,
           };
           if (body) {
-            await employeeage.update(body, {
+            await EmployeeAge.update(body, {
               where: {
                 id: body.id,
               },
@@ -465,7 +465,7 @@ self.update = async (req, res) => {
 self.delete = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await employeeage.destroy({
+    let data = await EmployeeAge.destroy({
       where: {
         id: id,
       },

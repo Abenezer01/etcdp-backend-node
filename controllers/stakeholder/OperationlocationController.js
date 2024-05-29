@@ -1,4 +1,4 @@
-const { operationlocation, Sequelize } = require("../../models");
+const { OperationLocation, Sequelize } = require("../../models");
 const Op = Sequelize.Op;
 const paginate = require("../../utils/pagination");
 const dotenv = require("dotenv");
@@ -17,7 +17,7 @@ self.getAll = async (req, res) => {
   const { limit, offset } = paginate.getPagination(page, size);
 
   try {
-    const { rows, count } = await operationlocation.findAndCountAll({
+    const { rows, count } = await OperationLocation.findAndCountAll({
       limit,
       offset,
       order: [["createdAt", order]],
@@ -41,7 +41,7 @@ self.getAll = async (req, res) => {
 self.get = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await operationlocation.findOne({
+    let data = await OperationLocation.findOne({
       where: {
         id: id,
       },
@@ -65,7 +65,7 @@ self.getByStakeholderId = async (req, res) => {
 
   const { limit, offset } = paginate.getPagination(page, size);
   try {
-    const data = await operationlocation.findAndCountAll({
+    const data = await OperationLocation.findAndCountAll({
       limit,
       offset,
       where: { stakeholder_id: id, status: true },
@@ -83,7 +83,7 @@ self.getByStakeholderId = async (req, res) => {
 self.search = async (req, res) => {
   try {
     let text = req.query.text;
-    let data = await operationlocation.findAll({
+    let data = await OperationLocation.findAll({
       where: {
         name: {
           [Op.like]: "%" + text + "%",
@@ -111,10 +111,10 @@ self.save = async (req, res) => {
 
     for (const location of body) {
       location.status = true;
-      const data = await operationlocation.create(location);
+      const data = await OperationLocation.create(location);
       await actionHelper.saveActionState(
         data.id,
-        "operationlocation",
+        "OperationLocation",
         "REGISTER",
         us,
         req,
@@ -139,8 +139,8 @@ self.save = async (req, res) => {
 //             let us = usr.usrID;
 //             let arr = [];
 //             for (i = 0; i < body.length; i++) {
-//                 let data = await operationlocation.create(body[i]);
-//                 await actionHelper.saveActionState(data.id, "operationlocation", "REGISTER", us, req, res);
+//                 let data = await OperationLocation.create(body[i]);
+//                 await actionHelper.saveActionState(data.id, "OperationLocation", "REGISTER", us, req, res);
 //                 arr.push(data);
 //             }
 //             return res.json(arr);
@@ -161,9 +161,9 @@ self.update = async (req, res) => {
     }
     for (const location of body) {
       if (!location.id && location.status == true) {
-        await operationlocation.create(location);
+        await OperationLocation.create(location);
       } else if (location.id && location.status == false) {
-        await operationlocation.update(location, {
+        await OperationLocation.update(location, {
           where: {
             id: location.id,
           },
@@ -184,7 +184,7 @@ self.update = async (req, res) => {
 self.delete = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await operationlocation.destroy({
+    let data = await OperationLocation.destroy({
       where: {
         id: id,
       },

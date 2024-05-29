@@ -1,4 +1,4 @@
-const { experiencelevel, Sequelize } = require("../../models");
+const { ExperienceLevel, Sequelize } = require("../../models");
 const paginate = require("../../utils/pagination");
 const dotenv = require("dotenv");
 dotenv.config();
@@ -17,7 +17,7 @@ self.getAll = async (req, res) => {
   const { limit, offset } = paginate.getPagination(page, size);
 
   try {
-    const { rows, count } = await experiencelevel.findAndCountAll({
+    const { rows, count } = await ExperienceLevel.findAndCountAll({
       limit,
       offset,
       order: [["createdAt", order]],
@@ -42,7 +42,7 @@ self.getAll = async (req, res) => {
 self.get = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await experiencelevel.findOne({
+    let data = await ExperienceLevel.findOne({
       where: {
         id: id,
       },
@@ -60,7 +60,7 @@ self.get = async (req, res) => {
 self.search = async (req, res) => {
   try {
     let text = req.query.text;
-    let data = await experiencelevel.findAll({
+    let data = await ExperienceLevel.findAll({
       where: {
         name: {
           [Op.like]: "%" + text + "%",
@@ -80,7 +80,7 @@ self.save = async (req, res) => {
     let usr = await usrData.userData(req, res);
     let body = req.body;
     if (usr) {
-      let data = await experiencelevel.create(body);
+      let data = await ExperienceLevel.create(body);
       if (data) {
         let us = usr.usrID;
         await actionHelper.saveActionState(
@@ -105,7 +105,7 @@ self.update = async (req, res) => {
   try {
     let id = req.params.id;
     let body = req.body;
-    let data = await experiencelevel.update(body, {
+    let data = await ExperienceLevel.update(body, {
       where: {
         id: id,
       },
@@ -123,7 +123,7 @@ self.update = async (req, res) => {
 self.delete = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await experiencelevel.destroy({
+    let data = await ExperienceLevel.destroy({
       where: {
         id: id,
       },

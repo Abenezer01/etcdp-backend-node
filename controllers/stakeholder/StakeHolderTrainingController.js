@@ -1,4 +1,4 @@
-const { training, Sequelize } = require("../../models");
+const { Training, Sequelize } = require("../../models");
 const paginate = require("../../utils/pagination");
 const dotenv = require("dotenv");
 const usrData = require("../../utils/userDataFromToken");
@@ -18,7 +18,7 @@ self.getAll = async (req, res) => {
   const { limit, offset } = paginate.getPagination(page, size);
 
   try {
-    const { rows, count } = await training.findAndCountAll({
+    const { rows, count } = await Training.findAndCountAll({
       limit,
       offset,
       order: [["createdAt", order]],
@@ -44,7 +44,7 @@ self.getAll = async (req, res) => {
 self.get = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await training.findOne({
+    let data = await Training.findOne({
       where: {
         id: id,
       },
@@ -69,7 +69,7 @@ self.getTrainingByStakeholderId = async (req, res) => {
   const { limit, offset } = paginate.getPagination(page, size);
 
   try {
-    const { rows, count } = await training.findAndCountAll({
+    const { rows, count } = await Training.findAndCountAll({
       limit,
       offset,
       where: {
@@ -96,7 +96,7 @@ self.getTrainingByStakeholderId = async (req, res) => {
 self.search = async (req, res) => {
   try {
     let text = req.query.text;
-    let data = await training.findAll({
+    let data = await Training.findAll({
       where: {
         name: {
           [Op.like]: "%" + text + "%",
@@ -116,12 +116,12 @@ self.save = async (req, res) => {
     let usr = await usrData.userData(req, res);
     let body = req.body;
     if (usr) {
-      let data = await training.create(body);
+      let data = await Training.create(body);
       if (data) {
         let us = usr.usrID;
         await actionHelper.saveActionState(
           data.id,
-          "training",
+          "Training",
           "REGISTER",
           us,
           req,
@@ -140,7 +140,7 @@ self.update = async (req, res) => {
   try {
     let id = req.params.id;
     let body = req.body;
-    let data = await training.update(body, {
+    let data = await Training.update(body, {
       where: {
         id: id,
       },
@@ -158,7 +158,7 @@ self.update = async (req, res) => {
 self.delete = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await training.destroy({
+    let data = await Training.destroy({
       where: {
         id: id,
       },

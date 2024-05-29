@@ -1,4 +1,4 @@
-const { stakeholderphone, Sequelize } = require('../../models');
+const { StakeholderPhone, Sequelize } = require('../../models');
 const Op = Sequelize.Op;
 const paginate = require('../../utils/pagination');
 const dotenv = require('dotenv');
@@ -18,7 +18,7 @@ self.getAll = async (req, res) => {
   const { limit, offset } = paginate.getPagination(page, size);
 
   try {
-    const { rows, count } = await stakeholderphone.findAndCountAll({
+    const { rows, count } = await StakeholderPhone.findAndCountAll({
       limit,
       offset,
       order: [['createdAt', order]]
@@ -43,7 +43,7 @@ self.getAll = async (req, res) => {
 self.getPrimaryphone = async (req, res) => {
   try {
     let id = req.query;
-    let data = await stakeholderphone.findOne({
+    let data = await StakeholderPhone.findOne({
       where: {
         [Op.and]: [{ stakeholder_id: id }, { is_primary: true }]
       }
@@ -60,7 +60,7 @@ self.getPrimaryphone = async (req, res) => {
 self.get = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await stakeholderphone.findAll({
+    let data = await StakeholderPhone.findAll({
       where: {
         stakeholder_id: id
       }
@@ -77,7 +77,7 @@ self.get = async (req, res) => {
 self.search = async (req, res) => {
   try {
     let text = req.query.text;
-    let data = await stakeholderphone.findAll({
+    let data = await StakeholderPhone.findAll({
       where: {
         name: {
           [Op.like]: '%' + text + '%'
@@ -106,7 +106,7 @@ self.save = async (req, res) => {
       }
       let filt = [];
       for (let dat of body) {
-        const allData = await stakeholderphone.findOne({
+        const allData = await StakeholderPhone.findOne({
           where: {
             [Op.and]: [
               { stakeholder_id: dat.stakeholder_id },
@@ -146,11 +146,11 @@ self.save = async (req, res) => {
 
       const fin = await Promise.all(
         body.map(async (item) => {
-          let data = await stakeholderphone.create(item);
+          let data = await StakeholderPhone.create(item);
           if (data) {
             await actionHelper.saveActionState(
               data.id,
-              'stakeholderphone',
+              'StakeholderPhone',
               'REGISTER',
               usr.usrID,
               req,
@@ -174,7 +174,7 @@ self.update = async (req, res) => {
   try {
     let id = req.params.id;
     let body = req.body;
-    let data = await stakeholderphone.update(body, {
+    let data = await StakeholderPhone.update(body, {
       where: {
         id: id
       }
@@ -192,7 +192,7 @@ self.update = async (req, res) => {
 self.delete = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await stakeholderphone.destroy({
+    let data = await StakeholderPhone.destroy({
       where: {
         id: id
       }

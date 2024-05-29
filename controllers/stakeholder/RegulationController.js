@@ -1,4 +1,4 @@
-const { regulation, Sequelize } = require("../../models");
+const { Regulation, Sequelize } = require("../../models");
 const paginate = require("../../utils/pagination");
 const dotenv = require("dotenv");
 dotenv.config();
@@ -17,7 +17,7 @@ self.getAll = async (req, res) => {
   const { limit, offset } = paginate.getPagination(page, size);
 
   try {
-    const { rows, count } = await regulation.findAndCountAll({
+    const { rows, count } = await Regulation.findAndCountAll({
       limit,
       offset,
       order: [["createdAt", order]],
@@ -42,7 +42,7 @@ self.getAll = async (req, res) => {
 self.get = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await regulation.findOne({
+    let data = await Regulation.findOne({
       where: {
         id: id,
       },
@@ -66,7 +66,7 @@ self.getRegulationByStakeholderId = async (req, res) => {
 
   const { limit, offset } = paginate.getPagination(page, size);
   try {
-    const data = await regulation.findAndCountAll({
+    const data = await Regulation.findAndCountAll({
       limit,
       offset,
       where: { stakeholder_id: id },
@@ -84,7 +84,7 @@ self.getRegulationByStakeholderId = async (req, res) => {
 self.search = async (req, res) => {
   try {
     let text = req.query.text;
-    let data = await regulation.findAll({
+    let data = await Regulation.findAll({
       where: {
         name: {
           [Op.like]: "%" + text + "%",
@@ -104,12 +104,12 @@ self.save = async (req, res) => {
     let usr = await usrData.userData(req, res);
     let body = req.body;
     if (usr) {
-      let data = await regulation.create(body);
+      let data = await Regulation.create(body);
       if (data) {
         let us = usr.usrID;
         await actionHelper.saveActionState(
           data.id,
-          "regulation",
+          "Regulation",
           "REGISTER",
           us,
           req,
@@ -129,7 +129,7 @@ self.update = async (req, res) => {
   try {
     let id = req.params.id;
     let body = req.body;
-    let data = await regulation.update(body, {
+    let data = await Regulation.update(body, {
       where: {
         id: id,
       },
@@ -147,7 +147,7 @@ self.update = async (req, res) => {
 self.delete = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await regulation.destroy({
+    let data = await Regulation.destroy({
       where: {
         id: id,
       },

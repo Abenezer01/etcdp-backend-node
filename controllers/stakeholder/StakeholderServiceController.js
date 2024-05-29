@@ -1,5 +1,5 @@
 const actionHelper = require("../utils/action-helper");
-const { stakeholderservice, Sequelize } = require("./../../models");
+const { StakeholderService, Sequelize } = require("./../../models");
 const usrData = require("../../utils/userDataFromToken");
 const paginate = require("../../utils/pagination");
 const dotenv = require("dotenv");
@@ -18,7 +18,7 @@ self.getAll = async (req, res) => {
   const { limit, offset } = paginate.getPagination(page, size);
 
   try {
-    const { rows, count } = await stakeholderservice.findAndCountAll({
+    const { rows, count } = await StakeholderService.findAndCountAll({
       limit,
       offset,
       order: [["createdAt", order]],
@@ -43,7 +43,7 @@ self.getAll = async (req, res) => {
 self.get = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await stakeholderservice.findOne({
+    let data = await StakeholderService.findOne({
       where: {
         id: id,
       },
@@ -68,7 +68,7 @@ self.getStakeServiceByStakeHolderId = async (req, res) => {
   const { limit, offset } = paginate.getPagination(page, size);
 
   try {
-    const { rows, count } = await stakeholderservice.findAndCountAll({
+    const { rows, count } = await StakeholderService.findAndCountAll({
       limit,
       offset,
       where: {
@@ -96,7 +96,7 @@ self.getStakeServiceByStakeHolderId = async (req, res) => {
 self.search = async (req, res) => {
   try {
     let text = req.query.text;
-    let data = await stakeholderservice.findAll({
+    let data = await StakeholderService.findAll({
       where: {
         name: {
           [Op.like]: "%" + text + "%",
@@ -116,12 +116,12 @@ self.save = async (req, res) => {
     let usr = await usrData.userData(req, res);
     let body = req.body;
     if (usr) {
-      let data = await stakeholderservice.create(body);
+      let data = await StakeholderService.create(body);
       if (data) {
         let us = usr.usrID;
         actionHelper.saveActionState(
           data.id,
-          "stakeholderservice",
+          "StakeholderService",
           "REGISTER",
           us,
           req,
@@ -141,7 +141,7 @@ self.update = async (req, res) => {
   try {
     let id = req.params.id;
     let body = req.body;
-    let data = await stakeholderservice.update(body, {
+    let data = await StakeholderService.update(body, {
       where: {
         id: id,
       },
@@ -159,7 +159,7 @@ self.update = async (req, res) => {
 self.delete = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await stakeholderservice.destroy({
+    let data = await StakeholderService.destroy({
       where: {
         id: id,
       },

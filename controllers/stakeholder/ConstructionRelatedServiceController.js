@@ -1,4 +1,4 @@
-const { constructionrelatedservice, Sequelize } = require("./../../models");
+const { ConstructionRelatedService, Sequelize } = require("./../../models");
 const paginate = require("../../utils/pagination");
 const dotenv = require("dotenv");
 dotenv.config();
@@ -19,7 +19,7 @@ self.getAll = async (req, res) => {
   page == -1 ? (limiter = {}) : limiter;
 
   try {
-    const { rows, count } = await constructionrelatedservice.findAndCountAll({
+    const { rows, count } = await ConstructionRelatedService.findAndCountAll({
       limit: limiter.limit,
       offset: limiter.offset,
       order: [["createdAt", order]],
@@ -44,7 +44,7 @@ self.getAll = async (req, res) => {
 self.get = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await constructionrelatedservice.findOne({
+    let data = await ConstructionRelatedService.findOne({
       where: {
         id: id,
       },
@@ -68,7 +68,7 @@ self.getConstructionRelatedServiceByStakeholderId = async (req, res) => {
 
   const { limit, offset } = paginate.getPagination(page, size);
   try {
-    const data = await constructionrelatedservice.findAndCountAll({
+    const data = await ConstructionRelatedService.findAndCountAll({
       limit,
       offset,
       where: { stakeholder_id: id },
@@ -86,7 +86,7 @@ self.getConstructionRelatedServiceByStakeholderId = async (req, res) => {
 self.search = async (req, res) => {
   try {
     let text = req.query.text;
-    let data = await constructionrelatedservice.findAll({
+    let data = await ConstructionRelatedService.findAll({
       where: {
         name: {
           [Op.like]: "%" + text + "%",
@@ -105,12 +105,12 @@ self.save = async (req, res) => {
     let usr = await usrData.userData(req, res);
     let body = req.body;
     if (usr) {
-      let data = await constructionrelatedservice.create(body);
+      let data = await ConstructionRelatedService.create(body);
       if (data) {
         let us = usr.usrID;
         await actionHelper.saveActionState(
           data.id,
-          "constructionrelatedservice",
+          "ConstructionRelatedService",
           "REGISTER",
           us,
           req,
@@ -130,7 +130,7 @@ self.update = async (req, res) => {
   try {
     let id = req.params.id;
     let body = req.body;
-    let data = await constructionrelatedservice.update(body, {
+    let data = await ConstructionRelatedService.update(body, {
       where: {
         id: id,
       },
@@ -148,7 +148,7 @@ self.update = async (req, res) => {
 self.delete = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await constructionrelatedservice.destroy({
+    let data = await ConstructionRelatedService.destroy({
       where: {
         id: id,
       },

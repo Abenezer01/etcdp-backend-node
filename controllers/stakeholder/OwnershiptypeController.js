@@ -1,5 +1,5 @@
 const actionHelper = require("../utils/action-helper");
-const { ownership, Sequelize } = require("./../../models");
+const { Ownership, Sequelize } = require("./../../models");
 const paginate = require("../../utils/pagination");
 const dotenv = require("dotenv");
 dotenv.config();
@@ -20,7 +20,7 @@ self.getAll = async (req, res) => {
   page == -1 ? (limiter = {}) : limiter;
 
   try {
-    const { rows, count } = await ownership.findAndCountAll({
+    const { rows, count } = await Ownership.findAndCountAll({
       limit: limiter.limit,
       offset: limiter.offset,
       order: [["createdAt", order]],
@@ -45,7 +45,7 @@ self.getAll = async (req, res) => {
 self.get = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await ownership.findOne({
+    let data = await Ownership.findOne({
       where: {
         id: id,
       },
@@ -63,7 +63,7 @@ self.get = async (req, res) => {
 self.search = async (req, res) => {
   try {
     let text = req.query.text;
-    let data = await ownership.findAll({
+    let data = await Ownership.findAll({
       where: {
         name: {
           [Op.like]: "%" + text + "%",
@@ -83,12 +83,12 @@ self.save = async (req, res) => {
     let usr = await usrData.userData(req, res);
     let body = req.body;
     if (usr) {
-      let data = await ownership.create(body);
+      let data = await Ownership.create(body);
       if (data) {
         let us = usr.usrID;
         await actionHelper.saveActionState(
           data.id,
-          "ownership",
+          "Ownership",
           "REGISTER",
           us,
           req,
@@ -108,7 +108,7 @@ self.update = async (req, res) => {
   try {
     let id = req.params.id;
     let body = req.body;
-    let data = await ownership.update(body, {
+    let data = await Ownership.update(body, {
       where: {
         id: id,
       },
@@ -126,7 +126,7 @@ self.update = async (req, res) => {
 self.delete = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await ownership.destroy({
+    let data = await Ownership.destroy({
       where: {
         id: id,
       },

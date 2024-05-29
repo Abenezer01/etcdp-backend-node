@@ -1,4 +1,4 @@
-const { agelevel, Sequelize } = require("../../models");
+const { AgeLevel, Sequelize } = require("../../models");
 const Op = Sequelize.Op;
 const paginate = require("../../utils/pagination");
 const dotenv = require("dotenv");
@@ -19,7 +19,7 @@ self.getAll = async (req, res) => {
   page == -1 ? (limiter = {}) : limiter;
 
   try {
-    const { rows, count } = await agelevel.findAndCountAll({
+    const { rows, count } = await AgeLevel.findAndCountAll({
       limit: limiter.limit,
       offset: limiter.offset,
       order: [["createdAt", order]],
@@ -44,7 +44,7 @@ self.getAll = async (req, res) => {
 self.get = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await agelevel.findOne({
+    let data = await AgeLevel.findOne({
       where: {
         id: id,
       },
@@ -62,7 +62,7 @@ self.get = async (req, res) => {
 self.search = async (req, res) => {
   try {
     let text = req.query.text;
-    let data = await agelevel.findAll({
+    let data = await AgeLevel.findAll({
       where: {
         name: {
           [Op.like]: "%" + text + "%",
@@ -82,12 +82,12 @@ self.save = async (req, res) => {
     let usr = await usrData.userData(req, res);
     let body = req.body;
     if (usr) {
-      let data = await agelevel.create(body);
+      let data = await AgeLevel.create(body);
       if (data) {
         let us = usr.usrID;
         await actionHelper.saveActionState(
           data.id,
-          "agelevel",
+          "AgeLevel",
           "REGISTER",
           us,
           req,
@@ -106,7 +106,7 @@ self.update = async (req, res) => {
   try {
     let id = req.params.id;
     let body = req.body;
-    let data = await agelevel.update(body, {
+    let data = await AgeLevel.update(body, {
       where: {
         id: id,
       },
@@ -124,7 +124,7 @@ self.update = async (req, res) => {
 self.delete = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await agelevel.destroy({
+    let data = await AgeLevel.destroy({
       where: {
         id: id,
       },
