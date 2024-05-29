@@ -1,4 +1,4 @@
-const { status, Sequelize } = require("../../models");
+const { Status, Sequelize } = require("../../models");
 const dotenv = require("dotenv");
 dotenv.config();
 const Op = Sequelize.Op;
@@ -9,7 +9,7 @@ let self = {};
 
 self.getAll = async (req, res) => {
   try {
-    let data = await status.findAll();
+    let data = await Status.findAll();
     return res.json(data);
   } catch (error) {
     res.status(500).json({
@@ -21,7 +21,7 @@ self.getAll = async (req, res) => {
 self.get = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await status.findOne({
+    let data = await Status.findOne({
       where: {
         id: id,
       },
@@ -39,7 +39,7 @@ self.get = async (req, res) => {
 self.search = async (req, res) => {
   try {
     let text = req.query.text;
-    let data = await status.findAll({
+    let data = await Status.findAll({
       where: {
         name: {
           [Op.like]: "%" + text + "%",
@@ -59,12 +59,12 @@ self.save = async (req, res) => {
     let usr = await usrData.userData(req, res);
     let body = req.body;
     if (usr) {
-      let data = await status.create(body);
+      let data = await Status.create(body);
       if (data) {
         let usrID = usr.usrID;
         await actionHelper.saveActionState(
           data.id,
-          "status",
+          "Status",
           "REGISTER",
           usrID,
           req,
@@ -84,7 +84,7 @@ self.update = async (req, res) => {
   try {
     let id = req.params.id;
     let body = req.body;
-    let data = await status.update(body, {
+    let data = await Status.update(body, {
       where: {
         id: id,
       },
@@ -102,7 +102,7 @@ self.update = async (req, res) => {
 self.delete = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await status.destroy({
+    let data = await Status.destroy({
       where: {
         id: id,
       },

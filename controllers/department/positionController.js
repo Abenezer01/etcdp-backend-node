@@ -1,5 +1,5 @@
 const actionHelper = require("../utils/action-helper");
-const { position, permission, positionpermission, Sequelize } = require("./../../models");
+const { Position, Permission, PositionPermission, Sequelize } = require("./../../models");
 const usrData = require("../../utils/userDataFromToken");
 
 
@@ -9,7 +9,7 @@ let self = {};
 
 self.getAll = async (req, res) => {
   try {
-    let data = await position.findAll();
+    let data = await Position.findAll();
     return res.status(200).json({
       data,
     });
@@ -23,7 +23,7 @@ self.getAll = async (req, res) => {
 self.get = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await position.findOne({
+    let data = await Position.findOne({
       where: {
         id: id,
       },
@@ -41,7 +41,7 @@ self.get = async (req, res) => {
 self.search = async (req, res) => {
   try {
     let text = req.query.text;
-    let data = await position.findAll({
+    let data = await Position.findAll({
       where: {
         name: {
           [Op.like]: "%" + text + "%",
@@ -59,12 +59,12 @@ self.search = async (req, res) => {
 self.save = async (req, res) => {
   try {
     let body = req.body;
-    let data = await position.create(body);
+    let data = await Position.create(body);
     if (data) {
       let usr = await usrData.userData(req, res);
       await actionHelper.saveActionState(
         data.id,
-        "position",
+        "Position",
         "REGISTER",
         usr.usrID,
         req,
@@ -83,7 +83,7 @@ self.update = async (req, res) => {
   try {
     let id = req.params.id;
     let body = req.body;
-    let data = await position.update(body, {
+    let data = await Position.update(body, {
       where: {
         id: id,
       },
@@ -99,7 +99,7 @@ self.update = async (req, res) => {
 self.delete = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await position.destroy({
+    let data = await Position.destroy({
       where: {
         id: id,
       },
@@ -134,7 +134,7 @@ self.getDepartmentPositions = async (req, res) => {
   try {
     let id = req.params.id;
 
-    let positions = await position.findAll({
+    let positions = await Position.findAll({
       where: {
         department_id: id,
       },
@@ -150,10 +150,10 @@ self.getDepartmentPositions = async (req, res) => {
 self.givePositionPermissions = async(req, res) => {
   
   try {
-     let permissions = await permission.findAll();
+     let permissions = await Permission.findAll();
      
       for(let per of permissions) {
-        let data = await positionpermission.create({
+        let data = await PositionPermission.create({
           permission_id: per.id,
           position_id: "8a0a21ce-45a8-462b-a07d-3d55ed3ab089"
         })

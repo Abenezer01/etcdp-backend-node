@@ -1,5 +1,5 @@
 const actionHelper = require("../utils/action-helper");
-const { roadsegment, Sequelize } = require("./../../models");
+const { RoadSegment, Sequelize } = require("./../../models");
 const dotenv = require("dotenv");
 const paginate = require("../../utils/pagination");
 dotenv.config();
@@ -17,7 +17,7 @@ self.getAll = async (req, res) => {
   const { limit, offset } = paginate.getPagination(page, size);
 
   try {
-    const { rows, count } = await roadsegment.findAndCountAll({
+    const { rows, count } = await RoadSegment.findAndCountAll({
       limit,
       offset,
       order: [["createdAt", order]],
@@ -50,12 +50,12 @@ self.getByProjectId = async (req, res) => {
   let limiter = { limit, offset };
   page == -1 ? (limiter = {}) : limiter;
   try {
-    const data = await roadsegment.findAndCountAll({
+    const data = await RoadSegment.findAndCountAll({
       limit: limiter.limit,
       offset: limiter.offset,
       where: { project_id: id },
       order: [["createdAt", order]],
-      //include: { model: roadsegment, as: 'roadsegment', attributes: ['id', 'name'] }
+      //include: { model: RoadSegment, as: 'RoadSegment', attributes: ['id', 'name'] }
     });
 
     const response = paginate.getPagingData(data, page, limit);
@@ -69,7 +69,7 @@ self.getByProjectId = async (req, res) => {
 self.get = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await roadsegment.findOne({
+    let data = await RoadSegment.findOne({
       where: {
         id: id,
       },
@@ -85,7 +85,7 @@ self.get = async (req, res) => {
 self.search = async (req, res) => {
   try {
     let text = req.query.text;
-    let data = await roadsegment.findAll({
+    let data = await RoadSegment.findAll({
       where: {
         name: {
           [Op.like]: "%" + text + "%",
@@ -105,12 +105,12 @@ self.save = async (req, res) => {
     let usr = await usrData.userData(req, res);
     let body = req.body;
     if (usr) {
-      let data = await roadsegment.create(body);
+      let data = await RoadSegment.create(body);
       if (data) {
         let usrID = usr.usrID;
         await actionHelper.saveActionState(
           data.id,
-          "roadsegment",
+          "RoadSegment",
           "REGISTER",
           usrID,
           req,
@@ -129,7 +129,7 @@ self.update = async (req, res) => {
   try {
     let id = req.params.id;
     let body = req.body;
-    let data = await roadsegment.update(body, {
+    let data = await RoadSegment.update(body, {
       where: {
         id: id,
       },
@@ -145,7 +145,7 @@ self.update = async (req, res) => {
 self.delete = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await roadsegment.destroy({
+    let data = await RoadSegment.destroy({
       where: {
         id: id,
       },

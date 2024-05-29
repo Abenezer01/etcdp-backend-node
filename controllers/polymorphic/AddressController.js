@@ -1,4 +1,4 @@
-const { address, Sequelize } = require("../../models");
+const { Address, Sequelize } = require("../../models");
 const usrData = require("../../utils/userDataFromToken");
 const actionHelper = require("../utils/action-helper");
 const Op = Sequelize.Op;
@@ -7,7 +7,7 @@ let self = {};
 
 self.getAll = async (req, res) => {
   try {
-    let data = await address.findAll();
+    let data = await Address.findAll();
     return res.status(200).json(data);
   } catch (error) {
     res.status(500).json({
@@ -18,7 +18,7 @@ self.getAll = async (req, res) => {
 
 self.getWithItems = async (req, res) => {
   try {
-    let data = await address.findAll({
+    let data = await Address.findAll({
       attributes: ["id", "name"],
       // include:[
       // 	{
@@ -43,7 +43,7 @@ self.getWithItems = async (req, res) => {
 self.get = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await address.findOne({
+    let data = await Address.findOne({
       where: {
         id: id,
       },
@@ -60,7 +60,7 @@ self.get = async (req, res) => {
 self.getAddressByModelId = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await address.findAll({
+    let data = await Address.findAll({
       where: {
         model_id: id,
       },
@@ -82,7 +82,7 @@ self.getAddressByModelId = async (req, res) => {
 self.search = async (req, res) => {
   try {
     let text = req.query.text;
-    let data = await address.findAll({
+    let data = await Address.findAll({
       where: {
         name: {
           [Op.like]: "%" + text + "%",
@@ -104,7 +104,7 @@ self.save = async (req, res) => {
     let model_id = body.model_id;
     if (usr) {
       let usrID = usr.usrID;
-      let hqData = await address.findAll({
+      let hqData = await Address.findAll({
         where: {
           model_id: model_id,
           hq: true,
@@ -113,11 +113,11 @@ self.save = async (req, res) => {
       console.log("The hq data", hqData);
       if (!hqData.length) {
         body.hq = true;
-        let hqBod = await address.create(body);
+        let hqBod = await Address.create(body);
         if (hqBod) {
           await actionHelper.saveActionState(
             hqBod.id,
-            "address",
+            "Address",
             "REGISTER",
             usrID,
             req,
@@ -129,12 +129,12 @@ self.save = async (req, res) => {
         }
       }
       body.hq = false;
-      let data = await address.create(body);
+      let data = await Address.create(body);
       if (data) {
         let usrID = usr.usrID;
         await actionHelper.saveActionState(
           data.id,
-          "address",
+          "Address",
           "REGISTER",
           usrID,
           req,
@@ -154,7 +154,7 @@ self.update = async (req, res) => {
   try {
     let id = req.params.id;
     let body = req.body;
-    let data = await address.update(body, {
+    let data = await Address.update(body, {
       where: {
         id: id,
       },
@@ -170,7 +170,7 @@ self.update = async (req, res) => {
 self.delete = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await address.destroy({
+    let data = await Address.destroy({
       where: {
         id: id,
       },

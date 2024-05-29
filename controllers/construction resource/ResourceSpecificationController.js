@@ -1,4 +1,4 @@
-const { resourcespecification, Sequelize } = require("../../models");
+const { ResourceSpecification, Sequelize } = require("../../models");
 const usrData = require("../../utils/userDataFromToken");
 const actionHelper = require("../utils/action-helper");
 const Op = Sequelize.Op;
@@ -18,7 +18,7 @@ self.getAll = async (req, res) => {
   const { limit, offset } = paginate.getPagination(page, size);
 
   try {
-    const { rows, count } = await resourcespecification.findAndCountAll({
+    const { rows, count } = await ResourceSpecification.findAndCountAll({
       limit,
       offset,
       order: [["createdAt", order]],
@@ -43,7 +43,7 @@ self.getAll = async (req, res) => {
 self.get = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await resourcespecification.findOne({
+    let data = await ResourceSpecification.findOne({
       where: {
         id: id,
       },
@@ -71,7 +71,7 @@ self.getByResourceId = async (req, res) => {
   }
 
   try {
-    const { count, rows } = await resourcespecification.findAndCountAll({
+    const { count, rows } = await ResourceSpecification.findAndCountAll({
       limit,
       offset,
       where: { resource_id: id },
@@ -102,7 +102,7 @@ self.getByResourceId = async (req, res) => {
 self.search = async (req, res) => {
   try {
     let text = req.query.text;
-    let data = await resourcespecification.findAll({
+    let data = await ResourceSpecification.findAll({
       where: {
         name: {
           [Op.like]: "%" + text + "%",
@@ -158,12 +158,12 @@ self.save = async (req, res) => {
     }
 
     if (usr) {
-      const data = await resourcespecification.create(body);
+      const data = await ResourceSpecification.create(body);
       if (data) {
         promises.push(
           actionHelper.saveActionState(
             data.id,
-            "resourcespecification",
+            "ResourceSpecification",
             "REGISTER",
             usr.usrID,
             req,
@@ -209,7 +209,7 @@ self.save = async (req, res) => {
 //         }
 
 //         if (usr) {
-//             let data = await resourcespecification.create(body);
+//             let data = await ResourceSpecification.create(body);
 //             if (data) {
 //                 if (pat) {
 //                     const filee = req.files.image
@@ -219,7 +219,7 @@ self.save = async (req, res) => {
 //                     })
 //                 }
 //                 let us = usr.usrID
-//                 await actionHelper.saveActionState(data.id, "resourcespecification", "REGISTER", us, req, res)
+//                 await actionHelper.saveActionState(data.id, "ResourceSpecification", "REGISTER", us, req, res)
 //             }
 //             return res.json(data)
 //         }
@@ -233,7 +233,7 @@ const prePath = path.join(__dirname, "..", "..", "public");
 self.getImage = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await resourcespecification.findOne({
+    let data = await ResourceSpecification.findOne({
       where: {
         id: id,
       },
@@ -272,7 +272,7 @@ self.update = async (req, res) => {
       const pat = filePath;
 
       if (usr) {
-        const { image } = await resourcespecification.findOne({
+        const { image } = await ResourceSpecification.findOne({
           where: { id },
         });
         if (image) {
@@ -292,7 +292,7 @@ self.update = async (req, res) => {
     }
 
     if (usr) {
-      await resourcespecification.update(body, { where: { id } });
+      await ResourceSpecification.update(body, { where: { id } });
       return res.json({ message: "Success" });
     }
   } catch (error) {
@@ -332,7 +332,7 @@ self.update = async (req, res) => {
 //         if (usr) {
 //             if (pat) {
 //                 const filee = req.files.image
-//                 let data = await resourcespecification.findOne({
+//                 let data = await ResourceSpecification.findOne({
 //                     where: {
 //                         id: id
 //                     },
@@ -359,7 +359,7 @@ self.update = async (req, res) => {
 //                 })
 //             }
 
-//             let data = await resourcespecification.update(body, {
+//             let data = await ResourceSpecification.update(body, {
 //                 where: {
 //                     id: id
 //                 },
@@ -376,7 +376,7 @@ self.update = async (req, res) => {
 self.delete = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await resourcespecification.destroy({
+    let data = await ResourceSpecification.destroy({
       where: {
         id: id,
       },

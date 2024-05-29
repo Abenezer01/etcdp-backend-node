@@ -1,4 +1,4 @@
-const { educationstatus, actionstate, Sequelize } = require("../../models");
+const { EducationStatus, ActionState, Sequelize } = require("../../models");
 const actionHelper = require("../utils/action-helper");
 const usrData = require("../../utils/userDataFromToken");
 
@@ -8,7 +8,7 @@ let self = {};
 
 self.getAll = async (req, res) => {
   try {
-    let data = await educationstatus.findAll();
+    let data = await EducationStatus.findAll();
     return res.json(data);
   } catch (error) {
     res.status(500).json({
@@ -20,7 +20,7 @@ self.getAll = async (req, res) => {
 self.get = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await educationstatus.findOne({
+    let data = await EducationStatus.findOne({
       where: {
         id: id,
       },
@@ -38,7 +38,7 @@ self.get = async (req, res) => {
 self.search = async (req, res) => {
   try {
     let text = req.query.text;
-    let data = await educationstatus.findAll({
+    let data = await EducationStatus.findAll({
       where: {
         name: {
           [Op.like]: "%" + text + "%",
@@ -56,14 +56,14 @@ self.search = async (req, res) => {
 self.save = async (req, res) => {
   try {
     let body = req.body;
-    let data = await educationstatus.create(body);
+    let data = await EducationStatus.create(body);
 
     if (data) {
       if (data) {
         let usr = await usrData.userData(req, res);
         await actionHelper.saveActionState(
           data.id,
-          "educationstatus",
+          "EducationStatus",
           "REGISTER",
           usr.usrID,
           req,
@@ -83,7 +83,7 @@ self.update = async (req, res) => {
   try {
     let id = req.params.id;
     let body = req.body;
-    let data = await educationstatus.update(body, {
+    let data = await EducationStatus.update(body, {
       where: {
         id: id,
       },
@@ -99,7 +99,7 @@ self.update = async (req, res) => {
 self.delete = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await educationstatus.destroy({
+    let data = await EducationStatus.destroy({
       where: {
         id: id,
       },
@@ -114,7 +114,7 @@ self.delete = async (req, res) => {
 self.getByUserId = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await educationstatus.findAll({
+    let data = await EducationStatus.findAll({
       where: {
         user_id: id,
       },

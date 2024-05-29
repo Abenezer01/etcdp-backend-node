@@ -1,4 +1,4 @@
-const { User, resource, image, Sequelize } = require("../../models");
+const { User, Resource, Image, Sequelize } = require("../../models");
 const path = require("path");
 const usrData = require("../../utils/userDataFromToken");
 const actionHelper = require("../utils/action-helper");
@@ -10,7 +10,7 @@ let self = {};
 
 self.getAll = async (req, res) => {
   try {
-    let data = await image.findAll();
+    let data = await Image.findAll();
     return res.status(200).json({
       data,
     });
@@ -29,7 +29,7 @@ self.getAll = async (req, res) => {
 self.get = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await image.findOne({
+    let data = await Image.findOne({
       where: {
         id: id,
       },
@@ -47,7 +47,7 @@ self.get = async (req, res) => {
 self.search = async (req, res) => {
   try {
     let text = req.query.text;
-    let data = await image.findAll({
+    let data = await Image.findAll({
       where: {
         name: {
           [Op.like]: "%" + text + "%",
@@ -95,7 +95,7 @@ self.save = async (req, res) => {
     const pat = filePath;
 
     const imagee = { url: filePathh };
-    const ll = await image.create(imagee);
+    const ll = await Image.create(imagee);
     if (!ll) {
       return res.status(500).send({ message: "Failed to create image" });
     }
@@ -110,7 +110,7 @@ self.save = async (req, res) => {
       res
     );
 
-    await resource.update({ image_id: ll.id }, { where: { id } });
+    await Resource.update({ image_id: ll.id }, { where: { id } });
 
     const file = req.files.image;
     file.mv(pat, (err) => {
@@ -130,12 +130,12 @@ const prePath = path.join(__dirname, "..", "..", "public");
 self.getImage = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await resource.findOne({
+    let data = await Resource.findOne({
       where: {
         id: id,
       },
     });
-    let img = await image.findOne({
+    let img = await Image.findOne({
       where: {
         id: data.image_id,
       },
@@ -164,14 +164,14 @@ self.getImage = async (req, res) => {
 //     let approx = Math.round(fileSizeinKB);
 //     //return res.status(200).json(approx)
 //     try {
-//         let resourceData = await resource.findOne({
+//         let resourceData = await Resource.findOne({
 //             where: {
 //                 id: id
 //             }
 //         });
 //         let image_id = resourceData.image_id
 //         if (image_id) {
-//             let resourceImageData = await image.findOne({
+//             let resourceImageData = await Image.findOne({
 //                 where: {
 //                     id: image_id
 //                 }
@@ -189,9 +189,9 @@ self.getImage = async (req, res) => {
 //             }
 
 //         }
-//         const ext = req.files.image.mimetype.split("/")[1];
+//         const ext = req.files.Image.mimetype.split("/")[1];
 //         let rand = Math.floor(100000 + Math.random() * 900000)
-//         var name = req.files.image.name;
+//         var name = req.files.Image.name;
 //         let parsedName = path.parse(name).name;
 //         checkedNew = parsedName.concat(rand);
 //         const filePath = path.join(__dirname, '../../public', 'images/resourceimages', checkedNew + '.' +
@@ -203,7 +203,7 @@ self.getImage = async (req, res) => {
 //                 // res.redirect('/')
 //         })
 //         var filePathh = filePath.split("public").pop();
-//         await image.update({
+//         await Image.update({
 //             url: filePathh
 //         }, {
 //             where: { id: image_id },
@@ -230,11 +230,11 @@ self.update = async (req, res) => {
   const fileSizeInKB = Math.round((contentLength / 1024) * 100) / 100;
 
   try {
-    const resourceData = await resource.findOne({ where: { id } });
+    const resourceData = await Resource.findOne({ where: { id } });
     const imageId = resourceData.image_id;
 
     if (imageId) {
-      const resourceImageData = await image.findOne({ where: { id: imageId } });
+      const resourceImageData = await Image.findOne({ where: { id: imageId } });
       const fc = path.join(prePath, resourceImageData.url);
 
       if (fs.existsSync(fc)) {
@@ -256,7 +256,7 @@ self.update = async (req, res) => {
     await file.mv(filePath);
     const filePathh = filePath.split("public").pop();
 
-    await image.update({ url: filePathh }, { where: { id: imageId } });
+    await Image.update({ url: filePathh }, { where: { id: imageId } });
 
     return res.status(200).json({ message: "Success" });
   } catch (error) {
@@ -268,7 +268,7 @@ self.update = async (req, res) => {
 self.delete = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await image.destroy({
+    let data = await Image.destroy({
       where: {
         id: id,
       },

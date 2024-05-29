@@ -1,5 +1,5 @@
 const actionHelper = require("../utils/action-helper");
-const { electrictower, transmissionline, Sequelize } = require("../../models");
+const { ElectricTower, TransmissionLine, Sequelize } = require("../../models");
 const usrData = require("../../utils/userDataFromToken");
 const dotenv = require("dotenv");
 dotenv.config();
@@ -18,7 +18,7 @@ self.getAll = async (req, res) => {
   const { limit, offset } = paginate.getPagination(page, size);
 
   try {
-    const { rows, count } = await electrictower.findAndCountAll({
+    const { rows, count } = await ElectricTower.findAndCountAll({
       limit,
       offset,
       order: [["createdAt", order]],
@@ -49,14 +49,14 @@ self.getByProjectId = async (req, res) => {
 
   const { limit, offset } = paginate.getPagination(page, size);
   try {
-    const data = await electrictower.findAndCountAll({
+    const data = await ElectricTower.findAndCountAll({
       limit,
       offset,
       where: { project_id: id },
       order: [["createdAt", order]],
       include: {
-        model: transmissionline,
-        as: "transmissionline",
+        model: TransmissionLine,
+        as: "TransmissionLine",
         attributes: ["id", "name"],
       },
     });
@@ -73,7 +73,7 @@ self.getByProjectId = async (req, res) => {
 self.get = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await electrictower.findOne({
+    let data = await ElectricTower.findOne({
       where: {
         id: id,
       },
@@ -89,7 +89,7 @@ self.get = async (req, res) => {
 self.search = async (req, res) => {
   try {
     let text = req.query.text;
-    let data = await electrictower.findAll({
+    let data = await ElectricTower.findAll({
       where: {
         name: {
           [Op.like]: "%" + text + "%",
@@ -109,12 +109,12 @@ self.save = async (req, res) => {
     let usr = await usrData.userData(req, res);
     let body = req.body;
     if (usr) {
-      let data = await electrictower.create(body);
+      let data = await ElectricTower.create(body);
       if (data) {
         let usrID = usr.usrID;
         await actionHelper.saveActionState(
           data.id,
-          "electrictower",
+          "ElectricTower",
           "REGISTER",
           usrID,
           req,
@@ -134,7 +134,7 @@ self.update = async (req, res) => {
   try {
     let id = req.params.id;
     let body = req.body;
-    let data = await electrictower.update(body, {
+    let data = await ElectricTower.update(body, {
       where: {
         id: id,
       },
@@ -150,7 +150,7 @@ self.update = async (req, res) => {
 self.delete = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await electrictower.destroy({
+    let data = await ElectricTower.destroy({
       where: {
         id: id,
       },

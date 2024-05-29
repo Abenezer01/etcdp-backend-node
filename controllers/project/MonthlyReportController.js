@@ -1,4 +1,4 @@
-const { projectplan, monthlyreport, Sequelize } = require("./../../models");
+const { ProjectPlan, MonthlyReport, Sequelize } = require("./../../models");
 const {
     sentNotification,
     activityLog,
@@ -12,7 +12,7 @@ let self = {};
 
 self.getAll = async(req, res) => {
     try {
-        let data = await monthlyreport.findAll();
+        let data = await MonthlyReport.findAll();
         return res.json(data);
     } catch (error) {
         res.status(500).json({
@@ -24,7 +24,7 @@ self.getAll = async(req, res) => {
 self.get = async(req, res) => {
     try {
         let id = req.params.id;
-        let data = await monthlyreport.findOne({
+        let data = await MonthlyReport.findOne({
             attributes: ["id", "name", "description"],
             where: {
                 id: id,
@@ -42,7 +42,7 @@ self.save = async(req, res) => {
     try {
         let body = req.body;
 
-        let existing = await monthlyreport.findOne({
+        let existing = await MonthlyReport.findOne({
             where: {
                 project_id: body.project_id,
                 year: body.year,
@@ -56,13 +56,13 @@ self.save = async(req, res) => {
                 message: "Data already found!",
             });
         } else {
-            let data = await monthlyreport.create(body);
+            let data = await MonthlyReport.create(body);
             if (data) {
                 let usr = await usrData.userData(req, res);
                 if (usr) {
                     await actionHelper.saveActionState(
                         data.id,
-                        "monthlyreport",
+                        "MonthlyReport",
                         "REGISTER",
                         usr.usrID,
                         req,
@@ -83,7 +83,7 @@ self.update = async(req, res) => {
     try {
         let id = req.params.id;
         let body = req.body;
-        let data = await monthlyreport.update(body, {
+        let data = await MonthlyReport.update(body, {
             where: {
                 id: id,
             },
@@ -99,7 +99,7 @@ self.update = async(req, res) => {
 self.delete = async(req, res) => {
     try {
         let id = req.params.id;
-        let data = await monthlyreport.destroy({
+        let data = await MonthlyReport.destroy({
             where: {
                 id: id,
             },
@@ -120,7 +120,7 @@ self.getMonthlyProjectReport = async(req, res) => {
     try {
         let data = null;
 
-        let plan = await projectplan.findOne({
+        let plan = await ProjectPlan.findOne({
             where: {
                 project_id: id,
                 year: year,
@@ -132,7 +132,7 @@ self.getMonthlyProjectReport = async(req, res) => {
                 message: "There is no plan data",
             });
         } else {
-            data = await monthlyreport.findOne({
+            data = await MonthlyReport.findOne({
                 where: {
                     project_id: id,
                     year: year,
@@ -141,7 +141,7 @@ self.getMonthlyProjectReport = async(req, res) => {
             });
 
             if (!data) {
-                data = await monthlyreport.create({
+                data = await MonthlyReport.create({
                     project_id: id,
                     year: year,
                     quarter: quarter,
@@ -150,7 +150,7 @@ self.getMonthlyProjectReport = async(req, res) => {
 
                 await actionHelper.saveActionState(
                     data.id,
-                    "monthlyreport",
+                    "MonthlyReport",
                     "REGISTER",
                     us.id,
                     req,

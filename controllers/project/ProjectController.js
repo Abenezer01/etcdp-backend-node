@@ -1,22 +1,22 @@
 const {
-  project,
-  actionstate,
-  projectstakeholder,
-  stakeholder,
+  Project,
+  ActionState,
+  ProjectStakeholder,
+  Stakeholder,
   User,
-  projecttime,
-  projectfinance,
-  projectstatus,
-  projectcategory,
-  projectsubcategory,
-  projecttype,
-  status,
-  projectreport,
-  projectplan,
-  projectvariation,
-  projectbond,
-  projectextensiontime,
-  payment,
+  ProjectTime,
+  ProjectFinance,
+  ProjectStatus,
+  ProjectCategory,
+  ProjectSubcategory,
+  ProjectType,
+  Status,
+  ProjectReport,
+  ProjectPlan,
+  ProjectVariation,
+  ProjectBond,
+  ProjectExtensionTime,
+  Payment,
   sequelize,
   Sequelize,
 } = require("./../../models");
@@ -40,14 +40,14 @@ self.getAllCPMProject = async(req, res) => {
   try {
 
     const cpmProjects = await apiHelper.getExternalData('project')
-    let projects = await project.findAll()
+    let projects = await Project.findAll()
     const mergedData = cpmProjects.concat(projects)
 
     return res.json(mergedData)
 
-    //stakeholder
+    //Stakeholder
     // const cpmStakeholders = await apiHelper.getExternalData('stakeholder')
-    // let stakeholders = await stakeholder.findAll()
+    // let stakeholders = await Stakeholder.findAll()
     // const mergedData = cpmStakeholders.concat(stakeholders)
 
     // return res.json(mergedData)
@@ -69,7 +69,7 @@ self.getAll = async (req, res) => {
   // test notification
   //send status
 
-  // let pro = await project.findOne({
+  // let pro = await Project.findOne({
   //   where: {
   //     id: "0fdbc117-d374-4f9d-86fa-cdb708cca67f",
   //   },
@@ -77,14 +77,14 @@ self.getAll = async (req, res) => {
 
   // notificationHelper.notify(
   //   "REGISTER",
-  //   "new project is added. check it",
-  //   "project",
+  //   "new Project is added. check it",
+  //   "Project",
   //   "00a340e3-431a-489f-a859-6d0c9d15e894",
   //   pro.id,
   //   "descr"
   // );
 
-  // let x = await checkerHelper.findChecker("projectreport", req, res)
+  // let x = await checkerHelper.findChecker("ProjectReport", req, res)
 
   // let act = await actionHelper.saveActionState("d5fbbf5a-776a-46ad-82c8-df91b1988811", "note", "REGISTER", "00a340e3-431a-489f-a859-6d0c9d15e894", req, res)
 
@@ -102,7 +102,7 @@ self.getAll = async (req, res) => {
   const { limit, offset } = paginate.getPagination(page, size);
 
   try {
-    const { rows, count } = await project.findAndCountAll({
+    const { rows, count } = await Project.findAndCountAll({
       limit,
       offset,
       order: [["createdAt", order]],
@@ -141,7 +141,7 @@ self.getProjectByTypeId = async (req, res) => {
       filter.push({ projectsubcategory_id: projectsubcategory_id });
     }
 
-    const projectResult = await project.findAll({
+    const projectResult = await Project.findAll({
       where: {
         [Op.and]: filter,
       },
@@ -156,14 +156,14 @@ self.getProjectByTypeId = async (req, res) => {
       }
     }
 
-    let reportData = await projectreport.findAll({
+    let reportData = await ProjectReport.findAll({
       where: {
         project_id: {
           [Sequelize.Op.in]: uf,
         },
       },
     });
-    let planData = await projectplan.findAll({
+    let planData = await ProjectPlan.findAll({
       where: {
         project_id: {
           [Sequelize.Op.in]: uf,
@@ -229,7 +229,7 @@ self.getProjectByTypeId = async (req, res) => {
 
     const { limit, offset } = paginate.getPagination(page, size);
 
-    const projectData = await project.findAndCountAll({
+    const projectData = await Project.findAndCountAll({
       limit,
       offset,
       where: {
@@ -245,7 +245,7 @@ self.getProjectByTypeId = async (req, res) => {
       projectData.rows.map(self.getProjectStatus)
     );
 
-    const projectTimeData = await projecttime.findAll({
+    const projectTimeData = await ProjectTime.findAll({
       where: {
         project_id: {
           [Sequelize.Op.in]: uf,
@@ -313,12 +313,12 @@ self.getProjectByTypeId = async (req, res) => {
 };
 
 self.getProjectStatus = async (pro) => {
-  const proStatus = await projectstatus.findOne({
+  const proStatus = await ProjectStatus.findOne({
     order: [["createdAt", "DESC"]],
     where: { project_id: pro.id },
   });
   const stat = proStatus
-    ? await status.findOne({ where: { id: proStatus.status_id } })
+    ? await Status.findOne({ where: { id: proStatus.status_id } })
     : null;
   return { ...pro, status: stat ? stat.title : null };
 };
@@ -340,7 +340,7 @@ self.getProjectByTypeIdPast = async (req, res) => {
   const { limit, offset } = paginate.getPagination(page, size);
 
   try {
-    const result = await project.findAndCountAll({
+    const result = await Project.findAndCountAll({
       limit,
       offset,
       order: [["createdAt", order]],
@@ -370,7 +370,7 @@ self.getAlll = async (req, res) => {
 
     let exist = await getChildren(department_id);
 
-    let other = await project.findAll({
+    let other = await Project.findAll({
       order: [["createdAt", "DESC"]],
       where: {
         department_id: {
@@ -379,7 +379,7 @@ self.getAlll = async (req, res) => {
       },
     });
 
-    let mine = await project.findAll({
+    let mine = await Project.findAll({
       where: {
         department_id,
       },
@@ -387,7 +387,7 @@ self.getAlll = async (req, res) => {
 
     let otherArr = [];
     for (let da of other) {
-      let action = await actionstate.findOne({
+      let action = await ActionState.findOne({
         where: {
           model_id: da.id,
           action: "APPROVE",
@@ -410,7 +410,7 @@ self.getArr = async (arr) => {
   try {
     const otherArr = await Promise.all(
       arr.map(async (da) => {
-        const action = await actionstate.findOne({
+        const action = await ActionState.findOne({
           where: {
             model_id: da.id,
             action: "APPROVE",
@@ -433,24 +433,24 @@ self.get = async (req, res) => {
   try {
     const { id } = req.params;
 
-    let data = await project.findOne({
+    let data = await Project.findOne({
       where: { id },
       include: [
         {
-          model: projectcategory,
-          as: "projectcategory",
+          model: ProjectCategory,
+          as: "ProjectCategory",
           attributes: ["title"],
         },
-        { model: projecttype, as: "projecttype", attributes: ["title"] },
+        { model: ProjectType, as: "ProjectType", attributes: ["title"] },
         {
-          model: projectsubcategory,
-          as: "projectsubcategory",
+          model: ProjectSubcategory,
+          as: "ProjectSubcategory",
           attributes: ["title"],
         },
       ],
     });
 
-    let stat = await projectstatus.findOne({
+    let stat = await ProjectStatus.findOne({
       order: [["createdAt", "DESC"]],
       where: {
         project_id: id,
@@ -459,7 +459,7 @@ self.get = async (req, res) => {
     });
 
     data = data.toJSON();
-    data.projectstatus = stat;
+    data.ProjectStatus = stat;
 
     return res.status(200).json({ data: data ? data : {} });
   } catch (error) {
@@ -472,7 +472,7 @@ self.get = async (req, res) => {
 self.search = async (req, res) => {
   try {
     let text = req.query.text;
-    let data = await project.findAll({
+    let data = await Project.findAll({
       where: {
         name: {
           [Op.like]: "%" + text + "%",
@@ -492,28 +492,28 @@ self.save = async (req, res) => {
     let usr = await usrData.userData(req, res);
     let body = req.body;
     if (usr) {
-      let data = await project.create(body);
+      let data = await Project.create(body);
       if (data) {
         let usrID = usr.usrID;
         data.department_id = usr.departmentID;
         await data.save();
         await actionHelper.saveActionState(
           data.id,
-          "project",
+          "Project",
           "REGISTER",
           usrID,
           req,
           res
         );
         //add status
-        let prostatus = await projectstatus.create({
+        let prostatus = await ProjectStatus.create({
           project_id: data.id,
           status_id: body.status_id,
         });
         if (prostatus) {
           await actionHelper.saveActionState(
             prostatus.id,
-            "projectstatus",
+            "ProjectStatus",
             "REGISTER",
             usrID,
             req,
@@ -524,7 +524,7 @@ self.save = async (req, res) => {
       // let arr = [{ name: "Client", id: body.clientId }, { name: "Consultant", id: body.consultantId }, { name: "Contractor", id: body.contractorId }]
       // for (let i = 0; i < arr.length; i++) {
       //     let body = { project_id: data.id, stakeholder_id: arr[i].id, title: arr[i].name }
-      //     projectstakeholder.create(body)
+      //     ProjectStakeholder.create(body)
 
       // }
       return res.json(data);
@@ -539,17 +539,17 @@ self.update = async (req, res) => {
   try {
     let id = req.params.id;
     let body = req.body;
-    let data = await project.update(body, {
+    let data = await Project.update(body, {
       where: {
         id: id,
       },
     });
 
-    const proStatus = await projectstatus.findOne({
+    const proStatus = await ProjectStatus.findOne({
       order: [["createdAt", "DESC"]],
       where: { project_id: id },
     });
-    let updatedStatus = await projectstatus.update(
+    let updatedStatus = await ProjectStatus.update(
       { status_id: body.status_id },
       {
         where: {
@@ -570,7 +570,7 @@ self.update = async (req, res) => {
 self.delete = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await project.destroy({
+    let data = await Project.destroy({
       where: {
         id: id,
       },
@@ -595,40 +595,40 @@ self.getProjectDetail = async (req, res) => {
       time,
       proStatus,
     ] = await Promise.all([
-      projectstakeholder.findOne({
+      ProjectStakeholder.findOne({
         where: {
           project_id: id,
           title: "Client",
         },
       }),
-      projectstakeholder.findOne({
+      ProjectStakeholder.findOne({
         where: {
           project_id: id,
           title: "Consultant",
         },
       }),
-      projectstakeholder.findOne({
+      ProjectStakeholder.findOne({
         where: {
           project_id: id,
           title: "Contractor",
         },
       }),
-      project.findOne({
+      Project.findOne({
         where: {
           id: id,
         },
       }),
-      projectfinance.findOne({
+      ProjectFinance.findOne({
         where: {
           project_id: id,
         },
       }),
-      projecttime.findOne({
+      ProjectTime.findOne({
         where: {
           project_id: id,
         },
       }),
-      projectstatus.findOne({
+      ProjectStatus.findOne({
         where: {
           project_id: id,
         },
@@ -646,7 +646,7 @@ self.getProjectDetail = async (req, res) => {
       : null;
 
     let stat = proStatus
-      ? await status.findOne({ where: { id: proStatus.status_id } })
+      ? await Status.findOne({ where: { id: proStatus.status_id } })
       : null;
 
     return res.json({
@@ -668,7 +668,7 @@ self.getProjectDetail = async (req, res) => {
 };
 self.getStakeholderName = async (id) => {
   try {
-    let data = await stakeholder.findOne({
+    let data = await Stakeholder.findOne({
       where: {
         id: id,
       },
@@ -718,34 +718,34 @@ self.getProjectData = async (req, res) => {
   try {
     let [pro, time, finance, clientStake, consultantStake, contractorStake] =
       await Promise.all([
-        project.findOne({
+        Project.findOne({
           where: {
             id: id,
           },
         }),
-        projecttime.findOne({
+        ProjectTime.findOne({
           where: {
             project_id: id,
           },
         }),
-        projectfinance.findOne({
+        ProjectFinance.findOne({
           where: {
             project_id: id,
           },
         }),
-        projectstakeholder.findOne({
+        ProjectStakeholder.findOne({
           where: {
             project_id: id,
             title: "Client",
           },
         }),
-        projectstakeholder.findOne({
+        ProjectStakeholder.findOne({
           where: {
             project_id: id,
             title: "Consultant",
           },
         }),
-        projectstakeholder.findOne({
+        ProjectStakeholder.findOne({
           where: {
             project_id: id,
             title: "Contractor",
@@ -763,7 +763,7 @@ self.getProjectData = async (req, res) => {
       ? moment().diff(commencement_date, "days")
       : null;
 
-    let extensions = await projectvariation.findAll({
+    let extensions = await ProjectVariation.findAll({
       where: {
         project_id: id,
       },
@@ -780,13 +780,13 @@ self.getProjectData = async (req, res) => {
         )
       : null;
 
-    let plans = await projectplan.findAll({
+    let plans = await ProjectPlan.findAll({
       where: {
         project_id: id,
       },
     });
 
-    let reports = await projectreport.findAll({
+    let reports = await ProjectReport.findAll({
       where: {
         project_id: id,
       },
@@ -813,7 +813,7 @@ self.getProjectData = async (req, res) => {
     let sv = actualFinance - plannedFinance;
     let cv = actualFinance - actualCost;
 
-    let interims = await payment.findAll({
+    let interims = await Payment.findAll({
       where: {
         project_id: id,
         type: "INTERIM_PAYMENT",
@@ -872,40 +872,40 @@ self.getProjectDetail = async (req, res) => {
       time,
       proStatus,
     ] = await Promise.all([
-      projectstakeholder.findOne({
+      ProjectStakeholder.findOne({
         where: {
           project_id: id,
           title: "Client",
         },
       }),
-      projectstakeholder.findOne({
+      ProjectStakeholder.findOne({
         where: {
           project_id: id,
           title: "Consultant",
         },
       }),
-      projectstakeholder.findOne({
+      ProjectStakeholder.findOne({
         where: {
           project_id: id,
           title: "Contractor",
         },
       }),
-      project.findOne({
+      Project.findOne({
         where: {
           id: id,
         },
       }),
-      projectfinance.findOne({
+      ProjectFinance.findOne({
         where: {
           project_id: id,
         },
       }),
-      projecttime.findOne({
+      ProjectTime.findOne({
         where: {
           project_id: id,
         },
       }),
-      projectstatus.findOne({
+      ProjectStatus.findOne({
         where: {
           project_id: id,
         },
@@ -923,7 +923,7 @@ self.getProjectDetail = async (req, res) => {
       : null;
 
     let stat = proStatus
-      ? await status.findOne({ where: { id: proStatus.status_id } })
+      ? await Status.findOne({ where: { id: proStatus.status_id } })
       : null;
 
     return res.json({
@@ -945,7 +945,7 @@ self.getProjectDetail = async (req, res) => {
 };
 self.getStakeholderName = async (id) => {
   try {
-    let data = await stakeholder.findOne({
+    let data = await Stakeholder.findOne({
       where: {
         id: id,
       },
@@ -976,11 +976,11 @@ self.countAllProjectWithProjectType = async (req, res) => {
     let projectSubCategoryData = await sequelize.query(querySubCategoryString, {
       type: sequelize.QueryTypes.SELECT,
     });
-    const { count } = await project.findAndCountAll();
+    const { count } = await Project.findAndCountAll();
     const Result = [];
     //let Result = {};
     const parent = {
-      name: "project",
+      name: "Project",
       id: "382d79ee-2b9d-4919-a7ad-1ada61c1ab28",
       parentNodeId: null,
       total: count,
@@ -1046,34 +1046,34 @@ self.getProjectData = async (req, res) => {
   try {
     let [pro, time, finance, clientStake, consultantStake, contractorStake] =
       await Promise.all([
-        project.findOne({
+        Project.findOne({
           where: {
             id: id,
           },
         }),
-        projecttime.findOne({
+        ProjectTime.findOne({
           where: {
             project_id: id,
           },
         }),
-        projectfinance.findOne({
+        ProjectFinance.findOne({
           where: {
             project_id: id,
           },
         }),
-        projectstakeholder.findOne({
+        ProjectStakeholder.findOne({
           where: {
             project_id: id,
             title: "Client",
           },
         }),
-        projectstakeholder.findOne({
+        ProjectStakeholder.findOne({
           where: {
             project_id: id,
             title: "Consultant",
           },
         }),
-        projectstakeholder.findOne({
+        ProjectStakeholder.findOne({
           where: {
             project_id: id,
             title: "Contractor",
@@ -1089,7 +1089,7 @@ self.getProjectData = async (req, res) => {
     let contract_duration = time ? time.original_contract_duration : null;
     let used_time = moment().diff(commencement_date, "days");
 
-    let extensions = await projectvariation.findAll({
+    let extensions = await ProjectVariation.findAll({
       where: {
         project_id: id,
       },
@@ -1105,13 +1105,13 @@ self.getProjectData = async (req, res) => {
       "days"
     );
 
-    let plans = await projectplan.findAll({
+    let plans = await ProjectPlan.findAll({
       where: {
         project_id: id,
       },
     });
 
-    let reports = await projectreport.findAll({
+    let reports = await ProjectReport.findAll({
       where: {
         project_id: id,
       },
@@ -1142,7 +1142,7 @@ self.getProjectData = async (req, res) => {
     let sv = actualFinance - plannedFinance;
     let cv = actualFinance - actualCost;
 
-    let interims = await payment.findAll({
+    let interims = await Payment.findAll({
       where: {
         project_id: id,
         type: "INTERIM_PAYMENT",
@@ -1193,18 +1193,18 @@ self.getProjectAnalysis = async (req, res) => {
   let id = req.params.id;
 
   try {
-    let plans = await projectplan.findAll({
+    let plans = await ProjectPlan.findAll({
       where: {
         project_id: id,
       },
     });
-    let reports = await projectreport.findAll({
+    let reports = await ProjectReport.findAll({
       where: {
         project_id: id,
       },
     });
 
-    let payments = await payment.findAll({
+    let payments = await Payment.findAll({
       where: {
         project_id: id,
         type: "INTERIM_PAYMENT",
@@ -1213,13 +1213,13 @@ self.getProjectAnalysis = async (req, res) => {
 
     let paid = payments.reduce((total, item) => total + item.amount, 0);
 
-    let time = await projecttime.findOne({
+    let time = await ProjectTime.findOne({
       where: {
         project_id: id,
       },
     });
 
-    let extensions = await projectextensiontime.findAll({
+    let extensions = await ProjectExtensionTime.findAll({
       where: {
         project_id: id,
       },
@@ -1241,21 +1241,21 @@ self.getProjectAnalysis = async (req, res) => {
       0
     );
 
-    let perBond = await projectbond.findOne({
+    let perBond = await ProjectBond.findOne({
       where: {
         project_id: id,
         type: "PERFORMANCE_BOND",
       },
     });
 
-    let advBond = await projectbond.findOne({
+    let advBond = await ProjectBond.findOne({
       where: {
         project_id: id,
         type: "ADVANCE_BOND",
       },
     });
 
-    let bidBond = await projectbond.findOne({
+    let bidBond = await ProjectBond.findOne({
       where: {
         project_id: id,
         type: "BID_BOND",
@@ -1351,7 +1351,7 @@ self.getProjectAnalysis = async (req, res) => {
     let sv = actualFinance - plannedFinance;
     let cv = actualFinance - actualCost;
 
-    let financeInfo = await projectfinance.findOne({
+    let financeInfo = await ProjectFinance.findOne({
       where: {
         project_id: id,
       },
@@ -1359,7 +1359,7 @@ self.getProjectAnalysis = async (req, res) => {
 
     let contractPrice = financeInfo ? financeInfo.price_after_rebate : null;
 
-    let supplementvarations = await projectvariation.findAll({
+    let supplementvarations = await ProjectVariation.findAll({
       where: {
         project_id: id,
       },
@@ -1422,8 +1422,8 @@ self.getFinancialNumbers = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const finance = await projectfinance.findOne({ where: { project_id: id } });
-    const supplementvarations = await projectvariation.findAll({
+    const finance = await ProjectFinance.findOne({ where: { project_id: id } });
+    const supplementvarations = await ProjectVariation.findAll({
       where: { project_id: id },
     });
 
@@ -1474,19 +1474,19 @@ self.getContractTimeAnalysis = async(req, res) => {
 	let id = req.params.id 
 	try {
 		
-		let time = await projecttime.findOne({
+		let time = await ProjectTime.findOne({
 			where: {
 				project_id: id
 			}
 		})
 
-		let plans = await projectplan.findAll({
+		let plans = await ProjectPlan.findAll({
 			where: {
 				project_id: id
 			}
 		})
 
-		let reports = await projectreport.findAll({
+		let reports = await ProjectReport.findAll({
 			where: {
 				project_id: id
 			}
@@ -1497,7 +1497,7 @@ self.getContractTimeAnalysis = async(req, res) => {
 /**
  * completion_date: moment(time.commencement_date).add(total_time)
  */
-		let extensions = await projectextensiontime.findAll({
+		let extensions = await ProjectExtensionTime.findAll({
 			where: {
 				project_id: time.project_id
 			}

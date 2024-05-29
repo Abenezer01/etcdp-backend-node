@@ -1,4 +1,4 @@
-const { contactperson, Sequelize } = require("../../models");
+const { ContactPerson, Sequelize } = require("../../models");
 const actionHelper = require("../utils/action-helper");
 const usrData = require("../../utils/userDataFromToken");
 
@@ -8,7 +8,7 @@ let self = {};
 
 self.getAll = async (req, res) => {
   try {
-    let data = await contactperson.findAll();
+    let data = await ContactPerson.findAll();
     return res.json(data);
   } catch (error) {
     res.status(500).json({
@@ -20,7 +20,7 @@ self.getAll = async (req, res) => {
 self.get = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await contactperson.findOne({
+    let data = await ContactPerson.findOne({
       where: {
         id: id,
       },
@@ -38,7 +38,7 @@ self.get = async (req, res) => {
 self.search = async (req, res) => {
   try {
     let text = req.query.text;
-    let data = await contactperson.findAll({
+    let data = await ContactPerson.findAll({
       where: {
         name: {
           [Op.like]: "%" + text + "%",
@@ -56,13 +56,13 @@ self.search = async (req, res) => {
 self.save = async (req, res) => {
   try {
     let body = req.body;
-    let data = await contactperson.create(body);
+    let data = await ContactPerson.create(body);
 
     if (data) {
       let usr = await usrData.userData(req, res);
       await actionHelper.saveActionState(
         data.id,
-        "contactperson",
+        "ContactPerson",
         "REGISTER",
         usr.usrID,
         req,
@@ -82,7 +82,7 @@ self.update = async (req, res) => {
   try {
     let id = req.params.id;
     let body = req.body;
-    let data = await contactperson.update(body, {
+    let data = await ContactPerson.update(body, {
       where: {
         id: id,
       },
@@ -98,7 +98,7 @@ self.update = async (req, res) => {
 self.delete = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await contactperson.destroy({
+    let data = await ContactPerson.destroy({
       where: {
         id: id,
       },
@@ -113,7 +113,7 @@ self.delete = async (req, res) => {
 self.getByUserId = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await contactperson.findAll({
+    let data = await ContactPerson.findAll({
       where: {
         user_id: id,
       },

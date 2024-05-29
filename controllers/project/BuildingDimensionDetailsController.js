@@ -1,4 +1,4 @@
-const { buildingdimensiondetail, Sequelize } = require("../../models");
+const { BuildingDimensionDetail, Sequelize } = require("../../models");
 const usrData = require("../../utils/userDataFromToken");
 const actionHelper = require("../utils/action-helper");
 const Op = Sequelize.Op;
@@ -17,7 +17,7 @@ self.getAll = async (req, res) => {
   const { limit, offset } = paginate.getPagination(page, size);
 
   try {
-    const { rows, count } = await buildingdimensiondetail.findAndCountAll({
+    const { rows, count } = await BuildingDimensionDetail.findAndCountAll({
       limit,
       offset,
       order: [["createdAt", order]],
@@ -48,7 +48,7 @@ self.getByProjectId = async (req, res) => {
 
   const { limit, offset } = paginate.getPagination(page, size);
   try {
-    const data = await buildingdimensiondetail.findAndCountAll({
+    const data = await BuildingDimensionDetail.findAndCountAll({
       limit,
       offset,
       where: { project_id: id },
@@ -67,7 +67,7 @@ self.getByProjectId = async (req, res) => {
 self.get = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await buildingdimensiondetail.findOne({
+    let data = await BuildingDimensionDetail.findOne({
       where: {
         id: id,
       },
@@ -85,7 +85,7 @@ self.get = async (req, res) => {
 self.search = async (req, res) => {
   try {
     let text = req.query.text;
-    let data = await buildingdimensiondetail.findAll({
+    let data = await BuildingDimensionDetail.findAll({
       where: {
         name: {
           [Op.like]: "%" + text + "%",
@@ -105,12 +105,12 @@ self.save = async (req, res) => {
     let usr = await usrData.userData(req, res);
     let body = req.body;
     if (usr) {
-      let data = await buildingdimensiondetail.create(body);
+      let data = await BuildingDimensionDetail.create(body);
       if (data) {
         let usrID = usr.usrID;
         await actionHelper.saveActionState(
           data.id,
-          "buildingdimensiondetail",
+          "BuildingDimensionDetail",
           "REGISTER",
           usrID,
           req,
@@ -130,7 +130,7 @@ self.update = async (req, res) => {
   try {
     let id = req.params.id;
     let body = req.body;
-    let data = await buildingdimensiondetail.update(body, {
+    let data = await BuildingDimensionDetail.update(body, {
       where: {
         id: id,
       },
@@ -148,7 +148,7 @@ self.update = async (req, res) => {
 self.delete = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await buildingdimensiondetail.destroy({
+    let data = await BuildingDimensionDetail.destroy({
       where: {
         id: id,
       },

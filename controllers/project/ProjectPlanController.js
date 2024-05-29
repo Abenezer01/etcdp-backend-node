@@ -1,4 +1,4 @@
-const { projectplan, file, Sequelize } = require("../../models");
+const { ProjectPlan, File, Sequelize } = require("../../models");
 const usrData = require("../../utils/userDataFromToken");
 const actionHelper = require("../utils/action-helper");
 const Op = Sequelize.Op;
@@ -17,7 +17,7 @@ self.getAll = async (req, res) => {
   const { limit, offset } = paginate.getPagination(page, size);
 
   try {
-    const { rows, count } = await projectplan.findAndCountAll({
+    const { rows, count } = await ProjectPlan.findAndCountAll({
       limit,
       offset,
       order: [["createdAt", order]],
@@ -48,7 +48,7 @@ self.getByProjectId = async (req, res) => {
 
   const { limit, offset } = paginate.getPagination(page, size);
   try {
-    const data = await projectplan.findAndCountAll({
+    const data = await ProjectPlan.findAndCountAll({
       limit,
       offset,
       where: { project_id: id },
@@ -59,7 +59,7 @@ self.getByProjectId = async (req, res) => {
     // for (let l of data.rows) {
     //   planID.push(l.id);
     // }
-    // let fle = await file.findAll({
+    // let fle = await File.findAll({
     //   where: {
     //     reference_id: {
     //       [Sequelize.Op.in]: planID,
@@ -75,7 +75,7 @@ self.getByProjectId = async (req, res) => {
     //   if (matchingBElements.length > 0) {
     //     return {
     //       ...aElement.dataValues,
-    //       file: matchingBElements,
+    //       File: matchingBElements,
     //     };
     //   }
 
@@ -95,7 +95,7 @@ self.getByProjectId = async (req, res) => {
 self.get = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await projectplan.findOne({
+    let data = await ProjectPlan.findOne({
       where: {
         id: id,
       },
@@ -113,7 +113,7 @@ self.get = async (req, res) => {
 self.search = async (req, res) => {
   try {
     let text = req.query.text;
-    let data = await projectplan.findAll({
+    let data = await ProjectPlan.findAll({
       where: {
         name: {
           [Op.like]: "%" + text + "%",
@@ -132,7 +132,7 @@ self.save = async (req, res) => {
   try {
     let usr = await usrData.userData(req, res);
     let body = req.body;
-    let found  = await projectplan.findOne({
+    let found  = await ProjectPlan.findOne({
       where: {
         project_id: body.project_id,
         year: body.year,
@@ -154,20 +154,20 @@ self.save = async (req, res) => {
 
     if (usr) {
      
-      let data = await projectplan.create(body);
+      let data = await ProjectPlan.create(body);
 
       if (data) {
         let usrID = usr.usrID;
         await actionHelper.saveActionState(
           data.id,
-          "projectplan",
+          "ProjectPlan",
           "REGISTER",
           usrID,
           req,
           res
         );
       }
-      let fle = await file.findAll({
+      let fle = await File.findAll({
         where: {
           id: {
             [Sequelize.Op.in]: body.file_ids,
@@ -187,10 +187,10 @@ self.save = async (req, res) => {
       }));
       //return res.send(fileData);
       for (const dataa of fileData) {
-        let f = await file.create(dataa);
+        let f = await File.create(dataa);
         await actionHelper.saveActionState(
           f.id,
-          "file",
+          "File",
           "REGISTER",
           usrID,
           req,
@@ -212,7 +212,7 @@ self.update = async (req, res) => {
   try {
     let id = req.params.id;
     let body = req.body;
-    let data = await projectplan.update(body, {
+    let data = await ProjectPlan.update(body, {
       where: {
         id: id,
       },
@@ -230,7 +230,7 @@ self.update = async (req, res) => {
 self.delete = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await projectplan.destroy({
+    let data = await ProjectPlan.destroy({
       where: {
         id: id,
       },
@@ -246,14 +246,14 @@ self.delete = async (req, res) => {
 self.getProjectYearlyPlans = async (req, res) => {
   const { id, year } = req.params;
   try {
-    let plans = await projectplan.findAll({
+    let plans = await ProjectPlan.findAll({
       where: {
         project_id: id,
         year: year,
       },
       include: {
-        model: file,
-        as: "file",
+        model: File,
+        as: "File",
       },
     });
 

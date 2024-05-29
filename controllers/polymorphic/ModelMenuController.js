@@ -1,4 +1,4 @@
-const { modelmenu, Sequelize } = require("../../models");
+const { ModelMenu, Sequelize } = require("../../models");
 const usrData = require("../../utils/userDataFromToken");
 const actionHelper = require("../utils/action-helper");
 const master = require("../../config/master");
@@ -10,7 +10,7 @@ let self = {};
 
 self.getAll = async (req, res) => {
   try {
-    let data = await modelmenu.findAll();
+    let data = await ModelMenu.findAll();
     return res.json(data);
   } catch (error) {
     return res.status(500).json({
@@ -22,7 +22,7 @@ self.getAll = async (req, res) => {
 self.get = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await modelmenu.findOne({
+    let data = await ModelMenu.findOne({
       where: {
         id: id,
       },
@@ -37,7 +37,7 @@ self.get = async (req, res) => {
 self.getByProjectId = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await modelmenu.findOne({
+    let data = await ModelMenu.findOne({
       where: {
         project_id: id,
       },
@@ -52,7 +52,7 @@ self.getByProjectId = async (req, res) => {
 self.search = async (req, res) => {
   try {
     let text = req.query.text;
-    let data = await modelmenu.findAll({
+    let data = await ModelMenu.findAll({
       where: {
         name: {
           [Op.like]: "%" + text + "%",
@@ -77,7 +77,7 @@ self.save = async (req, res) => {
     if (models.length > 0) {
       let arr = [];
       for (let model of models) {
-        let existing = await modelmenu.findOne({
+        let existing = await ModelMenu.findOne({
           where: {
             module_type_id: body.module_type_id,
             module: body.module,
@@ -86,7 +86,7 @@ self.save = async (req, res) => {
         });
 
         if (!existing) {
-          let data = await modelmenu.create({
+          let data = await ModelMenu.create({
             module_type_id: body.module_type_id,
             module: body.module,
             model: model,
@@ -96,7 +96,7 @@ self.save = async (req, res) => {
             let usrID = usr.usrID;
             await actionHelper.saveActionState(
               data.id,
-              "modelmenu",
+              "ModelMenu",
               "REGISTER",
               usrID,
               req,
@@ -122,7 +122,7 @@ self.update = async (req, res) => {
     let id = req.params.id;
     let body = req.body;
 
-    await modelmenu.update(body, {
+    await ModelMenu.update(body, {
       where: {
         id: id,
       },
@@ -156,7 +156,7 @@ self.editModuleTypeModels = async (req, res) => {
         };
 
         if (status) {
-          const [data, created] = await modelmenu.findOrCreate({
+          const [data, created] = await ModelMenu.findOrCreate({
             where,
             defaults: {
               module_type_id: id,
@@ -168,17 +168,17 @@ self.editModuleTypeModels = async (req, res) => {
           if (created) {
             await actionHelper.saveActionState(
               data.id,
-              "modelmenu",
+              "ModelMenu",
               "REGISTER",
               usr.usrID,
               "req, res"
             );
           }
         } else {
-          const exist = await modelmenu.findOne({ where });
+          const exist = await ModelMenu.findOne({ where });
 
           if (exist) {
-            await modelmenu.destroy({ where: { id: exist.id } });
+            await ModelMenu.destroy({ where: { id: exist.id } });
           }
         }
       }
@@ -197,7 +197,7 @@ self.editModuleTypeModels = async (req, res) => {
 self.delete = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await modelmenu.destroy({
+    let data = await ModelMenu.destroy({
       where: {
         id: id,
       },
@@ -213,7 +213,7 @@ self.delete = async (req, res) => {
 self.getModelMenuByModule = async (req, res) => {
   let id = req.params.id;
   try {
-    let data = await modelmenu.findAll({
+    let data = await ModelMenu.findAll({
       where: {
         module_type_id: id,
       },

@@ -1,7 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-  class operationlocation extends Model {
+  class OperationLocation extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  operationlocation.init(
+  OperationLocation.init(
     {
       id: {
         type: DataTypes.UUID,
@@ -29,30 +29,30 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "operationlocation",
+      modelName: "OperationLocation",
     }
   );
-  //   operationlocation.associate = function (models) {
-  //     operationlocation.belongsTo(models.studyfield, {
+  //   OperationLocation.associate = function (models) {
+  //     OperationLocation.belongsTo(models.studyfield, {
   //       as: "studyfield",
   //       foreignKey: "studyfield_id",
   //     });
-  //     operationlocation.belongsTo(models.studyprogram, {
+  //     OperationLocation.belongsTo(models.studyprogram, {
   //       as: "studyprogram",
   //       foreignKey: "study_program_id",
   //     });
-  //     operationlocation.belongsTo(models.studylevel, {
+  //     OperationLocation.belongsTo(models.studylevel, {
   //       as: "studylevel",
   //       foreignKey: "studylevel_id",
   //     });
-  //     operationlocation.belongsTo(models.studyperiodcost, {
+  //     OperationLocation.belongsTo(models.studyperiodcost, {
   //       as: "studyperiod",
   //       foreignKey: "study_period_id",
   //     });
-  //     operationlocation.belongsTo(models.agelevel, {
+  //     OperationLocation.belongsTo(models.agelevel, {
   //       as: "agelevel",
   //       foreignKey: "agelevel_id",
   //     });
   //   };
-  return operationlocation;
+  return OperationLocation;
 };

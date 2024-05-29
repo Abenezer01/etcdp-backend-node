@@ -1,7 +1,7 @@
 const actionHelper = require("../utils/action-helper");
 const {
-  projectvariation,
-  projectextensiontime,
+  ProjectVariation,
+  ProjectExtensionTime,
   Sequelize,
 } = require("./../../models");
 const usrData = require("../../utils/userDataFromToken");
@@ -21,7 +21,7 @@ self.getAll = async (req, res) => {
   const { limit, offset } = paginate.getPagination(page, size);
 
   try {
-    const { rows, count } = await projectvariation.findAndCountAll({
+    const { rows, count } = await ProjectVariation.findAndCountAll({
       limit,
       offset,
       order: [["createdAt", order]],
@@ -52,7 +52,7 @@ self.getByProjectId = async (req, res) => {
 
   const { limit, offset } = paginate.getPagination(page, size);
   try {
-    const data = await projectvariation.findAndCountAll({
+    const data = await ProjectVariation.findAndCountAll({
       limit,
       offset,
       where: { project_id: id },
@@ -70,7 +70,7 @@ self.getByProjectId = async (req, res) => {
 self.get = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await projectvariation.findOne({
+    let data = await ProjectVariation.findOne({
       where: {
         id: id,
       },
@@ -94,7 +94,7 @@ self.getByProjectType = async (req, res) => {
     if (!type) {
       return res.status(400).json({ message: "Can't get type value at param" });
     }
-    await projectvariation
+    await ProjectVariation
       .findAll({
         where: {
           type: type,
@@ -120,7 +120,7 @@ self.getByProjectType = async (req, res) => {
 self.search = async (req, res) => {
   try {
     let text = req.query.text;
-    let data = await projectvariation.findAll({
+    let data = await ProjectVariation.findAll({
       where: {
         name: {
           [Op.like]: "%" + text + "%",
@@ -140,12 +140,12 @@ self.save = async (req, res) => {
     let usr = await usrData.userData(req, res);
     let body = req.body;
     if (usr) {
-      let data = await projectvariation.create(body);
+      let data = await ProjectVariation.create(body);
       if (data) {
         let usrID = usr.usrID;
         await actionHelper.saveActionState(
           data.id,
-          "projectvariation",
+          "ProjectVariation",
           "REGISTER",
           usrID,
           req,
@@ -154,7 +154,7 @@ self.save = async (req, res) => {
 
         let extension_days = data.extension_time;
         if (extension_days > 0) {
-          let extension = await projectextensiontime.create({
+          let extension = await ProjectExtensionTime.create({
             title: `${data.type} extension`,
             project_id: data.project_id,
             number_of_days: extension_days,
@@ -165,7 +165,7 @@ self.save = async (req, res) => {
             await data.save();
             await actionHelper.saveActionState(
               extension.id,
-              "projectextensiontime",
+              "ProjectExtensionTime",
               "REGISTER",
               usrID,
               req,
@@ -187,20 +187,20 @@ self.update = async (req, res) => {
   try {
     let id = req.params.id;
     let body = req.body;
-    let data = await projectvariation.update(body, {
+    let data = await ProjectVariation.update(body, {
       where: {
         id: id,
       },
     });
 
     if (data) {
-      let variation = await projectvariation.findOne({
+      let variation = await ProjectVariation.findOne({
         where: {
           id: id,
         },
       });
       if (variation) {
-        await projectextensiontime.update(
+        await ProjectExtensionTime.update(
           { number_of_days: variation.extension_time },
           {
             where: {
@@ -222,7 +222,7 @@ self.update = async (req, res) => {
 self.delete = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await projectvariation.destroy({
+    let data = await ProjectVariation.destroy({
       where: {
         id: id,
       },

@@ -1,4 +1,4 @@
-const { projectdocument, Sequelize } = require("../../models");
+const { ProjectDocument, Sequelize } = require("../../models");
 
 const Op = Sequelize.Op;
 const paginate = require("../../utils/pagination");
@@ -18,7 +18,7 @@ self.getAll = async (req, res) => {
   const { limit, offset } = paginate.getPagination(page, size);
 
   try {
-    const { rows, count } = await projectdocument.findAndCountAll({
+    const { rows, count } = await ProjectDocument.findAndCountAll({
       limit,
       offset,
       order: [["createdAt", order]],
@@ -49,7 +49,7 @@ self.getByProjectId = async (req, res) => {
 
   const { limit, offset } = paginate.getPagination(page, size);
   try {
-    const data = await projectdocument.findAndCountAll({
+    const data = await ProjectDocument.findAndCountAll({
       limit,
       offset,
       where: { project_id: id },
@@ -67,7 +67,7 @@ self.getByProjectId = async (req, res) => {
 self.get = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await projectdocument.findOne({
+    let data = await ProjectDocument.findOne({
       where: {
         id: id,
       },
@@ -85,7 +85,7 @@ self.get = async (req, res) => {
 self.search = async (req, res) => {
   try {
     let text = req.query.text;
-    let data = await projectdocument.findAll({
+    let data = await ProjectDocument.findAll({
       where: {
         name: {
           [Op.like]: "%" + text + "%",
@@ -105,7 +105,7 @@ self.save = async (req, res) => {
     let usr = await usrData.userData(req, res);
     let body = req.body;
     if (usr) {
-      let data = await projectdocument.create(body);
+      let data = await ProjectDocument.create(body);
       if (data) {
         let usrID = usr.usrID;
         await actionHelper.saveActionState(
@@ -132,7 +132,7 @@ self.update = async (req, res) => {
   try {
     let id = req.params.id;
     let body = req.body;
-    let data = await projectdocument.update(body, {
+    let data = await ProjectDocument.update(body, {
       where: {
         id: id,
       },
@@ -150,7 +150,7 @@ self.update = async (req, res) => {
 self.delete = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await projectdocument.destroy({
+    let data = await ProjectDocument.destroy({
       where: {
         id: id,
       },

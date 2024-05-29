@@ -1,4 +1,4 @@
-const { detailresourcetype, Sequelize } = require("../../models");
+const { DetailResourceType, Sequelize } = require("../../models");
 const usrData = require("../../utils/userDataFromToken");
 const actionHelper = require("../utils/action-helper");
 const Op = Sequelize.Op;
@@ -18,7 +18,7 @@ self.getAll = async (req, res) => {
   const { limit, offset } = paginate.getPagination(page, size);
 
   try {
-    const { rows, count } = await detailresourcetype.findAndCountAll({
+    const { rows, count } = await DetailResourceType.findAndCountAll({
       limit,
       offset,
       order: [["createdAt", order]],
@@ -43,7 +43,7 @@ self.getAll = async (req, res) => {
 self.get = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await detailresourcetype.findOne({
+    let data = await DetailResourceType.findOne({
       where: {
         id: id,
       },
@@ -71,7 +71,7 @@ self.getByResourceId = async (req, res) => {
   }
 
   try {
-    const { count, rows } = await detailresourcetype.findAndCountAll({
+    const { count, rows } = await DetailResourceType.findAndCountAll({
       limit,
       offset,
       where: { resource_id: id },
@@ -100,7 +100,7 @@ self.getByResourceId = async (req, res) => {
 self.search = async (req, res) => {
   try {
     let text = req.query.text;
-    let data = await detailresourcetype.findAll({
+    let data = await DetailResourceType.findAll({
       where: {
         name: {
           [Op.like]: "%" + text + "%",
@@ -146,7 +146,7 @@ self.save = async (req, res) => {
     }
 
     if (usr) {
-      let data = await detailresourcetype.create(body);
+      let data = await DetailResourceType.create(body);
       if (data) {
         try {
           if (pat) {
@@ -159,7 +159,7 @@ self.save = async (req, res) => {
         let us = usr.usrID;
         await actionHelper.saveActionState(
           data.id,
-          "detailresourcetype",
+          "DetailResourceType",
           "REGISTER",
           us,
           req,
@@ -179,7 +179,7 @@ const prePath = path.join(__dirname, "..", "..", "public");
 self.getImage = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await detailresourcetype.findOne({
+    let data = await DetailResourceType.findOne({
       where: {
         id: id,
       },
@@ -215,7 +215,7 @@ self.update = async (req, res) => {
         body.image = filePathh;
         await file.mv(filePath);
 
-        const data = await detailresourcetype.findOne({ where: { id } });
+        const data = await DetailResourceType.findOne({ where: { id } });
         if (data.image) {
           const fc = path.join(__dirname, "../../public", data.image);
           if (fs.existsSync(fc)) {
@@ -229,7 +229,7 @@ self.update = async (req, res) => {
         }
       }
 
-      await detailresourcetype.update(body, { where: { id } });
+      await DetailResourceType.update(body, { where: { id } });
       return res.json({ message: "Success" });
     }
   } catch (error) {
@@ -269,7 +269,7 @@ self.update = async (req, res) => {
 //         if (usr) {
 //             if (pat) {
 //                 const filee = req.files.image
-//                 let data = await detailresourcetype.findOne({
+//                 let data = await DetailResourceType.findOne({
 //                     where: {
 //                         id: id
 //                     },
@@ -294,7 +294,7 @@ self.update = async (req, res) => {
 //                         // res.redirect('/')
 //                 })
 //             }
-//             let data = await detailresourcetype.update(body, {
+//             let data = await DetailResourceType.update(body, {
 //                 where: {
 //                     id: id
 //                 },
@@ -311,7 +311,7 @@ self.update = async (req, res) => {
 self.delete = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await detailresourcetype.destroy({
+    let data = await DetailResourceType.destroy({
       where: {
         id: id,
       },

@@ -1,14 +1,15 @@
 const {
-  actionstate,
+  ActionState,
   User,
-  position,
-  role,
-  department,
-  photo,
-  useremail,
-  userposition,
-  userphone,
-  Sequelize,
+  Position,
+  Role,
+  Department,
+  Photo,
+  UserEmail,
+  UserPosition,
+  UserPhone,
+  Sequelize
+
 } = require("../../models");
 const dotenv = require("dotenv");
 dotenv.config();
@@ -31,7 +32,7 @@ self.loginUser = async (request, res) => {
   const { email, password } = request.body;
 
   try {
-    const usEmail = await useremail.findOne({
+    const usEmail = await UserEmail.findOne({
       where: {
         email: cipherHelper.encrypt(email),
         is_primary: true,
@@ -52,20 +53,20 @@ self.loginUser = async (request, res) => {
       },
       include: [
         {
-          model: userposition,
+          model: UserPosition,
           as: "positions",
         },
       ],
     });
 
     const [usPos, usPhone] = await Promise.all([
-      userposition.findOne({
+      UserPosition.findOne({
         where: {
           user_id: usEmail.user_id,
           is_primary: true,
         },
       }),
-      userphone.findOne({
+      UserPhone.findOne({
         where: {
           user_id: usEmail.user_id,
           is_primary: true,
@@ -85,7 +86,7 @@ self.loginUser = async (request, res) => {
       });
     }
 
-    const pos = await position.findOne({
+    const pos = await Position.findOne({
       where: {
         id: usPos.position_id,
       },
@@ -93,13 +94,13 @@ self.loginUser = async (request, res) => {
 
     //show if it is checked
 
-    let action = await actionstate.findOne({
+    let action = await ActionState.findOne({
       where: {
         model_id: usr.id,
         action: "CHECK",
       },
     });
-    let profile_pic = await photo.findOne({
+    let profile_pic = await Photo.findOne({
       where: {
         model_id: usr.id,
         type: "USER_PROFILE_PHOTO",

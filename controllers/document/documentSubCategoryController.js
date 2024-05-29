@@ -1,4 +1,4 @@
-const { documentsubcategory, Sequelize } = require("../../models");
+const { DocumentSubCategory, Sequelize } = require("../../models");
 const usrData = require("../../utils/userDataFromToken");
 const actionHelper = require("../utils/action-helper");
 const Op = Sequelize.Op;
@@ -18,7 +18,7 @@ self.getAll = async (req, res) => {
     order = process.env.order;
   }
   const { limit, offset } = paginate.getPagination(page, size);
-  documentsubcategory
+  DocumentSubCategory
     .findAndCountAll({
       limit,
       offset,
@@ -34,7 +34,7 @@ self.getAll = async (req, res) => {
       });
     });
   // try {
-  //     let data = await documentsubcategory.findAll();
+  //     let data = await DocumentSubCategory.findAll();
   //     return res.json(data)
 
   // } catch (error) {
@@ -47,7 +47,7 @@ self.getAll = async (req, res) => {
 self.get = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await documentsubcategory.findOne({
+    let data = await DocumentSubCategory.findOne({
       where: {
         id: id,
       },
@@ -65,7 +65,7 @@ self.get = async (req, res) => {
 self.search = async (req, res) => {
   try {
     let text = req.query.text;
-    let data = await documentsubcategory.findAll({
+    let data = await DocumentSubCategory.findAll({
       where: {
         name: {
           [Op.like]: "%" + text + "%",
@@ -85,12 +85,12 @@ self.save = async (req, res) => {
     let usr = await usrData.userData(req, res);
     let body = req.body;
     if (usr) {
-      let data = await documentsubcategory.create(body);
+      let data = await DocumentSubCategory.create(body);
       if (data) {
         let us = usr.usrID;
         await actionHelper.saveActionState(
           data.id,
-          "documentsubcategory",
+          "DocumentSubCategory",
           "REGISTER",
           us,
           req,
@@ -110,7 +110,7 @@ self.update = async (req, res) => {
   try {
     let id = req.params.id;
     let body = req.body;
-    let data = await documentsubcategory.update(body, {
+    let data = await DocumentSubCategory.update(body, {
       where: {
         id: id,
       },
@@ -128,7 +128,7 @@ self.update = async (req, res) => {
 self.delete = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await documentsubcategory.destroy({
+    let data = await DocumentSubCategory.destroy({
       where: {
         id: id,
       },

@@ -1,7 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-  class documenttype extends Model {
+  class DocumentType extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  documenttype.init(
+  DocumentType.init(
     {
       id: {
         type: DataTypes.UUID,
@@ -28,12 +28,12 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "documenttype",
+      modelName: "DocumentType",
     }
   );
-  documenttype.associate = function (models) {
+  DocumentType.associate = function (models) {
     // associations can be defined here
-    // documenttype.hasMany(models.projectcategory, {
+    // DocumentType.hasMany(models.projectcategory, {
     //     foreignKey: 'documenttype_id',
     //     as: 'Projectcategories',
     // }, );
@@ -45,5 +45,5 @@ module.exports = (sequelize, DataTypes) => {
     //     });
     // }
   };
-  return documenttype;
+  return DocumentType;
 };

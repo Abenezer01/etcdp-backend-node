@@ -3,7 +3,7 @@ const { Model } = require("sequelize");
 const CipherHelper = require("../controllers/utils/cipher-helper");
 
 module.exports = (sequelize, DataTypes) => {
-  class stakeholder extends Model {
+  class Stakeholder extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
 
-  stakeholder.init(
+  Stakeholder.init(
     {
       id: {
         type: DataTypes.UUID,
@@ -65,38 +65,38 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "stakeholder",
+      modelName: "Stakeholder",
     }
   );
-  stakeholder.associate = function (models) {
-    // stakeholder.belongsTo(models.address, {
+  Stakeholder.associate = function (models) {
+    // Stakeholder.belongsTo(models.address, {
     //     as: "address",
     //     foreignKey: "address_id"
     // })
-    stakeholder.belongsTo(models.stakeholdertype, {
+    Stakeholder.belongsTo(models.stakeholdertype, {
       as: "staketype",
       foreignKey: "stakeholdertype_id",
     });
-    stakeholder.belongsTo(models.stakecategory, {
+    Stakeholder.belongsTo(models.stakecategory, {
       as: "stakecategory",
       foreignKey: "stakecategory_id",
     });
-    stakeholder.belongsTo(models.stakesubcategory, {
+    Stakeholder.belongsTo(models.stakesubcategory, {
       as: "stakesubcategory",
       foreignKey: "stakesubcategory_id",
     });
-    stakeholder.belongsTo(models.ownership, {
+    Stakeholder.belongsTo(models.ownership, {
       as: "ownership",
       foreignKey: "ownership_id",
     });
-    stakeholder.belongsTo(models.businessfield, {
+    Stakeholder.belongsTo(models.businessfield, {
       as: "businessfield",
       foreignKey: "businessfield_id",
     });
-    stakeholder.belongsTo(models.department, {
+    Stakeholder.belongsTo(models.department, {
       as: "department",
       foreignKey: "department_id",
     });
   };
-  return stakeholder;
+  return Stakeholder;
 };

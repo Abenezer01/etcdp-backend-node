@@ -1,5 +1,5 @@
 const actionHelper = require("../utils/action-helper");
-const { windenergy, Sequelize } = require("./../../models");
+const { WindEnergy, Sequelize } = require("./../../models");
 const usrData = require("../../utils/userDataFromToken");
 const Op = Sequelize.Op;
 const dotenv = require("dotenv");
@@ -17,7 +17,7 @@ self.getAll = async (req, res) => {
   const { limit, offset } = paginate.getPagination(page, size);
 
   try {
-    const { rows, count } = await windenergy.findAndCountAll({
+    const { rows, count } = await WindEnergy.findAndCountAll({
       limit,
       offset,
       order: [["createdAt", order]],
@@ -48,7 +48,7 @@ self.getByProjectId = async (req, res) => {
 
   const { limit, offset } = paginate.getPagination(page, size);
   try {
-    const data = await windenergy.findAndCountAll({
+    const data = await WindEnergy.findAndCountAll({
       limit,
       offset,
       where: { project_id: id },
@@ -66,7 +66,7 @@ self.getByProjectId = async (req, res) => {
 self.get = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await windenergy.findOne({
+    let data = await WindEnergy.findOne({
       where: {
         id: id,
       },
@@ -82,7 +82,7 @@ self.get = async (req, res) => {
 self.search = async (req, res) => {
   try {
     let text = req.query.text;
-    let data = await windenergy.findAll({
+    let data = await WindEnergy.findAll({
       where: {
         name: {
           [Op.like]: "%" + text + "%",
@@ -102,12 +102,12 @@ self.save = async (req, res) => {
     let usr = await usrData.userData(req, res);
     let body = req.body;
     if (usr) {
-      let data = await windenergy.create(body);
+      let data = await WindEnergy.create(body);
       if (data) {
         let usrID = usr.usrID;
         await actionHelper.saveActionState(
           data.id,
-          "windenergy",
+          "WindEnergy",
           "REGISTER",
           usrID,
           req,
@@ -127,7 +127,7 @@ self.update = async (req, res) => {
   try {
     let id = req.params.id;
     let body = req.body;
-    let data = await windenergy.update(body, {
+    let data = await WindEnergy.update(body, {
       where: {
         id: id,
       },
@@ -143,7 +143,7 @@ self.update = async (req, res) => {
 self.delete = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await windenergy.destroy({
+    let data = await WindEnergy.destroy({
       where: {
         id: id,
       },

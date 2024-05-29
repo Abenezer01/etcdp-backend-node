@@ -1,8 +1,8 @@
 const {
-  file,
-  employeeeducation,
-  employeeage,
-  workexperience,
+  File,
+  EmployeeEducation,
+  EmployeeAge,
+  WorkExperience,
   Sequelize,
 } = require("../../models");
 const path = require("path");
@@ -15,7 +15,7 @@ let self = {};
 
 self.getAll = async (req, res) => {
   try {
-    let data = await file.findAll();
+    let data = await File.findAll();
     return res.status(200).json({
       data: data,
     });
@@ -34,7 +34,7 @@ self.getAll = async (req, res) => {
 self.get = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await file.findOne({
+    let data = await File.findOne({
       where: {
         id: id,
       },
@@ -51,7 +51,7 @@ self.get = async (req, res) => {
 self.getMyFiles = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await file.findAll({
+    let data = await File.findAll({
       where: {
         reference_id: id,
       },
@@ -69,7 +69,7 @@ self.getMyFilteredFiles = async (req, res) => {
   try {
     let id = req.query.id;
     let projectType = req.query.project_type;
-    let data = await file.findAll({
+    let data = await File.findAll({
       where: {
         reference_id: id,
         project_type: projectType,
@@ -87,7 +87,7 @@ self.getMyFilteredFiles = async (req, res) => {
 self.getFilesByModelAndType = async (req, res) => {
   try {
     const { id, type } = req.query;
-    let data = await file.findAll({
+    let data = await File.findAll({
       where: {
         [Op.and]: [{ reference_id: id }, { type: type }],
       },
@@ -104,7 +104,7 @@ self.getFilesByModelAndType = async (req, res) => {
 self.search = async (req, res) => {
   try {
     let text = req.query.text;
-    let data = await file.findAll({
+    let data = await File.findAll({
       where: {
         name: {
           [Op.like]: "%" + text + "%",
@@ -128,7 +128,7 @@ self.save = async (req, res) => {
   const projectType = req.body.project_type;
 
   const ext = filer.mimetype.split("/")[1];
-  console.log("The file type is", ext);
+  console.log("The File type is", ext);
 
   const rand = Math.floor(100000 + Math.random() * 900000);
   const parsedName = path.parse(filer.name).name;
@@ -159,7 +159,7 @@ self.save = async (req, res) => {
   try {
     const usr = await usrData.userData(req, res);
     if (usr) {
-      const doc = await file.create(document);
+      const doc = await File.create(document);
       filer.mv(filePath, (err) => {
         if (err) {
           return res.status(500).send(err);
@@ -170,7 +170,7 @@ self.save = async (req, res) => {
         const usrID = usr.usrID;
         let ac = await actionHelper.saveActionState(
           doc.id,
-          "file",
+          "File",
           "REGISTER",
           usrID,
           req,
@@ -192,11 +192,11 @@ self.update = async (req, res) => {
   const filer = req.files.upload;
   if (!id) {
     return res.status(412).json({
-      message: "Can't get file id",
+      message: "Can't get File id",
     });
   }
   try {
-    let fileData = await file.findOne({
+    let fileData = await File.findOne({
       where: {
         id: id,
       },
@@ -223,7 +223,7 @@ self.update = async (req, res) => {
       "files",
       checkedNew + "." + `${ext}`
     );
-    //console.log("The file path is ", filePath)
+    //console.log("The File path is ", filePath)
 
     filer.mv(filePath, (err) => {
       if (err) return res.status(500).send(err);
@@ -235,7 +235,7 @@ self.update = async (req, res) => {
       description: req.body.description,
       url: filePath,
     };
-    await file.update(updatedFile, {
+    await File.update(updatedFile, {
       where: { id: id },
     });
     return res.status(200).json({
@@ -251,7 +251,7 @@ self.update = async (req, res) => {
 self.delete = async (req, res) => {
   try {
     let id = req.params.id;
-    let fileData = await file.findOne({
+    let fileData = await File.findOne({
       where: {
         id: id,
       },
@@ -267,7 +267,7 @@ self.delete = async (req, res) => {
         });
       }
     }
-    let data = await file.destroy({
+    let data = await File.destroy({
       where: {
         id: id,
       },
@@ -287,22 +287,22 @@ self.linkfiles = async (req, res) => {
   try {
     let data = null;
     switch (model) {
-      case "employeeeducation":
-        data = await employeeeducation.findOne({
+      case "EmployeeEducation":
+        data = await EmployeeEducation.findOne({
           where: {
             id: id,
           },
         });
         break;
-      case "employeeage":
-        data = await employeeage.findOne({
+      case "EmployeeAge":
+        data = await EmployeeAge.findOne({
           where: {
             id: id,
           },
         });
         break;
-      case "workexperience":
-        data = await workexperience.findOne({
+      case "WorkExperience":
+        data = await WorkExperience.findOne({
           where: {
             id: id,
           },
@@ -338,7 +338,7 @@ self.linkfiles = async (req, res) => {
       });
     }
 
-    const files = await file.findAll({
+    const files = await File.findAll({
       where: {
         reference_id: id,
       },
@@ -352,7 +352,7 @@ self.linkfiles = async (req, res) => {
 
     for (const model of models) {
       for (const doc of files) {
-        let exists = await file.findOne({
+        let exists = await File.findOne({
           where: {
             reference_id: model.id,
             url: doc.url,
@@ -368,7 +368,7 @@ self.linkfiles = async (req, res) => {
             reference_id: model.id,
             size: doc.size,
           };
-          await file.create(fileobj);
+          await File.create(fileobj);
         }
       }
     }
@@ -376,7 +376,7 @@ self.linkfiles = async (req, res) => {
     //   files.forEach(doc => {
     //     const tempfile = doc.toJSON();
     //     tempfile.reference_id = model.id;
-    //     await file.create(tempfile);
+    //     await File.create(tempfile);
     //   });
     // });
 

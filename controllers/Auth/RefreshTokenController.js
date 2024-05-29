@@ -1,14 +1,15 @@
 const {
-  actionstate,
+  ActionState,
   User,
-  role,
-  position,
-  userposition,
-  useremail,
-  userphone,
-  department,
-  photo,
-  Sequelize,
+  Role,
+  Position,
+  UserPosition,
+  UserEmail,
+  UserPhone,
+  Department,
+  Photo,
+  Sequelize
+
 } = require("../../models");
 const dotenv = require("dotenv");
 dotenv.config();
@@ -38,7 +39,7 @@ self.refreshToken = async (request, response, next) => {
     let usr = await User.findOne({
       include: [
         {
-          model: userposition,
+          model: UserPosition,
           as: "positions",
         },
       ],
@@ -48,44 +49,44 @@ self.refreshToken = async (request, response, next) => {
       },
     });
 
-    let pos = await position.findOne({
+    let pos = await Position.findOne({
       where: {
         id: positionId,
       },
     });
-    dept = await department.findOne({
+    dept = await Department.findOne({
       where: {
         id: departmentId,
       },
     });
-    let usEmail = await useremail.findOne({
+    let usEmail = await UserEmail.findOne({
       where: {
         user_id: userId,
         is_primary: true,
       },
     });
 
-    let usPhone = await userphone.findOne({
+    let usPhone = await UserPhone.findOne({
       where: {
         user_id: userId,
         is_primary: true,
       },
     });
 
-    let usPhoto = await photo.findOne({
+    let usPhoto = await Photo.findOne({
       where: {
         model_id: usr.id,
         type: "USER",
       },
     });
 
-    let action = await actionstate.findOne({
+    let action = await ActionState.findOne({
       where: {
         model_id: usr.id,
         action: "CHECKE",
       },
     });
-    let profile_pic = await photo.findOne({
+    let profile_pic = await Photo.findOne({
       where: {
         model_id: usr.id,
         type: "USER_PROFILE_PHOTO",

@@ -1,4 +1,4 @@
-const { salary, Sequelize } = require("../../models");
+const { Salary, Sequelize } = require("../../models");
 const usrData = require("../../utils/userDataFromToken");
 const actionHelper = require("../utils/action-helper");
 const Op = Sequelize.Op;
@@ -17,7 +17,7 @@ self.getAll = async (req, res) => {
   const { limit, offset } = paginate.getPagination(page, size);
 
   try {
-    const { rows, count } = await salary.findAndCountAll({
+    const { rows, count } = await Salary.findAndCountAll({
       limit,
       offset,
       order: [["createdAt", order]],
@@ -42,7 +42,7 @@ self.getAll = async (req, res) => {
 self.get = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await salary.findOne({
+    let data = await Salary.findOne({
       where: {
         id: id,
       },
@@ -62,12 +62,12 @@ self.save = async (req, res) => {
     let usr = await usrData.userData(req, res);
     let body = req.body;
     if (usr) {
-      let data = await salary.create(body);
+      let data = await Salary.create(body);
       if (data) {
         let us = usr.usrID;
         await actionHelper.saveActionState(
           data.id,
-          "salary",
+          "Salary",
           "REGISTER",
           us,
           req,
@@ -87,7 +87,7 @@ self.update = async (req, res) => {
   try {
     let id = req.params.id;
     let body = req.body;
-    let data = await salary.update(body, {
+    let data = await Salary.update(body, {
       where: {
         id: id,
       },
@@ -105,7 +105,7 @@ self.update = async (req, res) => {
 self.delete = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await salary.destroy({
+    let data = await Salary.destroy({
       where: {
         id: id,
       },
@@ -122,7 +122,7 @@ self.getByResourceId = async(req, res) => {
   
     try {
         let id = req.params.id
-        let data = await salary.findAll({
+        let data = await Salary.findAll({
             where:{
                 resource_id: id
             }

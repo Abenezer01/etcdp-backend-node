@@ -1,7 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-  class transformer extends Model {
+  class Transformer extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -10,12 +10,12 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
 
-      transformer.belongsTo(models.transformertype, {
+      Transformer.belongsTo(models.transformertype, {
         foreignKey: "transformertype_id",
       });
     }
   }
-  transformer.init(
+  Transformer.init(
     {
       id: {
         type: DataTypes.UUID,
@@ -42,8 +42,8 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "transformer",
+      modelName: "Transformer",
     }
   );
-  return transformer;
+  return Transformer;
 };

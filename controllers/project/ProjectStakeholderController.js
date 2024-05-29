@@ -1,10 +1,10 @@
 const {
-  projectstakeholder,
-  stakeholder,
-  projectreport,
-  projectplan,
-  project,
-  projecttime,
+  ProjectStakeholder,
+  Stakeholder,
+  ProjectReport,
+  ProjectPlan,
+  Project,
+  ProjectTime,
   Sequelize,
 } = require("../../models");
 const moment = require("moment");
@@ -28,7 +28,7 @@ self.getAll = async (req, res) => {
   const { limit, offset } = paginate.getPagination(page, size);
 
   try {
-    const { rows, count } = await projectstakeholder.findAndCountAll({
+    const { rows, count } = await ProjectStakeholder.findAndCountAll({
       limit,
       offset,
       order: [["createdAt", order]],
@@ -59,12 +59,12 @@ self.getByProjectId = async (req, res) => {
 
   const { limit, offset } = paginate.getPagination(page, size);
   try {
-    const data = await projectstakeholder.findAndCountAll({
+    const data = await ProjectStakeholder.findAndCountAll({
       limit,
       offset,
       where: { project_id: id },
       order: [["createdAt", order]],
-      include: { model: stakeholder, as: "stakeholder" },
+      include: { model: Stakeholder, as: "Stakeholder" },
     });
 
     const response = paginate.getPagingData(data, page, limit);
@@ -79,7 +79,7 @@ self.getByProjectId = async (req, res) => {
 self.getByStakeholderId = async (req, res) => {
   const { id } = req.params;
   try {
-    const data = await projectstakeholder.findAll({
+    const data = await ProjectStakeholder.findAll({
       where: { stakeholder_id: id },
       raw: true,
     });
@@ -91,14 +91,14 @@ self.getByStakeholderId = async (req, res) => {
       }
     }
 
-    let reportData = await projectreport.findAll({
+    let reportData = await ProjectReport.findAll({
       where: {
         project_id: {
           [Sequelize.Op.in]: uf,
         },
       },
     });
-    let planData = await projectplan.findAll({
+    let planData = await ProjectPlan.findAll({
       where: {
         project_id: {
           [Sequelize.Op.in]: uf,
@@ -173,7 +173,7 @@ self.getByStakeholderId = async (req, res) => {
 
     const { limit, offset } = paginate.getPagination(page, size);
 
-    const projectData = await project.findAndCountAll({
+    const projectData = await Project.findAndCountAll({
       limit,
       offset,
       where: {
@@ -187,7 +187,7 @@ self.getByStakeholderId = async (req, res) => {
 
 
     // return res.json(final)
-    const projectTimeData = await projecttime.findAll({
+    const projectTimeData = await ProjectTime.findAll({
       where: {
         project_id: {
           [Sequelize.Op.in]: uf,
@@ -251,7 +251,7 @@ self.getByStakeholderId = async (req, res) => {
 self.get = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await projectstakeholder.findOne({
+    let data = await ProjectStakeholder.findOne({
       where: {
         id: id,
       },
@@ -269,7 +269,7 @@ self.get = async (req, res) => {
 self.search = async (req, res) => {
   try {
     let text = req.query.text;
-    let data = await projectstakeholder.findAll({
+    let data = await ProjectStakeholder.findAll({
       where: {
         name: {
           [Op.like]: "%" + text + "%",
@@ -289,12 +289,12 @@ self.save = async (req, res) => {
     let usr = await usrData.userData(req, res);
     let body = req.body;
     if (usr) {
-      let data = await projectstakeholder.create(body);
+      let data = await ProjectStakeholder.create(body);
       if (data) {
         let usrID = usr.usrID;
         await actionHelper.saveActionState(
           data.id,
-          "projectstakeholder",
+          "ProjectStakeholder",
           "REGISTER",
           usrID,
           req,
@@ -314,7 +314,7 @@ self.update = async (req, res) => {
   try {
     let id = req.params.id;
     let body = req.body;
-    let data = await projectstakeholder.update(body, {
+    let data = await ProjectStakeholder.update(body, {
       where: {
         id: id,
       },
@@ -332,7 +332,7 @@ self.update = async (req, res) => {
 self.delete = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await projectstakeholder.destroy({
+    let data = await ProjectStakeholder.destroy({
       where: {
         id: id,
       },

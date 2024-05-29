@@ -1,7 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-  class projectsubcategory extends Model {
+  class ProjectSubCategory extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  projectsubcategory.init(
+  ProjectSubCategory.init(
     {
       id: {
         type: DataTypes.UUID,
@@ -31,11 +31,11 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "projectsubcategory",
+      modelName: "ProjectSubCategory",
     }
   );
-  projectsubcategory.associate = (models) => {
-    projectsubcategory.belongsTo(models.projectcategory, {
+  ProjectSubCategory.associate = (models) => {
+    ProjectSubCategory.belongsTo(models.projectcategory, {
       as: "Subcategories",
       foreignKey: {
         name: "projectcategory_id",
@@ -43,5 +43,5 @@ module.exports = (sequelize, DataTypes) => {
       },
     });
   };
-  return projectsubcategory;
+  return ProjectSubCategory;
 };

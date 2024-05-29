@@ -1,5 +1,5 @@
 const actionHelper = require("../utils/action-helper");
-const { roadlayer, roadsegment, Sequelize } = require("./../../models");
+const { RoadLayer, RoadSegment, Sequelize } = require("./../../models");
 const paginate = require("../../utils/pagination");
 const usrData = require("../../utils/userDataFromToken");
 const Op = Sequelize.Op;
@@ -17,7 +17,7 @@ self.getAll = async (req, res) => {
   const { limit, offset } = paginate.getPagination(page, size);
 
   try {
-    const { rows, count } = await roadlayer.findAndCountAll({
+    const { rows, count } = await RoadLayer.findAndCountAll({
       limit,
       offset,
       order: [["createdAt", order]],
@@ -48,14 +48,14 @@ self.getByProjectId = async (req, res) => {
 
   const { limit, offset } = paginate.getPagination(page, size);
   try {
-    const data = await roadlayer.findAndCountAll({
+    const data = await RoadLayer.findAndCountAll({
       limit,
       offset,
       where: { project_id: id },
       order: [["createdAt", order]],
       include: {
-        model: roadsegment,
-        as: "roadsegment",
+        model: RoadSegment,
+        as: "RoadSegment",
         attributes: ["id", "name"],
       },
     });
@@ -72,7 +72,7 @@ self.getByProjectId = async (req, res) => {
 self.get = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await roadlayer.findOne({
+    let data = await RoadLayer.findOne({
       where: {
         id: id,
       },
@@ -88,7 +88,7 @@ self.get = async (req, res) => {
 self.search = async (req, res) => {
   try {
     let text = req.query.text;
-    let data = await roadlayer.findAll({
+    let data = await RoadLayer.findAll({
       where: {
         name: {
           [Op.like]: "%" + text + "%",
@@ -108,12 +108,12 @@ self.save = async (req, res) => {
     let usr = await usrData.userData(req, res);
     let body = req.body;
     if (usr) {
-      let data = await roadlayer.create(body);
+      let data = await RoadLayer.create(body);
       if (data) {
         let usrID = usr.usrID;
         await actionHelper.saveActionState(
           data.id,
-          "roadlayer",
+          "RoadLayer",
           "REGISTER",
           usrID,
           req,
@@ -133,7 +133,7 @@ self.update = async (req, res) => {
   try {
     let id = req.params.id;
     let body = req.body;
-    let data = await roadlayer.update(body, {
+    let data = await RoadLayer.update(body, {
       where: {
         id: id,
       },
@@ -149,7 +149,7 @@ self.update = async (req, res) => {
 self.delete = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await roadlayer.destroy({
+    let data = await RoadLayer.destroy({
       where: {
         id: id,
       },

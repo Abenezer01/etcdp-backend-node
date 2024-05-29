@@ -1,7 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-  class resourceworkexperience extends Model {
+  class ResourceWorkExperience extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  resourceworkexperience.init(
+  ResourceWorkExperience.init(
     {
       id: {
         type: DataTypes.UUID,
@@ -25,14 +25,14 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "resourceworkexperience",
+      modelName: "ResourceWorkExperience",
     }
   );
-  resourceworkexperience.associate = function (models) {
-    resourceworkexperience.belongsTo(models.experiencelevel, {
+  ResourceWorkExperience.associate = function (models) {
+    ResourceWorkExperience.belongsTo(models.experiencelevel, {
       as: "workexperience",
       foreignKey: "workexperience_id",
     });
   };
-  return resourceworkexperience;
+  return ResourceWorkExperience;
 };

@@ -1,7 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-  class resourcesubcategory extends Model {
+  class ResourceSubCategory extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  resourcesubcategory.init(
+  ResourceSubCategory.init(
     {
       id: {
         type: DataTypes.UUID,
@@ -36,8 +36,8 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "resourcesubcategory",
+      modelName: "ResourceSubCategory",
     }
   );
-  return resourcesubcategory;
+  return ResourceSubCategory;
 };

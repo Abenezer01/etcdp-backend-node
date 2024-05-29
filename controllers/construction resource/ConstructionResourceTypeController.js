@@ -1,4 +1,4 @@
-const { resourcetype, Sequelize } = require("../../models");
+const { ResourceType, Sequelize } = require("../../models");
 const usrData = require("../../utils/userDataFromToken");
 const actionHelper = require("../utils/action-helper");
 const Op = Sequelize.Op;
@@ -17,7 +17,7 @@ self.getAll = async (req, res) => {
   const { limit, offset } = paginate.getPagination(page, size);
 
   try {
-    const { rows, count } = await resourcetype.findAndCountAll({
+    const { rows, count } = await ResourceType.findAndCountAll({
       limit,
       offset,
       order: [["createdAt", order]],
@@ -42,7 +42,7 @@ self.getAll = async (req, res) => {
 self.get = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await resourcetype.findOne({
+    let data = await ResourceType.findOne({
       where: {
         id: id,
       },
@@ -60,7 +60,7 @@ self.get = async (req, res) => {
 self.search = async (req, res) => {
   try {
     let text = req.query.text;
-    let data = await resourcetype.findAll({
+    let data = await ResourceType.findAll({
       where: {
         name: {
           [Op.like]: "%" + text + "%",
@@ -80,12 +80,12 @@ self.save = async (req, res) => {
     let usr = await usrData.userData(req, res);
     let body = req.body;
     if (usr) {
-      let data = await resourcetype.create(body);
+      let data = await ResourceType.create(body);
       if (data) {
         let us = usr.usrID;
         await actionHelper.saveActionState(
           data.id,
-          "resourcetype",
+          "ResourceType",
           "REGISTER",
           us,
           req,
@@ -105,7 +105,7 @@ self.update = async (req, res) => {
   try {
     let id = req.params.id;
     let body = req.body;
-    let data = await resourcetype.update(body, {
+    let data = await ResourceType.update(body, {
       where: {
         id: id,
       },
@@ -123,7 +123,7 @@ self.update = async (req, res) => {
 self.delete = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await resourcetype.destroy({
+    let data = await ResourceType.destroy({
       where: {
         id: id,
       },

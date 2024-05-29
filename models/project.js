@@ -2,7 +2,7 @@
 const { Model } = require("sequelize");
 const cipherHelper = require("../controllers/utils/cipher-helper");
 module.exports = (sequelize, DataTypes) => {
-  class project extends Model {
+  class Project extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  project.init(
+  Project.init(
     {
       id: {
         type: DataTypes.UUID,
@@ -51,53 +51,53 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "project",
+      modelName: "Project",
     }
   );
 
-  project.associate = function (models) {
+  Project.associate = function (models) {
     // associations can be defined here
-    project.hasOne(models.projecttime, {
+    Project.hasOne(models.projecttime, {
       foreignKey: "project_id",
     });
-    project.hasOne(models.projectfinance, {
+    Project.hasOne(models.projectfinance, {
       foreignKey: "project_id",
     });
-    project.hasMany(models.projectstakeholder, {
+    Project.hasMany(models.projectstakeholder, {
       foreignKey: "project_id",
     });
-    project.hasMany(models.projectvariation, {
-      foreignKey: "project_id",
-    });
-
-    project.hasMany(models.projectplan, {
-      foreignKey: "project_id",
-    });
-    project.hasMany(models.projectreport, {
+    Project.hasMany(models.projectvariation, {
       foreignKey: "project_id",
     });
 
-    project.hasMany(models.projectstatus, {
+    Project.hasMany(models.projectplan, {
+      foreignKey: "project_id",
+    });
+    Project.hasMany(models.projectreport, {
+      foreignKey: "project_id",
+    });
+
+    Project.hasMany(models.projectstatus, {
     as: "projectstatus",
     foreignKey: "project_id",
     });
-    project.hasMany(models.payment, {
+    Project.hasMany(models.payment, {
       foreignKey: "project_id",
     });
-    project.belongsTo(models.projectcategory, {
+    Project.belongsTo(models.projectcategory, {
       foreignKey: "projectcategory_id",
     });
-    project.belongsTo(models.projectsubcategory, {
+    Project.belongsTo(models.projectsubcategory, {
       foreignKey: "projectsubcategory_id",
     });
-    project.belongsTo(models.projecttype, {
+    Project.belongsTo(models.projecttype, {
       foreignKey: "projecttype_id",
     });
-    project.belongsTo(models.department, {
+    Project.belongsTo(models.department, {
       as: "department",
       foreignKey: "department_id",
     });
   };
 
-  return project;
+  return Project;
 };

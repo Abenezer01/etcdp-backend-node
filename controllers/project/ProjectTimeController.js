@@ -1,7 +1,7 @@
 const actionHelper = require("../utils/action-helper");
 const {
-  projecttime,
-  projectextensiontime,
+  ProjectTime,
+  ProjectExtensionTime,
   Sequelize,
 } = require("./../../models");
 const usrData = require("../../utils/userDataFromToken");
@@ -22,7 +22,7 @@ self.getAll = async (req, res) => {
   const { limit, offset } = paginate.getPagination(page, size);
 
   try {
-    const { rows, count } = await projecttime.findAndCountAll({
+    const { rows, count } = await ProjectTime.findAndCountAll({
       limit,
       offset,
       order: [["createdAt", order]],
@@ -53,13 +53,13 @@ self.getByProjectId = async (req, res) => {
 
   const { limit, offset } = paginate.getPagination(page, size);
   try {
-    let data = await projecttime.findOne({
+    let data = await ProjectTime.findOne({
       limit,
       offset,
       where: { project_id: id },
       order: [["createdAt", order]],
     });
-    const extensions = await projectextensiontime.findAll({
+    const extensions = await ProjectExtensionTime.findAll({
       where: {
         project_id: data.project_id,
       },
@@ -93,7 +93,7 @@ self.getByProjectId = async (req, res) => {
 self.get = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await projecttime.findOne({
+    let data = await ProjectTime.findOne({
       where: {
         id: id,
       },
@@ -111,7 +111,7 @@ self.get = async (req, res) => {
 self.search = async (req, res) => {
   try {
     let text = req.query.text;
-    let data = await projecttime.findAll({
+    let data = await ProjectTime.findAll({
       where: {
         name: {
           [Op.like]: "%" + text + "%",
@@ -131,12 +131,12 @@ self.save = async (req, res) => {
     let usr = await usrData.userData(req, res);
     let body = req.body;
     if (usr) {
-      let data = await projecttime.create(body);
+      let data = await ProjectTime.create(body);
       if (data) {
         let usrID = usr.usrID;
         await actionHelper.saveActionState(
           data.id,
-          "projecttime",
+          "ProjectTime",
           "REGISTER",
           usrID,
           req,
@@ -156,7 +156,7 @@ self.update = async (req, res) => {
   try {
     let id = req.params.id;
     let body = req.body;
-    let data = await projecttime.update(body, {
+    let data = await ProjectTime.update(body, {
       where: {
         id: id,
       },
@@ -172,7 +172,7 @@ self.update = async (req, res) => {
 self.delete = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await projecttime.destroy({
+    let data = await ProjectTime.destroy({
       where: {
         id: id,
       },

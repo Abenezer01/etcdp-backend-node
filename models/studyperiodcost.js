@@ -1,7 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-  class studyperiodcost extends Model {
+  class StudyPeriodCost extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  studyperiodcost.init(
+  StudyPeriodCost.init(
     {
       id: {
         type: DataTypes.UUID,
@@ -53,28 +53,28 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "studyperiodcost",
+      modelName: "StudyPeriodCost",
     }
   );
-  studyperiodcost.associate = function (models) {
-    studyperiodcost.belongsTo(models.stakeholderstudyfield, {
+  StudyPeriodCost.associate = function (models) {
+    StudyPeriodCost.belongsTo(models.stakeholderstudyfield, {
       as: "stakestudyfield",
       foreignKey: "stake_study_field_id",
       constraints: false,
       attribute: ["description", "title"],
     });
-    studyperiodcost.belongsTo(models.studyprogram, {
+    StudyPeriodCost.belongsTo(models.studyprogram, {
       as: "studyprogram",
       foreignKey: "study_program_id",
     });
-    studyperiodcost.belongsTo(models.studylevel, {
+    StudyPeriodCost.belongsTo(models.studylevel, {
       as: "studylevel",
       foreignKey: "studylevel_id",
     });
-    studyperiodcost.belongsTo(models.studyfield, {
+    StudyPeriodCost.belongsTo(models.studyfield, {
       as: "studyfield",
       foreignKey: "studyfield_id",
     });
   };
-  return studyperiodcost;
+  return StudyPeriodCost;
 };

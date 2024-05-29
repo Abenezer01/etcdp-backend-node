@@ -1,7 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-  class stakeholderstudyfield extends Model {
+  class StakeholderStudyField extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  stakeholderstudyfield.init(
+  StakeholderStudyField.init(
     {
       id: {
         type: DataTypes.UUID,
@@ -27,28 +27,28 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "stakeholderstudyfield",
+      modelName: "StakeholderStudyField",
     }
   );
-  stakeholderstudyfield.associate = function (models) {
-    stakeholderstudyfield.belongsTo(models.studyfield, {
+  StakeholderStudyField.associate = function (models) {
+    StakeholderStudyField.belongsTo(models.studyfield, {
       as: "studyfield",
       foreignKey: "studyfield_id",
       // constraints: false,
       // attribute: ['description', 'title']
     });
-    stakeholderstudyfield.belongsTo(models.studyprogram, {
+    StakeholderStudyField.belongsTo(models.studyprogram, {
       as: "studyprogram",
       foreignKey: "studyprogram_id",
       // constraints: false,
       // attribute: ['description', 'title']
     });
-    stakeholderstudyfield.belongsTo(models.studylevel, {
+    StakeholderStudyField.belongsTo(models.studylevel, {
       as: "studylevel",
       foreignKey: "studylevel_id",
       // constraints: false,
       // attribute: ['description', 'title']
     });
   };
-  return stakeholderstudyfield;
+  return StakeholderStudyField;
 };

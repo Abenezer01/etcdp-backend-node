@@ -1,29 +1,30 @@
 const {
-    note,
-    stakeholder,
-    stakeholdertype,
-    stakecategory,
-    stakesubcategory,
-    project,
-    projecttype,
-    projectcategory,
-    projectsubcategory,
-    document,
-    documenttype,
-    documentcategory,
-    documentsubcategory,
-    resource,
-    resourcetype,
-    resourcecategory,
-    resourcesubcategory,
-    department,
-    projecttime,
-    projectfinance,
-    projectvariation,
-    projectplan,
-    projectreport,
-    address,
-    actionstate,
+
+    Note, 
+    Stakeholder, 
+    StakeholderType, 
+    StakeCategory, 
+    StakeSubCategory, 
+    Project, 
+    ProjectType, 
+    ProjectCategory, 
+    ProjectSubCategory, 
+    Document, 
+    DocumentType, 
+    DocumentCategory, 
+    DocumentSubCategory, 
+    Resource, 
+    ResourceType, 
+    ResourceCategory, 
+    ResourceSubCategory, 
+    Department, 
+    ProjectTime, 
+    ProjectFinance, 
+    ProjectVariation, 
+    ProjectPlan, 
+    ProjectReport, 
+    Address, 
+    ActionState,
 
     Sequelize,
 } = require("../../models");
@@ -213,15 +214,15 @@ self.getGeneralAnalysisDepartments = async(req, res) => {
                         [`${moduleArr[2]}_id`]: category.id,
                     },
                     include: [{
-                        model: department,
-                        as: "department",
+                        model: Department,
+                        as: "Department",
                     }, ],
                 });
 
                 const countByName = catestake.reduce((acc, obj) => {
                     const department_id = obj.department_id;
 
-                    acc[obj.department.name] = (acc[department_id] || 0) + 1;
+                    acc[obj.Department.name] = (acc[department_id] || 0) + 1;
                     return acc;
                 }, {});
 
@@ -270,7 +271,7 @@ self.getGeneralAnalysisDepartments = async(req, res) => {
 let children = [];
 self.getAllChildren = async(arr) => {
     for (var i = 0; i < arr.length; i++) {
-        let dd = await department.findAll({
+        let dd = await Department.findAll({
             where: {
                 parent_department_id: arr[i].id,
             },
@@ -285,12 +286,12 @@ self.getAllChildren = async(arr) => {
 
 self.getChildren = async(id) => {
     try {
-        let parent = await department.findOne({
+        let parent = await Department.findOne({
             where: {
                 id: id,
             },
         });
-        let data = await department.findAll({
+        let data = await Department.findAll({
             where: {
                 parent_department_id: id,
             },
@@ -348,15 +349,15 @@ self.getGeneralAnalysisDepartmentsByCategory = async(req, res) => {
                         [`${moduleArr[3]}_id`]: subcategory.id,
                     },
                     include: [{
-                        model: department,
-                        as: "department",
+                        model: Department,
+                        as: "Department",
                     }, ],
                 });
 
                 const countByName = catestake.reduce((acc, obj) => {
                     const department_id = obj.department_id;
 
-                    acc[obj.department.name] = (acc[department_id] || 0) + 1;
+                    acc[obj.Department.name] = (acc[department_id] || 0) + 1;
                     return acc;
                 }, {});
 
@@ -837,7 +838,7 @@ self.getGeneralAnalysisSubCategoryDepartments = async (req, res) => {
   
       const { departmentID } = await usrData.userData(req, res);
 
-      let rootdepartment = await department.findOne({
+      let rootdepartment = await Department.findOne({
         where: {
             id: departmentID
         }

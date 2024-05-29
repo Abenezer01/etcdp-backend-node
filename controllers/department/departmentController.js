@@ -1,9 +1,9 @@
 const {
-  department,
-  position,
+  Department,
+  Position,
   User,
-  userposition,
-  actionstate,
+  UserPosition,
+  ActionState,
   Sequelize,
 } = require("./../../models");
 const usrData = require("../../utils/userDataFromToken");
@@ -29,7 +29,7 @@ let self = {};
 
 self.getAll = async (req, res) => {
   try {
-    let data = await department.findAll();
+    let data = await Department.findAll();
     return res.json(data);
   } catch (error) {
     // if (err.message === 'Error') {
@@ -46,7 +46,7 @@ self.getAll = async (req, res) => {
 self.get = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await department.findOne({
+    let data = await Department.findOne({
       where: {
         id: id,
       },
@@ -65,7 +65,7 @@ self.get = async (req, res) => {
 self.search = async (req, res) => {
   try {
     let text = req.query.text;
-    let data = await department.findAll({
+    let data = await Department.findAll({
       where: {
         name: {
           [Op.like]: "%" + text + "%",
@@ -83,7 +83,7 @@ self.search = async (req, res) => {
 self.save = async (req, res) => {
   try {
     let body = req.body;
-    let data = await department.create(body);
+    let data = await Department.create(body);
 
     let usr = await usrData.userData(req, res);
 
@@ -92,14 +92,14 @@ self.save = async (req, res) => {
       let pos;
       for (let name of roles) {
         if (name == "Admin") {
-          pos = await position.create({
+          pos = await Position.create({
             department_id: data.id,
             name: name,
             description: "discr",
             is_head: true,
           });
         } else {
-          pos = await position.create({
+          pos = await Position.create({
             department_id: data.id,
             name: name,
             description: "discr",
@@ -110,14 +110,14 @@ self.save = async (req, res) => {
         if (pos) {
           await actionHelper.saveActionState(
             pos.id,
-            "position",
+            "Position",
             "REGISTER",
             usr.usrID,
             req,
             res
           );
         } else {
-          await department.destroy({
+          await Department.destroy({
             where: {
               id: data.id,
             },
@@ -148,7 +148,7 @@ self.update = async (req, res) => {
   try {
     let id = req.params.id;
     let body = req.body;
-    let data = await department.update(body, {
+    let data = await Department.update(body, {
       where: {
         id: id,
       },
@@ -166,7 +166,7 @@ self.update = async (req, res) => {
 self.delete = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await department.destroy({
+    let data = await Department.destroy({
       where: {
         id: id,
       },
@@ -181,7 +181,7 @@ self.delete = async (req, res) => {
 self.getSubDepartments = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await department.findAll({
+    let data = await Department.findAll({
       where: {
         parent_department_id: id,
       },
@@ -195,7 +195,7 @@ self.getSubDepartments = async (req, res) => {
 };
 self.getParentDepartment = async (req, res) => {
   try {
-    let data = await department.findOne({
+    let data = await Department.findOne({
       where: {
         parent_department_id: null,
       },
@@ -216,13 +216,13 @@ self.getParentOrGivenId = async (req, res) => {
     let id = req.params.id;
     let data = null;
     if (id) {
-      data = await department.findOne({
+      data = await Department.findOne({
         where: {
           id: id,
         },
       });
     } else {
-      data = await department.findOne({
+      data = await Department.findOne({
         where: {
           parent_department_id: null,
         },
@@ -238,11 +238,11 @@ self.getParentOrGivenId = async (req, res) => {
 
 self.getStructure = async (req, res) => {
   try {
-    const departments = await department.findAll();
+    const departments = await Department.findAll();
 
     const arr = await Promise.all(
       departments.map(async (dept) => {
-        const userpos = await userposition.findAll({
+        const userpos = await UserPosition.findAll({
           attributes: ["user_id"],
           where: { department_id: dept.id },
         });
@@ -258,12 +258,12 @@ self.getStructure = async (req, res) => {
           },
         });
 
-        const pos = await position.findOne({
+        const pos = await Position.findOne({
           where: { department_id: dept.id, is_head: true },
         });
 
         if (pos) {
-          let uspos = await userposition.findOne({
+          let uspos = await UserPosition.findOne({
             where: {
               position_id: pos.id,
             },
@@ -271,7 +271,7 @@ self.getStructure = async (req, res) => {
         }
 
         const uspos = pos
-          ? await userposition.findOne({ where: { position_id: pos.id } })
+          ? await UserPosition.findOne({ where: { position_id: pos.id } })
           : null;
 
         const head = uspos
@@ -299,20 +299,20 @@ self.getStructure = async (req, res) => {
 self.getDepartmentHead = async (req, res) => {
   let id = req.params.id;
   try {
-    let data = await department.findOne({
+    let data = await Department.findOne({
       where: {
         id: id,
       },
     });
     if (data) {
-      let pos = await position.findOne({
+      let pos = await Position.findOne({
         where: {
           department_id: data.id,
           is_head: true,
         },
       });
       if (pos) {
-        let userpos = await userposition.findOne({
+        let userpos = await UserPosition.findOne({
           where: {
             position_id: pos.id,
           },
@@ -357,7 +357,7 @@ let all = [];
 self.getToRoot = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await department.findAll();
+    let data = await Department.findAll();
     await self.getPath(data, id);
     return res.json(all);
   } catch (error) {
@@ -373,7 +373,7 @@ self.getPath = async (arr, x) => {
     if (arr[i].id == x) {
       self.getPath(arr, arr[i].parent_department_id);
       if (arr[i].parent_department_id !== null) {
-        let child = await department.findOne({
+        let child = await Department.findOne({
           where: {
             id: arr[i].parent_department_id,
           },
@@ -388,7 +388,7 @@ self.getPath = async (arr, x) => {
 let children = [];
 self.getAllChildren = async (arr) => {
   for (var i = 0; i < arr.length; i++) {
-    let dd = await department.findAll({
+    let dd = await Department.findAll({
       where: {
         parent_department_id: arr[i].id,
       },
@@ -404,12 +404,12 @@ self.getAllChildren = async (arr) => {
 self.getChildren = async (req, res) => {
   let id = req.params.id;
   try {
-    let parent = await department.findOne({
+    let parent = await Department.findOne({
       where: {
         id: id,
       },
     });
-    let data = await department.findAll({
+    let data = await Department.findAll({
       where: {
         parent_department_id: id,
       },
@@ -419,7 +419,7 @@ self.getChildren = async (req, res) => {
     all.unshift(parent);
     let arr = [];
     for (let dept of all) {
-      let posi = await userposition.findAll({
+      let posi = await UserPosition.findAll({
         attributes: ["user_id"],
         where: {
           department_id: dept.id,
@@ -438,7 +438,7 @@ self.getChildren = async (req, res) => {
         },
       });
 
-      let pos = await position.findOne({
+      let pos = await Position.findOne({
         where: {
           department_id: dept.id,
           is_head: true,
@@ -446,7 +446,7 @@ self.getChildren = async (req, res) => {
       });
 
       const uspos = pos
-        ? await userposition.findOne({ where: { position_id: pos.id } })
+        ? await UserPosition.findOne({ where: { position_id: pos.id } })
         : null;
       const head = uspos
         ? await User.findOne({ where: { user_id: uspos.user_id } })
@@ -478,19 +478,19 @@ self.getDepartmentDashboad = async (req, res) => {
   try {
     let id = req.params.id;
 
-    let departments = await department.findAll({
+    let departments = await Department.findAll({
       where: {
         parent_department_id: id,
       },
     });
 
-    let positions = await position.findAll({
+    let positions = await Position.findAll({
       where: {
         department_id: id,
       },
     });
 
-    let userpositions = await userposition.findAll({
+    let userpositions = await UserPosition.findAll({
       where: {
         department_id: id,
         is_primary: true,

@@ -1,4 +1,4 @@
-const { documenttype, Sequelize } = require("../../models");
+const { DocumentType, Sequelize } = require("../../models");
 const usrData = require("../../utils/userDataFromToken");
 const actionHelper = require("../utils/action-helper");
 const Op = Sequelize.Op;
@@ -18,7 +18,7 @@ self.getAll = async (req, res) => {
     order = process.env.order;
   }
   const { limit, offset } = paginate.getPagination(page, size);
-  documenttype
+  DocumentType
     .findAndCountAll({
       limit,
       offset,
@@ -38,7 +38,7 @@ self.getAll = async (req, res) => {
 self.get = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await documenttype.findOne({
+    let data = await DocumentType.findOne({
       where: {
         id: id,
       },
@@ -56,7 +56,7 @@ self.get = async (req, res) => {
 self.search = async (req, res) => {
   try {
     let text = req.query.text;
-    let data = await documenttype.findAll({
+    let data = await DocumentType.findAll({
       where: {
         name: {
           [Op.like]: "%" + text + "%",
@@ -76,12 +76,12 @@ self.save = async (req, res) => {
     let usr = await usrData.userData(req, res);
     let body = req.body;
     if (usr) {
-      let data = await documenttype.create(body);
+      let data = await DocumentType.create(body);
       if (data) {
         let us = usr.usrID;
         await actionHelper.saveActionState(
           data.id,
-          "documenttype",
+          "DocumentType",
           "REGISTER",
           us,
           req,
@@ -101,7 +101,7 @@ self.update = async (req, res) => {
   try {
     let id = req.params.id;
     let body = req.body;
-    let data = await documenttype.update(body, {
+    let data = await DocumentType.update(body, {
       where: {
         id: id,
       },
@@ -119,7 +119,7 @@ self.update = async (req, res) => {
 self.delete = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await documenttype.destroy({
+    let data = await DocumentType.destroy({
       where: {
         id: id,
       },

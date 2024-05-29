@@ -1,15 +1,15 @@
 const {
     User,
-    address,
-    actionstate,
-    position,
-    userposition,
-    useremail,
-    userphone,
-    department,
-    passwordreset,
-    photo,
-    role,
+    Address,
+    ActionState,
+    Position,
+    UserPosition,
+    UserEmail,
+    UserPhone,
+    Department,
+    PasswordReset,
+    Photo,
+    Role,
     sequelize,
     Sequelize,
 } = require("./../../models");
@@ -53,7 +53,7 @@ self.getAlll = async(req, res) => {
     var arr = [];
     //console.log("The other is", other)
     for (let act of userData) {
-        dd = await actionstate.findOne({
+        dd = await ActionState.findOne({
             where: {
                 model_id: act.id,
                 action: "REGISTER",
@@ -151,14 +151,14 @@ self.get = async(req, res) => {
         });
 
         if (data) {
-            let usEmail = await useremail.findOne({
+            let usEmail = await UserEmail.findOne({
                 where: {
                     user_id: data.id,
                     is_primary: true,
                 },
             });
 
-            let usPhone = await userphone.findOne({
+            let usPhone = await UserPhone.findOne({
                 where: {
                     user_id: data.id,
                     is_primary: true,
@@ -250,7 +250,7 @@ self.save = async(req, res) => {
 
         if (created_user) {
             let usr = await usrData.userData(req, res);
-            await actionstate.create({
+            await ActionState.create({
                 model_id: created_user.id,
                 model: "User",
                 action: "REGISTER",
@@ -260,8 +260,8 @@ self.save = async(req, res) => {
             });
 
             // await actionHelper.saveActionState(created_user.id, "User", "REGISTER", usr.usrID, req, res)
-            //create position
-            let usemail = await useremail.create({
+            //create Position
+            let usemail = await UserEmail.create({
                 user_id: created_user.id,
                 email: body.email,
                 is_primary: true,
@@ -270,21 +270,21 @@ self.save = async(req, res) => {
             if (usemail) {
                 actionHelper.saveActionState(
                     usemail.id,
-                    "useremail",
+                    "UserEmail",
                     "REGISTER",
                     usr.usrID,
                     req,
                     res
                 );
 
-                let usphone = await userphone.create({
+                let usphone = await UserPhone.create({
                     user_id: created_user.id,
                     phone: body.phone,
                     is_primary: true,
                 });
                 //email to user
                 const resetString = uuid.v4() + created_user.id;
-                await passwordreset.create({
+                await PasswordReset.create({
                     user_id: created_user.id,
                     token: resetString,
                     expiresAt: Date.now() + 3600000,
@@ -335,7 +335,7 @@ self.save = async(req, res) => {
                     if (usphone) {
                         actionHelper.saveActionState(
                             usphone.id,
-                            "userphone",
+                            "UserPhone",
                             "REGISTER",
                             usr.usrID,
                             req,
@@ -343,13 +343,13 @@ self.save = async(req, res) => {
                         );
                     }
 
-                    let pos = await position.findOne({
+                    let pos = await Position.findOne({
                         where: {
                             id: body.position_id,
                         },
                     });
                     if (pos) {
-                        let uspos = await userposition.create({
+                        let uspos = await UserPosition.create({
                             user_id: created_user.id,
                             department_id: pos.department_id,
                             position_id: body.position_id,
@@ -359,7 +359,7 @@ self.save = async(req, res) => {
                         if (uspos) {
                             actionHelper.saveActionState(
                                 uspos.id,
-                                "userposition",
+                                "UserPosition",
                                 "REGISTER",
                                 usr.usrID,
                                 req,
@@ -416,7 +416,7 @@ self.getDepartmentUsers = async(req, res) => {
     try {
         let id = req.params.id;
 
-        let pos = await userposition.findAll({
+        let pos = await UserPosition.findAll({
             attributes: ["user_id"],
             where: {
                 department_id: id,
@@ -444,7 +444,7 @@ self.getDepartmentUsers = async(req, res) => {
 self.assignPosition = async(req, res) => {
     try {
         let body = req.body;
-        let existing = await userposition.findOne({
+        let existing = await UserPosition.findOne({
             where: {
                 user_id: body.user_id,
                 position_id: body.position_id,
@@ -454,10 +454,10 @@ self.assignPosition = async(req, res) => {
         if (existing) {
             if (existing.status) {
                 return res.status(302).json({
-                    message: "User Already assigned this position",
+                    message: "User Already assigned this Position",
                 });
             } else {
-                await userposition.update({ status: true }, {
+                await UserPosition.update({ status: true }, {
                     where: {
                         id: existing.id,
                     },
@@ -467,12 +467,12 @@ self.assignPosition = async(req, res) => {
                 });
             }
         } else {
-            let pos = await position.findOne({
+            let pos = await Position.findOne({
                 where: {
                     id: body.position_id,
                 },
             });
-            let data = await userposition.create(body);
+            let data = await UserPosition.create(body);
             data.status = true;
             data.department_id = pos.department_id;
             await data.save();
@@ -489,7 +489,7 @@ self.assignPosition = async(req, res) => {
 self.dePosition = async(req, res) => {
     try {
         let id = req.params.id;
-        let data = await userposition.findOne({
+        let data = await UserPosition.findOne({
             where: {
                 id: id,
             },
@@ -497,7 +497,7 @@ self.dePosition = async(req, res) => {
 
         if (data) {
             if (data.status) {
-                let updated = await userposition.update({ status: false }, {
+                let updated = await UserPosition.update({ status: false }, {
                     where: {
                         id: id,
                     },
@@ -529,28 +529,28 @@ self.switchAccount = async(req, res) => {
         let body = req.body;
         let usr = await usrData.userData(req, res);
         //position_id === userposition_id
-        const userpos = await userposition.findOne({
+        const userpos = await UserPosition.findOne({
             where: {
                 id: body.position_id,
             },
         });
-        const pos = await position.findOne({ where: { id: userpos.position_id } });
+        const pos = await Position.findOne({ where: { id: userpos.position_id } });
 
         const account = await User.findOne({
             where: { id: usr.usrID },
-            include: [{ model: userposition, as: "positions" }],
+            include: [{ model: UserPosition, as: "positions" }],
         });
 
-        // let usrRole = await role.findOne({ where: { id: pos.role_id } })
-        const usEmail = await useremail.findOne({
+        // let usrRole = await Role.findOne({ where: { id: pos.role_id } })
+        const usEmail = await UserEmail.findOne({
             where: { user_id: account.id, is_primary: true },
         });
 
-        const usPhone = await userphone.findOne({
+        const usPhone = await UserPhone.findOne({
             where: { user_id: account.id, is_primary: true },
         });
 
-        let userphoto = await photo.findOne({
+        let userphoto = await Photo.findOne({
             where: {
                 model_id: account.id,
             },
@@ -562,13 +562,13 @@ self.switchAccount = async(req, res) => {
 
         //show if it is checked
 
-        let action = await actionstate.findOne({
+        let action = await ActionState.findOne({
             where: {
                 model_id: usr.usrID,
                 action: "CHECK",
             },
         });
-        let profile_pic = await photo.findOne({
+        let profile_pic = await Photo.findOne({
             where: {
                 model_id: usr.usrID,
                 type: "USER_PROFILE_PHOTO",
@@ -590,7 +590,7 @@ self.switchAccount = async(req, res) => {
             user_position_id: userpos.id,
             is_checked: action ? true : false,
             profile_completed: profile_pic ? true : false,
-            // role: usrRole.name,
+            // Role: usrRole.name,
             avatar: userphoto ? userphoto.url : null,
         };
 
@@ -631,11 +631,11 @@ self.getAllUserPositions = async(req, res) => {
     try {
         let { id } = req.params;
 
-        let data = await userposition.findAll({
+        let data = await UserPosition.findAll({
             where: { user_id: id },
             include: [
-                { model: position, attributes: ["name"] },
-                { model: department, attributes: ["name"] },
+                { model: Position, attributes: ["name"] },
+                { model: Department, attributes: ["name"] },
             ],
         });
 
@@ -683,7 +683,7 @@ self.sendMail = async(req, res) => {
         if (us) {
             const redirectUrl = body.redirectUrl;
 
-            let preset = await passwordreset.findOne({
+            let preset = await PasswordReset.findOne({
                 where: {
                     user_id: us.id,
                     is_used: false,
@@ -747,7 +747,7 @@ self.requestPasswordReset = async(req, res) => {
 
         let encrypted_email = cipherHelper.encrypt(email);
 
-        let usemail = await useremail.findOne({
+        let usemail = await UserEmail.findOne({
             where: {
                 email: encrypted_email,
                 is_primary: true,
@@ -771,7 +771,7 @@ self.requestPasswordReset = async(req, res) => {
         if (us) {
             const resetString = uuid.v4() + us.id;
 
-            let data = await passwordreset.findOne({
+            let data = await PasswordReset.findOne({
                 order: [
                     ["createdAt", "DESC"]
                 ],
@@ -793,7 +793,7 @@ self.requestPasswordReset = async(req, res) => {
 
             // }
 
-            await passwordreset.create({
+            await PasswordReset.create({
                 user_id: us.id,
                 token: resetString,
                 expiresAt: Date.now() + 3600000,
@@ -857,7 +857,7 @@ self.resetPassword = async(req, res) => {
     try {
         let { user_id, resetString, password } = req.body;
 
-        let existing = await passwordreset.findOne({
+        let existing = await PasswordReset.findOne({
             order: [
                 ["createdAt", "DESC"]
             ],
@@ -887,7 +887,7 @@ self.resetPassword = async(req, res) => {
                         id: user_id,
                     },
                 });
-                await passwordreset.update({ is_used: true }, {
+                await PasswordReset.update({ is_used: true }, {
                     where: {
                         user_id: existing.user_id,
                         is_used: false,
@@ -917,13 +917,13 @@ self.checkUserStatus = async(req, res) => {
                 id: id,
             },
         });
-        let action = await actionstate.findOne({
+        let action = await ActionState.findOne({
             where: {
                 model_id: id,
                 action: "CHECK",
             },
         });
-        let profile_pic = await photo.findOne({
+        let profile_pic = await Photo.findOne({
             where: {
                 model_id: id,
                 type: "USER_PROFILE_PHOTO",

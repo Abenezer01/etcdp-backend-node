@@ -1,8 +1,8 @@
 const {
-  document,
-  documenttype,
-  documentcategory,
-  documentsubcategory,
+  Document,
+  DocumentType,
+  DocumentCategory,
+  DocumentSubCategory,
   sequelize,
   Sequelize,
 } = require("../../models");
@@ -26,7 +26,7 @@ self.getAll = async (req, res) => {
     order = process.env.order;
   }
   const { limit, offset } = paginate.getPagination(page, size);
-  document
+  Document
     .findAndCountAll({
       limit,
       offset,
@@ -42,7 +42,7 @@ self.getAll = async (req, res) => {
       });
     });
   // try {
-  //     let data = await document.findAll();
+  //     let data = await Document.findAll();
   //     return res.json(data)
 
   // } catch (error) {
@@ -55,24 +55,24 @@ self.getAll = async (req, res) => {
 self.get = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await document.findOne({
+    let data = await Document.findOne({
       where: {
         id: id,
       },
       include: [
         {
-          model: documenttype,
-          as: "documenttype",
+          model: DocumentType,
+          as: "DocumentType",
           attributes: ["id", "title"],
         },
         {
-          model: documentcategory,
-          as: "documentcategory",
+          model: DocumentCategory,
+          as: "DocumentCategory",
           attributes: ["id", "title"],
         },
         {
-          model: documentsubcategory,
-          as: "documentsubcategory",
+          model: DocumentSubCategory,
+          as: "DocumentSubCategory",
           attributes: ["id", "title"],
         },
       ],
@@ -117,7 +117,7 @@ self.filter = async (req, res) => {
   };
   console.log("The filter", filter());
   const { limit, offset } = paginate.getPagination(page, size);
-  document
+  Document
     .findAndCountAll({
       limit,
       offset,
@@ -154,7 +154,7 @@ self.filter = async (req, res) => {
 self.search = async (req, res) => {
   try {
     let text = req.query.text;
-    let data = await document.findAll({
+    let data = await Document.findAll({
       where: {
         name: {
           [Op.like]: "%" + text + "%",
@@ -201,7 +201,7 @@ self.save = async (req, res) => {
     }
     if (usr) {
       body.department_id = usr.departmentID;
-      let data = await document.create(body);
+      let data = await Document.create(body);
       if (data) {
         if (pat) {
           const filee = req.files.attachement;
@@ -216,7 +216,7 @@ self.save = async (req, res) => {
         //await data.save()
         await actionHelper.saveActionState(
           data.id,
-          "document",
+          "Document",
           "REGISTER",
           us,
           req,
@@ -235,7 +235,7 @@ self.getdocument = async (req, res) => {
   try {
     let id = req.params.id;
     let body = req.body;
-    let data = await document.findOne({
+    let data = await Document.findOne({
       where: {
         id: id,
       },
@@ -269,11 +269,11 @@ self.countAllDocumentWithDocumentType = async (req, res) => {
         type: sequelize.QueryTypes.SELECT,
       }
     );
-    const { count } = await document.findAndCountAll();
+    const { count } = await Document.findAndCountAll();
     const Result = [];
     //let Result = {};
     const parent = {
-      name: "document",
+      name: "Document",
       id: "382d79ee-2b9d-4919-a7ad-1ada61c1ab28",
       parentNodeId: null,
       total: count,
@@ -365,7 +365,7 @@ self.update = async (req, res) => {
     if (usr) {
       if (pat) {
         const filee = req.files.attachement;
-        let data = await document.findOne({
+        let data = await Document.findOne({
           where: {
             id: id,
           },
@@ -390,7 +390,7 @@ self.update = async (req, res) => {
           // res.redirect('/')
         });
       }
-      let data = await document.update(body, {
+      let data = await Document.update(body, {
         where: {
           id: id,
         },
@@ -407,7 +407,7 @@ self.update = async (req, res) => {
 self.delete = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await document.destroy({
+    let data = await Document.destroy({
       where: {
         id: id,
       },

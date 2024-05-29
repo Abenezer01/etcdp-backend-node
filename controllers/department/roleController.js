@@ -1,4 +1,4 @@
-const { role, rolepermission, permission, Sequelize } = require("../../models");
+const { Role, RolePermission, Permission, Sequelize } = require("../../models");
 const actionHelper = require("../utils/action-helper");
 const usrData = require("../../utils/userDataFromToken");
 
@@ -8,7 +8,7 @@ let self = {};
 
 self.getAll = async (req, res) => {
   try {
-    let data = await role.findAll();
+    let data = await Role.findAll();
     return res.json(data);
   } catch (error) {
     // if (err.message === 'Error') {
@@ -25,7 +25,7 @@ self.getAll = async (req, res) => {
 self.get = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await role.findOne({
+    let data = await Role.findOne({
       where: {
         id: id,
       },
@@ -43,7 +43,7 @@ self.get = async (req, res) => {
 self.search = async (req, res) => {
   try {
     let text = req.query.text;
-    let data = await role.findAll({
+    let data = await Role.findAll({
       where: {
         name: {
           [Op.like]: "%" + text + "%",
@@ -61,12 +61,12 @@ self.search = async (req, res) => {
 self.save = async (req, res) => {
   try {
     let body = req.body;
-    let data = await role.create(body);
+    let data = await Role.create(body);
     if (data) {
       let usr = await usrData.userData(req, res);
       await actionHelper.saveActionState(
         data.id,
-        "role",
+        "Role",
         "REGISTER",
         usr.usrID,
         req,
@@ -85,7 +85,7 @@ self.update = async (req, res) => {
   try {
     let id = req.params.id;
     let body = req.body;
-    let data = await role.update(body, {
+    let data = await Role.update(body, {
       where: {
         id: id,
       },
@@ -101,7 +101,7 @@ self.update = async (req, res) => {
 self.delete = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await role.destroy({
+    let data = await Role.destroy({
       where: {
         id: id,
       },
@@ -119,7 +119,7 @@ self.givePermission = async (req, res) => {
   try {
     let body = req.body;
     let permissions = body.permissions;
-    let rol = await role.findOne({
+    let rol = await Role.findOne({
       where: {
         id: id,
       },
@@ -127,14 +127,14 @@ self.givePermission = async (req, res) => {
 
     for (let per of permissions) {
       if (per.is_selected) {
-        await rolepermission.findOrCreate({
+        await RolePermission.findOrCreate({
           where: {
             permission_id: per.id,
             role_id: rol.id,
           },
         });
       } else {
-        await rolepermission.destroy({
+        await RolePermission.destroy({
           where: {
             permission_id: per.id,
           },
@@ -143,7 +143,7 @@ self.givePermission = async (req, res) => {
     }
 
     return res.json({
-      message: "permissions are given to a role ",
+      message: "permissions are given to a Role ",
     });
   } catch (error) {
     return res.status(500).json({

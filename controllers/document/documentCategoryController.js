@@ -1,4 +1,4 @@
-const { documentcategory, Sequelize } = require("../../models");
+const { DocumentCategory, Sequelize } = require("../../models");
 const usrData = require("../../utils/userDataFromToken");
 const actionHelper = require("../utils/action-helper");
 const Op = Sequelize.Op;
@@ -17,7 +17,7 @@ self.getAll = async (req, res) => {
     order = process.env.order;
   }
   const { limit, offset } = paginate.getPagination(page, size);
-  documentcategory
+  DocumentCategory
     .findAndCountAll({
       limit,
       offset,
@@ -33,7 +33,7 @@ self.getAll = async (req, res) => {
       });
     });
   // try {
-  //     let data = await documentcategory.findAll();
+  //     let data = await DocumentCategory.findAll();
   //     return res.json(data)
 
   // } catch (error) {
@@ -46,7 +46,7 @@ self.getAll = async (req, res) => {
 self.get = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await documentcategory.findOne({
+    let data = await DocumentCategory.findOne({
       where: {
         id: id,
       },
@@ -64,7 +64,7 @@ self.get = async (req, res) => {
 self.search = async (req, res) => {
   try {
     let text = req.query.text;
-    let data = await documentcategory.findAll({
+    let data = await DocumentCategory.findAll({
       where: {
         name: {
           [Op.like]: "%" + text + "%",
@@ -89,7 +89,7 @@ self.getCRCBydocumentTypeId = async (req, res) => {
     order = process.env.order;
   }
   const { limit, offset } = paginate.getPagination(page, size);
-  documentcategory
+  DocumentCategory
     .findAndCountAll({
       limit,
       offset,
@@ -114,12 +114,12 @@ self.save = async (req, res) => {
     let usr = await usrData.userData(req, res);
     let body = req.body;
     if (usr) {
-      let data = await documentcategory.create(body);
+      let data = await DocumentCategory.create(body);
       if (data) {
         let us = usr.usrID;
         await actionHelper.saveActionState(
           data.id,
-          "documentcategory",
+          "DocumentCategory",
           "REGISTER",
           us,
           req,
@@ -139,7 +139,7 @@ self.update = async (req, res) => {
   try {
     let id = req.params.id;
     let body = req.body;
-    let data = await documentcategory.update(body, {
+    let data = await DocumentCategory.update(body, {
       where: {
         id: id,
       },
@@ -157,7 +157,7 @@ self.update = async (req, res) => {
 self.delete = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await documentcategory.destroy({
+    let data = await DocumentCategory.destroy({
       where: {
         id: id,
       },

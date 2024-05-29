@@ -1,7 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-  class documentsubcategory extends Model {
+  class DocumentSubCategory extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  documentsubcategory.init(
+  DocumentSubCategory.init(
     {
       id: {
         type: DataTypes.UUID,
@@ -38,12 +38,12 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "documentsubcategory",
+      modelName: "DocumentSubCategory",
     }
   );
-  // documentsubcategory.associate = function(models) {
+  // DocumentSubCategory.associate = function(models) {
 
-  //     documentsubcategory.belongsTo(models.stakecategory)
+  //     DocumentSubCategory.belongsTo(models.stakecategory)
   // };
-  return documentsubcategory;
+  return DocumentSubCategory;
 };

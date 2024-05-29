@@ -1,5 +1,5 @@
 const actionHelper = require("../utils/action-helper");
-const { railway, Sequelize } = require("../../models");
+const { Railway, Sequelize } = require("../../models");
 const usrData = require("../../utils/userDataFromToken");
 const Op = Sequelize.Op;
 const dotenv = require("dotenv");
@@ -17,7 +17,7 @@ self.getAll = async (req, res) => {
   const { limit, offset } = paginate.getPagination(page, size);
 
   try {
-    const { rows, count } = await railway.findAndCountAll({
+    const { rows, count } = await Railway.findAndCountAll({
       limit,
       offset,
       order: [["createdAt", order]],
@@ -48,7 +48,7 @@ self.getByProjectId = async (req, res) => {
 
   const { limit, offset } = paginate.getPagination(page, size);
   try {
-    const data = await railway.findAndCountAll({
+    const data = await Railway.findAndCountAll({
       limit,
       offset,
       where: { project_id: id },
@@ -66,7 +66,7 @@ self.getByProjectId = async (req, res) => {
 self.get = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await railway.findOne({
+    let data = await Railway.findOne({
       where: {
         id: id,
       },
@@ -82,7 +82,7 @@ self.get = async (req, res) => {
 self.search = async (req, res) => {
   try {
     let text = req.query.text;
-    let data = await railway.findAll({
+    let data = await Railway.findAll({
       where: {
         name: {
           [Op.like]: "%" + text + "%",
@@ -102,12 +102,12 @@ self.save = async (req, res) => {
     let usr = await usrData.userData(req, res);
     let body = req.body;
     if (usr) {
-      let data = await railway.create(body);
+      let data = await Railway.create(body);
       if (data) {
         let usrID = usr.usrID;
         await actionHelper.saveActionState(
           data.id,
-          "railway",
+          "Railway",
           "REGISTER",
           usrID,
           req,
@@ -127,7 +127,7 @@ self.update = async (req, res) => {
   try {
     let id = req.params.id;
     let body = req.body;
-    let data = await railway.update(body, {
+    let data = await Railway.update(body, {
       where: {
         id: id,
       },
@@ -143,7 +143,7 @@ self.update = async (req, res) => {
 self.delete = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await railway.destroy({
+    let data = await Railway.destroy({
       where: {
         id: id,
       },

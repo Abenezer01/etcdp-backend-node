@@ -1,7 +1,7 @@
 const actionHelper = require("../utils/action-helper");
 const {
-  projectextensiontime,
-  projectvariation,
+  ProjectExtensionTime,
+  ProjectVariation,
   Sequelize,
 } = require("./../../models");
 const usrData = require("../../utils/userDataFromToken");
@@ -21,7 +21,7 @@ self.getAll = async (req, res) => {
     order = process.env.order;
   }
   const { limit, offset } = paginate.getPagination(page, size);
-  projectextensiontime
+  ProjectExtensionTime
     .findAndCountAll({
       limit,
       offset,
@@ -41,7 +41,7 @@ self.getAll = async (req, res) => {
 self.get = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await projectextensiontime.findOne({
+    let data = await ProjectExtensionTime.findOne({
       where: {
         id: id,
       },
@@ -66,7 +66,7 @@ self.getByProjectId = async (req, res) => {
     }
     const { limit, offset } = paginate.getPagination(page, size);
 
-    let data = await projectextensiontime.findAndCountAll({
+    let data = await ProjectExtensionTime.findAndCountAll({
       limit,
       offset,
       order: [["createdAt", "ASC"]],
@@ -77,7 +77,7 @@ self.getByProjectId = async (req, res) => {
 
     let withVariation = await Promise.all(
       data.rows.map(async (item) => {
-        let variation = await projectvariation.findOne({
+        let variation = await ProjectVariation.findOne({
           where: {
             extension_time_id: item.id,
           },
@@ -103,7 +103,7 @@ self.getByProjectId = async (req, res) => {
 self.search = async (req, res) => {
   try {
     let text = req.query.text;
-    let data = await projectextensiontime.findAll({
+    let data = await ProjectExtensionTime.findAll({
       where: {
         name: {
           [Op.like]: "%" + text + "%",
@@ -123,7 +123,7 @@ self.save = async (req, res) => {
     let usr = await usrData.userData(req, res);
     let body = req.body;
     if (usr) {
-      let data = await projectextensiontime.create(body);
+      let data = await ProjectExtensionTime.create(body);
       if (data) {
         let usrID = usr.usrID;
         await actionHelper.saveActionState(
@@ -147,20 +147,20 @@ self.update = async (req, res) => {
   try {
     let id = req.params.id;
     let body = req.body;
-    let data = await projectextensiontime.update(body, {
+    let data = await ProjectExtensionTime.update(body, {
       where: {
         id: id,
       },
     });
 
     if (data) {
-      let extension = await projectextensiontime.findOne({
+      let extension = await ProjectExtensionTime.findOne({
         where: {
           id: id,
         },
       });
       if (extension) {
-        await projectvariation.update(
+        await ProjectVariation.update(
           { extension_time: extension.number_of_days },
           {
             where: {
@@ -181,7 +181,7 @@ self.update = async (req, res) => {
 self.delete = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await projectextensiontime.destroy({
+    let data = await ProjectExtensionTime.destroy({
       where: {
         id: id,
       },

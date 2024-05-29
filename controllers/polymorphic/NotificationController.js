@@ -1,4 +1,4 @@
-const { notification, Sequelize } = require("./../../models");
+const { Notification, Sequelize } = require("./../../models");
 const moment = require("moment");
 const usrData = require("../../utils/userDataFromToken");
 const Op = Sequelize.Op;
@@ -11,7 +11,7 @@ self.getAll = async (req, res) => {
     let limit = req.params.limit;
     let page_no = req.params.page_no;
     let us = await usrData.userData(req, res);
-    let data = await notification.findAndCountAll({
+    let data = await Notification.findAndCountAll({
       order: [["createdAt", "DESC"]],
       where: {
         notifiable_id: us.usrID,
@@ -35,7 +35,7 @@ self.unreadNotification = async (req, res) => {
   try {
     let count = req.params.count;
     let us = await usrData.userData(req, res);
-    let data = await notification.findAll({
+    let data = await Notification.findAll({
       limit: Number(count),
       where: {
         notifiable_id: us.usrID,
@@ -54,14 +54,14 @@ self.unreadNotification = async (req, res) => {
 self.get = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await notification.findOne({
+    let data = await Notification.findOne({
       where: {
         id: id,
       },
     });
 
     if (!data.read_at) {
-      await notification.update(
+      await Notification.update(
         { read_at: moment() },
         {
           where: {
@@ -83,7 +83,7 @@ self.update = async (req, res) => {
   try {
     let id = req.params.id;
     let body = req.body;
-    let data = await notification.update(body, {
+    let data = await Notification.update(body, {
       where: {
         id: id,
       },
@@ -99,7 +99,7 @@ self.update = async (req, res) => {
 self.delete = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await notification.destroy({
+    let data = await Notification.destroy({
       where: {
         id: id,
       },

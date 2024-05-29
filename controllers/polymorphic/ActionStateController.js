@@ -1,10 +1,10 @@
 const {
-  actionstate,
-  note,
+  ActionState,
+  Note,
   User,
-  userposition,
-  position,
-  file,
+  UserPosition,
+  Position,
+  File,
   Sequelize,
 } = require("../../models");
 
@@ -16,7 +16,7 @@ const actorHelper = require("../utils/actor-helper")
 
 self.getAll = async (req, res) => {
   try {
-    let data = await actionstate.findAll();
+    let data = await ActionState.findAll();
     return res.status(200).json(data);
   } catch (error) {
     res.status(500).json({
@@ -28,7 +28,7 @@ self.getAll = async (req, res) => {
 self.get = async (req, res) => {
   let id = req.params.id;
   try {
-    let data = await actionstate.findOne({
+    let data = await ActionState.findOne({
       where: {
         id: id,
 
@@ -52,7 +52,7 @@ self.check = async (req, res) => {
     let usr = await usrData.userData(req, res);
 
     if (usr) {
-      let data = await actionstate.findOne({
+      let data = await ActionState.findOne({
         where: {
           model_id: id,
           model: model,
@@ -65,7 +65,7 @@ self.check = async (req, res) => {
           message: "already checked!",
         });
       } else {
-        let action = await actionstate.findOne({
+        let action = await ActionState.findOne({
             where: {
                 model_id: id,
                 action: "REGISTER",
@@ -78,7 +78,7 @@ self.check = async (req, res) => {
                 message: 'You are not allowed to check the data as you are the register'
             })
         } else {
-        let action = await actionstate.create({
+        let action = await ActionState.create({
           model_id: id,
           model: model,
           action: "CHECK",
@@ -108,7 +108,7 @@ self.approve = async (req, res) => {
     let usr = await usrData.userData(req, res);
 
     if (usr) {
-      let data = await actionstate.findOne({
+      let data = await ActionState.findOne({
         where: {
           model_id: id,
           model: model,
@@ -120,7 +120,7 @@ self.approve = async (req, res) => {
           message: "Already Approve!",
         });
       } else {
-        let action = await actionstate.findAll({
+        let action = await ActionState.findAll({
             where: {
                 model_id: id,
                 action: {
@@ -135,7 +135,7 @@ self.approve = async (req, res) => {
                 message: 'You can not approve as you either register or check the data'
             })
         } else {
-        let action = await actionstate.create({
+        let action = await ActionState.create({
           model: model.toLowerCase(),
           model_id: id,
           action: "APPROVE",
@@ -168,7 +168,7 @@ self.reject = async (req, res) => {
       id: usr.usrID,
     };
     if (usr) {
-      let data = await actionstate.findOne({
+      let data = await ActionState.findOne({
         where: {
           id: id,
           action: "REJECT",
@@ -179,7 +179,7 @@ self.reject = async (req, res) => {
           message: "Already Rejected",
         });
       } else {
-        let action = await actionstate.findAll({
+        let action = await ActionState.findAll({
             where: {
                 model_id: id,
                 action: {
@@ -195,7 +195,7 @@ self.reject = async (req, res) => {
                 message: 'You can not approve as you either register or check or approver the data'
             })
         } else {
-        let action = await actionstate.create({
+        let action = await ActionState.create({
           model: model.toLowerCase(),
           model_id: id,
           action: "REJECT",
@@ -222,7 +222,7 @@ self.authorize = async (req, res) => {
     let usr = await usrData.userData(req, res);
 
     if (usr) {
-      let data = await actionstate.findOne({
+      let data = await ActionState.findOne({
         where: {
           model_id: id,
           action: "AUTHORIZE",
@@ -234,7 +234,7 @@ self.authorize = async (req, res) => {
           message: "Already Authorized",
         });
       } else {
-        let action = await actionstate.findAll({
+        let action = await ActionState.findAll({
             model_id: id,
             action: {
                 [Op.in]: ['REGISTSER', 'CHECK', "APPROVE"]
@@ -249,7 +249,7 @@ self.authorize = async (req, res) => {
             })
         } else {
 
-        let action = await actionstate.create({
+        let action = await ActionState.create({
           model: model.toLowerCase(),
           model_id: id,
           action: "AUTHORIZE",
@@ -273,7 +273,7 @@ self.authorize = async (req, res) => {
 //     let id = req.params.id
 //     try {
 
-//         let data = await  actionstate.findAll({
+//         let data = await  ActionState.findAll({
 //             where: {
 //                 model_id: id
 //             }
@@ -288,35 +288,35 @@ self.authorize = async (req, res) => {
 //             let authorizeUser = null
 
 //             let element = {}
-//             let register = await actionstate.findOne({
+//             let register = await ActionState.findOne({
 //                 where: {
 //                    model_id: id,
 //                    action: 'REGISTER'
 //                 }
 //             })
 
-//             let check = await actionstate.findOne({
+//             let check = await ActionState.findOne({
 //                 where: {
 //                    model_id: id,
 //                    action: 'CHECK'
 //                 }
 //             })
 
-//             let approve = await actionstate.findOne({
+//             let approve = await ActionState.findOne({
 //                 where: {
 //                    model_id: id,
 //                    action: 'APPROVE'
 //                 }
 //             })
 
-//             let reject = await actionstate.findOne({
+//             let reject = await ActionState.findOne({
 //                 where: {
 //                    model_id: id,
 //                    action: 'REJECT'
 //                 }
 //             })
 
-//             let authorize = await actionstate.findOne({
+//             let authorize = await ActionState.findOne({
 //                 where: {
 //                    model_id: id,
 //                    action: 'AUTHORIZE'
@@ -332,14 +332,14 @@ self.authorize = async (req, res) => {
 //                     }
 //                 })
 //                 if(registerUser){
-//                     let userpos = await userposition.findOne({
+//                     let userpos = await UserPosition.findOne({
 
 //                         where: {
 //                             user_id:registerUser.id,
 //                             is_primary: true
 //                         }
 //                     })
-//                     let pos = await position.findOne({
+//                     let pos = await Position.findOne({
 //                         where: {
 //                             id: userpos.position_id
 //                         }
@@ -353,7 +353,7 @@ self.authorize = async (req, res) => {
 //                 }
 
 //                 //notes
-//                 // let registerNote = await note.findAll({
+//                 // let registerNote = await Note.findAll({
 //                 //     where: {
 //                 //         model_id: register.id
 //                 //     }
@@ -386,13 +386,13 @@ self.authorize = async (req, res) => {
 //                     }
 //                 })
 //                 if(checkUser){
-//                     let userpos = await userposition.findOne({
+//                     let userpos = await UserPosition.findOne({
 //                         where: {
 //                             user_id:checkUser.id,
 //                             is_primary: true
 //                         }
 //                     })
-//                     let pos = await position.findOne({
+//                     let pos = await Position.findOne({
 //                         where: {
 //                             id: userpos.position_id
 //                         }
@@ -406,7 +406,7 @@ self.authorize = async (req, res) => {
 //                 }
 
 //                 //notes
-//                 // let checkNote = await note.findAll({
+//                 // let checkNote = await Note.findAll({
 //                 //     where: {
 //                 //         model_id: check.id
 //                 //     }
@@ -419,7 +419,7 @@ self.authorize = async (req, res) => {
 //                 //     }
 //                 // })
 
-//                 let checkedFiles = await file.findAndCountAll({
+//                 let checkedFiles = await File.findAndCountAll({
 //                     where: {
 //                         fileable_id: check.id,
 //                         file_type: "CHECK"
@@ -447,13 +447,13 @@ self.authorize = async (req, res) => {
 //                     }
 //                 })
 //                 if(approveUser){
-//                     let userpos = await userposition.findOne({
+//                     let userpos = await UserPosition.findOne({
 //                         where: {
 //                             user_id:approveUser.id,
 //                             is_primary: true
 //                         }
 //                     })
-//                     let pos = await position.findOne({
+//                     let pos = await Position.findOne({
 //                         where: {
 //                             id: userpos.position_id
 //                         }
@@ -466,7 +466,7 @@ self.authorize = async (req, res) => {
 //                     }
 //                 }
 //                 //notes
-//                 // let approveNote = await note.findAll({
+//                 // let approveNote = await Note.findAll({
 //                 //     where: {
 //                 //         model_id: approve.id
 //                 //     }
@@ -479,7 +479,7 @@ self.authorize = async (req, res) => {
 //                 //     }
 //                 // })
 
-//                 let approvedFiles = await file.findAndCountAll({
+//                 let approvedFiles = await File.findAndCountAll({
 //                     where: {
 //                         fileable_id: approve.id,
 //                         file_type: "APPROVE"
@@ -507,13 +507,13 @@ self.authorize = async (req, res) => {
 //                     }
 //                 })
 //                 if(authorizeUser){
-//                     let userpos = await userposition.findOne({
+//                     let userpos = await UserPosition.findOne({
 //                         where: {
 //                             user_id:authorizeUser.id,
 //                             is_primary: true
 //                         }
 //                     })
-//                     let pos = await position.findOne({
+//                     let pos = await Position.findOne({
 //                         where: {
 //                             id: userpos.position_id
 //                         }
@@ -527,7 +527,7 @@ self.authorize = async (req, res) => {
 //                 }
 
 //                 //notes
-//                 // let authorizeNote = await note.findAll({
+//                 // let authorizeNote = await Note.findAll({
 //                 //     where: {
 //                 //         model_id: authorize.id
 //                 //     }
@@ -540,7 +540,7 @@ self.authorize = async (req, res) => {
 //                 //     }
 //                 // })
 
-//                 let authorizedFiles = await file.findAndCountAll({
+//                 let authorizedFiles = await File.findAndCountAll({
 //                     where: {
 //                         fileable_id: authorize.id,
 //                         file_type: "AUTHORIZE"
@@ -568,13 +568,13 @@ self.authorize = async (req, res) => {
 //                     }
 //                 })
 //                 if(rejectUser){
-//                     let userpos = await userposition.findOne({
+//                     let userpos = await UserPosition.findOne({
 //                         where: {
 //                             user_id:rejectUser.id,
 //                             is_primary: true
 //                         }
 //                     })
-//                     let pos = await position.findOne({
+//                     let pos = await Position.findOne({
 //                         where: {
 //                             id: userpos.position_id
 //                         }
@@ -588,7 +588,7 @@ self.authorize = async (req, res) => {
 //                 }
 
 //                 //notes
-//                 // let rejectNote = await note.findAll({
+//                 // let rejectNote = await Note.findAll({
 //                 //     where: {
 //                 //         model_id: reject.id
 //                 //     }
@@ -601,7 +601,7 @@ self.authorize = async (req, res) => {
 //                 //     }
 //                 // })
 
-//                 let rejectedFiles = await file.findAndCountAll({
+//                 let rejectedFiles = await File.findAndCountAll({
 //                     where: {
 //                         fileable_id: reject.id,
 //                         file_type: "REJECT"
@@ -659,7 +659,7 @@ self.getModelAction = async (req, res) => {
   const id = req.params.id;
 
   try {
-    const data = await actionstate.findAll({
+    const data = await ActionState.findAll({
       where: {
         model_id: id,
       },
@@ -786,19 +786,19 @@ self.getUserData = async (userId, actionId) => {
 
   const temp = userObj.toJSON();
 
-  let action = await actionstate.findOne({
+  let action = await ActionState.findOne({
     where: {
       id: actionId,
     },
     include: [
       {
-        model: position,
-        as: "position",
+        model: Position,
+        as: "Position",
       },
     ],
   });
 
-  const primaryPosition = action.position;
+  const primaryPosition = action.Position;
   if (primaryPosition) {
     temp.position_name = primaryPosition.name;
   }
@@ -807,7 +807,7 @@ self.getUserData = async (userId, actionId) => {
 };
 
 self.getFileData = async (fileableId, fileType) => {
-  const files = await file.findAndCountAll({
+  const files = await File.findAndCountAll({
     where: {
       fileable_id: fileableId,
       file_type: fileType,
@@ -820,7 +820,7 @@ self.getFileData = async (fileableId, fileType) => {
 self.getLast = async (req, res) => {
   let id = req.params.id;
   try {
-    let data = await actionstate.findAll({
+    let data = await ActionState.findAll({
       where: {
         model_id: id,
       },

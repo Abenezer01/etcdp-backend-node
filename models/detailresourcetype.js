@@ -1,7 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-  class detailresourcetype extends Model {
+  class DetailResourceType extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  detailresourcetype.init(
+  DetailResourceType.init(
     {
       id: {
         type: DataTypes.UUID,
@@ -31,8 +31,8 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "detailresourcetype",
+      modelName: "DetailResourceType",
     }
   );
-  return detailresourcetype;
+  return DetailResourceType;
 };

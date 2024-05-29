@@ -1,4 +1,4 @@
-const { jobexperience, Sequelize } = require("../../models");
+const { JobExperience, Sequelize } = require("../../models");
 const actionHelper = require("../utils/action-helper");
 const usrData = require("../../utils/userDataFromToken");
 const Op = Sequelize.Op;
@@ -7,7 +7,7 @@ let self = {};
 
 self.getAll = async (req, res) => {
   try {
-    let data = await jobexperience.findAll();
+    let data = await JobExperience.findAll();
     return res.json(data);
   } catch (error) {
     res.status(500).json({
@@ -19,7 +19,7 @@ self.getAll = async (req, res) => {
 self.get = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await jobexperience.findOne({
+    let data = await JobExperience.findOne({
       where: {
         id: id,
       },
@@ -37,7 +37,7 @@ self.get = async (req, res) => {
 self.search = async (req, res) => {
   try {
     let text = req.query.text;
-    let data = await jobexperience.findAll({
+    let data = await JobExperience.findAll({
       where: {
         name: {
           [Op.like]: "%" + text + "%",
@@ -55,13 +55,13 @@ self.search = async (req, res) => {
 self.save = async (req, res) => {
   try {
     let body = req.body;
-    let data = await jobexperience.create(body);
+    let data = await JobExperience.create(body);
 
     if (data) {
       let usr = await usrData.userData(req, res);
       await actionHelper.saveActionState(
         data.id,
-        "jobexperience",
+        "JobExperience",
         "REGISTER",
         usr.usrID,
         req,
@@ -80,7 +80,7 @@ self.update = async (req, res) => {
   try {
     let id = req.params.id;
     let body = req.body;
-    let data = await jobexperience.update(body, {
+    let data = await JobExperience.update(body, {
       where: {
         id: id,
       },
@@ -96,7 +96,7 @@ self.update = async (req, res) => {
 self.delete = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await jobexperience.destroy({
+    let data = await JobExperience.destroy({
       where: {
         id: id,
       },
@@ -112,7 +112,7 @@ self.delete = async (req, res) => {
 self.getByUserId = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await jobexperience.findAll({
+    let data = await JobExperience.findAll({
       where: {
         user_id: id,
       },

@@ -1,4 +1,4 @@
-const { resourcesubcategory, Sequelize } = require("../../models");
+const { ResourceSubCategory, Sequelize } = require("../../models");
 const usrData = require("../../utils/userDataFromToken");
 const actionHelper = require("../utils/action-helper");
 const Op = Sequelize.Op;
@@ -17,7 +17,7 @@ self.getAll = async (req, res) => {
   const { limit, offset } = paginate.getPagination(page, size);
 
   try {
-    const { rows, count } = await resourcesubcategory.findAndCountAll({
+    const { rows, count } = await ResourceSubCategory.findAndCountAll({
       limit,
       offset,
       order: [["createdAt", order]],
@@ -42,7 +42,7 @@ self.getAll = async (req, res) => {
 self.get = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await resourcesubcategory.findOne({
+    let data = await ResourceSubCategory.findOne({
       where: {
         id: id,
       },
@@ -60,7 +60,7 @@ self.get = async (req, res) => {
 self.search = async (req, res) => {
   try {
     let text = req.query.text;
-    let data = await resourcesubcategory.findAll({
+    let data = await ResourceSubCategory.findAll({
       where: {
         name: {
           [Op.like]: "%" + text + "%",
@@ -80,12 +80,12 @@ self.save = async (req, res) => {
     let usr = await usrData.userData(req, res);
     let body = req.body;
     if (usr) {
-      let data = await resourcesubcategory.create(body);
+      let data = await ResourceSubCategory.create(body);
       if (data) {
         let us = usr.usrID;
         await actionHelper.saveActionState(
           data.id,
-          "resourcesubcategory",
+          "ResourceSubCategory",
           "REGISTER",
           us,
           req,
@@ -105,7 +105,7 @@ self.update = async (req, res) => {
   try {
     let id = req.params.id;
     let body = req.body;
-    let data = await resourcesubcategory.update(body, {
+    let data = await ResourceSubCategory.update(body, {
       where: {
         id: id,
       },
@@ -123,7 +123,7 @@ self.update = async (req, res) => {
 self.delete = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await resourcesubcategory.destroy({
+    let data = await ResourceSubCategory.destroy({
       where: {
         id: id,
       },

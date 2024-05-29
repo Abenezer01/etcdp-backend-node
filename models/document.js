@@ -1,7 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-  class document extends Model {
+  class Document extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -9,28 +9,28 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      // document.belongsTo(models.image, {
+      // Document.belongsTo(models.image, {
       //     foreignKey: 'image_id',
       // });
-      document.belongsTo(models.documenttype, {
+      Document.belongsTo(models.documenttype, {
         //as: "documenttype",
         foreignKey: "documenttype_id",
       });
-      document.belongsTo(models.documentcategory, {
+      Document.belongsTo(models.documentcategory, {
         // as: "documentcategory",
         foreignKey: "documentcategory_id",
       });
-      document.belongsTo(models.documentsubcategory, {
+      Document.belongsTo(models.documentsubcategory, {
         //as: "documentsubcategory",
         foreignKey: "documentsubcategory_id",
       });
-      document.belongsTo(models.department, {
+      Document.belongsTo(models.department, {
         as: "department",
         foreignKey: "department_id",
       });
     }
   }
-  document.init(
+  Document.init(
     {
       id: {
         type: DataTypes.UUID,
@@ -54,15 +54,15 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "document",
+      modelName: "Document",
     }
   );
-  // document.associate = function(models) {
-  //     // document.belongsTo(models.address, {
+  // Document.associate = function(models) {
+  //     // Document.belongsTo(models.address, {
   //     //     as: "address",
   //     //     foreignKey: "address_id"
   //     // })
 
   // }
-  return document;
+  return Document;
 };

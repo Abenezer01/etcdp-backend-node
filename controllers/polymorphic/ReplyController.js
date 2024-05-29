@@ -1,4 +1,4 @@
-const { reply, Sequelize } = require("../../models");
+const { Reply, Sequelize } = require("../../models");
 const usrData = require("../../utils/userDataFromToken");
 const actionHelper = require("../utils/action-helper");
 const Op = Sequelize.Op;
@@ -7,7 +7,7 @@ let self = {};
 
 self.getAll = async (req, res) => {
   try {
-    let data = await reply.findAll();
+    let data = await Reply.findAll();
     return res.status(200).json(data);
   } catch (error) {
     res.status(500).json({
@@ -19,7 +19,7 @@ self.getAll = async (req, res) => {
 self.get = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await reply.findOne({
+    let data = await Reply.findOne({
       where: {
         id: id,
       },
@@ -39,7 +39,7 @@ self.save = async (req, res) => {
     let usr = await usrData.userData(req, res);
     let body = req.body;
     if (usr) {
-      let data = await reply.create(body);
+      let data = await Reply.create(body);
       return res.json(data);
       data.creator_id = usr.usrID;
       await data.save();
@@ -47,7 +47,7 @@ self.save = async (req, res) => {
         let usrID = usr.usrID;
         await actionHelper.saveActionState(
           data.id,
-          "reply",
+          "Reply",
           "REGISTER",
           usrID,
           req,
@@ -67,7 +67,7 @@ self.update = async (req, res) => {
   try {
     let id = req.params.id;
     let body = req.body;
-    let data = await reply.update(body, {
+    let data = await Reply.update(body, {
       where: {
         id: id,
       },
@@ -83,7 +83,7 @@ self.update = async (req, res) => {
 self.delete = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await reply.destroy({
+    let data = await Reply.destroy({
       where: {
         id: id,
       },
@@ -99,7 +99,7 @@ self.delete = async (req, res) => {
 self.getActionReplies = async (req, res) => {
   let id = req.params.id;
   try {
-    let data = await reply.findAll({
+    let data = await Reply.findAll({
       where: {
         actionstate_id: id,
       },

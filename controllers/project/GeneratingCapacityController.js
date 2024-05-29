@@ -1,4 +1,4 @@
-const { generatingcapacity, Sequelize } = require("../../models");
+const { GeneratingCapacity, Sequelize } = require("../../models");
 const usrData = require("../../utils/userDataFromToken");
 const actionHelper = require("../utils/action-helper");
 const Op = Sequelize.Op;
@@ -17,7 +17,7 @@ self.getAll = async (req, res) => {
   const { limit, offset } = paginate.getPagination(page, size);
 
   try {
-    const { rows, count } = await generatingcapacity.findAndCountAll({
+    const { rows, count } = await GeneratingCapacity.findAndCountAll({
       limit,
       offset,
       order: [["createdAt", order]],
@@ -48,7 +48,7 @@ self.getByProjectId = async (req, res) => {
 
   const { limit, offset } = paginate.getPagination(page, size);
   try {
-    const data = await generatingcapacity.findAndCountAll({
+    const data = await GeneratingCapacity.findAndCountAll({
       limit,
       offset,
       where: { project_id: id },
@@ -67,7 +67,7 @@ self.getByProjectId = async (req, res) => {
 self.get = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await generatingcapacity.findOne({
+    let data = await GeneratingCapacity.findOne({
       where: {
         id: id,
       },
@@ -85,7 +85,7 @@ self.get = async (req, res) => {
 self.search = async (req, res) => {
   try {
     let text = req.query.text;
-    let data = await generatingcapacity.findAll({
+    let data = await GeneratingCapacity.findAll({
       where: {
         name: {
           [Op.like]: "%" + text + "%",
@@ -105,12 +105,12 @@ self.save = async (req, res) => {
     let usr = await usrData.userData(req, res);
     let body = req.body;
     if (usr) {
-      let data = await generatingcapacity.create(body);
+      let data = await GeneratingCapacity.create(body);
       if (data) {
         let usrID = usr.usrID;
         await actionHelper.saveActionState(
           data.id,
-          "generatingcapacity",
+          "GeneratingCapacity",
           "REGISTER",
           usrID,
           req,
@@ -130,7 +130,7 @@ self.update = async (req, res) => {
   try {
     let id = req.params.id;
     let body = req.body;
-    let data = await generatingcapacity.update(body, {
+    let data = await GeneratingCapacity.update(body, {
       where: {
         id: id,
       },
@@ -148,7 +148,7 @@ self.update = async (req, res) => {
 self.delete = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await generatingcapacity.destroy({
+    let data = await GeneratingCapacity.destroy({
       where: {
         id: id,
       },

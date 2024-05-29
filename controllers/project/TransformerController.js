@@ -1,5 +1,5 @@
 const actionHelper = require("../utils/action-helper");
-const { transformer, transformertype, Sequelize } = require("./../../models");
+const { Transformer, TransformerType, Sequelize } = require("./../../models");
 const usrData = require("../../utils/userDataFromToken");
 const Op = Sequelize.Op;
 const paginate = require("../../utils/pagination");
@@ -17,7 +17,7 @@ self.getAll = async (req, res) => {
   const { limit, offset } = paginate.getPagination(page, size);
 
   try {
-    const { rows, count } = await transformer.findAndCountAll({
+    const { rows, count } = await Transformer.findAndCountAll({
       limit,
       offset,
       order: [["createdAt", order]],
@@ -49,14 +49,14 @@ self.getByProjectId = async (req, res) => {
   const { limit, offset } = paginate.getPagination(page, size);
 
   try {
-    const data = await transformer.findAndCountAll({
+    const data = await Transformer.findAndCountAll({
       limit,
       offset,
       where: { project_id: id },
       order: [["createdAt", order]],
       include: {
-        model: transformertype,
-        as: "transformertype",
+        model: TransformerType,
+        as: "TransformerType",
         attributes: ["id", "name"],
       },
     });
@@ -73,7 +73,7 @@ self.getByProjectId = async (req, res) => {
 self.get = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await transformer.findOne({
+    let data = await Transformer.findOne({
       where: {
         id: id,
       },
@@ -89,7 +89,7 @@ self.get = async (req, res) => {
 self.search = async (req, res) => {
   try {
     let text = req.query.text;
-    let data = await transformer.findAll({
+    let data = await Transformer.findAll({
       where: {
         name: {
           [Op.like]: "%" + text + "%",
@@ -109,12 +109,12 @@ self.save = async (req, res) => {
     let usr = await usrData.userData(req, res);
     let body = req.body;
     if (usr) {
-      let data = await transformer.create(body);
+      let data = await Transformer.create(body);
       if (data) {
         let usrID = usr.usrID;
         await actionHelper.saveActionState(
           data.id,
-          "transformer",
+          "Transformer",
           "REGISTER",
           usrID,
           req,
@@ -134,7 +134,7 @@ self.update = async (req, res) => {
   try {
     let id = req.params.id;
     let body = req.body;
-    let data = await transformer.update(body, {
+    let data = await Transformer.update(body, {
       where: {
         id: id,
       },
@@ -150,7 +150,7 @@ self.update = async (req, res) => {
 self.delete = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await transformer.destroy({
+    let data = await Transformer.destroy({
       where: {
         id: id,
       },

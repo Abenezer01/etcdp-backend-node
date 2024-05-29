@@ -1,8 +1,8 @@
 const {
-  projectreport,
-  projectplan,
-  file,
-  monthlyreport,
+  ProjectReport,
+  ProjectPlan,
+  File,
+  MonthlyReport,
   Sequelize,
 } = require("../../models");
 const usrData = require("../../utils/userDataFromToken");
@@ -22,12 +22,12 @@ self.getAll = async (req, res) => {
     order = process.env.order;
   }
   const { limit, offset } = paginate.getPagination(page, size);
-  projectreport
+  ProjectReport
     .findAndCountAll({
       limit,
       offset,
       order: [["createdAt", order]],
-      include: ["projectplan"],
+      include: ["ProjectPlan"],
     })
     .then((data) => {
       const response = paginate.getPagingData(data, page, limit);
@@ -43,7 +43,7 @@ self.getAll = async (req, res) => {
 self.get = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await projectreport.findOne({
+    let data = await ProjectReport.findOne({
       where: {
         id: id,
       },
@@ -68,7 +68,7 @@ self.getByProjectId = async (req, res) => {
     order = process.env.order;
   }
   const { limit, offset } = paginate.getPagination(page, size);
-  projectreport
+  ProjectReport
     .findAndCountAll({
       limit,
       offset,
@@ -101,13 +101,13 @@ self.getByProjectIdAndPopulate = async (req, res) => {
 
   const { limit, offset } = paginate.getPagination(page, size);
   try {
-    const data = await projectreport.findAndCountAll({
+    const data = await ProjectReport.findAndCountAll({
       limit,
       offset,
       where: { project_id: id },
       order: [["createdAt", order]],
 
-      include: ["projectplan"],
+      include: ["ProjectPlan"],
     });
     let totalReportProfitOrLoss = 0;
     let totalReportProjectExpense = 0;
@@ -142,7 +142,7 @@ self.getByProjectIdAndPopulate = async (req, res) => {
     let arr = [];
 
     data.rows.forEach((item) => {
-      console.log("Parse", Number(item.projectplan.sub_total_expense));
+      console.log("Parse", Number(item.ProjectPlan.sub_total_expense));
       //Report
       totalReportProfitOrLoss += Number(item.profit_or_loss);
       totalReportProjectExpense += Number(item.projectexpense);
@@ -159,20 +159,20 @@ self.getByProjectIdAndPopulate = async (req, res) => {
       totalReportCostDueToRework += item.cost_due_to_rework;
       totalReportoverHeadCost += item.over_head_cost;
       //Plan
-      totalPlanProfitOrLoss += item.projectplan.profit_or_loss;
-      totalPlanProjectExpense += item.projectplan.projectexpense;
-      totalPlanSubtotalExpense += Number(item.projectplan.sub_total_expense);
-      totalPlanManPower += item.projectplan.manpower;
-      totalPlanDirectLabour += item.projectplan.direct_labour;
-      totalPlanIndirectLabour += item.projectplan.indirect_labour;
-      totalPlanMaterial += item.projectplan.material;
-      totalPlanMachinery += item.projectplan.machinery;
-      totalPlanOtherExpense += item.projectplan.other_expense;
-      totalPlanSubContractorCost += item.projectplan.sub_contractor_cost;
-      totalPlanFinancialPerformance += item.projectplan.financial_performance;
-      totalPlanPhysicalPerformance += item.projectplan.physical_performance;
-      totalPlanCostDueToRework += item.projectplan.cost_due_to_rework;
-      totalPlanoverHeadCost += item.projectplan.over_head_cost;
+      totalPlanProfitOrLoss += item.ProjectPlan.profit_or_loss;
+      totalPlanProjectExpense += item.ProjectPlan.projectexpense;
+      totalPlanSubtotalExpense += Number(item.ProjectPlan.sub_total_expense);
+      totalPlanManPower += item.ProjectPlan.manpower;
+      totalPlanDirectLabour += item.ProjectPlan.direct_labour;
+      totalPlanIndirectLabour += item.ProjectPlan.indirect_labour;
+      totalPlanMaterial += item.ProjectPlan.material;
+      totalPlanMachinery += item.ProjectPlan.machinery;
+      totalPlanOtherExpense += item.ProjectPlan.other_expense;
+      totalPlanSubContractorCost += item.ProjectPlan.sub_contractor_cost;
+      totalPlanFinancialPerformance += item.ProjectPlan.financial_performance;
+      totalPlanPhysicalPerformance += item.ProjectPlan.physical_performance;
+      totalPlanCostDueToRework += item.ProjectPlan.cost_due_to_rework;
+      totalPlanoverHeadCost += item.ProjectPlan.over_head_cost;
     });
     //return res.send(totalProfitOrLoss)
     // arr.forEach((item) => {
@@ -226,7 +226,7 @@ self.getByProjectIdAndPopulate = async (req, res) => {
 self.getByMonthlyId = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await projectreport.findOne({
+    let data = await ProjectReport.findOne({
       where: {
         monthlyreport_id: id,
       },
@@ -243,7 +243,7 @@ self.getByMonthlyId = async (req, res) => {
 self.search = async (req, res) => {
   try {
     let text = req.query.text;
-    let data = await projectreport.findAll({
+    let data = await ProjectReport.findAll({
       where: {
         name: {
           [Op.like]: "%" + text + "%",
@@ -266,7 +266,7 @@ self.save = async (req, res) => {
     var lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
     body.end = lastDay;
     if (usr) {
-      let plan = await projectplan.findOne({
+      let plan = await ProjectPlan.findOne({
         where: {
           id: body.projectplan_id,
         },
@@ -276,13 +276,13 @@ self.save = async (req, res) => {
           message: "Plan doesn't exist!",
         });
       }
-      let data = await projectreport.create(body);
+      let data = await ProjectReport.create(body);
 
       if (data) {
         let usrID = usr.usrID;
         await actionHelper.saveActionState(
           data.id,
-          "projectreport",
+          "ProjectReport",
           "REGISTER",
           usrID,
           req,
@@ -331,7 +331,7 @@ self.update = async (req, res) => {
   try {
     let id = req.params.id;
     let body = req.body;
-    let data = await projectreport.update(body, {
+    let data = await ProjectReport.update(body, {
       where: {
         id: id,
       },
@@ -349,7 +349,7 @@ self.update = async (req, res) => {
 self.delete = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await projectreport.destroy({
+    let data = await ProjectReport.destroy({
       where: {
         id: id,
       },
@@ -372,7 +372,7 @@ self.getMonthlyProjectReport = async (req, res) => {
     let report = null;
     let usr = await usrData.userData(req, res);
 
-    let plan = await projectplan.findOne({
+    let plan = await ProjectPlan.findOne({
       where: {
         project_id: id,
         year: year,
@@ -389,7 +389,7 @@ self.getMonthlyProjectReport = async (req, res) => {
         message: "There is no plan data",
       });
     } else {
-      data = await monthlyreport.findOne({
+      data = await MonthlyReport.findOne({
         where: {
           project_id: id,
           year: year,
@@ -398,13 +398,13 @@ self.getMonthlyProjectReport = async (req, res) => {
       });
 
       if (!data) {
-        data = await monthlyreport.create({
+        data = await MonthlyReport.create({
           project_id: id,
           year: year,
           quarter: quarter,
         });
 
-        report = await projectreport.findOne({
+        report = await ProjectReport.findOne({
           where: {
             projectplan_id: data.id,
           },
@@ -412,7 +412,7 @@ self.getMonthlyProjectReport = async (req, res) => {
 
         await actionHelper.saveActionState(
           data.id,
-          "monthlyreport",
+          "MonthlyReport",
           "REGISTER",
           usr.usrID,
           req,
@@ -420,7 +420,7 @@ self.getMonthlyProjectReport = async (req, res) => {
         );
       }
 
-      report = await projectreport.findOne({
+      report = await ProjectReport.findOne({
         where: {
           projectplan_id: plan.id,
         },
@@ -446,7 +446,7 @@ self.getMonthlyProjectReport = async (req, res) => {
 self.getProjectYearlyReports = async (req, res) => {
   const { id, year } = req.params;
   try {
-    let reports = await projectreport.findAll({
+    let reports = await ProjectReport.findAll({
       where: {
         project_id: id,
         year: year,

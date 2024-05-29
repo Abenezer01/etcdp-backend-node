@@ -1,5 +1,5 @@
 const actionHelper = require("../utils/action-helper");
-const { port, Sequelize } = require("../../models");
+const { Port, Sequelize } = require("../../models");
 const usrData = require("../../utils/userDataFromToken");
 const dotenv = require("dotenv");
 dotenv.config();
@@ -18,7 +18,7 @@ self.getAll = async (req, res) => {
   const { limit, offset } = paginate.getPagination(page, size);
 
   try {
-    const { rows, count } = await port.findAndCountAll({
+    const { rows, count } = await Port.findAndCountAll({
       limit,
       offset,
       order: [["createdAt", order]],
@@ -49,7 +49,7 @@ self.getByProjectId = async (req, res) => {
 
   const { limit, offset } = paginate.getPagination(page, size);
   try {
-    const data = await port.findAndCountAll({
+    const data = await Port.findAndCountAll({
       limit,
       offset,
       where: { project_id: id },
@@ -68,7 +68,7 @@ self.getByProjectId = async (req, res) => {
 self.get = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await port.findOne({
+    let data = await Port.findOne({
       where: {
         id: id,
       },
@@ -84,7 +84,7 @@ self.get = async (req, res) => {
 self.search = async (req, res) => {
   try {
     let text = req.query.text;
-    let data = await port.findAll({
+    let data = await Port.findAll({
       where: {
         name: {
           [Op.like]: "%" + text + "%",
@@ -104,12 +104,12 @@ self.save = async (req, res) => {
     let usr = await usrData.userData(req, res);
     let body = req.body;
     if (usr) {
-      let data = await port.create(body);
+      let data = await Port.create(body);
       if (data) {
         let usrID = usr.usrID;
         await actionHelper.saveActionState(
           data.id,
-          "port",
+          "Port",
           "REGISTER",
           usrID,
           req,
@@ -128,7 +128,7 @@ self.update = async (req, res) => {
   try {
     let id = req.params.id;
     let body = req.body;
-    let data = await port.update(body, {
+    let data = await Port.update(body, {
       where: {
         id: id,
       },
@@ -144,7 +144,7 @@ self.update = async (req, res) => {
 self.delete = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await port.destroy({
+    let data = await Port.destroy({
       where: {
         id: id,
       },

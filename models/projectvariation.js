@@ -1,7 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-    class projectvariation extends Model {
+    class ProjectVariation extends Model {
         /**
          * Helper method for defining associations.
          * This method is not a part of Sequelize lifecycle.
@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
             // define association here
         }
     }
-    projectvariation.init({
+    ProjectVariation.init({
         id: {
             type: DataTypes.UUID,
             primaryKey: true,
@@ -32,7 +32,7 @@ module.exports = (sequelize, DataTypes) => {
         revision_no: DataTypes.INTEGER,
     }, {
         sequelize,
-        modelName: "projectvariation",
+        modelName: "ProjectVariation",
     });
-    return projectvariation;
+    return ProjectVariation;
 };

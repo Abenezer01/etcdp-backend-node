@@ -1,4 +1,4 @@
-const { permission, positionpermission, Sequelize } = require("../../models");
+const { Permission, PositionPermission, Sequelize } = require("../../models");
 const actionHelper = require("../utils/action-helper");
 const usrData = require("../../utils/userDataFromToken");
 const Op = Sequelize.Op;
@@ -8,7 +8,7 @@ let self = {};
 
 self.getAll = async (req, res) => {
   try {
-    let data = await permission.findAll();
+    let data = await Permission.findAll();
     return res.json(data);
   } catch (error) {
     res.status(500).json({
@@ -20,7 +20,7 @@ self.getAll = async (req, res) => {
 self.get = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await permission.findOne({
+    let data = await Permission.findOne({
       where: {
         id: id,
       },
@@ -29,7 +29,7 @@ self.get = async (req, res) => {
       let usr = await usrData.userData(req, res);
       await actionHelper.saveActionState(
         data.id,
-        "permission",
+        "Permission",
         "REGISTER",
         usr.usrID,
         req,
@@ -49,7 +49,7 @@ self.get = async (req, res) => {
 self.search = async (req, res) => {
   try {
     let text = req.query.text;
-    let data = await permission.findAll({
+    let data = await Permission.findAll({
       where: {
         name: {
           [Op.like]: "%" + text + "%",
@@ -67,12 +67,12 @@ self.search = async (req, res) => {
 self.save = async (req, res) => {
   try {
     let body = req.body;
-    let data = await permission.create(body);
+    let data = await Permission.create(body);
     if (data) {
       let usr = await usrData.userData(req, res);
       actionHelper.saveActionState(
         data.id,
-        "permission",
+        "Permission",
         "REGISTER",
         usr.usrID,
         req,
@@ -91,7 +91,7 @@ self.update = async (req, res) => {
   try {
     let id = req.params.id;
     let body = req.body;
-    let data = await permission.update(body, {
+    let data = await Permission.update(body, {
       where: {
         id: id,
       },
@@ -107,7 +107,7 @@ self.update = async (req, res) => {
 self.delete = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await permission.destroy({
+    let data = await Permission.destroy({
       where: {
         id: id,
       },
@@ -134,7 +134,7 @@ self.getModels = async (req, res) => {
 self.getPermissionsByModule = async (req, res) => {
   try {
     let module = req.params.module;
-    let data = await permission.findAll({
+    let data = await Permission.findAll({
       where: {
         module: module,
       },
@@ -152,12 +152,12 @@ self.getGroupedPermissions = async (req, res) => {
 
   try {
     const [rolePos, ePermissions] = await Promise.all([
-      positionpermission.findAll({ where: { position_id: id } }),
-      permission.findAll({ where: { module: module } }),
+      PositionPermission.findAll({ where: { position_id: id } }),
+      Permission.findAll({ where: { module: module } }),
     ]);
 
     if (ePermissions.length == 0) {
-      //if no permission under this module doesnt exist
+      //if no Permission under this module doesnt exist
       //return empty array []
       return res.json([]);
     }
@@ -193,7 +193,7 @@ self.getGroupedPermissions = async (req, res) => {
 
     let arr = [];
 
-    let pers = await permission.findAll({
+    let pers = await Permission.findAll({
       where: {
         module: module,
       },
@@ -263,7 +263,7 @@ self.getPermissionsByAction = async (req, res) => {
   const { id, action } = req.params;
 
   try {
-    const ePermissions = await permission.findAll({
+    const ePermissions = await Permission.findAll({
       where: {
         name: {
           [Op.like]: `%${action}%`,
@@ -281,7 +281,7 @@ self.getPermissionsByAction = async (req, res) => {
           ePermissions
             .filter((per) => per.category === cat)
             .map(async (per) => {
-              const pos = await positionpermission.findOne({
+              const pos = await PositionPermission.findOne({
                 where: {
                   position_id: id,
                   permission_id: per.id,
@@ -318,28 +318,28 @@ self.assignPositionPermissions = async (req, res) => {
     let data = [];
     for (let per of permissions) {
       if (per.is_selected) {
-        let exists = await positionpermission.findOne({
+        let exists = await PositionPermission.findOne({
           where: {
             position_id: per.position_id,
             permission_id: per.id,
           },
         });
         if (!exists) {
-          let temp = await positionpermission.create({
+          let temp = await PositionPermission.create({
             position_id: per.position_id,
             permission_id: per.id,
           });
           data.push(temp);
         }
       } else {
-        let exists = await positionpermission.findOne({
+        let exists = await PositionPermission.findOne({
           where: {
             position_id: per.position_id,
             permission_id: per.id,
           },
         });
         if (exists) {
-          let temp = await positionpermission.delete({
+          let temp = await PositionPermission.delete({
             where: {
               id: exists.id,
             },
@@ -360,7 +360,7 @@ self.assignPositionPermissions = async (req, res) => {
 self.getUserPermission = async (req, res) => {
   try {
     const usr = await usrData.userData(req, res);
-    const positionpermissions = await positionpermission.findAll({
+    const positionpermissions = await PositionPermission.findAll({
       where: {
         position_id: usr.position_id,
       },
@@ -368,7 +368,7 @@ self.getUserPermission = async (req, res) => {
 
     const perArr = await Promise.all(
       positionpermissions.map(async (posper) => {
-        const data = await permission.findOne({
+        const data = await Permission.findOne({
           where: {
             id: posper.permission_id,
           },
@@ -387,7 +387,7 @@ self.getUserPermission = async (req, res) => {
     return res.json(filteredArr);
 
     // let usr = await usrData.userData(req, res)
-    // let positionpermissions = await positionpermission.findAll({
+    // let positionpermissions = await PositionPermission.findAll({
     //     where:{
     //         position_id: usr.position_id
     //     }
@@ -395,7 +395,7 @@ self.getUserPermission = async (req, res) => {
 
     // let perArr = []
     // for(let posper of positionpermissions){
-    //     let data = await permission.findOne({
+    //     let data = await Permission.findOne({
     //         where: {
     //             id: posper.permission_id
     //         }
@@ -420,7 +420,7 @@ self.initPermission = async (req, res) => {
     for (const action of actions) {
       for (const module of permissionModules) {
         permissionPromises.push(
-          permission.create({
+          Permission.create({
             name: `${action}_${module}`,
             module: module,
             category: "CENTER",

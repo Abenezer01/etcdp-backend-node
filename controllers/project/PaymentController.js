@@ -1,4 +1,4 @@
-const { payment, Sequelize } = require("../../models");
+const { Payment, Sequelize } = require("../../models");
 const usrData = require("../../utils/userDataFromToken");
 const actionHelper = require("../utils/action-helper");
 const Op = Sequelize.Op;
@@ -17,7 +17,7 @@ self.getAll = async (req, res) => {
   const { limit, offset } = paginate.getPagination(page, size);
 
   try {
-    const { rows, count } = await payment.findAndCountAll({
+    const { rows, count } = await Payment.findAndCountAll({
       limit,
       offset,
       order: [["createdAt", order]],
@@ -48,7 +48,7 @@ self.getByProjectId = async (req, res) => {
 
   const { limit, offset } = paginate.getPagination(page, size);
   try {
-    const data = await payment.findAndCountAll({
+    const data = await Payment.findAndCountAll({
       limit,
       offset,
       where: { project_id: id },
@@ -75,7 +75,7 @@ self.getByProjectIdAndType = async (req, res) => {
   const { limit, offset } = paginate.getPagination(page, size);
 
   try {
-    const { rows, count } = await payment.findAndCountAll({
+    const { rows, count } = await Payment.findAndCountAll({
       limit,
       offset,
       order: [["createdAt", order]],
@@ -102,7 +102,7 @@ self.getByProjectIdAndType = async (req, res) => {
 self.get = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await payment.findOne({
+    let data = await Payment.findOne({
       where: {
         id: id,
       },
@@ -120,7 +120,7 @@ self.get = async (req, res) => {
 self.search = async (req, res) => {
   try {
     let text = req.query.text;
-    let data = await payment.findAll({
+    let data = await Payment.findAll({
       where: {
         name: {
           [Op.like]: "%" + text + "%",
@@ -140,12 +140,12 @@ self.save = async (req, res) => {
     let usr = await usrData.userData(req, res);
     let body = req.body;
     if (usr) {
-      let data = await payment.create(body);
+      let data = await Payment.create(body);
       if (data) {
         let usrID = usr.usrID;
         await actionHelper.saveActionState(
           data.id,
-          "payment",
+          "Payment",
           "REGISTER",
           usrID,
           req,
@@ -165,7 +165,7 @@ self.update = async (req, res) => {
   try {
     let id = req.params.id;
     let body = req.body;
-    let data = await payment.update(body, {
+    let data = await Payment.update(body, {
       where: {
         id: id,
       },
@@ -183,7 +183,7 @@ self.update = async (req, res) => {
 self.delete = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await payment.destroy({
+    let data = await Payment.destroy({
       where: {
         id: id,
       },

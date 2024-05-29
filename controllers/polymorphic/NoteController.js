@@ -1,4 +1,4 @@
-const { note, Sequelize } = require("../../models");
+const { Note, Sequelize } = require("../../models");
 const usrData = require("../../utils/userDataFromToken");
 const actionHelper = require("../utils/action-helper");
 const Op = Sequelize.Op;
@@ -7,7 +7,7 @@ let self = {};
 
 self.getAll = async (req, res) => {
   try {
-    let data = await note.findAll();
+    let data = await Note.findAll();
     return res.status(200).json(data);
   } catch (error) {
     res.status(500).json({
@@ -19,7 +19,7 @@ self.getAll = async (req, res) => {
 self.get = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await note.findOne({
+    let data = await Note.findOne({
       where: {
         id: id,
       },
@@ -39,14 +39,14 @@ self.save = async (req, res) => {
     let usr = await usrData.userData(req, res);
     let body = req.body;
     if (usr) {
-      let data = await note.create(body);
+      let data = await Note.create(body);
       data.user_id = usr.usrID;
       await data.save();
       if (data) {
         let usrID = usr.usrID;
         await actionHelper.saveActionState(
           data.id,
-          "note",
+          "Note",
           "REGISTER",
           usrID,
           req,
@@ -66,7 +66,7 @@ self.update = async (req, res) => {
   try {
     let id = req.params.id;
     let body = req.body;
-    let data = await note.update(body, {
+    let data = await Note.update(body, {
       where: {
         id: id,
       },
@@ -82,7 +82,7 @@ self.update = async (req, res) => {
 self.delete = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await note.destroy({
+    let data = await Note.destroy({
       where: {
         id: id,
       },
@@ -98,7 +98,7 @@ self.delete = async (req, res) => {
 self.getNoteByModelId = async (req, res) => {
   let id = req.params.id;
   try {
-    let data = await note.findAll({
+    let data = await Note.findAll({
       // include: [
       // 	{
       // 		model: file,

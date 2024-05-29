@@ -1,4 +1,4 @@
-const { resourcebrand, Sequelize } = require("../../models");
+const { ResourceBrand, Sequelize } = require("../../models");
 const usrData = require("../../utils/userDataFromToken");
 const actionHelper = require("../utils/action-helper");
 const Op = Sequelize.Op;
@@ -19,7 +19,7 @@ self.getAll = async (req, res) => {
   const { limit, offset } = paginate.getPagination(page, size);
 
   try {
-    const { rows, count } = await resourcebrand.findAndCountAll({
+    const { rows, count } = await ResourceBrand.findAndCountAll({
       limit,
       offset,
       order: [["createdAt", order]],
@@ -44,7 +44,7 @@ self.getAll = async (req, res) => {
 self.get = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await resourcebrand.findOne({
+    let data = await ResourceBrand.findOne({
       where: {
         id: id,
       },
@@ -73,7 +73,7 @@ self.getByResourceId = async (req, res) => {
   }
 
   try {
-    const { count, rows } = await resourcebrand.findAndCountAll({
+    const { count, rows } = await ResourceBrand.findAndCountAll({
       limit,
       offset,
       where: { resource_id: id },
@@ -102,7 +102,7 @@ self.getByResourceId = async (req, res) => {
 self.search = async (req, res) => {
   try {
     let text = req.query.text;
-    let data = await resourcebrand.findAll({
+    let data = await ResourceBrand.findAll({
       where: {
         name: {
           [Op.like]: "%" + text + "%",
@@ -132,7 +132,7 @@ self.save = async (req, res) => {
       const filePath = path.join(
         __dirname,
         "../../public",
-        "images/resourcebrand",
+        "images/ResourceBrand",
         checkedNew + "." + `${ext}`
       );
       console.log("The file path is ", filePath);
@@ -148,7 +148,7 @@ self.save = async (req, res) => {
     }
 
     if (usr) {
-      let data = await resourcebrand.create(body);
+      let data = await ResourceBrand.create(body);
       if (data) {
         if (pat) {
           const filee = req.files.image;
@@ -160,7 +160,7 @@ self.save = async (req, res) => {
         let us = usr.usrID;
         await actionHelper.saveActionState(
           data.id,
-          "resourcebrand",
+          "ResourceBrand",
           "REGISTER",
           us,
           req,
@@ -179,7 +179,7 @@ self.save = async (req, res) => {
 self.getImage = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await resourcebrand.findOne({
+    let data = await ResourceBrand.findOne({
       where: {
         id: id,
       },
@@ -208,14 +208,14 @@ self.update = async (req, res) => {
         const checkedNew = parsedName.concat(rand);
         const filePath = path.join(
           __dirname,
-          "../../public/images/resourcebrand",
+          "../../public/images/ResourceBrand",
           checkedNew + "." + ext
         );
         const filePathh = filePath.split("public").pop();
         body.image = filePathh;
         await file.mv(filePath);
 
-        const data = await resourcebrand.findOne({ where: { id } });
+        const data = await ResourceBrand.findOne({ where: { id } });
         if (data.image) {
           const fc = path.join(__dirname, "../../public", data.image);
           if (fs.existsSync(fc)) {
@@ -229,7 +229,7 @@ self.update = async (req, res) => {
         }
       }
 
-      await resourcebrand.update(body, { where: { id } });
+      await ResourceBrand.update(body, { where: { id } });
       return res.json({ message: "Success" });
     }
   } catch (error) {
@@ -251,7 +251,7 @@ self.update = async (req, res) => {
 //             var name = req.files.image.name;
 //             let parsedName = path.parse(name).name;
 //             checkedNew = parsedName.concat(rand);
-//             const filePath = path.join(__dirname, '../../public', 'images/resourcebrand', checkedNew + '.' +
+//             const filePath = path.join(__dirname, '../../public', 'images/ResourceBrand', checkedNew + '.' +
 //                 `${ext}`)
 //             console.log("The file path is ", filePath)
 //             var filePathh = filePath.split("public").pop();
@@ -268,7 +268,7 @@ self.update = async (req, res) => {
 //         if (usr) {
 //             if (pat) {
 //                 const filee = req.files.image
-//                 let data = await resourcebrand.findOne({
+//                 let data = await ResourceBrand.findOne({
 //                     where: {
 //                         id: id
 //                     },
@@ -293,7 +293,7 @@ self.update = async (req, res) => {
 //                         // res.redirect('/')
 //                 })
 //             }
-//             let data = await resourcebrand.update(body, {
+//             let data = await ResourceBrand.update(body, {
 //                 where: {
 //                     id: id
 //                 },
@@ -310,7 +310,7 @@ self.update = async (req, res) => {
 self.delete = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await resourcebrand.destroy({
+    let data = await ResourceBrand.destroy({
       where: {
         id: id,
       },

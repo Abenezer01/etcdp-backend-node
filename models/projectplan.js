@@ -2,7 +2,7 @@
 const { Model } = require("sequelize");
 
 module.exports = (sequelize, DataTypes) => {
-    class projectplan extends Model {
+    class ProjectPlan extends Model {
         /**
          * Helper method for defining associations.
          * This method is not a part of Sequelize lifecycle.
@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
             // define association here
         }
     }
-    projectplan.init({
+    ProjectPlan.init({
         id: {
             type: DataTypes.UUID,
             primaryKey: true,
@@ -92,20 +92,20 @@ module.exports = (sequelize, DataTypes) => {
         },
     }, {
         sequelize,
-        modelName: "projectplan",
+        modelName: "ProjectPlan",
     });
-    projectplan.associate = function(models) {
+    ProjectPlan.associate = function(models) {
         // associations can be defined here
-        projectplan.belongsTo(models.file, {
+        ProjectPlan.belongsTo(models.file, {
             as: "file",
             foreignKey: "file_id",
         });
 
-        projectplan.hasMany(models.actionstate, {
+        ProjectPlan.hasMany(models.actionstate, {
             as: "action",
             foreignKey: "model_id"
         })
     };
 
-    return projectplan;
+    return ProjectPlan;
 };

@@ -1,5 +1,5 @@
 const actionHelper = require("../utils/action-helper");
-const { roadinfo, Sequelize } = require("./../../models");
+const { RoadInfo, Sequelize } = require("./../../models");
 const usrData = require("../../utils/userDataFromToken");
 const paginate = require("../../utils/pagination");
 const Op = Sequelize.Op;
@@ -17,7 +17,7 @@ self.getAll = async (req, res) => {
   const { limit, offset } = paginate.getPagination(page, size);
 
   try {
-    const { rows, count } = await roadinfo.findAndCountAll({
+    const { rows, count } = await RoadInfo.findAndCountAll({
       limit,
       offset,
       order: [["createdAt", order]],
@@ -48,7 +48,7 @@ self.getByProjectId = async (req, res) => {
 
   const { limit, offset } = paginate.getPagination(page, size);
   try {
-    const data = await roadinfo.findAndCountAll({
+    const data = await RoadInfo.findAndCountAll({
       limit,
       offset,
       where: { project_id: id },
@@ -66,7 +66,7 @@ self.getByProjectId = async (req, res) => {
 self.get = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await roadinfo.findOne({
+    let data = await RoadInfo.findOne({
       where: {
         id: id,
       },
@@ -82,7 +82,7 @@ self.get = async (req, res) => {
 self.search = async (req, res) => {
   try {
     let text = req.query.text;
-    let data = await roadinfo.findAll({
+    let data = await RoadInfo.findAll({
       where: {
         name: {
           [Op.like]: "%" + text + "%",
@@ -102,7 +102,7 @@ self.save = async (req, res) => {
     let usr = await usrData.userData(req, res);
     let body = req.body;
     if (usr) {
-      let data = await roadinfo.create(body);
+      let data = await RoadInfo.create(body);
       if (data) {
         let usrID = usr.usrID;
         await actionHelper.saveActionState(
@@ -126,7 +126,7 @@ self.update = async (req, res) => {
   try {
     let id = req.params.id;
     let body = req.body;
-    let data = await roadinfo.update(body, {
+    let data = await RoadInfo.update(body, {
       where: {
         id: id,
       },
@@ -142,7 +142,7 @@ self.update = async (req, res) => {
 self.delete = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await roadinfo.destroy({
+    let data = await RoadInfo.destroy({
       where: {
         id: id,
       },

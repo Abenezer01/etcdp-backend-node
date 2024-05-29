@@ -1,7 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-  class resource extends Model {
+  class Resource extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -9,24 +9,24 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      resource.belongsTo(models.image, {
+      Resource.belongsTo(models.image, {
         foreignKey: "image_id",
       });
-      resource.belongsTo(models.resourcetype, {
+      Resource.belongsTo(models.resourcetype, {
         as: "resourcetype",
         foreignKey: "resourcetype_id",
       });
-      resource.belongsTo(models.resourcecategory, {
+      Resource.belongsTo(models.resourcecategory, {
         as: "resourcecategory",
         foreignKey: "resourcecategory_id",
       });
-      resource.belongsTo(models.resourcesubcategory, {
+      Resource.belongsTo(models.resourcesubcategory, {
         as: "resourcesubcategory",
         foreignKey: "resourcesubcategory_id",
       });
     }
   }
-  resource.init(
+  Resource.init(
     {
       id: {
         type: DataTypes.UUID,
@@ -46,14 +46,14 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "resource",
+      modelName: "Resource",
     }
   );
-  resource.associate = function (models) {
-    resource.belongsTo(models.department, {
+  Resource.associate = function (models) {
+    Resource.belongsTo(models.department, {
       as: "department",
       foreignKey: "department_id",
     });
   };
-  return resource;
+  return Resource;
 };

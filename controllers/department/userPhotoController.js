@@ -1,4 +1,4 @@
-const { photo, User, Sequelize } = require("../../models");
+const { Photo, User, Sequelize } = require("../../models");
 const path = require("path");
 
 const fs = require("fs");
@@ -13,7 +13,7 @@ let self = {};
 
 self.getAll = async (req, res) => {
   try {
-    let data = await photo.findAll();
+    let data = await Photo.findAll();
     return res.status(200).json({
       data,
     });
@@ -32,7 +32,7 @@ self.getAll = async (req, res) => {
 self.get = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await photo.findOne({
+    let data = await Photo.findOne({
       where: {
         id: id,
       },
@@ -50,7 +50,7 @@ self.get = async (req, res) => {
 self.search = async (req, res) => {
   try {
     let text = req.query.text;
-    let data = await photo.findAll({
+    let data = await Photo.findAll({
       where: {
         name: {
           [Op.like]: "%" + text + "%",
@@ -90,7 +90,7 @@ self.save = async (req, res) => {
     const filePath = path.join(
       __dirname,
       "../../public",
-      "images/user photo",
+      "images/user Photo",
       checkedNew + "." + `${ext}`
     );
     //console.log("The file path is ", filePath)
@@ -99,12 +99,12 @@ self.save = async (req, res) => {
     //console.log("The rand is: ", rand)
     let photoData;
     photoo = { url: filePathh, type: "USER", model_id: id };
-    photoData = await photo.create(photoo);
+    photoData = await Photo.create(photoo);
     if (photoData) {
       let usrID = usr.usrID;
       actionHelper.saveActionState(
         photoData.id,
-        "photo",
+        "Photo",
         "REGISTER",
         usrID,
         req,
@@ -116,7 +116,7 @@ self.save = async (req, res) => {
       // res.redirect('/')
     });
 
-    console.log("The photo id is: ", photoData.id);
+    console.log("The Photo id is: ", photoData.id);
     await User.update(
       {
         photo_id: photoData.id,
@@ -145,7 +145,7 @@ self.getUserPhoto = async (req, res) => {
         id: id,
       },
     });
-    let img = await photo.findOne({
+    let img = await Photo.findOne({
       where: {
         model_id: id,
       },
@@ -174,17 +174,17 @@ self.update = async (req, res) => {
       attributes: ["photo_id"],
       include: [
         {
-          model: photo,
-          as: "photo",
+          model: Photo,
+          as: "Photo",
         },
       ],
       where: {
         id: id,
       },
     });
-    if (userData.photo.avatar) {
-      if (fs.existsSync(userData.photo.avatar)) {
-        fs.unlink(userData.photo.avatar, (err) => {
+    if (userData.Photo.avatar) {
+      if (fs.existsSync(userData.Photo.avatar)) {
+        fs.unlink(userData.Photo.avatar, (err) => {
           if (err) {
             throw err;
           }
@@ -198,7 +198,7 @@ self.update = async (req, res) => {
     const filePath = path.join(
       __dirname,
       "../../public",
-      "images/user photo",
+      "images/user Photo",
       rand + "." + `${ext}`
     );
     //console.log("The file path is ", filePath)
@@ -207,7 +207,7 @@ self.update = async (req, res) => {
       if (err) return res.status(500).send(err);
       // res.redirect('/')
     });
-    await photo.update(
+    await Photo.update(
       {
         avatar: filePath,
       },
@@ -228,7 +228,7 @@ self.update = async (req, res) => {
 self.delete = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await photo.destroy({
+    let data = await Photo.destroy({
       where: {
         id: id,
       },

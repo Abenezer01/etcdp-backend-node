@@ -1,7 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-  class resourcequantityandprice extends Model {
+  class ResourceQuantityAndPrice extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -9,15 +9,15 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      resourcequantityandprice.belongsTo(models.detailresourcetype, {
+      ResourceQuantityAndPrice.belongsTo(models.detailresourcetype, {
         foreignKey: "detailresourcetype_id",
       });
-      resourcequantityandprice.belongsTo(models.resourcebrand, {
+      ResourceQuantityAndPrice.belongsTo(models.resourcebrand, {
         foreignKey: "resourcebrand_id",
       });
     }
   }
-  resourcequantityandprice.init(
+  ResourceQuantityAndPrice.init(
     {
       id: {
         type: DataTypes.UUID,
@@ -38,11 +38,11 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "resourcequantityandprice",
+      modelName: "ResourceQuantityAndPrice",
     }
   );
-  // resourcequantityandprice.associate = function(models) {
+  // ResourceQuantityAndPrice.associate = function(models) {
 
   // }
-  return resourcequantityandprice;
+  return ResourceQuantityAndPrice;
 };

@@ -1,10 +1,10 @@
 const {
-  projectcategory,
-  projectsubcategory,
-  projecttype,
+  ProjectCategory,
+  ProjectSubCategory,
+  ProjectType,
   Sequelize,
 } = require("../../models");
-//const projecttype = require("../../models/projecttype");
+//const ProjectType = require("../../models/ProjectType");
 
 const usrData = require("../../utils/userDataFromToken");
 const actionHelper = require("../utils/action-helper");
@@ -26,7 +26,7 @@ self.getAll = async (req, res) => {
   const { limit, offset } = paginate.getPagination(page, size);
 
   try {
-    const { rows, count } = await projectcategory.findAndCountAll({
+    const { rows, count } = await ProjectCategory.findAndCountAll({
       limit,
       offset,
       order: [["createdAt", order]],
@@ -58,7 +58,7 @@ self.getByProjectId = async (req, res) => {
 
   const { limit, offset } = paginate.getPagination(page, size);
   try {
-    const data = await projectcategory.findAndCountAll({
+    const data = await ProjectCategory.findAndCountAll({
       limit,
       offset,
       where: { project_id: id },
@@ -87,7 +87,7 @@ self.getAllProCatByTypeId = async (req, res) => {
   const { limit, offset } = paginate.getPagination(page, size);
 
   try {
-    const { count, rows } = await projectcategory.findAndCountAll({
+    const { count, rows } = await ProjectCategory.findAndCountAll({
       limit,
       offset,
       include: "Projectsubcategories",
@@ -109,7 +109,7 @@ self.getAllProCatByTypeId = async (req, res) => {
 self.get = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await projectcategory.findOne({
+    let data = await ProjectCategory.findOne({
       where: {
         id: id,
       },
@@ -127,7 +127,7 @@ self.get = async (req, res) => {
 self.search = async (req, res) => {
   try {
     let text = req.query.text;
-    let data = await projectcategory.findAll({
+    let data = await ProjectCategory.findAll({
       where: {
         name: {
           [Op.like]: "%" + text + "%",
@@ -147,12 +147,12 @@ self.save = async (req, res) => {
     let usr = await usrData.userData(req, res);
     let body = req.body;
     if (usr) {
-      let data = await projectcategory.create(body);
+      let data = await ProjectCategory.create(body);
       if (data) {
         let usrID = usr.usrID;
         await actionHelper.saveActionState(
           data.id,
-          "projectcategory",
+          "ProjectCategory",
           "REGISTER",
           usrID,
           req,
@@ -172,7 +172,7 @@ self.update = async (req, res) => {
   try {
     let id = req.params.id;
     let body = req.body;
-    let data = await projectcategory.update(body, {
+    let data = await ProjectCategory.update(body, {
       where: {
         id: id,
       },
@@ -190,7 +190,7 @@ self.update = async (req, res) => {
 self.delete = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await projectcategory.destroy({
+    let data = await ProjectCategory.destroy({
       where: {
         id: id,
       },

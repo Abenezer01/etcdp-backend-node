@@ -1,7 +1,7 @@
 const {
-  resourcequantityandprice,
-  detailresourcetype,
-  resourcebrand,
+  ResourceQuantityAndPrice,
+  DetailResourceType,
+  ResourceBrand,
   Sequelize,
 } = require("../../models");
 const usrData = require("../../utils/userDataFromToken");
@@ -22,7 +22,7 @@ self.getAll = async (req, res) => {
   const { limit, offset } = paginate.getPagination(page, size);
 
   try {
-    const { rows, count } = await resourcequantityandprice.findAndCountAll({
+    const { rows, count } = await ResourceQuantityAndPrice.findAndCountAll({
       limit,
       offset,
       order: [["createdAt", order]],
@@ -53,7 +53,7 @@ self.getByProjectId = async (req, res) => {
 
   const { limit, offset } = paginate.getPagination(page, size);
 
-  resourcequantityandprice
+  ResourceQuantityAndPrice
     .findAndCountAll({
       limit,
       offset,
@@ -63,13 +63,13 @@ self.getByProjectId = async (req, res) => {
       order: [["createdAt", order]],
       include: [
         {
-          model: resourcebrand,
-          as: "resourcebrand",
+          model: ResourceBrand,
+          as: "ResourceBrand",
           attributes: ["id", "title"],
         },
         {
-          model: detailresourcetype,
-          as: "detailresourcetype",
+          model: DetailResourceType,
+          as: "DetailResourceType",
           attributes: ["id", "title"],
         },
       ],
@@ -85,7 +85,7 @@ self.getByProjectId = async (req, res) => {
 self.get = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await resourcequantityandprice.findOne({
+    let data = await ResourceQuantityAndPrice.findOne({
       where: {
         id: id,
       },
@@ -110,15 +110,15 @@ self.getByResourceId = async (req, res) => {
     const id = req.params.id;
     const { limit, offset } = paginate.getPagination(page, size);
 
-    const data = await resourcequantityandprice.findAndCountAll({
+    const data = await ResourceQuantityAndPrice.findAndCountAll({
       limit,
       offset,
       where: {
         resource_id: id,
       },
       include: [
-        { model: resourcebrand, as: "resourcebrand" },
-        { model: detailresourcetype, as: "detailresourcetype" },
+        { model: ResourceBrand, as: "ResourceBrand" },
+        { model: DetailResourceType, as: "DetailResourceType" },
       ],
     });
     const response = paginate.getPagingData(data, page, limit);
@@ -133,7 +133,7 @@ self.getByResourceId = async (req, res) => {
 self.search = async (req, res) => {
   try {
     let text = req.query.text;
-    let data = await resourcequantityandprice.findAll({
+    let data = await ResourceQuantityAndPrice.findAll({
       where: {
         name: {
           [Op.like]: "%" + text + "%",
@@ -153,12 +153,12 @@ self.save = async (req, res) => {
     let usr = await usrData.userData(req, res);
     let body = req.body;
     if (usr) {
-      let data = await resourcequantityandprice.create(body);
+      let data = await ResourceQuantityAndPrice.create(body);
       if (data) {
         let us = usr.usrID;
         await actionHelper.saveActionState(
           data.id,
-          "resourcequantityandprice",
+          "ResourceQuantityAndPrice",
           "REGISTER",
           us,
           req,
@@ -178,7 +178,7 @@ self.update = async (req, res) => {
   try {
     let id = req.params.id;
     let body = req.body;
-    let data = await resourcequantityandprice.update(body, {
+    let data = await ResourceQuantityAndPrice.update(body, {
       where: {
         id: id,
       },
@@ -196,7 +196,7 @@ self.update = async (req, res) => {
 self.delete = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await resourcequantityandprice.destroy({
+    let data = await ResourceQuantityAndPrice.destroy({
       where: {
         id: id,
       },

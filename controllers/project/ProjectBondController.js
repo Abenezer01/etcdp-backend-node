@@ -1,5 +1,5 @@
 const actionHelper = require("../utils/action-helper");
-const { projectbond, Sequelize } = require("./../../models");
+const { ProjectBond, Sequelize } = require("./../../models");
 const paginate = require("../../utils/pagination");
 const usrData = require("../../utils/userDataFromToken");
 const dotenv = require("dotenv");
@@ -18,7 +18,7 @@ self.getAll = async (req, res) => {
   const { limit, offset } = paginate.getPagination(page, size);
 
   try {
-    const { rows, count } = await projectbond.findAndCountAll({
+    const { rows, count } = await ProjectBond.findAndCountAll({
       limit,
       offset,
       order: [["createdAt", order]],
@@ -49,7 +49,7 @@ self.getByProjectId = async (req, res) => {
 
   const { limit, offset } = paginate.getPagination(page, size);
   try {
-    const data = await projectbond.findAndCountAll({
+    const data = await ProjectBond.findAndCountAll({
       limit,
       offset,
       where: { project_id: id },
@@ -67,7 +67,7 @@ self.getByProjectId = async (req, res) => {
 self.get = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await projectbond.findOne({
+    let data = await ProjectBond.findOne({
       where: {
         id: id,
       },
@@ -90,7 +90,7 @@ self.getByProjectType = async (req, res) => {
     if (!type) {
       res.status(400).json({ message: "Can't get type value at param" });
     }
-    await projectbond
+    await ProjectBond
       .findAll({
         where: {
           type: type,
@@ -115,7 +115,7 @@ self.getByProjectType = async (req, res) => {
 self.search = async (req, res) => {
   try {
     let text = req.query.text;
-    let data = await projectbond.findAll({
+    let data = await ProjectBond.findAll({
       where: {
         name: {
           [Op.like]: "%" + text + "%",
@@ -135,12 +135,12 @@ self.save = async (req, res) => {
     let usr = await usrData.userData(req, res);
     let body = req.body;
     if (usr) {
-      let data = await projectbond.create(body);
+      let data = await ProjectBond.create(body);
       if (data) {
         let usrID = usr.usrID;
         await actionHelper.saveActionState(
           data.id,
-          "projectbond",
+          "ProjectBond",
           "REGISTER",
           usrID,
           req,
@@ -160,7 +160,7 @@ self.update = async (req, res) => {
   try {
     let id = req.params.id;
     let body = req.body;
-    let data = await projectbond.update(body, {
+    let data = await ProjectBond.update(body, {
       where: {
         id: id,
       },
@@ -176,7 +176,7 @@ self.update = async (req, res) => {
 self.delete = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await projectbond.destroy({
+    let data = await ProjectBond.destroy({
       where: {
         id: id,
       },

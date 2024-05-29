@@ -1,5 +1,5 @@
 const actionHelper = require("../utils/action-helper");
-const { waterirrigationdam, Sequelize } = require("../../models");
+const { WaterIrrigationDam, Sequelize } = require("../../models");
 const usrData = require("../../utils/userDataFromToken");
 const Op = Sequelize.Op;
 const dotenv = require("dotenv");
@@ -17,7 +17,7 @@ self.getAll = async (req, res) => {
   const { limit, offset } = paginate.getPagination(page, size);
 
   try {
-    const { rows, count } = await waterirrigationdam.findAndCountAll({
+    const { rows, count } = await WaterIrrigationDam.findAndCountAll({
       limit,
       offset,
       order: [["createdAt", order]],
@@ -48,7 +48,7 @@ self.getByProjectId = async (req, res) => {
 
   const { limit, offset } = paginate.getPagination(page, size);
   try {
-    const data = await waterirrigationdam.findAndCountAll({
+    const data = await WaterIrrigationDam.findAndCountAll({
       limit,
       offset,
       where: { project_id: id },
@@ -66,7 +66,7 @@ self.getByProjectId = async (req, res) => {
 self.get = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await waterirrigationdam.findOne({
+    let data = await WaterIrrigationDam.findOne({
       where: {
         id: id,
       },
@@ -82,7 +82,7 @@ self.get = async (req, res) => {
 self.search = async (req, res) => {
   try {
     let text = req.query.text;
-    let data = await waterirrigationdam.findAll({
+    let data = await WaterIrrigationDam.findAll({
       where: {
         name: {
           [Op.like]: "%" + text + "%",
@@ -102,12 +102,12 @@ self.save = async (req, res) => {
     let usr = await usrData.userData(req, res);
     let body = req.body;
     if (usr) {
-      let data = await waterirrigationdam.create(body);
+      let data = await WaterIrrigationDam.create(body);
       if (data) {
         let usrID = usr.usrID;
         await actionHelper.saveActionState(
           data.id,
-          "waterirrigationdam",
+          "WaterIrrigationDam",
           "REGISTER",
           usrID,
           req,
@@ -126,7 +126,7 @@ self.update = async (req, res) => {
   try {
     let id = req.params.id;
     let body = req.body;
-    let data = await waterirrigationdam.update(body, {
+    let data = await WaterIrrigationDam.update(body, {
       where: {
         id: id,
       },
@@ -142,7 +142,7 @@ self.update = async (req, res) => {
 self.delete = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await waterirrigationdam.destroy({
+    let data = await WaterIrrigationDam.destroy({
       where: {
         id: id,
       },

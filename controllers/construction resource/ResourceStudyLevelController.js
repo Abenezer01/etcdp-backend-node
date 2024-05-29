@@ -1,4 +1,4 @@
-const { resourcestudylevel, image, Sequelize } = require("../../models");
+const { ResourceStudyLevel, Image, Sequelize } = require("../../models");
 const usrData = require("../../utils/userDataFromToken");
 const actionHelper = require("../utils/action-helper");
 const Op = Sequelize.Op;
@@ -17,7 +17,7 @@ self.getAll = async (req, res) => {
   const { limit, offset } = paginate.getPagination(page, size);
 
   try {
-    const { rows, count } = await resourcestudylevel.findAndCountAll({
+    const { rows, count } = await ResourceStudyLevel.findAndCountAll({
       limit,
       offset,
       order: [["createdAt", order]],
@@ -42,11 +42,11 @@ self.getAll = async (req, res) => {
 self.get = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await resourcestudylevel.findOne({
+    let data = await ResourceStudyLevel.findOne({
       where: {
         id: id,
       },
-      //include: { model: image, as: "image", attributes: ["url"] },
+      //include: { model: Image, as: "Image", attributes: ["url"] },
     });
     return res.status(200).json({
       data: data ? data : {},
@@ -67,7 +67,7 @@ self.getByResourceId = async (req, res) => {
   const { limit, offset } = paginate.getPagination(page, size);
 
   try {
-    const { rows, count } = await resourcestudylevel.findAndCountAll({
+    const { rows, count } = await ResourceStudyLevel.findAndCountAll({
       limit,
       offset,
       where: {
@@ -95,7 +95,7 @@ self.getByResourceId = async (req, res) => {
 self.search = async (req, res) => {
   try {
     let text = req.query.text;
-    let data = await resourcestudylevel.findAll({
+    let data = await ResourceStudyLevel.findAll({
       where: {
         name: {
           [Op.like]: "%" + text + "%",
@@ -115,13 +115,13 @@ self.save = async (req, res) => {
     let usr = await usrData.userData(req, res);
     let body = req.body;
     if (usr) {
-      let data = await resourcestudylevel.create(body);
+      let data = await ResourceStudyLevel.create(body);
       if (data) {
         let us = usr.usrID;
         await data.save();
         await actionHelper.saveActionState(
           data.id,
-          "resourcestudylevel",
+          "ResourceStudyLevel",
           "REGISTER",
           us,
           req,
@@ -141,7 +141,7 @@ self.update = async (req, res) => {
   try {
     let id = req.params.id;
     let body = req.body;
-    let data = await resourcestudylevel.update(body, {
+    let data = await ResourceStudyLevel.update(body, {
       where: {
         id: id,
       },
@@ -159,7 +159,7 @@ self.update = async (req, res) => {
 self.delete = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await resourcestudylevel.destroy({
+    let data = await ResourceStudyLevel.destroy({
       where: {
         id: id,
       },
