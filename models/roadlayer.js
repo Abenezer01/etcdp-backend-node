@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      RoadLayer.belongsTo(models.roadsegment, {
+      RoadLayer.belongsTo(models.RoadSegment, {
         foreignKey: "segment_id",
       });
     }

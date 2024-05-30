@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      DocumentCategory.hasMany(models.documentsubcategory, {
+      DocumentCategory.hasMany(models.DocumentSubCategory, {
         foreignKey: "documentcategory_Id",
         as: "documentsubcategories",
       });

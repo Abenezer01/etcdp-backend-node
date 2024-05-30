@@ -49,10 +49,10 @@ module.exports = (sequelize, DataTypes) => {
   );
 
   UserPosition.associate = function (models) {
-    UserPosition.belongsTo(models.position, {
+    UserPosition.belongsTo(models.Position, {
       foreignKey: "position_id",
     });
-    UserPosition.belongsTo(models.department, {
+    UserPosition.belongsTo(models.Department, {
       foreignKey: "department_id",
     });
   };

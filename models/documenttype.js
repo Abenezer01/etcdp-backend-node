@@ -34,13 +34,13 @@ module.exports = (sequelize, DataTypes) => {
   );
   DocumentType.associate = function (models) {
     // associations can be defined here
-    // DocumentType.hasMany(models.projectcategory, {
+    // DocumentType.hasMany(models.ProjectCategory, {
     //     foreignKey: 'documenttype_id',
     //     as: 'Projectcategories',
     // }, );
     // models.projectcategory.associate = function(models) {
     //     // associations can be defined here
-    //     projectcategory.hasMany(models.projectsubcategory, {
+    //     projectcategory.hasMany(models.ProjectSubCategory, {
     //         foreignKey: 'category_id',
     //         as: 'Projectsubcategories',
     //     });

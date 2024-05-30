@@ -70,31 +70,31 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
   Stakeholder.associate = function (models) {
-    // Stakeholder.belongsTo(models.address, {
+    // Stakeholder.belongsTo(models.Address, {
     //     as: "address",
     //     foreignKey: "address_id"
     // })
-    Stakeholder.belongsTo(models.stakeholdertype, {
+    Stakeholder.belongsTo(models.StakeholderType, {
       as: "staketype",
       foreignKey: "stakeholdertype_id",
     });
-    Stakeholder.belongsTo(models.stakecategory, {
+    Stakeholder.belongsTo(models.StakeholderCategory, {
       as: "stakecategory",
       foreignKey: "stakecategory_id",
     });
-    Stakeholder.belongsTo(models.stakesubcategory, {
+    Stakeholder.belongsTo(models.StakeholderSubCategory, {
       as: "stakesubcategory",
       foreignKey: "stakesubcategory_id",
     });
-    Stakeholder.belongsTo(models.ownership, {
+    Stakeholder.belongsTo(models.Ownership, {
       as: "ownership",
       foreignKey: "ownership_id",
     });
-    Stakeholder.belongsTo(models.businessfield, {
+    Stakeholder.belongsTo(models.BusinessField, {
       as: "businessfield",
       foreignKey: "businessfield_id",
     });
-    Stakeholder.belongsTo(models.department, {
+    Stakeholder.belongsTo(models.Department, {
       as: "department",
       foreignKey: "department_id",
     });

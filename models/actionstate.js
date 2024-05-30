@@ -50,7 +50,7 @@ module.exports = (sequelize, DataTypes) => {
   );
 
   ActionState.associate = function (models) {
-    ActionState.belongsTo(models.position, {
+    ActionState.belongsTo(models.Position, {
       foreignKey: "position_id",
     });
   };

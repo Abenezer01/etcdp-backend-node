@@ -97,12 +97,12 @@ module.exports = (sequelize, DataTypes) => {
     });
     ProjectPlan.associate = function(models) {
         // associations can be defined here
-        ProjectPlan.belongsTo(models.file, {
+        ProjectPlan.belongsTo(models.File, {
             as: "file",
             foreignKey: "file_id",
         });
 
-        ProjectPlan.hasMany(models.actionstate, {
+        ProjectPlan.hasMany(models.ActionState, {
             as: "action",
             foreignKey: "model_id"
         })

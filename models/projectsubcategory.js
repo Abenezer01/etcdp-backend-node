@@ -36,7 +36,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
   ProjectSubCategory.associate = (models) => {
-    ProjectSubCategory.belongsTo(models.projectcategory, {
+    ProjectSubCategory.belongsTo(models.ProjectCategory, {
       as: "Subcategories",
       foreignKey: {
         name: "projectcategory_id",

@@ -58,43 +58,43 @@ module.exports = (sequelize, DataTypes) => {
 
   Project.associate = function (models) {
     // associations can be defined here
-    Project.hasOne(models.projecttime, {
+    Project.hasOne(models.ProjectTime, {
       foreignKey: "project_id",
     });
-    Project.hasOne(models.projectfinance, {
+    Project.hasOne(models.ProjectFinance, {
       foreignKey: "project_id",
     });
-    Project.hasMany(models.projectstakeholder, {
+    Project.hasMany(models.ProjectStakeholder, {
       foreignKey: "project_id",
     });
-    Project.hasMany(models.projectvariation, {
-      foreignKey: "project_id",
-    });
-
-    Project.hasMany(models.projectplan, {
-      foreignKey: "project_id",
-    });
-    Project.hasMany(models.projectreport, {
+    Project.hasMany(models.ProjectVariation, {
       foreignKey: "project_id",
     });
 
-    Project.hasMany(models.projectstatus, {
+    Project.hasMany(models.ProjectPlan, {
+      foreignKey: "project_id",
+    });
+    Project.hasMany(models.ProjectReport, {
+      foreignKey: "project_id",
+    });
+
+    Project.hasMany(models.ProjectStatus, {
     as: "projectstatus",
     foreignKey: "project_id",
     });
-    Project.hasMany(models.payment, {
+    Project.hasMany(models.Payment, {
       foreignKey: "project_id",
     });
-    Project.belongsTo(models.projectcategory, {
+    Project.belongsTo(models.ProjectCategory, {
       foreignKey: "projectcategory_id",
     });
-    Project.belongsTo(models.projectsubcategory, {
+    Project.belongsTo(models.ProjectSubCategory, {
       foreignKey: "projectsubcategory_id",
     });
-    Project.belongsTo(models.projecttype, {
+    Project.belongsTo(models.ProjectType, {
       foreignKey: "projecttype_id",
     });
-    Project.belongsTo(models.department, {
+    Project.belongsTo(models.Department, {
       as: "department",
       foreignKey: "department_id",
     });

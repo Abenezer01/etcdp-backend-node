@@ -51,7 +51,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
   Resource.associate = function (models) {
-    Resource.belongsTo(models.department, {
+    Resource.belongsTo(models.Department, {
       as: "department",
       foreignKey: "department_id",
     });

@@ -12,19 +12,19 @@ module.exports = (sequelize, DataTypes) => {
       // Document.belongsTo(models.image, {
       //     foreignKey: 'image_id',
       // });
-      Document.belongsTo(models.documenttype, {
+      Document.belongsTo(models.DocumentType, {
         //as: "documenttype",
         foreignKey: "documenttype_id",
       });
-      Document.belongsTo(models.documentcategory, {
+      Document.belongsTo(models.DocumentCategory, {
         // as: "documentcategory",
         foreignKey: "documentcategory_id",
       });
-      Document.belongsTo(models.documentsubcategory, {
+      Document.belongsTo(models.DocumentSubCategory, {
         //as: "documentsubcategory",
         foreignKey: "documentsubcategory_id",
       });
-      Document.belongsTo(models.department, {
+      Document.belongsTo(models.Department, {
         as: "department",
         foreignKey: "department_id",
       });
@@ -59,7 +59,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
   // Document.associate = function(models) {
-  //     // Document.belongsTo(models.address, {
+  //     // Document.belongsTo(models.Address, {
   //     //     as: "address",
   //     //     foreignKey: "address_id"
   //     // })

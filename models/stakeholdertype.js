@@ -37,7 +37,7 @@ module.exports = (sequelize, DataTypes) => {
   );
   StakeholderType.associate = function (models) {
     // associations can be defined here
-    StakeholderType.hasMany(models.stakecategory, {
+    StakeholderType.hasMany(models.StakeholderCategory, {
       foreignKey: "stakeholdertype_id",
       as: "stakecategories",
     });

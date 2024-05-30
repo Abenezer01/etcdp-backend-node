@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      ConstructionResource.belongsTo(models.resource, {
+      ConstructionResource.belongsTo(models.Resource, {
         foreignKey: "resource_id",
       });
     }

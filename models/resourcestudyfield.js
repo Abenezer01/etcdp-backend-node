@@ -30,7 +30,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
   ResourceStudyField.associate = function (models) {
-    ResourceStudyField.belongsTo(models.studyfield, {
+    ResourceStudyField.belongsTo(models.StudyField, {
       as: "studyfield",
       foreignKey: "studyfield_id",
     });

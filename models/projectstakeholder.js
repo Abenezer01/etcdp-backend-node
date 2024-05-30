@@ -52,7 +52,7 @@ module.exports = (sequelize, DataTypes) => {
     //     as: "address",
     //     foreignKey: "address_id"
     // })
-    ProjectStakeholder.belongsTo(models.stakeholder, {
+    ProjectStakeholder.belongsTo(models.Stakeholder, {
       as: "stakeholder",
       foreignKey: "stakeholder_id",
     });

@@ -73,23 +73,23 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
   Graduate.associate = function (models) {
-    Graduate.belongsTo(models.studyfield, {
+    Graduate.belongsTo(models.StudyField, {
       as: "studyfield",
       foreignKey: "studyfield_id",
     });
-    Graduate.belongsTo(models.studyprogram, {
+    Graduate.belongsTo(models.StudyProgram, {
       as: "studyprogram",
       foreignKey: "study_program_id",
     });
-    Graduate.belongsTo(models.studylevel, {
+    Graduate.belongsTo(models.StudyLevel, {
       as: "studylevel",
       foreignKey: "studylevel_id",
     });
-    Graduate.belongsTo(models.studyperiodcost, {
+    Graduate.belongsTo(models.StudyPeriodCost, {
       as: "studyperiod",
       foreignKey: "study_period_id",
     });
-    Graduate.belongsTo(models.agelevel, {
+    Graduate.belongsTo(models.AgeLevel, {
       as: "agelevel",
       foreignKey: "agelevel_id",
     });

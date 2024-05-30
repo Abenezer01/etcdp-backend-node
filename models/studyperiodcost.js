@@ -58,21 +58,21 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
   StudyPeriodCost.associate = function (models) {
-    StudyPeriodCost.belongsTo(models.stakeholderstudyfield, {
+    StudyPeriodCost.belongsTo(models.StakeholderStudyField, {
       as: "stakestudyfield",
       foreignKey: "stake_study_field_id",
       constraints: false,
       attribute: ["description", "title"],
     });
-    StudyPeriodCost.belongsTo(models.studyprogram, {
+    StudyPeriodCost.belongsTo(models.StudyProgram, {
       as: "studyprogram",
       foreignKey: "study_program_id",
     });
-    StudyPeriodCost.belongsTo(models.studylevel, {
+    StudyPeriodCost.belongsTo(models.StudyLevel, {
       as: "studylevel",
       foreignKey: "studylevel_id",
     });
-    StudyPeriodCost.belongsTo(models.studyfield, {
+    StudyPeriodCost.belongsTo(models.StudyField, {
       as: "studyfield",
       foreignKey: "studyfield_id",
     });

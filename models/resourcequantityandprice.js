@@ -9,10 +9,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      ResourceQuantityAndPrice.belongsTo(models.detailresourcetype, {
+      ResourceQuantityAndPrice.belongsTo(models.DetailResourceType, {
         foreignKey: "detailresourcetype_id",
       });
-      ResourceQuantityAndPrice.belongsTo(models.resourcebrand, {
+      ResourceQuantityAndPrice.belongsTo(models.ResourceBrand, {
         foreignKey: "resourcebrand_id",
       });
     }

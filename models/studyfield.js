@@ -45,11 +45,11 @@ module.exports = (sequelize, DataTypes) => {
     //     as: "address",
     //     foreignKey: "address_id"
     // })
-    StudyField.belongsTo(models.studyprogram, {
+    StudyField.belongsTo(models.StudyProgram, {
       as: "studyprogram",
       foreignKey: "study_program_id",
     });
-    StudyField.belongsTo(models.studylevel, {
+    StudyField.belongsTo(models.StudyProgram, {
       as: "studylevel",
       foreignKey: "studylevel_id",
     });

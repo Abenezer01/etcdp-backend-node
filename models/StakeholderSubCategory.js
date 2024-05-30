@@ -45,7 +45,7 @@ module.exports = (sequelize, DataTypes) => {
   );
   // StakeholderSubCategory.associate = function(models) {
 
-  //     StakeholderSubCategory.belongsTo(models.stakecategory)
+  //     StakeholderSubCategory.belongsTo(models.StakeholderCategory)
   // };
   return StakeholderSubCategory;
 };

@@ -113,11 +113,11 @@ module.exports = (sequelize, DataTypes) => {
 
   ProjectReport.associate = function (models) {
     // associations can be defined here
-    ProjectReport.belongsTo(models.file, {
+    ProjectReport.belongsTo(models.File, {
       as: "file",
       foreignKey: "file_id",
     });
-    ProjectReport.belongsTo(models.projectplan, {
+    ProjectReport.belongsTo(models.ProjectPlan, {
       as: "projectplan",
       foreignKey: "projectplan_id",
     });

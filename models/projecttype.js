@@ -36,13 +36,13 @@ module.exports = (sequelize, DataTypes) => {
   );
   ProjectType.associate = function (models) {
     // associations can be defined here
-    ProjectType.hasMany(models.projectcategory, {
+    ProjectType.hasMany(models.ProjectCategory, {
       foreignKey: "projecttype_id",
       as: "Projectcategories",
     });
-    models.projectcategory.associate = function (models) {
+    models.ProjectCategory.associate = function (models) {
       // associations can be defined here
-      projectcategory.hasMany(models.projectsubcategory, {
+      ProjectCategory.hasMany(models.ProjectSubCategory, {
         foreignKey: "projectcategory_id",
         as: "Projectsubcategories",
       });

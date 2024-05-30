@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
 
-      Transformer.belongsTo(models.transformertype, {
+      Transformer.belongsTo(models.TransformerType, {
         foreignKey: "transformertype_id",
       });
     }

@@ -88,11 +88,11 @@ module.exports = (sequelize, DataTypes) => {
 
   User.associate = function (models) {
     // associations can be defined here
-    User.hasMany(models.actionstate, {
+    User.hasMany(models.ActionState, {
       foreignKey: "model_id",
       as: "users",
     });
-    User.hasMany(models.userposition, {
+    User.hasMany(models.UserPosition, {
       foreignKey: "user_id",
       as: "positions",
     });

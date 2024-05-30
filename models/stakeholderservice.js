@@ -30,7 +30,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
   StakeholderService.associate = function (models) {
-    StakeholderService.belongsTo(models.constructionrelatedservice, {
+    StakeholderService.belongsTo(models.ConstructionRelatedService, {
       as: "constructionrelatedservice",
       foreignKey: "construction_related_service_id",
       constraints: false,

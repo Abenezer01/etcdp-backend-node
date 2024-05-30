@@ -62,7 +62,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
   EmployeeEducation.associate = function (models) {
-    EmployeeEducation.belongsTo(models.studylevel, {
+    EmployeeEducation.belongsTo(models.StudyLevel, {
       as: "studylevel",
       foreignKey: "studylevel_id",
     });
