@@ -13,15 +13,21 @@ const Op = Sequelize.Op;
 let self = {};
 const usrData = require("../../utils/userDataFromToken");
 const actorHelper = require("../utils/actor-helper")
+const paginationHelper = require("../utils/pagination-helper")
 
 self.getAll = async (req, res) => {
   try {
-    let data = await ActionState.findAll();
-    return res.status(200).json(data);
+    const paginatedResult = await paginationHelper(ActionState, req);
+
+    // Use the response formatter to send the success response
+    res.apiSuccess({
+      data: paginatedResult.data,
+      total: paginatedResult.total,
+    }, paginatedResult.pagination);
+
   } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
+    console.error("Error in getAll method:", error);
+    res.apiError(error);
   }
 };
 

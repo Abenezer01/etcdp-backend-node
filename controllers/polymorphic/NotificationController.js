@@ -1,35 +1,52 @@
 const { Notification, Sequelize } = require("./../../models");
 const moment = require("moment");
 const usrData = require("../../utils/userDataFromToken");
+const paginationHelper = require("../utils/pagination-helper")
 const Op = Sequelize.Op;
 
 let self = {};
 
+
 self.getAll = async (req, res) => {
   try {
-    //pagination
-    let limit = req.params.limit;
-    let page_no = req.params.page_no;
-    let us = await usrData.userData(req, res);
-    let data = await Notification.findAndCountAll({
-      order: [["createdAt", "DESC"]],
-      where: {
-        notifiable_id: us.usrID,
-      },
-      limit: Number(limit),
-      offset: Number(--page_no),
-    });
+    const paginatedResult = await paginationHelper(Notification, req);
 
-    return res.json({
-      count: data.count,
-      data: data.rows,
-    });
+    // Use the response formatter to send the success response
+    res.apiSuccess({
+      data: paginatedResult.data,
+      total: paginatedResult.total,
+    }, paginatedResult.pagination);
+
   } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
+    console.error("Error in getAll method:", error);
+    res.apiError(error);
   }
 };
+// self.getAll = async (req, res) => {
+//   try {
+//     //pagination
+//     let limit = req.params.limit;
+//     let page_no = req.params.page_no;
+//     let us = await usrData.userData(req, res);
+//     let data = await Notification.findAndCountAll({
+//       order: [["createdAt", "DESC"]],
+//       where: {
+//         notifiable_id: us.usrID,
+//       },
+//       limit: Number(limit),
+//       offset: Number(--page_no),
+//     });
+
+//     return res.json({
+//       count: data.count,
+//       data: data.rows,
+//     });
+//   } catch (error) {
+//     res.status(500).json({
+//       message: error.message,
+//     });
+//   }
+// };
 
 self.unreadNotification = async (req, res) => {
   try {
