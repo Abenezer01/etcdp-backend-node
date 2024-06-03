@@ -31,7 +31,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "ProjectType",
-      tableName: "projecttimes"
+      tableName: "projecttypes"
     }
   );
   ProjectType.associate = function (models) {

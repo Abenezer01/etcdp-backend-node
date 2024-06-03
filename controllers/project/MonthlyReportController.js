@@ -4,21 +4,27 @@ const {
     activityLog,
     saveActionState,
 } = require("../../utils/helper.js");
+const paginationHelper = require("../utils/pagination-helper")
 const moment = require("moment");
 const months = require("./../../config/quarter");
 const { validateMonthlyReport } = require("../../validator");
 
 let self = {};
 
-self.getAll = async(req, res) => {
-    try {
-        let data = await MonthlyReport.findAll();
-        return res.json(data);
-    } catch (error) {
-        res.status(500).json({
-            message: error.message,
-        });
-    }
+self.getAll = async (req, res) => {
+  try {
+    const paginatedResult = await paginationHelper(MonthlyReport, req);
+
+    // Use the response formatter to send the success response
+    res.apiSuccess({
+      data: paginatedResult.data,
+      total: paginatedResult.total,
+    }, paginatedResult.pagination);
+
+  } catch (error) {
+    console.error("Error in getAll method:", error);
+    res.apiError(error);
+  }
 };
 
 self.get = async(req, res) => {

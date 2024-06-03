@@ -1,4 +1,5 @@
 const actionHelper = require("../utils/action-helper");
+const paginationHelper = require("../utils/pagination-helper")
 const {
   ProjectExtensionTime,
   ProjectVariation,
@@ -12,30 +13,19 @@ dotenv.config();
 let self = {};
 
 self.getAll = async (req, res) => {
-  let { page, size, order } = req.query;
-  //console.log("The page", page, size)
-  if (page == null && size == null) {
-    (page = process.env.page), (size = process.env.size);
+  try {
+    const paginatedResult = await paginationHelper(ProjectExtensionTime, req);
+
+    // Use the response formatter to send the success response
+    res.apiSuccess({
+      data: paginatedResult.data,
+      total: paginatedResult.total,
+    }, paginatedResult.pagination);
+
+  } catch (error) {
+    console.error("Error in getAll method:", error);
+    res.apiError(error);
   }
-  if (order == null) {
-    order = process.env.order;
-  }
-  const { limit, offset } = paginate.getPagination(page, size);
-  ProjectExtensionTime
-    .findAndCountAll({
-      limit,
-      offset,
-      order: [["createdAt", order]],
-    })
-    .then((data) => {
-      const response = paginate.getPagingData(data, page, limit);
-      res.send(response);
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message: err.message || "Some error occurred while retrieving data.",
-      });
-    });
 };
 
 self.get = async (req, res) => {

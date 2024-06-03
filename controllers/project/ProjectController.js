@@ -26,7 +26,8 @@ const usrData = require("../../utils/userDataFromToken");
 const actionHelper = require("../utils/action-helper");
 const cipherHelper = require("../utils/cipher-helper");
 const notificationHelper = require("../utils/notification-helper");
-const apiHelper = require("../utils/API-helper")
+const apiHelper = require("../utils/API-helper");
+const paginationHelper = require("../utils/pagination-helper");
 const fetch = require('node-fetch')
 
 
@@ -65,62 +66,20 @@ self.getAllCPMProject = async(req, res) => {
     })
   }
 }
+
 self.getAll = async (req, res) => {
-  // test notification
-  //send status
-
-  // let pro = await Project.findOne({
-  //   where: {
-  //     id: "0fdbc117-d374-4f9d-86fa-cdb708cca67f",
-  //   },
-  // });
-
-  // notificationHelper.notify(
-  //   "REGISTER",
-  //   "new Project is added. check it",
-  //   "Project",
-  //   "00a340e3-431a-489f-a859-6d0c9d15e894",
-  //   pro.id,
-  //   "descr"
-  // );
-
-  // let x = await checkerHelper.findChecker("ProjectReport", req, res)
-
-  // let act = await actionHelper.saveActionState("d5fbbf5a-776a-46ad-82c8-df91b1988811", "note", "REGISTER", "00a340e3-431a-489f-a859-6d0c9d15e894", req, res)
-
-  // return res.json(act)
-  // return res.json(x)
-
-  let { page, size, order } = req.query;
-  //console.log("The page", page, size)
-  if (page == null && size == null) {
-    (page = process.env.page), (size = process.env.size);
-  }
-  if (order == null) {
-    order = process.env.order;
-  }
-  const { limit, offset } = paginate.getPagination(page, size);
-
   try {
-    const { rows, count } = await Project.findAndCountAll({
-      limit,
-      offset,
-      order: [["createdAt", order]],
-    });
+    const paginatedResult = await paginationHelper(Project, req);
 
-    const response = paginate.getPagingData(
-      { rows, count },
-      page,
-      limit,
-      count
-    );
+    // Use the response formatter to send the success response
+    res.apiSuccess({
+      data: paginatedResult.data,
+      total: paginatedResult.total,
+    }, paginatedResult.pagination);
 
-    res.send(response);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send({
-      message: err.message || "An error occurred while retrieving data.",
-    });
+  } catch (error) {
+    console.error("Error in getAll method:", error);
+    res.apiError(error);
   }
 };
 self.getProjectByTypeId = async (req, res) => {

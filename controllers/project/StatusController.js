@@ -4,17 +4,24 @@ dotenv.config();
 const Op = Sequelize.Op;
 const usrData = require("../../utils/userDataFromToken");
 const { saveActionState, getChildren } = require("../../utils/helper");
+const paginationHelper = require("../utils/pagination-helper");
 const actionHelper = require("../utils/action-helper");
 let self = {};
 
+
 self.getAll = async (req, res) => {
   try {
-    let data = await Status.findAll();
-    return res.json(data);
+    const paginatedResult = await paginationHelper(Status, req);
+
+    // Use the response formatter to send the success response
+    res.apiSuccess({
+      data: paginatedResult.data,
+      total: paginatedResult.total,
+    }, paginatedResult.pagination);
+
   } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
+    console.error("Error in getAll method:", error);
+    res.apiError(error);
   }
 };
 
