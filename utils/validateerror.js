@@ -1,14 +1,30 @@
 const validator = require("./validator");
-// const {
-//     user
-// } = require("../models");
+
+const formatErrorResponse = (errors) => {
+  const formattedErrors = Object.entries(errors).reduce((acc, [key, value]) => {
+    acc[key] = value.map(error => error.message || error);
+    return acc;
+  }, {});
+
+  return {
+    "_links": {
+      "previousPage": null,
+      "nextPage": null
+    },
+    "_warning": [],
+    "payload": [],
+    "_attributes": {},
+    "_errors": formattedErrors,
+    "_generated": new Date().toISOString()
+  };
+};
+
 const checkParam = async (req, res, next) => {
   let id = req.params.id;
   if (id) {
     const regexExp =
       /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/gi;
 
-    // String with valid UUID separated by dash
     const str = id;
 
     let tester = regexExp.test(str);
@@ -19,26 +35,26 @@ const checkParam = async (req, res, next) => {
     }
   }
 };
+
 const validateReply = async (body, validationRule, res, next) => {
   await validator(body, validationRule, {}, (err, status) => {
     if (!status) {
-      res.status(412).send({
-        success: false,
-        message: "Validation failed",
-        error: err.errors,
-      });
+      const errors = Object.entries(err.errors).reduce((acc, [key, value]) => {
+        acc[key] = value.map(error => error.message || error);
+        return acc;
+      }, {});
 
-      console.log("The error", err);
+      return res.status(412).json(formatErrorResponse(errors));
     } else {
       next();
     }
   }).catch((err) => console.log(err));
 };
+
 const validateArrayReply = async (body, validationRule, res, next) => {
   let bodyArr = body;
   let errarr = [];
-  for (i = 0; i < bodyArr.length; i++) {
-    //console.log(i, bodyArr[i])
+  for (let i = 0; i < bodyArr.length; i++) {
     await validator(bodyArr[i], validationRule, {}, (err, status) => {
       if (!status) {
         errarr.push({ row: i, ...err.errors });
@@ -46,15 +62,19 @@ const validateArrayReply = async (body, validationRule, res, next) => {
     });
   }
   if (errarr.length) {
-    res.status(412).send({
-      success: false,
-      message: "Missing fields",
-      error: errarr,
-    });
+    const combinedErrors = errarr.reduce((acc, error) => {
+      Object.entries(error).forEach(([key, value]) => {
+        acc[key] = acc[key] || [];
+        acc[key].push(value.message || value);
+      });
+      return acc;
+    }, {});
+    return res.status(412).json(formatErrorResponse(combinedErrors));
   } else {
     next();
   }
 };
+
 module.exports = {
   validateReply,
   checkParam,

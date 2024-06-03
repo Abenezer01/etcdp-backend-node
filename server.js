@@ -18,8 +18,11 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const fileUpload = require("express-fileupload");
 const cipherHelper = require("./controllers/utils/cipher-helper");
+const formatResponse = require("./middleware/formatters/response-formatter");
 
 let app = express();
+app.use(formatResponse);
+
 app.use(fileUpload());
 app.use(cookieParser());
 app.use(express.static("public"));
@@ -56,9 +59,8 @@ app.use("/api/generics", polymorphicRoute(express));
 app.use("/api/analytics", analyticRoute(express));
 
 app.use("/", route_view(express));
-
 app.listen(7500, () => {
-  console.log('email', cipherHelper.encrypt('abebe@gmail.com'))
+  // console.log('email', cipherHelper.encrypt('abebe@gmail.com'))
   console.log("Success running on  7500");
 });
 

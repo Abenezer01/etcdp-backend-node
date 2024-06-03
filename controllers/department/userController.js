@@ -38,6 +38,8 @@ const uuid = require("uuid");
 var nodemailer = require("nodemailer");
 var smtpTransport = require("nodemailer-smtp-transport");
 const emailValidator = require("deep-email-validator");
+const paginationHelper = require("../utils/pagination-helper")
+
 
 let TOKEN_KEY = process.env.ACCESS_TOKEN_KEY;
 let REFRESH_TOKEN_KEY = process.env.REFRESH_TOKEN_KEY;
@@ -111,34 +113,21 @@ self.getAlll = async(req, res) => {
 };
 // let one = "Ss"
 // let queryString = `SELECT * FROM users as U WHERE U.id=${one};`
-self.getAll = async(req, res) => {
-    // let x = await User.findOne({
-    //     where: {
-    //         id: "00a340e3-431a-489f-a859-6d0c9d15e894"
-    //     }
-    // })
-    // return res.json({
-    //     first_name: await decrypt(x.first_name),
-    //     middle_name: await decrypt(x.middle_name),
-    //     last_name: await decrypt(x.last_name)
-    // })
-    let data = await User.findAll({
-        where: {
-            is_activated: 1
-        }
-    });
 
-    return res.json(data);
-    // let one = "12c85269-9dc5-4e89-8d47-62719baea7ed"
-    // let queryString = `SELECT first_name FROM users as U WHERE U.id='${one}';`
-    // let queryString = "SELECT *  FROM users as U JOIN actionstates as A WHERE U.id=A.model_id AND A.action='REGISTER';"
-    // let userData = await sequelize.query(
-    //     queryString, { type: sequelize.QueryTypes.SELECT }
-    // );
+self.getAll = async (req, res) => {
+  try {
+    const paginatedResult = await paginationHelper(User, req);
 
-    // console.log("The user is", userData)
+    // Use the response formatter to send the success response
+    res.apiSuccess({
+      data: paginatedResult.data,
+      total: paginatedResult.total,
+    }, paginatedResult.pagination);
 
-    res.send(userData);
+  } catch (error) {
+    console.error("Error in getAll method:", error);
+    res.apiError(error);
+  }
 };
 
 self.get = async(req, res) => {
@@ -169,7 +158,14 @@ self.get = async(req, res) => {
             temp.email = usEmail ? usEmail.email : null;
             temp.phone = usPhone ? usPhone.phone : null;
 
-            return res.json(temp);
+            res.apiSuccess({
+                data: temp,
+                total: 1 // Assuming a single user is being returned
+              }, {
+                pageSize: 1,
+                page: 1
+              });
+            // return res.json(temp);
         }
     } catch (error) {
         res.status(500).json({
@@ -371,7 +367,15 @@ self.save = async(req, res) => {
             }
         }
 
-        return res.json(created_user);
+        res.apiSuccess({
+            data: created_user,
+            total: 1 // Assuming a single user is being returned
+          }, {
+            pageSize: 1,
+            page: 1
+          });
+
+        // return res.json(created_user);
     } catch (err) {
         return res.status(500).json({
             message: err.message,
@@ -388,6 +392,7 @@ self.update = async(req, res) => {
                 id: id,
             },
         });
+        
         return res.status(200).json({ message: "User updated succesfully" });
     } catch (error) {
         res.status(500).json({
@@ -432,6 +437,7 @@ self.getDepartmentUsers = async(req, res) => {
                 },
             },
         });
+        
 
         return res.json(users);
     } catch (error) {

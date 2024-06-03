@@ -1,27 +1,28 @@
 const { Role, RolePermission, Permission, Sequelize } = require("../../models");
 const actionHelper = require("../utils/action-helper");
 const usrData = require("../../utils/userDataFromToken");
+const paginationHelper = require("../utils/pagination-helper")
 
 const Op = Sequelize.Op;
 
 let self = {};
 
+
 self.getAll = async (req, res) => {
   try {
-    let data = await Role.findAll();
-    return res.json(data);
+    const paginatedResult = await paginationHelper(Role, req);
+
+    // Use the response formatter to send the success response
+    res.apiSuccess({
+      data: paginatedResult.data,
+      total: paginatedResult.total,
+    }, paginatedResult.pagination);
+
   } catch (error) {
-    // if (err.message === 'Error') {
-    //     res.status(500).json({
-    //         message: error.message
-    //     })
-    // }
-    res.status(500).json({
-      message: error.message,
-    });
+    console.error("Error in getAll method:", error);
+    res.apiError(error);
   }
 };
-
 self.get = async (req, res) => {
   try {
     let id = req.params.id;
