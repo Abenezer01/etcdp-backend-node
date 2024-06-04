@@ -761,9 +761,20 @@ self.requestPasswordReset = async(req, res) => {
         });
 
         if (!usemail) {
-            return res.status(404).json({
-                message: "Email not found!",
-            });
+            const errorResponse = {
+                _links: {
+                  previousPage: null,
+                  nextPage: null
+                },
+                _warning: [],
+                payload: [],
+                _attributes: {},
+                _errors: {
+                  message: ["User not Found"]
+                },
+                _generated: new Date().toISOString()
+              };
+            return res.status(404).json(errorResponse);
         }
 
         //must decrypt email
@@ -777,15 +788,15 @@ self.requestPasswordReset = async(req, res) => {
         if (us) {
             const resetString = uuid.v4() + us.id;
 
-            let data = await PasswordReset.findOne({
-                order: [
-                    ["createdAt", "DESC"]
-                ],
-                where: {
-                    user_id: us.id,
-                    is_used: false,
-                },
-            });
+            // let data = await PasswordReset.findOne({
+            //     order: [
+            //         ["createdAt", "DESC"]
+            //     ],
+            //     where: {
+            //         user_id: us.id,
+            //         is_used: false,
+            //     },
+            // });
 
             // if(data){
             // 	let created_at = moment(data.createdAt)
@@ -810,6 +821,7 @@ self.requestPasswordReset = async(req, res) => {
             const salt = await bcrypt.genSalt();
             const hashedResetString = await bcrypt.hash(resetString, salt);
 
+            
             var mailOptions = {
                 from: "1space.mia@gmail.com",
                 // from: process.env.AUTH_EMAIL,
@@ -834,19 +846,33 @@ self.requestPasswordReset = async(req, res) => {
                         user: "1space.mia@gmail.com",
                         pass: "rjxcwxgyrijvturw",
                     },
+                    tls: {
+                        rejectUnauthorized: false
+                    }
                 })
             );
 
+
             transporter.sendMail(mailOptions, function(error, info) {
+
                 if (error) {
-                    return res.json("error" + error);
                     console.log(error);
+                    res.apiError(error);
+                    // return res.status(500).json(error)
                 } else {
-                    return res.json({
-                        message: "Password reset link sent to you email",
-                    });
+
+                    res.apiSuccess({
+                        data: { message: "Password reset link sent to you email"},
+                        total: 1 // Assuming a single user is being returned
+                      }, {
+                        pageSize: 1,
+                        page: 1
+                      });
+
+                    
                 }
             });
+
         } else {
             return res.status(404).json({
                 message: "User not Found!",

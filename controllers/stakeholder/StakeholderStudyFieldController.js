@@ -9,45 +9,27 @@ dotenv.config();
 const Op = Sequelize.Op;
 const usrData = require("../../utils/userDataFromToken");
 const { saveActionState, getChildren } = require("../../utils/helper");
+const paginationHelper = require("../utils/pagination-helper");
 const actionHelper = require("../utils/action-helper");
 const { getModelAction } = require("../polymorphic/ActionStateController");
 //const getModelAction = require("../polymorphic/ActionStateController");
 let self = {};
 
 self.getAll = async (req, res) => {
-  const {
-    page = process.env.page,
-    size = process.env.size,
-    order = process.env.order,
-  } = req.query;
-
-  const { limit, offset } = paginate.getPagination(page, size);
-  let limiter = { limit, offset };
-  page == -1 ? (limiter = {}) : limiter;
   try {
-    const { rows, count } = await StakeholderStudyField.findAndCountAll({
-      limit: limiter.limit,
-      offset: limiter.offset,
-      order: [["createdAt", order]],
-      include: ["studyfield", "studyprogram"],
-    });
+    const paginatedResult = await paginationHelper(StakeholderStudyField, req);
 
-    const response = paginate.getPagingData(
-      { rows, count },
-      page,
-      limit,
-      count
-    );
+    // Use the response formatter to send the success response
+    res.apiSuccess({
+      data: paginatedResult.data,
+      total: paginatedResult.total,
+    }, paginatedResult.pagination);
 
-    res.send(response);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send({
-      message: err.message || "Some error occurred while retrieving data.",
-    });
+  } catch (error) {
+    console.error("Error in getAll method:", error);
+    res.apiError(error);
   }
 };
-
 self.get = async (req, res) => {
   try {
     let id = req.params.id;

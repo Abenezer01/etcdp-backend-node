@@ -9,34 +9,27 @@ dotenv.config();
 const Op = Sequelize.Op;
 const usrData = require("../../utils/userDataFromToken");
 const actionHelper = require("../utils/action-helper");
-let self = {};
+const paginationHelper = require("../utils/pagination-helper");
 const uuid = require("uuid");
-self.getAll = async(req, res) => {
-    const { page = process.env.cust_page, size = process.env.size, order = process.env.order } = req.query;
+let self = {};
 
-    const { limit, offset } = paginate.getPagination(page, size);
-    let limiter = { limit, offset }
-    page == -1 ? limiter = {} : limiter
 
-    try {
-        const { rows, count } = await WorkExperience.findAndCountAll({
-            limit: limiter.limit,
-            offset: limiter.offset,
-            order: [
-                ['createdAt', order]
-            ]
-        });
 
-        const response = paginate.getPagingData({ rows, count }, page, limit, count);
+self.getAll = async (req, res) => {
+  try {
+    const paginatedResult = await paginationHelper(WorkExperience, req);
 
-        res.send(response);
-    } catch (err) {
-        console.error(err);
-        res.status(500).send({
-            message: err.message || "Some error occurred while retrieving data."
-        });
-    }
-}
+    // Use the response formatter to send the success response
+    res.apiSuccess({
+      data: paginatedResult.data,
+      total: paginatedResult.total,
+    }, paginatedResult.pagination);
+
+  } catch (error) {
+    console.error("Error in getAll method:", error);
+    res.apiError(error);
+  }
+};
 
 
 self.get = async(req, res) => {

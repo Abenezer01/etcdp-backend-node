@@ -16,127 +16,25 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 const actionHelper = require("../utils/action-helper");
+const paginationHelper = require("../utils/pagination-helper");
 
 const Op = Sequelize.Op;
 
 let self = {};
 
 self.getAll = async (req, res) => {
-  let { page, size, order } = req.query;
-  //console.log("The page", page, size)
-  if (page == null && size == null) {
-    (page = process.env.page), (size = process.env.size);
-  }
-  if (order == null) {
-    order = process.env.order;
-  }
-  const { limit, offset } = paginate.getPagination(Number(page), Number(size));
   try {
-    //     let usr = await usrData.userData(req, res);
-    //     // let us = req.decoded
-    //     let us = {
-    //         id: "e1594d67-3aa2-429b-bb77-2e4ecc2124f8",
-    //         department_id: usr.departmentID,
-    //     };
-    //     let department_id = us.department_id;
-    //     let exist = await getChildren(department_id);
-    //     console.log("The exist", exist);
-    //     let other = await Stakeholder.findAll({
-    //         order: [
-    //             ["createdAt", "DESC"]
-    //         ],
-    //         where: {
-    //             department_id: {
-    //                 [Op.in]: exist,
-    //             },
-    //         },
-    //     });
-    //     let mine = await Stakeholder.findAll({
-    //         limit,
-    //         offset,
-    //         order: [
-    //             ["createdAt", order]
-    //         ],
-    //         where: {
-    //             department_id,
-    //         },
-    //     });
-    //     let otherArr = [];
-    //     console.log("The other is", other);
-    //     for (let da of other) {
-    //         let action = await ActionState.findOne({
-    //             where: {
-    //                 model_id: da.id,
-    //                 action: "APPROVE",
-    //             },
-    //         });
-    //         if (action) {
-    //             otherArr.push(da);
-    //             console.log("Other array", otherArr);
-    //         }
-    //     }
-    //     let data = mine.concat(otherArr);
-    //     paginate.getPagingData(data, page, limit);
-    //     return res.json(data);
+    const paginatedResult = await paginationHelper(Stakeholder, req);
+
+    // Use the response formatter to send the success response
+    res.apiSuccess({
+      data: paginatedResult.data,
+      total: paginatedResult.total,
+    }, paginatedResult.pagination);
+
   } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
-  // if (order == null) {
-  //     order = process.env.order
-  // }
-  // const { limit, offset } = paginate.getPagination(page, size);
-  // Stakeholder.findAndCountAll({
-  //         limit,
-  //         offset,
-  //         order: [
-  //             ['createdAt', order]
-  //         ],
-  //     })
-  //     .then(data => {
-  //         const response = paginate.getPagingData(data, page, limit);
-  //         res.send(response);
-  //     })
-  //     .catch(err => {
-  //         res.status(500).send({
-  //             message: err.message || "Some error occurred while retrieving data."
-  //         });
-  //     });
-};
-self.getStakeholders = async (req, res) => {
-  const {
-    page = process.env.page,
-    size = process.env.size,
-    order = process.env.order,
-  } = req.query;
-
-  let { limit, offset } = paginate.getPagination(page, size);
-  let limiter = { limit, offset };
-  page == -1 ? (limiter = {}) : limiter;
-  //return res.json(limiter.limit)
-  try {
-    const { rows, count } = await Stakeholder.findAndCountAll({
-      limit: limiter.limit,
-      offset: limiter.offset,
-      //include: ["staketype", "stakecategory"],
-      attributes: ["id", "trade_name"],
-      order: [["createdAt", order]],
-    });
-
-    const response = paginate.getPagingData(
-      { rows, count },
-      page,
-      limit,
-      count
-    );
-
-    res.send(response);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send({
-      message: err.message || "Some error occurred while retrieving data.",
-    });
+    console.error("Error in getAll method:", error);
+    res.apiError(error);
   }
 };
 self.get = async (req, res) => {

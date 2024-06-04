@@ -2,10 +2,10 @@ const stakeholderCategoryController = require("../../../controllers/stakeholder/
 const stakeholderSubCategoryController = require("../../../controllers/stakeholder/StakeholderSubCategoryController.js");
 const stakeholderTypeController = require("../../../controllers/stakeholder/StakeholderTypeController.js");
 const stakeholderInfoController = require("../../../controllers/stakeholder/StakeholderInfoController.js");
-const stakeholderController = require("../../../controllers/stakeholder/StakeholderController.js");
+const StakeholderController = require("../../../controllers/stakeholder/StakeholderController.js");
 const StakeholderContactPersonController = require("../../../controllers/stakeholder/StakeholderContactPersonController.js");
 const ownershiptypeController = require("../../../controllers/stakeholder/OwnershiptypeController");
-const BusinessfieldController = require("../../../controllers/stakeholder/BusinessfieldController");
+const BusinessFieldController = require("../../../controllers/stakeholder/BusinessFieldController");
 const CertificateController = require("../../../controllers/stakeholder/CertificateController");
 const TotalEmployeeController = require("../../../controllers/stakeholder/TotalEmployeeController");
 const AgeLevelController = require("../../../controllers/stakeholder/AgeLevelController");
@@ -14,7 +14,7 @@ const EmployeeAgeController = require("../../../controllers/stakeholder/Employee
 const EmployeeEducationController = require("../../../controllers/stakeholder/EmployeeEducationController");
 const WorkExperienceLevelController = require("../../../controllers/stakeholder/WorkExperienceLevelController");
 const WorkExperienceController = require("../../../controllers/stakeholder/WorkExperienceController");
-const StakeHolderTrainingController = require("../../../controllers/stakeholder/StakeHolderTrainingController");
+const StakeHolderTrainingController = require("../../../controllers/stakeholder/StakeholderTrainingController.js");
 const RegulationController = require("../../../controllers/stakeholder/RegulationController");
 const StudyFieldController = require("../../../controllers/stakeholder/StudyFieldController");
 const StakeholderStudyFieldController = require("../../../controllers/stakeholder/StakeholderStudyFieldController");
@@ -47,20 +47,20 @@ module.exports = function (express) {
   );
   route.delete("/ownership/:id", ownershiptypeController.delete);
   //business field route
-  route.get("/businessfield/", BusinessfieldController.getAll);
-  route.get("/businessfield/:id", BusinessfieldController.get);
-  route.get("/businessfield-search", BusinessfieldController.search);
+  route.get("/business-field/", BusinessFieldController.getAll);
+  route.get("/business-field/:id", BusinessFieldController.get);
+  route.get("/business-field-search", BusinessFieldController.search);
   route.post(
-    "/businessfield",
+    "/business-field",
     validateData.buisnessFieldValidate,
-    BusinessfieldController.save
+    BusinessFieldController.save
   );
   route.put(
-    "/businessfield/:id",
+    "/business-field/:id",
     validateData.buisnessFieldValidate,
-    BusinessfieldController.update
+    BusinessFieldController.update
   );
-  route.delete("/businessfield/:id", BusinessfieldController.delete);
+  route.delete("/business-field/:id", BusinessFieldController.delete);
   //stakeholder category route
   route.get("/stakeholder-category/", stakeholderCategoryController.getAll);
   route.get("/stakeholder-category/:id", stakeholderCategoryController.get);
@@ -149,26 +149,26 @@ module.exports = function (express) {
   );
   route.delete("/stakeholder-info/:id", stakeholderInfoController.delete);
   //stakeholder route
-  route.get("/stakeholder", stakeholderController.getStakeholders);
-  route.get("/stakeholder/:id", stakeholderController.get);
+  route.get("/stakeholder", StakeholderController.getAll);
+  route.get("/stakeholder/:id", StakeholderController.get);
   route.post(
     "/stakeholder/filter/stakeholder-type/",
-    stakeholderController.getStakeHolderByTypeId
+    StakeholderController.getStakeHolderByTypeId
   );
-  route.get("/stakeholder-search", stakeholderController.search);
+  route.get("/stakeholder-search", StakeholderController.search);
   route.post(
     "/stakeholder",
     validateData.stakeHolderValidate,
-    stakeholderController.save
+    StakeholderController.save
   );
   route.put(
     "/stakeholder/:id",
     validateData.stakeHolderValidate,
-    stakeholderController.update
+    StakeholderController.update
   );
-  route.delete("/stakeholder/:id", stakeholderController.delete);
+  route.delete("/stakeholder/:id", StakeholderController.delete);
 
-  route.get("/general-info/:id", stakeholderController.getStakeholderData);
+  route.get("/general-info/:id", StakeholderController.getStakeholderData);
 
   //stakeholder contact person
   route.get(
@@ -405,33 +405,33 @@ module.exports = function (express) {
   route.delete("/study-field/:id", StudyFieldController.delete);
   //stakeholder study field
   route.get(
-    "/stake-holder/study-field/",
+    "/stakeholder-study-field",
     StakeholderStudyFieldController.getAll
   );
   route.get(
-    "/stake-holder/study-field/:id",
+    "/stakeholder-study-field/:id",
     StakeholderStudyFieldController.get
   );
   route.get(
-    "/stake-holder/study-field/stake-holder/:id",
+    "/stakeholder-study-field/stakeholder/:id",
     StakeholderStudyFieldController.getStakeholderStudyFieldByStakeholderId
   );
   route.get(
-    "/stake-holder/study-field-search",
+    "/stakeholder-study-field-search",
     StakeholderStudyFieldController.search
   );
   route.post(
-    "/stake-holder/study-field",
+    "/stakeholder-study-field",
     validateData.stakeholderStudyFieldValidate,
     StakeholderStudyFieldController.save
   );
   route.put(
-    "/stake-holder/study-field/:id",
+    "/stakeholder-study-field/:id",
     validateData.stakeholderStudyFieldValidate,
     StakeholderStudyFieldController.update
   );
   route.delete(
-    "/stake-holder/study-field/:id",
+    "/stakeholder-study-field/:id",
     StakeholderStudyFieldController.delete
   );
   //study program
@@ -569,13 +569,21 @@ module.exports = function (express) {
   //summary
   route.get(
     "/matrix/stakeholder",
-    stakeholderController.countAllStakeholderWithStakeType
+    StakeholderController.countAllStakeholderWithStakeType
   );
   // route.get(
   //   "/count/stakeholder/stakeholdercategory",
-  //   stakeholderController.countAllStakeholderWithStakeCategory
+  //   StakeholderController.countAllStakeholderWithStakeCategory
   // );
   //Stakeholder email and phone
+  route.get(
+    "/stakeholder-email",
+    StakeholderEmailController.getAll
+  );
+  route.get(
+    "/stakeholder-phone",
+    StakeholderPhoneController.getAll
+  );
   route.post("/stakeholder-email", StakeholderEmailController.save);
   route.post("/stakeholder-phone", StakeholderPhoneController.save);
   route.put("/stakeholder-email/:id", StakeholderEmailController.update);

@@ -31,24 +31,19 @@ module.exports = (sequelize, DataTypes) => {
       tableName: "stakeholderstudyfields"
     }
   );
+
   StakeholderStudyField.associate = function (models) {
     StakeholderStudyField.belongsTo(models.StudyField, {
       as: "studyfield",
       foreignKey: "studyfield_id",
-      // constraints: false,
-      // attribute: ['description', 'title']
     });
     StakeholderStudyField.belongsTo(models.StudyProgram, {
       as: "studyprogram",
       foreignKey: "studyprogram_id",
-      // constraints: false,
-      // attribute: ['description', 'title']
     });
     StakeholderStudyField.belongsTo(models.StudyLevel, {
       as: "studylevel",
       foreignKey: "studylevel_id",
-      // constraints: false,
-      // attribute: ['description', 'title']
     });
   };
   return StakeholderStudyField;

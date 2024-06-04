@@ -3,41 +3,25 @@ const paginate = require("../../utils/pagination");
 const dotenv = require("dotenv");
 const usrData = require("../../utils/userDataFromToken");
 const actionHelper = require("../utils/action-helper");
+const paginationHelper = require("../utils/pagination-helper");
 dotenv.config();
 const Op = Sequelize.Op;
 
 let self = {};
 
 self.getAll = async (req, res) => {
-  const {
-    page = process.env.page,
-    size = process.env.size,
-    order = process.env.order,
-  } = req.query;
-
-  const { limit, offset } = paginate.getPagination(page, size);
-
   try {
-    const { rows, count } = await Training.findAndCountAll({
-      limit,
-      offset,
-      order: [["createdAt", order]],
-      //include: ["studyfield", "studyprogram"],
-    });
+    const paginatedResult = await paginationHelper(Training, req);
 
-    const response = paginate.getPagingData(
-      { rows, count },
-      page,
-      limit,
-      count
-    );
+    // Use the response formatter to send the success response
+    res.apiSuccess({
+      data: paginatedResult.data,
+      total: paginatedResult.total,
+    }, paginatedResult.pagination);
 
-    res.send(response);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send({
-      message: err.message || "Some error occurred while retrieving data.",
-    });
+  } catch (error) {
+    console.error("Error in getAll method:", error);
+    res.apiError(error);
   }
 };
 
