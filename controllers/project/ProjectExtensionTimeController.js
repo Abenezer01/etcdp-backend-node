@@ -75,30 +75,10 @@ self.search = async (req, res) => {
 };
 
 self.save = async (req, res) => {
-  try {
-    let usr = await usrData.userData(req, res);
-    let body = req.body;
-    if (usr) {
-      let data = await ProjectExtensionTime.create(body);
-      if (data) {
-        let usrID = usr.usrID;
-        await actionHelper.saveActionState(
-          data.id,
-          "projectextensiontime",
-          "REGISTER",
-          usrID,
-          req,
-          res
-        );
-      }
-      return res.json(data);
-    }
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+  saveRecord(ProjectExtensionTime, req, res);
 };
+
+
 self.update = async (req, res) => {
   try {
     let id = req.params.id;
@@ -135,19 +115,7 @@ self.update = async (req, res) => {
 };
 
 self.delete = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let data = await ProjectExtensionTime.destroy({
-      where: {
-        id: id,
-      },
-    });
-    return res.json(data);
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+  deleteRecord(ProjectExtensionTime, req, res);
 };
 
 module.exports = self;

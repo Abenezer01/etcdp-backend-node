@@ -97,62 +97,15 @@ self.search = async (req, res) => {
 };
 
 self.save = async (req, res) => {
-  try {
-    let usr = await usrData.userData(req, res);
-    let body = req.body;
-    if (usr) {
-      let data = await ProjectBond.create(body);
-      if (data) {
-        let usrID = usr.usrID;
-        await actionHelper.saveActionState(
-          data.id,
-          "ProjectBond",
-          "REGISTER",
-          usrID,
-          req,
-          res
-        );
-      }
-      return res.json(data);
-    }
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+  saveRecord(ProjectBond, req, res);
 };
 
 self.update = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let body = req.body;
-    let data = await ProjectBond.update(body, {
-      where: {
-        id: id,
-      },
-    });
-    return res.json(data);
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+  updateRecord(ProjectBond, req, res);
 };
 
 self.delete = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let data = await ProjectBond.destroy({
-      where: {
-        id: id,
-      },
-    });
-    return res.json(data);
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+  deleteRecord(ProjectBond, req, res);
 };
 
 module.exports = self;

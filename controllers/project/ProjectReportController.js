@@ -296,38 +296,11 @@ self.save = async (req, res) => {
 };
 
 self.update = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let body = req.body;
-    let data = await ProjectReport.update(body, {
-      where: {
-        id: id,
-      },
-    });
-    return res.status(200).json({
-      message: "Success",
-    });
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+  updateRecord(ProjectReport, req, res);
 };
 
 self.delete = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let data = await ProjectReport.destroy({
-      where: {
-        id: id,
-      },
-    });
-    return res.json(data);
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+  deleteRecord(ProjectReport, req, res);
 };
 
 self.getMonthlyProjectReport = async (req, res) => {

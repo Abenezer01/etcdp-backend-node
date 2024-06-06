@@ -66,61 +66,15 @@ self.search = async (req, res) => {
 };
 
 self.save = async (req, res) => {
-  try {
-    let usr = await usrData.userData(req, res);
-    let body = req.body;
-    if (usr) {
-      let data = await RoadInfo.create(body);
-      if (data) {
-        let usrID = usr.usrID;
-        await actionHelper.saveActionState(
-          data.id,
-          "roaddetail",
-          "REGISTER",
-          usrID,
-          req,
-          res
-        );
-      }
-      return res.json(data);
-    }
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+  saveRecord(RoadInfo, req, res);
 };
+
 self.update = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let body = req.body;
-    let data = await RoadInfo.update(body, {
-      where: {
-        id: id,
-      },
-    });
-    return res.json(data);
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+  updateRecord(RoadInfo, req, res);
 };
 
 self.delete = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let data = await RoadInfo.destroy({
-      where: {
-        id: id,
-      },
-    });
-    return res.json(data);
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+  deleteRecord(RoadInfo, req, res);
 };
 
 module.exports = self;

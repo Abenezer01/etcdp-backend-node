@@ -66,61 +66,15 @@ self.search = async (req, res) => {
 };
 
 self.save = async (req, res) => {
-  try {
-    let usr = await usrData.userData(req, res);
-    let body = req.body;
-    if (usr) {
-      let data = await Port.create(body);
-      if (data) {
-        let usrID = usr.usrID;
-        await actionHelper.saveActionState(
-          data.id,
-          "Port",
-          "REGISTER",
-          usrID,
-          req,
-          res
-        );
-      }
-      return res.json(data);
-    }
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+  saveRecord(Port, req, res);
 };
+
 self.update = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let body = req.body;
-    let data = await Port.update(body, {
-      where: {
-        id: id,
-      },
-    });
-    return res.json(data);
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+  updateRecord(Port, req, res);
 };
 
 self.delete = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let data = await Port.destroy({
-      where: {
-        id: id,
-      },
-    });
-    return res.json(data);
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+  deleteRecord(Port, req, res);
 };
 
 module.exports = self;
