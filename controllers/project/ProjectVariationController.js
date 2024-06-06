@@ -186,19 +186,7 @@ self.update = async (req, res) => {
 };
 
 self.delete = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let data = await ProjectVariation.destroy({
-      where: {
-        id: id,
-      },
-    });
-    return res.json(data);
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+  deleteRecord(ProjectVariation, req, res);
 };
 
 module.exports = self;
