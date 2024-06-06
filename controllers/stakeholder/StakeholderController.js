@@ -11,6 +11,7 @@ const {
 } = require("./../../models");
 const jwt = require("jsonwebtoken");
 const paginate = require("../../utils/pagination");
+const { getRecordById, saveRecord, updateRecord, deleteRecord } = require('../utils/format-helper');
 const usrData = require("../../utils/userDataFromToken");
 const dotenv = require("dotenv");
 dotenv.config();
@@ -118,69 +119,17 @@ self.search = async (req, res) => {
   }
 };
 
-self.save = async (req, res) => {
-  try {
-    let usr = await usrData.userData(req, res);
-    let body = req.body;
-    if (usr) {
-      req.body.department_id = usr.departmentID;
-      let data = await Stakeholder.create(body);
 
-      if (data) {
-        data.trade_name = body.trade_name;
-        data.save();
-        let usrID = usr.usrID;
-        actionHelper.saveActionState(
-          data.id,
-          "Stakeholder",
-          "REGISTER",
-          usrID,
-          req,
-          res
-        );
-      }
-      return res.json(data);
-    }
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+self.save = async (req, res) => {
+  saveRecord(Stakeholder, req, res);
 };
 
 self.update = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let body = req.body;
-    let data = await Stakeholder.update(body, {
-      where: {
-        id: id,
-      },
-    });
-    return res.status(200).json({
-      message: "Success",
-    });
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+  updateRecord(Stakeholder, req, res);
 };
 
 self.delete = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let data = await Stakeholder.destroy({
-      where: {
-        id: id,
-      },
-    });
-    return res.json(data);
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+  deleteRecord(Stakeholder, req, res);
 };
 self.countAllStakeholderWithStakeTypee = async (req, res) => {
   try {

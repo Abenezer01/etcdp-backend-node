@@ -10,7 +10,7 @@ let self = {};
 const usrData = require("../../utils/userDataFromToken");
 const actionHelper = require("../utils/action-helper");
 const paginationHelper = require("../utils/pagination-helper");
-
+const { getRecordById, saveRecord, updateRecord, deleteRecord } = require('../utils/format-helper');
 
 self.getAll = async (req, res) => {
   try {
@@ -163,41 +163,13 @@ self.save = async (req, res) => {
     });
   }
 };
+
 self.update = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let body = req.body;
-    let data = await StakeholderEmail.update(body, {
-      where: {
-        id: id,
-      },
-    });
-    return res.status(200).json({
-      message: "Success",
-    });
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+  updateRecord(StakeholderEmail, req, res);
 };
 
 self.delete = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let data = await StakeholderEmail.destroy({
-      where: {
-        id: id,
-      },
-    });
-    return res.status(200).json({
-      message: "Success",
-    });
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+  deleteRecord(StakeholderEmail, req, res);
 };
 
 module.exports = self;

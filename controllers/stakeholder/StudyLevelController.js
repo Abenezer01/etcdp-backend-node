@@ -9,6 +9,7 @@ const actionHelper = require("../utils/action-helper");
 let self = {};
 
 const paginationHelper = require("../utils/pagination-helper");
+const { getRecordById, saveRecord, updateRecord, deleteRecord } = require('../utils/format-helper');
 self.getAll = async (req, res) => {
   try {
     const paginatedResult = await paginationHelper(StudyLevel, req);
@@ -26,21 +27,7 @@ self.getAll = async (req, res) => {
 };
 
 self.get = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let data = await StudyLevel.findOne({
-      where: {
-        id: id,
-      },
-    });
-    return res.status(200).json({
-      data: data ? data : {},
-    });
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+  getRecordById(StudyLevel, req, res);
 };
 
 self.search = async (req, res) => {
@@ -62,64 +49,15 @@ self.search = async (req, res) => {
 };
 
 self.save = async (req, res) => {
-  try {
-    let usr = await usrData.userData(req, res);
-    let body = req.body;
-    if (usr) {
-      let data = await StudyLevel.create(body);
-      if (data) {
-        let us = usr.usrID;
-        await actionHelper.saveActionState(
-          data.id,
-          "StudyLevel",
-          "REGISTER",
-          us,
-          req,
-          res
-        );
-      }
-      return res.json(data);
-    }
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+  saveRecord(StudyLevel, req, res);
 };
 
 self.update = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let body = req.body;
-    let data = await StudyLevel.update(body, {
-      where: {
-        id: id,
-      },
-    });
-    return res.status(200).json({
-      message: "Success",
-    });
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+  updateRecord(StudyLevel, req, res);
 };
 
 self.delete = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let data = await StudyLevel.destroy({
-      where: {
-        id: id,
-      },
-    });
-    return res.json(data);
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+  deleteRecord(StudyLevel, req, res);
 };
 
 module.exports = self;

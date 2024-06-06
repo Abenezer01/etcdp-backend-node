@@ -1,13 +1,11 @@
-const { actionstate } = require("../../models");
+const { ActionState } = require("../../models")
 const usrData = require("../../utils/userDataFromToken");
-const crypto = require("crypto");
-const actionHelper = require("./actor-helper");
 const self = {};
 
 self.saveActionState = async (model_id, model, action, user_id, req, res) => {
   try {
     let usr = await usrData.userData(req, res);
-    const act = await actionstate.create({
+    const act = await ActionState.create({
       model_id,
       model,
       action,
@@ -15,6 +13,7 @@ self.saveActionState = async (model_id, model, action, user_id, req, res) => {
       position_id: usr.position_id,
       time: new Date(),
     });
+    return act;
 
     // if(act) {
     //   let me = await actionHelper.notifyActor(act,'check', usr.usrID, usr.departmentID)
@@ -28,7 +27,7 @@ self.saveActionState = async (model_id, model, action, user_id, req, res) => {
 };
 self.getAction = async function (idd) {
   try {
-    const data = await actionstate.findAll({
+    const data = await ActionState.findAll({
       where: {
         model_id: idd,
       },

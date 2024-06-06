@@ -12,6 +12,7 @@ const usrData = require("../../utils/userDataFromToken");
 const { saveActionState, getChildren } = require("../../utils/helper");
 const actionHelper = require("../utils/action-helper");
 const paginationHelper = require("../utils/pagination-helper");
+const { getRecordById, saveRecord, updateRecord, deleteRecord } = require('../utils/format-helper');
 let self = {};
 
 self.getAll = async (req, res) => {
@@ -31,21 +32,7 @@ self.getAll = async (req, res) => {
 };
 
 self.get = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let data = await StudyPeriodCost.findOne({
-      where: {
-        id: id,
-      },
-    });
-    return res.status(200).json({
-      data: data ? data : {},
-    });
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+  getRecordById(StudyPeriodCost, req, res);
 };
 //include: ["StudyField", "studyprogram", "studylevel"],
 
@@ -190,39 +177,13 @@ self.save = async (req, res) => {
   }
 };
 
+
 self.update = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let body = req.body;
-    let data = await StudyPeriodCost.update(body, {
-      where: {
-        id: id,
-      },
-    });
-    return res.status(200).json({
-      message: "success",
-    });
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+  updateRecord(StudyPeriodCost, req, res);
 };
 
 self.delete = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let data = await StudyPeriodCost.destroy({
-      where: {
-        id: id,
-      },
-    });
-    return res.json(data);
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+  deleteRecord(StudyPeriodCost, req, res);
 };
 
 module.exports = self;

@@ -10,6 +10,7 @@ const Op = Sequelize.Op;
 const usrData = require("../../utils/userDataFromToken");
 const actionHelper = require("../utils/action-helper");
 const paginationHelper = require("../utils/pagination-helper");
+const { getRecordById, saveRecord, updateRecord, deleteRecord } = require('../utils/format-helper');
 const uuid = require("uuid");
 let self = {};
 
@@ -33,21 +34,7 @@ self.getAll = async (req, res) => {
 
 
 self.get = async(req, res) => {
-    try {
-        let id = req.params.id;
-        let data = await WorkExperience.findOne({
-            where: {
-                id: id
-            }
-        });
-        return res.status(200).json({
-            data: (data) ? data : {}
-        })
-    } catch (error) {
-        res.status(500).json({
-            message: error.message
-        })
-    }
+    getRecordById(WorkExperience, req, res);
 }
 
 self.getWorkExperienceByStakeholderId = async(req, res) => {
@@ -514,21 +501,11 @@ self.update = async(req, res) => {
     }
 }
 
-self.delete = async(req, res) => {
-    try {
-        let id = req.params.id;
-        let data = await WorkExperience.destroy({
-            where: {
-                id: id
-            }
-        });
-        return res.json(data)
-    } catch (error) {
-        res.status(500).json({
-            message: error.message
-        })
-    }
-}
+
+  
+self.delete = async (req, res) => {
+    deleteRecord(WorkExperience, req, res);
+};
 
 
 module.exports = self;
