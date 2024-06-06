@@ -6,7 +6,7 @@ dotenv.config();
 const usrData = require("../../utils/userDataFromToken");
 const actionHelper = require("../utils/action-helper");
 const paginationHelper = require("../utils/pagination-helper");
-const { getRecordById } = require('../utils/format-helper');
+const { getRecordById, saveRecord, updateRecord, deleteRecord } = require('../utils/format-helper');
 let self = {};
 
 self.getAll = async (req, res) => {

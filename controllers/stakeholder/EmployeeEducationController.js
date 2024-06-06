@@ -6,6 +6,7 @@ const Op = Sequelize.Op;
 const usrData = require("../../utils/userDataFromToken");
 const { saveActionState, getChildren } = require("../../utils/helper");
 const paginationHelper = require("../utils/pagination-helper");
+const { getRecordById, saveRecord, updateRecord, deleteRecord } = require('../utils/format-helper');
 const actionHelper = require("../utils/action-helper");
 const file = require("../../models/file");
 let self = {};
@@ -28,21 +29,7 @@ self.getAll = async (req, res) => {
 };
 
 self.get = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let data = await EmployeeEducation.findOne({
-      where: {
-        id: id,
-      },
-    });
-    return res.status(200).json({
-      data: data ? data : {},
-    });
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+  getRecordById(EmployeeEducation, req, res);
 };
 self.getEmployeeEducationByStakeholderId = async (req, res) => {
   const { id } = req.params;
@@ -91,71 +78,6 @@ self.search = async (req, res) => {
   }
 };
 
-// self.savee = async(req, res) => {
-//     try {
-
-//         let usr = await usrData.userData(req, res)
-
-//         let us = usr.usrID
-//         let body = req.body;
-//         let arr = body.empEduArr
-//         let sumMale = 0
-//         let sumFemale = 0
-//         console.log("The array", arr[0].stakeholder_id)
-
-//         let stakeHolderId = arr[0].stakeholder_id
-
-//         if (usr) {
-//             let totalEmployee = await TotalEmployee.findOne({
-//                 where: {
-//                     stakeholder_id: stakeHolderId
-//                 }
-//             })
-//             let totalEmployeeData = totalEmployee.dataValues
-//             console.log("The total employee", totalEmployeeData.male)
-//             for (i = 0; i < arr.length; i++) {
-//                 sumMale += parseInt(arr[i].male);
-//                 sumFemale += parseInt(arr[i].female);
-//             }
-//             if (sumMale != totalEmployeeData.male) {
-//                 return res.status(400).json({
-//                     message: `The sum of male is not equal to total employee male ${totalEmployeeData.male}`
-//                 })
-//             }
-//             if (sumFemale != totalEmployeeData.female) {
-//                 return res.status(400).json({
-//                     message: `The sum of female is not equal to total employee female ${totalEmployeeData.female}`
-//                 })
-//             }
-//             var arr2 = [];
-//             for (i = 0; i < arr.length; i++) {
-//                 let body = {
-//                     stakeholder_id: arr[i].stakeholder_id,
-//                     year: arr[i].year,
-//                     domain: arr[i].domain,
-//                     studylevel_id: arr[i].studylevel_id,
-//                     department_name: arr[i].department_name,
-//                     male: arr[i].male,
-//                     female: arr[i].female,
-//                     nationality: arr[i].nationality,
-//                     quantity: arr[i].quantity
-//                 }
-//                 if (body) {
-//                     let data = await EmployeeEducation.create(body);
-//                     await actionHelper.saveActionState(data.id, "EmployeeEducation", "REGISTER", us)
-//                     arr2.push(data)
-//                 }
-//             }
-//             console.log("The array two datas are", arr2.dataValues)
-//             return res.json(arr2)
-//         }
-//     } catch (error) {
-//         //console.log("The controleer error", error)
-//         res.status(500).json({
-//             message: error.message
-//         })
-//     }
-// }
 self.getCollectionOfData = async (req, res) => {
   let registeredData = await EmployeeEducation.findAll();
 
@@ -553,20 +475,9 @@ self.update = async (req, res) => {
   }
 };
 
+
 self.delete = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let data = await EmployeeEducation.destroy({
-      where: {
-        id: id,
-      },
-    });
-    return res.json(data);
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+  deleteRecord(EmployeeEducation, req, res);
 };
 
 module.exports = self;

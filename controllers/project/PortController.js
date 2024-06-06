@@ -1,6 +1,6 @@
 const actionHelper = require("../utils/action-helper");
 const paginationHelper = require("../utils/pagination-helper")
-const { getRecordById } = require('../utils/format-helper');
+const { getRecordById, saveRecord, updateRecord, deleteRecord } = require('../utils/format-helper');
 const { Port, Sequelize } = require("../../models");
 const usrData = require("../../utils/userDataFromToken");
 const dotenv = require("dotenv");

@@ -12,7 +12,7 @@ const usrData = require("../../utils/userDataFromToken");
 const actionHelper = require("../utils/action-helper");
 const cipherHelper = require("../utils/cipher-helper");
 const paginationHelper = require("../utils/pagination-helper")
-const { getRecordById } = require('../utils/format-helper');
+const { getRecordById, saveRecord, updateRecord, deleteRecord } = require('../utils/format-helper');
 
 const Op = Sequelize.Op;
 const paginate = require("../../utils/pagination");

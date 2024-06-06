@@ -7,7 +7,7 @@ let self = {};
 const usrData = require("../../utils/userDataFromToken");
 const actionHelper = require("../utils/action-helper");
 const paginationHelper = require("../utils/pagination-helper");
-
+const { getRecordById, saveRecord, updateRecord, deleteRecord } = require('../utils/format-helper');
 
 self.getAll = async (req, res) => {
   try {
@@ -26,21 +26,7 @@ self.getAll = async (req, res) => {
 };
 
 self.get = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let data = await OperationLocation.findOne({
-      where: {
-        id: id,
-      },
-    });
-    return res.status(200).json({
-      data: data ? data : {},
-    });
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+  getRecordById(OperationLocation, req, res);
 };
 self.getByStakeholderId = async (req, res) => {
   const { id } = req.params;
@@ -118,26 +104,6 @@ self.save = async (req, res) => {
   }
 };
 
-// self.save = async(req, res) => {
-//     try {
-//         let usr = await usrData.userData(req, res);
-//         let body = req.body.opLocation;
-//         if (usr) {
-//             let us = usr.usrID;
-//             let arr = [];
-//             for (i = 0; i < body.length; i++) {
-//                 let data = await OperationLocation.create(body[i]);
-//                 await actionHelper.saveActionState(data.id, "OperationLocation", "REGISTER", us, req, res);
-//                 arr.push(data);
-//             }
-//             return res.json(arr);
-//         }
-//     } catch (error) {
-//         res.status(500).json({
-//             message: error.message,
-//         });
-//     }
-// };
 self.update = async (req, res) => {
   try {
     const usr = await usrData.userData(req, res);
@@ -168,20 +134,9 @@ self.update = async (req, res) => {
   }
 };
 
+
 self.delete = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let data = await OperationLocation.destroy({
-      where: {
-        id: id,
-      },
-    });
-    return res.json(data);
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+  deleteRecord(OperationLocation, req, res);
 };
 
 module.exports = self;

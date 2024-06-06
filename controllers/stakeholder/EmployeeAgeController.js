@@ -8,6 +8,7 @@ const usrData = require("../../utils/userDataFromToken");
 const { saveActionState, getChildren } = require("../../utils/helper");
 const actionHelper = require("../utils/action-helper");
 const paginationHelper = require("../utils/pagination-helper");
+const { getRecordById, saveRecord, updateRecord, deleteRecord } = require('../utils/format-helper');
 let self = {};
 const uuid = require("uuid");
 
@@ -30,21 +31,7 @@ self.getAll = async (req, res) => {
 };
 
 self.get = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let data = await EmployeeAge.findOne({
-      where: {
-        id: id,
-      },
-    });
-    return res.status(200).json({
-      data: data ? data : {},
-    });
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+  getRecordById(EmployeeAge, req, res);
 };
 self.getEmployeeAgeByStakeholderId = async (req, res) => {
   const { id } = req.params;
@@ -450,20 +437,9 @@ self.update = async (req, res) => {
   }
 };
 
+
 self.delete = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let data = await EmployeeAge.destroy({
-      where: {
-        id: id,
-      },
-    });
-    return res.json(data);
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+  deleteRecord(EmployeeAge, req, res);
 };
 
 module.exports = self;

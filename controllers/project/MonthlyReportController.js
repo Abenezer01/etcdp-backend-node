@@ -1,6 +1,6 @@
 const { ProjectPlan, MonthlyReport, Sequelize } = require("./../../models");
 const paginationHelper = require("../utils/pagination-helper")
-const { getRecordById } = require('../utils/format-helper');
+const { getRecordById, saveRecord, updateRecord, deleteRecord } = require('../utils/format-helper');
 
 let self = {};
 
