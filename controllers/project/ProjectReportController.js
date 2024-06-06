@@ -8,6 +8,7 @@ const {
 const usrData = require("../../utils/userDataFromToken");
 const actionHelper = require("../utils/action-helper");
 const paginationHelper = require("../utils/pagination-helper")
+const { getRecordById } = require('../utils/format-helper');
 const Op = Sequelize.Op;
 const paginate = require("../../utils/pagination");
 const dotenv = require("dotenv");
@@ -29,22 +30,9 @@ self.getAll = async (req, res) => {
     res.apiError(error);
   }
 };
+
 self.get = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let data = await ProjectReport.findOne({
-      where: {
-        id: id,
-      },
-    });
-    return res.status(200).json({
-      data: data ? data : {},
-    });
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+  getRecordById(ProjectPlan, req, res);
 };
 
 self.getByProjectId = async (req, res) => {
@@ -70,40 +58,7 @@ self.getByProjectId = async (req, res) => {
     res.apiError(error);
   }
 };
-// self.getByProjectId = async (req, res) => {
-//   let id = req.params.id;
-//   let { page, size, order } = req.query;
-//   //console.log("The page", page, size)
-//   if (page == null && size == null) {
-//     (page = process.env.page), (size = process.env.size);
-//   }
-//   if (order == null) {
-//     order = process.env.order;
-//   }
-//   const { limit, offset } = paginate.getPagination(page, size);
-//   ProjectReport
-//     .findAndCountAll({
-//       limit,
-//       offset,
-//       order: [["createdAt", "ASC"]],
-//       where: {
-//         project_id: id,
-//       },
-//       include: {
-//         model: file,
-//         as: "file",
-//       },
-//     })
-//     .then((data) => {
-//       const response = paginate.getPagingData(data, page, limit);
-//       res.send(response);
-//     })
-//     .catch((err) => {
-//       res.status(500).send({
-//         message: err.message || "Some error occurred while retrieving data.",
-//       });
-//     });
-// };
+
 self.getByProjectIdAndPopulate = async (req, res) => {
   const { id } = req.params;
   const {

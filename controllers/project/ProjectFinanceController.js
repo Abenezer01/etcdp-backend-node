@@ -1,8 +1,8 @@
 const actionHelper = require("../utils/action-helper");
 const paginationHelper = require("../utils/pagination-helper")
+const { getRecordById } = require('../utils/format-helper');
 const { ProjectFinance, Sequelize } = require("./../../models");
 const usrData = require("../../utils/userDataFromToken");
-const paginate = require("../../utils/pagination");
 const Op = Sequelize.Op;
 const dotenv = require("dotenv");
 dotenv.config();
@@ -42,19 +42,7 @@ self.getByProjectId = async (req, res) => {
   }
 };
 self.get = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let data = await ProjectFinance.findOne({
-      where: {
-        id: id,
-      },
-    });
-    return res.status(200).json(data);
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+  getRecordById(ProjectFinance, req, res);
 };
 
 self.search = async (req, res) => {

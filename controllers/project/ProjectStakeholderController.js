@@ -12,6 +12,7 @@ const usrData = require("../../utils/userDataFromToken");
 const actionHelper = require("../utils/action-helper");
 const cipherHelper = require("../utils/cipher-helper");
 const paginationHelper = require("../utils/pagination-helper")
+const { getRecordById } = require('../utils/format-helper');
 
 const Op = Sequelize.Op;
 const paginate = require("../../utils/pagination");
@@ -232,22 +233,9 @@ self.getByStakeholderId = async (req, res) => {
     });
   }
 };
+
 self.get = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let data = await ProjectStakeholder.findOne({
-      where: {
-        id: id,
-      },
-    });
-    return res.status(200).json({
-      data: data ? data : {},
-    });
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+  getRecordById(ProjectStakeholder, req, res);
 };
 
 self.search = async (req, res) => {

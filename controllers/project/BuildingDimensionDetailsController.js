@@ -6,6 +6,7 @@ const Op = Sequelize.Op;
 const paginate = require("../../utils/pagination");
 const dotenv = require("dotenv");
 const { where } = require("sequelize");
+const { getRecordById } = require('../utils/format-helper');
 dotenv.config();
 let self = {};
 
@@ -45,48 +46,8 @@ self.getByProjectId = async (req, res) => {
 };
 
 
-// self.getByProjectId = async (req, res) => {
-//   const { id } = req.params;
-//   const {
-//     page = process.env.page,
-//     size = process.env.size,
-//     order = process.env.order,
-//   } = req.query;
-
-//   const { limit, offset } = paginate.getPagination(page, size);
-//   try {
-//     const data = await BuildingDimensionDetail.findAndCountAll({
-//       limit,
-//       offset,
-//       where: { project_id: id },
-//       order: [["createdAt", order]],
-//     });
-
-//     const response = paginate.getPagingData(data, page, limit);
-//     res.send(response);
-//   } catch (error) {
-//     res.status(500).send({
-//       message: error.message || "Some error occurred while retrieving data.",
-//     });
-//   }
-// };
-
 self.get = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let data = await BuildingDimensionDetail.findOne({
-      where: {
-        id: id,
-      },
-    });
-    return res.status(200).json({
-      data: data ? data : {},
-    });
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+  getRecordById(BuildingDimensionDetail, req, res);
 };
 
 self.search = async (req, res) => {

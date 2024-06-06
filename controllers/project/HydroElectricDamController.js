@@ -2,8 +2,8 @@ const { HydroElectricDam, Sequelize } = require("../../models");
 const usrData = require("../../utils/userDataFromToken");
 const actionHelper = require("../utils/action-helper");
 const paginationHelper = require("../utils/pagination-helper")
+const { getRecordById } = require('../utils/format-helper');
 const Op = Sequelize.Op;
-const paginate = require("../../utils/pagination");
 const dotenv = require("dotenv");
 dotenv.config();
 let self = {};
@@ -43,27 +43,13 @@ self.getByProjectId = async (req, res) => {
 };
 
 self.get = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let data = await HydroelectricDam.findOne({
-      where: {
-        id: id,
-      },
-    });
-    return res.status(200).json({
-      data: data ? data : {},
-    });
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+  getRecordById(HydroElectricDam, req, res);
 };
 
 self.search = async (req, res) => {
   try {
     let text = req.query.text;
-    let data = await HydroelectricDam.findAll({
+    let data = await HydroElectricDam.findAll({
       where: {
         name: {
           [Op.like]: "%" + text + "%",
@@ -83,12 +69,12 @@ self.save = async (req, res) => {
     let usr = await usrData.userData(req, res);
     let body = req.body;
     if (usr) {
-      let data = await HydroelectricDam.create(body);
+      let data = await HydroElectricDam.create(body);
       if (data) {
         let usrID = usr.usrID;
         await actionHelper.saveActionState(
           data.id,
-          "HydroelectricDam",
+          "HydroElectricDam",
           "REGISTER",
           usrID,
           req,
@@ -108,7 +94,7 @@ self.update = async (req, res) => {
   try {
     let id = req.params.id;
     let body = req.body;
-    let data = await HydroelectricDam.update(body, {
+    let data = await HydroElectricDam.update(body, {
       where: {
         id: id,
       },
@@ -126,7 +112,7 @@ self.update = async (req, res) => {
 self.delete = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await HydroelectricDam.destroy({
+    let data = await HydroElectricDam.destroy({
       where: {
         id: id,
       },

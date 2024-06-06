@@ -2,8 +2,8 @@ const { ConstructionResource, Resource, Sequelize } = require("../../models");
 const usrData = require("../../utils/userDataFromToken");
 const actionHelper = require("../utils/action-helper");
 const paginationHelper = require("../utils/pagination-helper")
+const { getRecordById } = require('../utils/format-helper');
 const Op = Sequelize.Op;
-const paginate = require("../../utils/pagination");
 const dotenv = require("dotenv");
 dotenv.config();
 let self = {};
@@ -49,61 +49,9 @@ self.getByProjectId = async (req, res) => {
   }
 };
 
-// self.getByProjectId = async (req, res) => {
-//   const { id } = req.params;
-//   const {
-//     page = process.env.page,
-//     size = process.env.size,
-//     order = process.env.order,
-//   } = req.query;
-
-//   const { limit, offset } = paginate.getPagination(page, size);
-//   try {
-//     const { rows, count } = await ConstructionResource.findAndCountAll({
-//       limit,
-//       offset,
-//       where: { project_id: id },
-//       include: { model: Resource, as: "Resource" },
-//       order: [["createdAt", order]],
-//     });
-//     let newData = await Promise.all(
-//       rows.map(async (item) => {
-//         //console.log("The item id", item.dataValues);
-//         return {
-//           ...item.dataValues,
-//           status: await actionHelper.getAction(item.dataValues.id),
-//         };
-//       })
-//     );
-//     const response = paginate.getPagingData(
-//       { rows: newData, count },
-//       page,
-//       limit
-//     );
-//     res.send(response);
-//   } catch (error) {
-//     res.status(500).send({
-//       message: error.message || "Some error occurred while retrieving data.",
-//     });
-//   }
-// };
 
 self.get = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let data = await ConstructionResource.findOne({
-      where: {
-        id: id,
-      },
-    });
-    return res.status(200).json({
-      data: data ? data : {},
-    });
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+  getRecordById(ConstructionResource, req, res);
 };
 
 self.search = async (req, res) => {
