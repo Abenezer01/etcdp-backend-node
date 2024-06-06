@@ -28,21 +28,14 @@ self.getAll = async (req, res) => {
     res.apiError(error);
   }
 };
-self.getByProjectId = async (req, res) => {
-  const { id } = req.params;
-  const {
-    page = process.env.page,
-    size = process.env.size,
-    order = process.env.order,
-  } = req.query;
 
-  const { limit, offset } = paginate.getPagination(page, size);
+self.getByProjectId = async (req, res) => {
+  
+  const { id } = req.params;
+ 
   try {
     let data = await ProjectTime.findOne({
-      limit,
-      offset,
-      where: { project_id: id },
-      order: [["createdAt", order]],
+      where: { project_id: id }
     });
     const extensions = await ProjectExtensionTime.findAll({
       where: {
@@ -65,14 +58,17 @@ self.getByProjectId = async (req, res) => {
     data = data.toJSON();
     data.revised_completion_date = revised_completion_date;
 
-    return res.json(data);
 
-    const response = paginate.getPagingData(data, page, limit);
-    res.send(response);
-  } catch (error) {
-    res.status(500).send({
-      message: error.message || "Some error occurred while retrieving data.",
+    res.apiSuccess({
+      data: data,
+      total: 1 // Assuming a single user is being returned
+    }, {
+      pageSize: 1,
+      page: 1
     });
+  } catch (error) {
+    console.error("Error:", error);
+    res.apiError(error);
   }
 };
 self.get = async (req, res) => {

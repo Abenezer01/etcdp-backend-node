@@ -66,6 +66,7 @@ module.exports = (sequelize, DataTypes) => {
     });
     Project.hasMany(models.ProjectStakeholder, {
       foreignKey: "project_id",
+      as: "projectstakeholders"
     });
     Project.hasMany(models.ProjectVariation, {
       foreignKey: "project_id",

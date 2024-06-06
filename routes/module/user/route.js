@@ -1,8 +1,8 @@
-const userController = require("../../../controllers/department/userController.js");
-const roleController = require("../../../controllers/department/roleController.js");
-const permissionController = require("../../../controllers/department/permissionController.js");
-const userPhotoController = require("../../../controllers/department/userPhotoController.js");
-const positionController = require("../../../controllers/department/positionController.js");
+const UserController = require("../../../controllers/department/UserController.js");
+const roleController = require("../../../controllers/department/RoleController.js");
+const PermissionController = require("../../../controllers/department/PermissionController.js");
+const UserPhotoController = require("../../../controllers/department/UserPhotoController.js");
+const positionController = require("../../../controllers/department/PositionController.js");
 const departmentController = require("../../../controllers/department/departmentController.js");
 // const TestController = require("../../../controllers/TestController.js")
 //Hr
@@ -18,23 +18,24 @@ module.exports = function (express) {
   const route = express.Router();
 
   //user route
-  route.get("/user", userController.getAll);
-  route.get("/user/:id", userController.get);
-  route.get("/user_search/:key", userController.search);
-  route.post("/user", validateInput.createUser, userController.save);
-  route.put("/user/:id", validateInput.createUser, userController.update);
-  route.delete("/user/:id", userController.delete);
-  route.get("/department-users/:id", userController.getDepartmentUsers);
+  
+  route.get("/user", UserController.getAll);
+  route.get("/user/:id", UserController.get);
+  route.get("/user_search/:key", UserController.search);
+  route.post("/user", validateInput.createUser, UserController.save);
+  route.put("/user/:id", validateInput.createUser, UserController.update);
+  route.delete("/user/:id", UserController.delete);
+  route.get("/department-users/:id", UserController.getDepartmentUsers);
 
-  route.put("/account-activate/:id", validateInput.createUser, userController.activateAccount);
-  route.put("/account-deactivate/:id", validateInput.createUser, userController.deactivateAccount);
+  route.put("/account-activate/:id", validateInput.createUser, UserController.activateAccount);
+  route.put("/account-deactivate/:id", validateInput.createUser, UserController.deactivateAccount);
 
 
-  route.post("/assign-user-position", userController.assignPosition);
-  route.get("/disable-user-position/:id", userController.dePosition);
-  route.post("/switch-account", userController.switchAccount);
-  route.get("/user-positions/:id", userController.getAllUserPositions);
-  route.get("/user-check-status/:id", userController.checkUserStatus);
+  route.post("/assign-user-position", UserController.assignPosition);
+  route.get("/disable-user-position/:id", UserController.dePosition);
+  route.post("/switch-account", UserController.switchAccount);
+  route.get("/user-positions/:id", UserController.getAllUserPositions);
+  route.get("/user-check-status/:id", UserController.checkUserStatus);
 
   //position route
   route.get("/position", positionController.getAll);
@@ -94,50 +95,50 @@ module.exports = function (express) {
   route.delete("/role/:id", roleController.delete);
 
   //Role route
-  route.get("/permission", permissionController.getAll);
-  route.get("/permission/:id", permissionController.get);
-  route.get("/permission_search", permissionController.search);
+  route.get("/permission", PermissionController.getAll);
+  route.get("/permission/:id", PermissionController.get);
+  route.get("/permission_search", PermissionController.search);
   route.post(
     "/permission",
     validateInput.permissionValidate,
-    permissionController.save
+    PermissionController.save
   );
-  route.put("/permission/:id", permissionController.update);
-  route.delete("/permission/:id", permissionController.delete);
-  route.get("/generate-permission", permissionController.initPermission);
-  route.get("/models", permissionController.getModels);
+  route.put("/permission/:id", PermissionController.update);
+  route.delete("/permission/:id", PermissionController.delete);
+  route.get("/generate-permission", PermissionController.initPermission);
+  route.get("/models", PermissionController.getModels);
 
   route.get(
     "/grouped-permissions/:id/:module",
-    permissionController.getGroupedPermissions
+    PermissionController.getGroupedPermissions
   );
   route.get(
     "/position-permissions/:id/:action",
-    permissionController.getPermissionsByAction
+    PermissionController.getPermissionsByAction
   );
 
   route.post(
     "/assign-permissions",
-    permissionController.assignPositionPermissions
+    PermissionController.assignPositionPermissions
   );
 
   route.post(
     "/assign-position-permissions",
-    permissionController.assignPositionPermissions
+    PermissionController.assignPositionPermissions
   );
-  route.get("/user-permissions", permissionController.getUserPermission);
+  route.get("/user-permissions", PermissionController.getUserPermission);
 
   route.get(
     "/module-permissions/:module",
-    permissionController.getPermissionsByModule
+    PermissionController.getPermissionsByModule
   );
-  route.get("/permission-modules", permissionController.getPermissionModules);
+  route.get("/permission-modules", PermissionController.getPermissionModules);
   //Photo route
-  // route.get("/photo", userPhotoController.getAll);
-  // route.get("/photo/:id", userPhotoController.get);
-  // route.post("/photo/:id", userPhotoController.save);
-  // route.put("/photo/:id", validateInput.userPhotoValidate, userPhotoController.update);
-  // route.delete("/photo/:id", validateInput.userPhotoValidate, userPhotoController.delete);
+  // route.get("/photo", UserPhotoController.getAll);
+  // route.get("/photo/:id", UserPhotoController.get);
+  // route.post("/photo/:id", UserPhotoController.save);
+  // route.put("/photo/:id", validateInput.userPhotoValidate, UserPhotoController.update);
+  // route.delete("/photo/:id", validateInput.userPhotoValidate, UserPhotoController.delete);
 
   //hr for
   //Role route
@@ -224,7 +225,7 @@ module.exports = function (express) {
   route.get("/contact-person/user/:id", ContactPersonController.getByUserId);
   route.get("/job-experience/user/:id", JobExperienceController.getByUserId);
   //test
-  route.post("/change-language", userController.changeLanguage);
+  route.post("/change-language", UserController.changeLanguage);
   route.get("/test", departmentController.test);
 
   return route;

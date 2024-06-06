@@ -24,44 +24,69 @@ self.getAll = async (req, res) => {
     res.apiError(error);
   }
 };
+
 self.getByProjectId = async (req, res) => {
   const { id } = req.params;
-  const {
-    page = process.env.page,
-    size = process.env.size,
-    order = process.env.order,
-  } = req.query;
-
-  const { limit, offset } = paginate.getPagination(page, size);
   try {
-    const { rows, count } = await ConstructionResource.findAndCountAll({
-      limit,
-      offset,
-      where: { project_id: id },
-      include: { model: Resource, as: "Resource" },
-      order: [["createdAt", order]],
-    });
-    let newData = await Promise.all(
-      rows.map(async (item) => {
-        //console.log("The item id", item.dataValues);
-        return {
-          ...item.dataValues,
-          status: await actionHelper.getAction(item.dataValues.id),
-        };
-      })
-    );
-    const response = paginate.getPagingData(
-      { rows: newData, count },
-      page,
-      limit
-    );
-    res.send(response);
+    const whereCondition = { project_id: id }
+
+    const includeOptions = [
+      { model: Resource, as: 'Resource' } // Example association
+    ];
+   
+
+    const paginatedResult = await paginationHelper(ConstructionResource, req, whereCondition, includeOptions);
+
+    // Use the response formatter to send the success response
+    res.apiSuccess({
+      data: paginatedResult.data,
+      total: paginatedResult.total,
+    }, paginatedResult.pagination);
+
   } catch (error) {
-    res.status(500).send({
-      message: error.message || "Some error occurred while retrieving data.",
-    });
+    console.error("Error in getAll method:", error);
+    res.apiError(error);
   }
 };
+
+// self.getByProjectId = async (req, res) => {
+//   const { id } = req.params;
+//   const {
+//     page = process.env.page,
+//     size = process.env.size,
+//     order = process.env.order,
+//   } = req.query;
+
+//   const { limit, offset } = paginate.getPagination(page, size);
+//   try {
+//     const { rows, count } = await ConstructionResource.findAndCountAll({
+//       limit,
+//       offset,
+//       where: { project_id: id },
+//       include: { model: Resource, as: "Resource" },
+//       order: [["createdAt", order]],
+//     });
+//     let newData = await Promise.all(
+//       rows.map(async (item) => {
+//         //console.log("The item id", item.dataValues);
+//         return {
+//           ...item.dataValues,
+//           status: await actionHelper.getAction(item.dataValues.id),
+//         };
+//       })
+//     );
+//     const response = paginate.getPagingData(
+//       { rows: newData, count },
+//       page,
+//       limit
+//     );
+//     res.send(response);
+//   } catch (error) {
+//     res.status(500).send({
+//       message: error.message || "Some error occurred while retrieving data.",
+//     });
+//   }
+// };
 
 self.get = async (req, res) => {
   try {

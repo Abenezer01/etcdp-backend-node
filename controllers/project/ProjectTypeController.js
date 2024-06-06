@@ -24,31 +24,6 @@ self.getAll = async (req, res) => {
   }
 };
 
-self.getByProjectId = async (req, res) => {
-  const { id } = req.params;
-  const {
-    page = process.env.page,
-    size = process.env.size,
-    order = process.env.order,
-  } = req.query;
-
-  const { limit, offset } = paginate.getPagination(page, size);
-  try {
-    const data = await ProjectType.findAndCountAll({
-      limit,
-      offset,
-      where: { project_id: id },
-      order: [["createdAt", order]],
-    });
-
-    const response = paginate.getPagingData(data, page, limit);
-    res.send(response);
-  } catch (error) {
-    res.status(500).send({
-      message: error.message || "Some error occurred while retrieving data.",
-    });
-  }
-};
 self.get = async (req, res) => {
   try {
     let id = req.params.id;

@@ -1,5 +1,5 @@
 const actionHelper = require("../utils/action-helper");
-const { Position, Permission, PositionPermission, Sequelize } = require("./../../models");
+const { Position, Permission, PositionPermission, Sequelize } = require("../../models");
 const usrData = require("../../utils/userDataFromToken");
 const paginationHelper = require("../utils/pagination-helper")
 

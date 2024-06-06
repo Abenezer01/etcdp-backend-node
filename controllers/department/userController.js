@@ -12,13 +12,14 @@ const {
     Role,
     sequelize,
     Sequelize,
-} = require("./../../models");
+} = require("../../models");
 const bcrypt = require("bcrypt");
 let validator = require("../../utils/validator");
 const Op = Sequelize.Op;
 const dotenv = require("dotenv");
 dotenv.config();
 const usrData = require("../../utils/userDataFromToken");
+const { userInfo } = require("../../utils/userInfo");
 const {
     getChildren,
     encrypt,
@@ -1058,4 +1059,122 @@ self.deactivateAccount = async(req, res) => {
         })
     }
 }
+
+
+
+self.getMe = async (req, res) => {
+  try {
+    const user = await userInfo(req, res)
+
+    // if ( user =! "TOKEN_MISSING" || user != "INVALID_EXPIRED_TOKEN")
+    // return res.json(user)
+    switch (user) {
+        case "TOKEN_MISSING":
+            return res.status(404).json({
+                status: 404,
+                _links: {
+                  previousPage: null,
+                  nextPage: null
+                },
+                _warning: [],
+                payload: [],
+                _attributes: {},
+                _errors: [{ message: "Authorization token is missing" }],
+                _generated: new Date().toISOString()
+              })
+           
+             
+            break;
+        case "INVALID_EXPIRED_TOKEN":
+
+        
+            return res.status(401).json({
+                _links: {
+                previousPage: null,
+                nextPage: null
+                },
+                _warning: [],
+                payload: [],
+                _attributes: {},
+                _errors: [{ message: "Invalid Authorization header format" }],
+                _generated: new Date().toISOString()
+            })
+            break;
+        case "TOKEN_NOT_FOUND":
+
+            return res.status(404).json({
+                _links: {
+                previousPage: null,
+                nextPage: null
+                },
+                _warning: [],
+                payload: [],
+                _attributes: {},
+                _errors: [{ message: "Authorization token is missing" }],
+                _generated: new Date().toISOString()
+            })
+            break;
+            
+    
+        default:
+            // return res.json("default")
+            break;
+
+    }
+
+    const usr = await User.findOne({
+      where: { id: user.usrID, is_activated: true },
+      include: [{ model: UserPosition, as: "positions" }]
+    });
+
+    const [usPos, usPhone] = await Promise.all([
+      UserPosition.findOne({ where: { user_id: usr.id, is_primary: true } }),
+      UserPhone.findOne({ where: { user_id: usr.id, is_primary: true } })
+    ]);
+
+    const pos = await Position.findOne({ where: { id: usPos.position_id } });
+    const action = await ActionState.findOne({ where: { model_id: usr.id, action: "CHECK" } });
+    const profile_pic = await Photo.findOne({ where: { model_id: usr.id, type: "USER_PROFILE_PHOTO" } });
+
+    const userPayload = {
+      id: usr.id,
+      department_id: pos.department_id,
+      position_id: pos.id,
+      lang: usr.lang
+    };
+
+    const accessToken = jwt.sign(userPayload, process.env.ACCESS_TOKEN_KEY, { expiresIn: "1000h" });
+
+    const replyUser = {
+      id: usr.id,
+      full_name: usr.full_name,
+      first_name: usr.first_name,
+      middle_name: usr.middle_name,
+      last_name: usr.last_name,
+      phone: usPhone?.phone,
+      gender: usr.gender,
+      position_id: pos.id,
+      position_name: pos.name,
+      department_id: usPos.department_id,
+      user_position_id: usPos.id,
+      is_checked: !!action,
+      profile_completed: !!profile_pic,
+    };
+
+    const data = { user_data: replyUser, access_token: accessToken };
+
+    res.apiSuccess({
+      data: data,
+      total: 1 // Assuming a single user is being returned
+    }, {
+      pageSize: 1,
+      page: 1
+    });
+  } catch (error) {
+    console.error("Error:", error);
+    res.apiError(error);
+  }
+};
+
+
 module.exports = self;

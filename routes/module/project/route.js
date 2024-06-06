@@ -56,7 +56,6 @@ module.exports = function (express) {
 
   route.get("/project-type", ProjectTypeController.getAll);
   route.get("/project-type/:id", ProjectTypeController.get);
-  route.get("/project/project-type/:id", ProjectTypeController.getByProjectId);
   route.get("/project-type-search", ProjectTypeController.search);
   route.post(
     "/project-type",
@@ -71,16 +70,13 @@ module.exports = function (express) {
   route.delete("/project-type/:id", ProjectTypeController.delete);
   //project category
   route.get("/project-category", ProjectCategoryController.getAll);
-  route.get("/project-category/:id", ProjectCategoryController.get);
-  route.get(
-    "/project/project-category/:id",
-    ProjectCategoryController.getByProjectId
-  );
-  route.get("/project-category-search", ProjectCategoryController.search);
   route.get(
     "/project-category/projecttype/:id",
     ProjectCategoryController.getAllProCatByTypeId
   );
+  route.get("/project-category/:id", ProjectCategoryController.get);
+  route.get("/project-category-search", ProjectCategoryController.search);
+  
   route.post(
     "/project-category",
     validateData.projectCategoryValidate,
@@ -96,8 +92,8 @@ module.exports = function (express) {
   route.get("/project-sub-category", ProjectSubCategoryController.getAll);
   route.get("/project-sub-category/:id", ProjectSubCategoryController.get);
   route.get(
-    "/project/project-sub-category/:id",
-    ProjectSubCategoryController.getByProjectId
+    "/project-category/project-sub-category/:id",
+    ProjectSubCategoryController.getByProjectCategoryId
   );
   route.get(
     "/project-sub-category-search",
@@ -511,52 +507,7 @@ module.exports = function (express) {
     ProjectController.getFinancialNumbers
   );
 
-  //project category
-  route.get("/project-category/", ProjectCategoryController.getAll);
-  route.get("/project-category/:id", ProjectCategoryController.get);
-  route.get(
-    "/project/project-category/:id",
-    ProjectCategoryController.getByProjectId
-  );
-  route.get("/project-category-search", ProjectCategoryController.search);
-  route.post(
-    "/project-category",
-    validateData.projectCategoryValidate,
-    ProjectCategoryController.save
-  );
-  route.put(
-    "/project-category/:id",
-    validateData.projectCategoryValidate,
-    ProjectCategoryController.update
-  );
-  route.delete("/project-category/:id", ProjectCategoryController.delete);
-
-  //projec subcategory
-  route.get("/project-sub-category/", ProjectSubCategoryController.getAll);
-  route.get("/project-sub-category/:id", ProjectSubCategoryController.get);
-  route.get(
-    "/project/project-sub-category/:id",
-    ProjectSubCategoryController.getByProjectId
-  );
-  route.get(
-    "/project-sub-category-search",
-    ProjectSubCategoryController.search
-  );
-  route.post(
-    "/project-sub-category",
-    validateData.projectSubCategoryValidate,
-    ProjectSubCategoryController.save
-  );
-  route.put(
-    "/project-sub-category/:id",
-    validateData.projectSubCategoryValidate,
-    ProjectSubCategoryController.update
-  );
-  route.delete(
-    "/project-sub-category/:id",
-    ProjectSubCategoryController.delete
-  );
-
+  
   //project finance route
   route.get("/project-finance/", ProjectFinanceController.getAll);
   route.get("/project-finance/:id", ProjectFinanceController.get);

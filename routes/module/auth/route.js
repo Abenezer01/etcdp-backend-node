@@ -1,7 +1,7 @@
 const authController = require("../../../controllers/Auth/LoginController");
 const refreshController = require("../../../controllers/Auth/RefreshTokenController");
 const logoutController = require("../../../controllers/Auth/LogoutController");
-const UserController = require("../../../controllers/department/userController.js");
+const UserController = require("../../../controllers/department/UserController.js");
 const validateData = require("../../../middleware/validate/module/auth/validate");
 module.exports = function (express) {
   const route = express.Router();
@@ -12,5 +12,6 @@ module.exports = function (express) {
 
   route.post("/request-password-reset", UserController.requestPasswordReset);
   route.post("/password-reset", UserController.resetPassword);
+  route.get("/me", UserController.getMe);
   return route;
 };

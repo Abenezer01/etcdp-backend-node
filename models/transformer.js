@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
 
       Transformer.belongsTo(models.TransformerType, {
+        as: "transformertype",
         foreignKey: "transformertype_id",
       });
     }
