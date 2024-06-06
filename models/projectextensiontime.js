@@ -43,5 +43,13 @@ module.exports = (sequelize, DataTypes) => {
       tableName: "projectextensiontimes"
     }
   );
+
+  ProjectExtensionTime.associate = function (models) {
+    // associations can be defined here
+    ProjectExtensionTime.hasOne(models.ProjectVariation, {
+      foreignKey: "extension_time_id",
+      as: "variation"
+    });
+  };
   return ProjectExtensionTime;
 };

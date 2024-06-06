@@ -1,4 +1,4 @@
-const { ProjectStatus, Sequelize } = require("../../models");
+const { ProjectStatus, Status, Sequelize } = require("../../models");
 const usrData = require("../../utils/userDataFromToken");
 const actionHelper = require("../utils/action-helper");
 const paginationHelper = require("../utils/pagination-helper")
@@ -26,28 +26,25 @@ self.getAll = async (req, res) => {
 
 self.getByProjectId = async (req, res) => {
   const { id } = req.params;
-  const {
-    page = process.env.page,
-    size = process.env.size,
-    order = process.env.order,
-  } = req.query;
-
-  const { limit, offset } = paginate.getPagination(page, size);
   try {
-    const data = await ProjectStatus.findAndCountAll({
-      limit,
-      offset,
-      where: { project_id: id },
-      order: [["createdAt", order]],
-      include: ["status"],
-    });
+    const whereCondition = { project_id: id }
 
-    const response = paginate.getPagingData(data, page, limit);
-    res.send(response);
+    const includeOptions = [
+      { model: Status, as: 'status' } // Example association
+    ];
+   
+
+    const paginatedResult = await paginationHelper(ProjectStatus, req, whereCondition, includeOptions);
+
+    // Use the response formatter to send the success response
+    res.apiSuccess({
+      data: paginatedResult.data,
+      total: paginatedResult.total,
+    }, paginatedResult.pagination);
+
   } catch (error) {
-    res.status(500).send({
-      message: error.message || "Some error occurred while retrieving data.",
-    });
+    console.error("Error in getAll method:", error);
+    res.apiError(error);
   }
 };
 

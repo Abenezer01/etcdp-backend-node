@@ -37,63 +37,31 @@ self.getAll = async (req, res) => {
 };
 
 
-self.getByProjectId = async (req, res) => {
-  const { id } = req.params;
-  const {
-    page = process.env.page,
-    size = process.env.size,
-    order = process.env.order,
-  } = req.query;
-
-  const { limit, offset } = paginate.getPagination(page, size);
-  try {
-    const data = await ProjectCategory.findAndCountAll({
-      limit,
-      offset,
-      where: { project_id: id },
-
-      order: [["createdAt", order]],
-    });
-
-    const response = paginate.getPagingData(data, page, limit);
-    res.send(response);
-  } catch (error) {
-    res.status(500).send({
-      message: error.message || "Some error occurred while retrieving data.",
-    });
-  }
-};
 
 self.getAllProCatByTypeId = async (req, res) => {
   const { id } = req.params;
-  let { page, size } = req.query;
-
-  if (!page && !size) {
-    page = process.env.page;
-    size = process.env.size;
-  }
-
-  const { limit, offset } = paginate.getPagination(page, size);
-
   try {
-    const { count, rows } = await ProjectCategory.findAndCountAll({
-      limit,
-      offset,
-      include: "Projectsubcategories",
-      where: {
-        projecttype_id: id,
-      },
-    });
+    const whereCondition = { projecttype_id: id }
 
-    const response = paginate.getPagingData({ count, rows }, page, limit);
+    const includeOptions = [
+      { model: ProjectSubCategory, as: 'projectsubcategories' } // Example association
+    ];
+   
 
-    res.send(response);
-  } catch (err) {
-    res.status(500).send({
-      message: err.message || "Some error occurred while retrieving data.",
-    });
+    const paginatedResult = await paginationHelper(ProjectCategory, req, whereCondition, includeOptions);
+
+    // Use the response formatter to send the success response
+    res.apiSuccess({
+      data: paginatedResult.data,
+      total: paginatedResult.total,
+    }, paginatedResult.pagination);
+
+  } catch (error) {
+    console.error("Error in getAll method:", error);
+    res.apiError(error);
   }
 };
+
 
 self.get = async (req, res) => {
   try {

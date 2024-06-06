@@ -26,55 +26,19 @@ self.getAll = async (req, res) => {
 
 self.getByProjectId = async (req, res) => {
   const { id } = req.params;
-  const {
-    page = process.env.page,
-    size = process.env.size,
-    order = process.env.order,
-  } = req.query;
-
-  const { limit, offset } = paginate.getPagination(page, size);
   try {
-    const data = await ProjectPlan.findAndCountAll({
-      limit,
-      offset,
-      where: { project_id: id },
-      order: [["createdAt", order]],
-    });
-    // console.log("The data", data.rows);
-    // let planID = [];
-    // for (let l of data.rows) {
-    //   planID.push(l.id);
-    // }
-    // let fle = await File.findAll({
-    //   where: {
-    //     reference_id: {
-    //       [Sequelize.Op.in]: planID,
-    //     },
-    //   },
-    //   raw: true,
-    // });
-    // const finalResult = data.rows.map((aElement) => {
-    //   const matchingBElements = fle.filter(
-    //     (bElement) => bElement.reference_id === aElement.id
-    //   );
+    const whereCondition = { project_id: id }
+    const paginatedResult = await paginationHelper(ProjectPlan, req, whereCondition);
 
-    //   if (matchingBElements.length > 0) {
-    //     return {
-    //       ...aElement.dataValues,
-    //       File: matchingBElements,
-    //     };
-    //   }
+    // Use the response formatter to send the success response
+    res.apiSuccess({
+      data: paginatedResult.data,
+      total: paginatedResult.total,
+    }, paginatedResult.pagination);
 
-    //   return aElement;
-    // });
-
-    // return res.json(finalResult);
-    const response = paginate.getPagingData(data, page, limit);
-    res.send(response);
   } catch (error) {
-    res.status(500).send({
-      message: error.message || "Some error occurred while retrieving data.",
-    });
+    console.error("Error in getAll method:", error);
+    res.apiError(error);
   }
 };
 

@@ -46,40 +46,64 @@ self.get = async (req, res) => {
     });
   }
 };
+
 self.getByProjectId = async (req, res) => {
-  let id = req.params.id;
-  let { page, size, order } = req.query;
-  //console.log("The page", page, size)
-  if (page == null && size == null) {
-    (page = process.env.page), (size = process.env.size);
+  const { id } = req.params;
+  try {
+    const whereCondition = { project_id: id }
+
+    const includeOptions = [
+      { model: File, as: 'file' } // Example association
+    ];
+   
+
+    const paginatedResult = await paginationHelper(ProjectReport, req, whereCondition, includeOptions);
+
+    // Use the response formatter to send the success response
+    res.apiSuccess({
+      data: paginatedResult.data,
+      total: paginatedResult.total,
+    }, paginatedResult.pagination);
+
+  } catch (error) {
+    console.error("Error in getAll method:", error);
+    res.apiError(error);
   }
-  if (order == null) {
-    order = process.env.order;
-  }
-  const { limit, offset } = paginate.getPagination(page, size);
-  ProjectReport
-    .findAndCountAll({
-      limit,
-      offset,
-      order: [["createdAt", "ASC"]],
-      where: {
-        project_id: id,
-      },
-      include: {
-        model: file,
-        as: "file",
-      },
-    })
-    .then((data) => {
-      const response = paginate.getPagingData(data, page, limit);
-      res.send(response);
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message: err.message || "Some error occurred while retrieving data.",
-      });
-    });
 };
+// self.getByProjectId = async (req, res) => {
+//   let id = req.params.id;
+//   let { page, size, order } = req.query;
+//   //console.log("The page", page, size)
+//   if (page == null && size == null) {
+//     (page = process.env.page), (size = process.env.size);
+//   }
+//   if (order == null) {
+//     order = process.env.order;
+//   }
+//   const { limit, offset } = paginate.getPagination(page, size);
+//   ProjectReport
+//     .findAndCountAll({
+//       limit,
+//       offset,
+//       order: [["createdAt", "ASC"]],
+//       where: {
+//         project_id: id,
+//       },
+//       include: {
+//         model: file,
+//         as: "file",
+//       },
+//     })
+//     .then((data) => {
+//       const response = paginate.getPagingData(data, page, limit);
+//       res.send(response);
+//     })
+//     .catch((err) => {
+//       res.status(500).send({
+//         message: err.message || "Some error occurred while retrieving data.",
+//       });
+//     });
+// };
 self.getByProjectIdAndPopulate = async (req, res) => {
   const { id } = req.params;
   const {

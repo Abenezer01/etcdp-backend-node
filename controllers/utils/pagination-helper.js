@@ -1,6 +1,7 @@
+const { where } = require("sequelize");
 const { parseParams } = require("../../utils/request/param-hanlder")
 
-const paginationHelper = async (Model, req) => {
+const paginationHelper = async (Model, req, where = {}, include = []) => {
     const params = parseParams(req);
     const { pagination } = params;
   
@@ -10,8 +11,11 @@ const paginationHelper = async (Model, req) => {
   
     try {
       const { count, rows: data } = await Model.findAndCountAll({
+        where: where,
+        include: include,
         offset: offset,
         limit: pageSize,
+        order: [["createdAt", "DESC"]],
       });
   
       return {

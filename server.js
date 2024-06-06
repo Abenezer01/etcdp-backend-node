@@ -48,6 +48,7 @@ app.use(
 );
 
 //app.use("/api", userRoute(express), polymorphicRoute(express), loginRoute(express), stakeCategory(express), ProjectRoute(express));
+app.use("/api/auth", loginRoute(express));
 app.use("/api/departments", departmentRoute(express));
 app.use("/api/accounts", loginRoute(express));
 app.use("/api/projects", projectRoute(express));

@@ -3,13 +3,19 @@ dotenv.config();
 const jwt = require("jsonwebtoken");
 let ACCESS_TOKEN_KEY = process.env.ACCESS_TOKEN_KEY;
 const userData = async (req, res, next) => {
-  // try {
+  try {
 
-  const userToken = req.headers.authorization;
-  // if (!userTokenn) {
-  //   return res.status(401).json({ error: "Authorization token is missing" });
-  // }
-  // const [, userTokenn] = tokenString.split(' ');
+  const tokenString = req.headers.authorization;
+
+  if (!tokenString) {
+    return { error: "Authorization token is missing" };
+  }
+
+  const [, userToken] = tokenString.split(' ');
+  if(!userToken){
+    return {error: "Token not Found"}
+  }
+
   let decodetoken;
   decodetoken = jwt.verify(userToken, ACCESS_TOKEN_KEY);
   usrID = decodetoken.id;
@@ -19,6 +25,9 @@ const userData = async (req, res, next) => {
 
   console.log("This is user id", usrID);
   return { usrID, departmentID, position_id, lang };
+} catch (error) {
+  return error;
+}
 };
 module.exports = {
   userData,

@@ -6,7 +6,6 @@ const fs = require("fs");
 const actionHelper = require("../utils/action-helper");
 const paginationHelper = require("../utils/pagination-helper")
 const usrData = require("../../utils/userDataFromToken");
-const paginate = require("../../utils/pagination");
 
 const Op = Sequelize.Op;
 

@@ -43,53 +43,32 @@ self.get = async (req, res) => {
     });
   }
 };
+
+
 self.getByProjectId = async (req, res) => {
+  const { id } = req.params;
   try {
-    let id = req.params.id;
-    let { page, size, order } = req.query;
-    //console.log("The page", page, size)
-    if (page == null && size == null) {
-      (page = process.env.page), (size = process.env.size);
-    }
-    if (order == null) {
-      order = process.env.order;
-    }
-    const { limit, offset } = paginate.getPagination(page, size);
+    const whereCondition = { project_id: id }
 
-    let data = await ProjectExtensionTime.findAndCountAll({
-      limit,
-      offset,
-      order: [["createdAt", "ASC"]],
-      where: {
-        project_id: id,
-      },
-    });
+    const includeOptions = [
+      { model: ProjectVariation, as: 'variation' } // Example association
+    ];
+   
 
-    let withVariation = await Promise.all(
-      data.rows.map(async (item) => {
-        let variation = await ProjectVariation.findOne({
-          where: {
-            extension_time_id: item.id,
-          },
-        });
+    const paginatedResult = await paginationHelper(ProjectExtensionTime, req, whereCondition, includeOptions);
 
-        let temp = item.toJSON();
-        temp.variation_id = variation ? variation.id : null;
-        temp.type = variation ? variation.type : null;
-        return temp;
-      })
-    );
+    // Use the response formatter to send the success response
+    res.apiSuccess({
+      data: paginatedResult.data,
+      total: paginatedResult.total,
+    }, paginatedResult.pagination);
 
-    data.rows = withVariation;
-    const response = paginate.getPagingData(data, page, limit);
-
-    res.send(response);
   } catch (error) {
-    res.status(500).send({
-      message: error.message || "Some error occurred while retrieving data.",
-    });
+    console.error("Error in getAll method:", error);
+    res.apiError(error);
   }
 };
+
 self.search = async (req, res) => {
   try {
     let text = req.query.text;

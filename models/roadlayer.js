@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       RoadLayer.belongsTo(models.RoadSegment, {
         foreignKey: "segment_id",
+        as: "roadsegment"
       });
     }
   }

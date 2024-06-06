@@ -5,6 +5,7 @@ const paginationHelper = require("../utils/pagination-helper")
 const Op = Sequelize.Op;
 const paginate = require("../../utils/pagination");
 const dotenv = require("dotenv");
+const { where } = require("sequelize");
 dotenv.config();
 let self = {};
 
@@ -24,31 +25,51 @@ self.getAll = async (req, res) => {
     res.apiError(error);
   }
 };
+
 self.getByProjectId = async (req, res) => {
   const { id } = req.params;
-  const {
-    page = process.env.page,
-    size = process.env.size,
-    order = process.env.order,
-  } = req.query;
-
-  const { limit, offset } = paginate.getPagination(page, size);
   try {
-    const data = await BuildingDimensionDetail.findAndCountAll({
-      limit,
-      offset,
-      where: { project_id: id },
-      order: [["createdAt", order]],
-    });
+    const whereCondition = { project_id: id }
+    const paginatedResult = await paginationHelper(BuildingDimensionDetail, req, whereCondition);
 
-    const response = paginate.getPagingData(data, page, limit);
-    res.send(response);
+    // Use the response formatter to send the success response
+    res.apiSuccess({
+      data: paginatedResult.data,
+      total: paginatedResult.total,
+    }, paginatedResult.pagination);
+
   } catch (error) {
-    res.status(500).send({
-      message: error.message || "Some error occurred while retrieving data.",
-    });
+    console.error("Error in getAll method:", error);
+    res.apiError(error);
   }
 };
+
+
+// self.getByProjectId = async (req, res) => {
+//   const { id } = req.params;
+//   const {
+//     page = process.env.page,
+//     size = process.env.size,
+//     order = process.env.order,
+//   } = req.query;
+
+//   const { limit, offset } = paginate.getPagination(page, size);
+//   try {
+//     const data = await BuildingDimensionDetail.findAndCountAll({
+//       limit,
+//       offset,
+//       where: { project_id: id },
+//       order: [["createdAt", order]],
+//     });
+
+//     const response = paginate.getPagingData(data, page, limit);
+//     res.send(response);
+//   } catch (error) {
+//     res.status(500).send({
+//       message: error.message || "Some error occurred while retrieving data.",
+//     });
+//   }
+// };
 
 self.get = async (req, res) => {
   try {
