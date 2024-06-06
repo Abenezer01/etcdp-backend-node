@@ -75,7 +75,21 @@ const loginUser = async (req, res) => {
     const auth = bcrypt.compareSync(password, usr.password);
 
     if (!auth) {
-      return res.apiError("You are not authorized");
+
+      const errorResponse = {
+        _links: {
+          previousPage: null,
+          nextPage: null
+        },
+        _warning: [],
+        payload: [],
+        _attributes: {},
+        _errors: {
+          message: ["You are not authorized"]
+        },
+        _generated: new Date().toISOString()
+      };
+      return res.status(401).json(errorResponse);
     }
 
     const userPayload = {

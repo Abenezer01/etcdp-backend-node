@@ -1,7 +1,7 @@
 const actionHelper = require("../utils/action-helper");
 const paginationHelper = require("../utils/pagination-helper")
+const { getRecordById } = require('../utils/format-helper');
 const { ProjectBond, Sequelize } = require("./../../models");
-const paginate = require("../../utils/pagination");
 const usrData = require("../../utils/userDataFromToken");
 const dotenv = require("dotenv");
 dotenv.config();
@@ -42,23 +42,11 @@ self.getByProjectId = async (req, res) => {
     res.apiError(error);
   }
 };
+
 self.get = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let data = await ProjectBond.findOne({
-      where: {
-        id: id,
-      },
-    });
-    return res.status(200).json({
-      data: data,
-    });
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+  getRecordById(ProjectBond, req, res);
 };
+
 self.getByProjectType = async (req, res) => {
   try {
     let { type, project_id } = req.query;

@@ -4,6 +4,7 @@ const actionHelper = require("../utils/action-helper");
 const paginationHelper = require("../utils/pagination-helper")
 const Op = Sequelize.Op;
 const paginate = require("../../utils/pagination");
+const { getRecordById } = require('../utils/format-helper');
 const dotenv = require("dotenv");
 dotenv.config();
 let self = {};
@@ -43,21 +44,7 @@ self.getByProjectId = async (req, res) => {
 };
 
 self.get = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let data = await BuildingEnvelopMaterial.findOne({
-      where: {
-        id: id,
-      },
-    });
-    return res.status(200).json({
-      data: data ? data : {},
-    });
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+  getRecordById(BuildingEnvelopMaterial, req, res);
 };
 
 self.search = async (req, res) => {

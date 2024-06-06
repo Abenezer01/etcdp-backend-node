@@ -1,5 +1,6 @@
 const actionHelper = require("../utils/action-helper");
 const paginationHelper = require("../utils/pagination-helper")
+const { getRecordById } = require('../utils/format-helper');
 const {
   ProjectVariation,
   ProjectExtensionTime,
@@ -8,7 +9,6 @@ const {
 const usrData = require("../../utils/userDataFromToken");
 const Op = Sequelize.Op;
 const dotenv = require("dotenv");
-const paginate = require("../../utils/pagination");
 dotenv.config();
 let self = {};
 
@@ -45,23 +45,11 @@ self.getByProjectId = async (req, res) => {
     res.apiError(error);
   }
 };
+
 self.get = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let data = await ProjectVariation.findOne({
-      where: {
-        id: id,
-      },
-    });
-    return res.status(200).json({
-      data: data,
-    });
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+  getRecordById(ProjectVariation, req, res);
 };
+
 self.getByProjectType = async (req, res) => {
   try {
     const { order = process.env.order } = req.query;

@@ -1,8 +1,8 @@
 const actionHelper = require("../utils/action-helper");
 const paginationHelper = require("../utils/pagination-helper");
+const { getRecordById } = require('../utils/format-helper');
 const { RoadSegment, Sequelize } = require("./../../models");
 const dotenv = require("dotenv");
-const paginate = require("../../utils/pagination");
 dotenv.config();
 const Op = Sequelize.Op;
 const usrData = require("../../utils/userDataFromToken");
@@ -44,19 +44,7 @@ self.getByProjectId = async (req, res) => {
 };
 
 self.get = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let data = await RoadSegment.findOne({
-      where: {
-        id: id,
-      },
-    });
-    return res.status(200).json(data);
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+  getRecordById(RoadSegment, req, res);
 };
 
 self.search = async (req, res) => {

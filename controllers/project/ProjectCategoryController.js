@@ -1,7 +1,6 @@
 const {
   ProjectCategory,
   ProjectSubCategory,
-  ProjectType,
   Sequelize,
 } = require("../../models");
 //const ProjectType = require("../../models/ProjectType");
@@ -9,7 +8,7 @@ const {
 const usrData = require("../../utils/userDataFromToken");
 const actionHelper = require("../utils/action-helper");
 const paginationHelper = require("../utils/pagination-helper")
-
+const { getRecordById } = require('../utils/format-helper');
 const Op = Sequelize.Op;
 
 let self = {};
@@ -64,21 +63,7 @@ self.getAllProCatByTypeId = async (req, res) => {
 
 
 self.get = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let data = await ProjectCategory.findOne({
-      where: {
-        id: id,
-      },
-    });
-    return res.status(200).json({
-      data: data ? data : {},
-    });
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+  getRecordById(ProjectCategory, req, res);
 };
 
 self.search = async (req, res) => {

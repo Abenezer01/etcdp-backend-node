@@ -1,13 +1,6 @@
 const { ProjectPlan, MonthlyReport, Sequelize } = require("./../../models");
-const {
-    sentNotification,
-    activityLog,
-    saveActionState,
-} = require("../../utils/helper.js");
 const paginationHelper = require("../utils/pagination-helper")
-const moment = require("moment");
-const months = require("./../../config/quarter");
-const { validateMonthlyReport } = require("../../validator");
+const { getRecordById } = require('../utils/format-helper');
 
 let self = {};
 
@@ -28,20 +21,7 @@ self.getAll = async (req, res) => {
 };
 
 self.get = async(req, res) => {
-    try {
-        let id = req.params.id;
-        let data = await MonthlyReport.findOne({
-            attributes: ["id", "name", "description"],
-            where: {
-                id: id,
-            },
-        });
-        return res.json(data);
-    } catch (error) {
-        res.status(500).json({
-            message: error.message,
-        });
-    }
+    getRecordById(MonthlyReport, req, res);
 };
 
 self.save = async(req, res) => {

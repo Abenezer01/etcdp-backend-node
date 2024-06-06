@@ -5,6 +5,7 @@ const Op = Sequelize.Op;
 const usrData = require("../../utils/userDataFromToken");
 const { saveActionState, getChildren } = require("../../utils/helper");
 const paginationHelper = require("../utils/pagination-helper");
+const { getRecordById } = require('../utils/format-helper');
 const actionHelper = require("../utils/action-helper");
 let self = {};
 
@@ -26,21 +27,7 @@ self.getAll = async (req, res) => {
 };
 
 self.get = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let data = await Status.findOne({
-      where: {
-        id: id,
-      },
-    });
-    return res.status(200).json({
-      data: data ? data : {},
-    });
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+  getRecordById(Status, req, res);
 };
 
 self.search = async (req, res) => {
