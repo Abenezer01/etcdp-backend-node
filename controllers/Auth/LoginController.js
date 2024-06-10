@@ -59,6 +59,7 @@ const loginUser = async (req, res) => {
     const replyUser = {
       id: usr.id,
       full_name: usr.full_name,
+      name: usr.name,
       first_name: usr.first_name,
       middle_name: usr.middle_name,
       last_name: usr.last_name,

@@ -1136,18 +1136,19 @@ self.getMe = async (req, res) => {
     const action = await ActionState.findOne({ where: { model_id: usr.id, action: "CHECK" } });
     const profile_pic = await Photo.findOne({ where: { model_id: usr.id, type: "USER_PROFILE_PHOTO" } });
 
-    const userPayload = {
-      id: usr.id,
-      department_id: pos.department_id,
-      position_id: pos.id,
-      lang: usr.lang
-    };
+    // const userPayload = {
+    //   id: usr.id,
+    //   department_id: pos.department_id,
+    //   position_id: pos.id,
+    //   lang: usr.lang
+    // };
 
-    const accessToken = jwt.sign(userPayload, process.env.ACCESS_TOKEN_KEY, { expiresIn: "1000h" });
+    // const accessToken = jwt.sign(userPayload, process.env.ACCESS_TOKEN_KEY, { expiresIn: "1000h" });
 
     const replyUser = {
       id: usr.id,
       full_name: usr.full_name,
+      name: usr.name,
       first_name: usr.first_name,
       middle_name: usr.middle_name,
       last_name: usr.last_name,
@@ -1161,7 +1162,7 @@ self.getMe = async (req, res) => {
       profile_completed: !!profile_pic,
     };
 
-    const data = { user_data: replyUser, access_token: accessToken };
+    const data = { user_data: replyUser };
 
     res.apiSuccess({
       data: data,
