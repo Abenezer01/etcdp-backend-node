@@ -1,5 +1,5 @@
 "use strict";
-const { Model } = require("sequelize");
+const { UserEmail, Model } = require("sequelize");
 const cipherHelper = require("../controllers/utils/cipher-helper");
 
 module.exports = (sequelize, DataTypes) => {
@@ -10,7 +10,22 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      User.hasOne(models.UserEmail, {
+        foreignKey: 'user_id',
+        as: 'useremails'
+      });
+      User.hasOne(models.UserPhone, {
+        foreignKey: 'user_id',
+        as: 'userphones'
+      });
+      User.hasMany(models.ActionState, {
+        foreignKey: "model_id",
+        as: "users",
+      });
+      User.hasMany(models.UserPosition, {
+        foreignKey: "user_id",
+        as: "positions",
+      });
     }
   }
   User.init(
@@ -91,18 +106,5 @@ module.exports = (sequelize, DataTypes) => {
       tableName: "users"
     }
   );
-
-  User.associate = function (models) {
-    // associations can be defined here
-    User.hasMany(models.ActionState, {
-      foreignKey: "model_id",
-      as: "users",
-    });
-    User.hasMany(models.UserPosition, {
-      foreignKey: "user_id",
-      as: "positions",
-    });
-  };
-
   return User;
 };

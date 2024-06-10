@@ -135,14 +135,5 @@ module.exports = function (express) {
   );
 
 
-  
-  
-
-  
-
-  //  route.get("/note/:id", DashboardController.get);
-  //  route.put("/note/:id", DashboardController.update);
-  //  route.delete("/note/:id", DashboardController.delete);
-  //  route.get("/model-notes/:id", DashboardController.getNoteByModelId);
   return route;
 };

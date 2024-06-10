@@ -54,141 +54,141 @@ module.exports = function (express) {
 
   //project route
 
-  route.get("/project-type", ProjectTypeController.getAll);
-  route.get("/project-type/:id", ProjectTypeController.get);
-  route.get("/project-type-search", ProjectTypeController.search);
+  route.get("/project-types", ProjectTypeController.getAll);
+  route.get("/project-types/:id", ProjectTypeController.get);
+  route.get("/project-type-searches", ProjectTypeController.search);
   route.post(
-    "/project-type",
+    "/project-types",
     validateData.projectTypeValidate,
     ProjectTypeController.save
   );
   route.put(
-    "/project-type/:id",
+    "/project-typse/:id",
     validateData.projectTypeValidate,
     ProjectTypeController.update
   );
-  route.delete("/project-type/:id", ProjectTypeController.delete);
+  route.delete("/project-types/:id", ProjectTypeController.delete);
   //project category
-  route.get("/project-category", ProjectCategoryController.getAll);
+  route.get("/project-categories", ProjectCategoryController.getAll);
   route.get(
-    "/project-category/projecttype/:id",
+    "/project-categories/projecttype/:id",
     ProjectCategoryController.getAllProCatByTypeId
   );
-  route.get("/project-category/:id", ProjectCategoryController.get);
-  route.get("/project-category-search", ProjectCategoryController.search);
+  route.get("/project-categories/:id", ProjectCategoryController.get);
+  route.get("/project-categories-searches", ProjectCategoryController.search);
   
   route.post(
-    "/project-category",
+    "/project-categories",
     validateData.projectCategoryValidate,
     ProjectCategoryController.save
   );
   route.put(
-    "/project-category/:id",
+    "/project-categories/:id",
     validateData.projectCategoryValidate,
     ProjectCategoryController.update
   );
-  route.delete("/project-category/:id", ProjectCategoryController.delete);
+  route.delete("/project-categories/:id", ProjectCategoryController.delete);
   //project subcategory
-  route.get("/project-sub-category", ProjectSubCategoryController.getAll);
-  route.get("/project-sub-category/:id", ProjectSubCategoryController.get);
+  route.get("/project-sub-categories", ProjectSubCategoryController.getAll);
+  route.get("/project-sub-categories/:id", ProjectSubCategoryController.get);
   route.get(
-    "/project-category/project-sub-category/:id",
+    "/project-category/project-sub-categories/:id",
     ProjectSubCategoryController.getByProjectCategoryId
   );
   route.get(
-    "/project-sub-category-search",
+    "/project-sub-category-searches",
     ProjectSubCategoryController.search
   );
   route.post(
-    "/project-sub-category",
+    "/project-sub-categories",
     validateData.projectSubCategoryValidate,
     ProjectSubCategoryController.save
   );
   route.put(
-    "/project-sub-category/:id",
+    "/project-sub-categories/:id",
     validateData.projectSubCategoryValidate,
     ProjectSubCategoryController.update
   );
   route.delete(
-    "/project-sub-category/:id",
+    "/project-sub-categories/:id",
     ProjectSubCategoryController.delete
   );
   //status
-  route.get("/status", StatusController.getAll);
-  route.get("/status/:id", StatusController.get);
-  route.get("/status-search", StatusController.search);
-  route.post("/status", validateData.statusValidate, StatusController.save);
+  route.get("/statuses", StatusController.getAll);
+  route.get("/statuses/:id", StatusController.get);
+  route.get("/status-searches", StatusController.search);
+  route.post("/statuses", validateData.statusValidate, StatusController.save);
   route.put(
-    "/status/:id",
+    "/statuses/:id",
     validateData.statusValidate,
     StatusController.update
   );
-  route.delete("/status/:id", StatusController.delete);
+  route.delete("/statuses/:id", StatusController.delete);
   //Project status
-  route.get("/project-status", ProjectStatusController.getAll);
-  route.get("/project-status/:id", ProjectStatusController.get);
+  route.get("/project-statuses", ProjectStatusController.getAll);
+  route.get("/project-statuses/:id", ProjectStatusController.get);
   route.get(
-    "/project/project-status/:id",
+    "/project/project-statuses/:id",
     ProjectStatusController.getByProjectId
   );
-  route.get("/project-status-search", ProjectStatusController.search);
+  route.get("/project-status-searches", ProjectStatusController.search);
   route.post(
-    "/project-status",
+    "/project-statuses",
     validateData.projectStatusValidate,
     ProjectStatusController.save
   );
   route.put(
-    "/project-status/:id",
+    "/project-statuses/:id",
     validateData.projectStatusValidate,
     ProjectStatusController.update
   );
-  route.delete("/project-status/:id", ProjectStatusController.delete);
+  route.delete("/project-statuses/:id", ProjectStatusController.delete);
   // //Project registration
   // route.get("/project", ProjectController.getAll);
   // route.get("/project/:id", ProjectController.get);
-  // route.get("/project-search", ProjectController.search);
+  // route.get("/project-searches", ProjectController.search);
   // route.post("/project", validateData.projectValidate, ProjectController.save);
   // route.put("/project/:id", validateData.projectValidate, ProjectController.update);
   // route.delete("/project/:id", ProjectController.delete);
   //Project stakeholder
-  route.get("/project-stakeholder", ProjectStakeholderController.getAll);
-  route.get("/project-stakeholder/:id", ProjectStakeholderController.get);
+  route.get("/project-stakeholders", ProjectStakeholderController.getAll);
+  route.get("/project-stakeholders/:id", ProjectStakeholderController.get);
   route.get(
-    "/project/project-stakeholder/:id",
+    "/project/project-stakeholders/:id",
     ProjectStakeholderController.getByProjectId
   );
   route.get(
-    "/stakeholder/project-stakeholder/:id",
+    "/stakeholder/project-stakeholders/:id",
     ProjectStakeholderController.getByStakeholderId
   );
-  route.get("/project-stakeholder-search", ProjectStakeholderController.search);
+  route.get("/project-stakeholder-searches", ProjectStakeholderController.search);
   route.post(
     "/project-stakeholder",
     validateData.projectStakeholderValidate,
     ProjectStakeholderController.save
   );
   route.put(
-    "/project-stakeholder/:id",
+    "/project-stakeholders/:id",
     validateData.projectStakeholderValidate,
     ProjectStakeholderController.update
   );
-  route.delete("/project-stakeholder/:id", ProjectStakeholderController.delete);
+  route.delete("/project-stakeholders/:id", ProjectStakeholderController.delete);
   //Project plan
-  route.get("/project-plan", ProjectPlanController.getAll);
-  route.get("/project-plan/:id", ProjectPlanController.get);
-  route.get("/project/project-plan/:id", ProjectPlanController.getByProjectId);
-  route.get("/project-plan-search", ProjectPlanController.search);
+  route.get("/project-plans", ProjectPlanController.getAll);
+  route.get("/project-plans/:id", ProjectPlanController.get);
+  route.get("/project/project-plans/:id", ProjectPlanController.getByProjectId);
+  route.get("/project-plan-searches", ProjectPlanController.search);
   route.post(
-    "/project-plan",
+    "/project-plans",
     validateData.projectPlanValidate,
     ProjectPlanController.save
   );
   route.put(
-    "/project-plan/:id",
+    "/project-plans/:id",
     validateData.projectPlanValidate,
     ProjectPlanController.update
   );
-  route.delete("/project-plan/:id", ProjectPlanController.delete);
+  route.delete("/project-plans/:id", ProjectPlanController.delete);
   route.get(
     "/project-yearly-plans/:id/:year",
     ProjectPlanController.getProjectYearlyPlans
@@ -196,35 +196,35 @@ module.exports = function (express) {
 
   //project report
 
-  route.get("/project-report", ProjectReportController.getAll);
-  route.get("/project-report/:id", ProjectReportController.get);
+  route.get("/project-reports", ProjectReportController.getAll);
+  route.get("/project-reports/:id", ProjectReportController.get);
   route.get(
-    "/project/project-report/:id",
+    "/project/project-reports/:id",
     ProjectReportController.getByProjectId
   );
   route.get(
-    "/populate/project-plan/project-report/:id",
+    "/populate/project-plan/project-reports/:id",
     ProjectReportController.getByProjectIdAndPopulate
   );
-  route.get("/project-report-search", ProjectReportController.search);
+  route.get("/project-report-searches", ProjectReportController.search);
   route.post(
-    "/project-report",
+    "/project-reports",
     validateData.projectReportValidate,
     ProjectReportController.save
   );
   route.put(
-    "/project-report/:id",
+    "/project-reports/:id",
     validateData.projectReportValidate,
     ProjectReportController.update
   );
-  route.delete("/project-report/:id", ProjectReportController.delete);
+  route.delete("/project-reports/:id", ProjectReportController.delete);
 
   route.get(
     "/monthly-project-report/:id/:year/:quarter",
     ProjectReportController.getMonthlyProjectReport
   );
   route.get(
-    "/report/monthly-project-report/:id",
+    "/report/monthly-project-reports/:id",
     ProjectReportController.getByMonthlyId
   );
   route.get(
@@ -233,41 +233,41 @@ module.exports = function (express) {
   );
 
   //Project document
-  route.get("/project-document", ProjectDocumentController.getAll);
-  route.get("/project-document/:id", ProjectDocumentController.get);
+  route.get("/project-documents", ProjectDocumentController.getAll);
+  route.get("/project-documents/:id", ProjectDocumentController.get);
   route.get(
-    "/project/project-document/:id",
+    "/project/project-documents/:id",
     ProjectDocumentController.getByProjectId
   );
-  route.get("/project-document-search", ProjectDocumentController.search);
+  route.get("/project-document-searches", ProjectDocumentController.search);
   route.post(
-    "/project-document",
+    "/project-documents",
     validateData.projectDocumentValidate,
     ProjectDocumentController.save
   );
   route.put(
-    "/project-document/:id",
+    "/project-documents/:id",
     validateData.projectDocumentValidate,
     ProjectDocumentController.update
   );
-  route.delete("/project-document/:id", ProjectDocumentController.delete);
+  route.delete("/project-documents/:id", ProjectDocumentController.delete);
   //Construction resource
-  route.get("/construction-resource", ConstructionResourceController.getAll);
-  route.get("/construction-resource/:id", ConstructionResourceController.get);
+  route.get("/construction-resources", ConstructionResourceController.getAll);
+  route.get("/construction-resources/:id", ConstructionResourceController.get);
   route.get(
-    "/project/construction-resource/:id",
+    "/project/construction-resources/:id",
     ConstructionResourceController.getByProjectId
   );
   route.get(
-    "/constructionproject/construction-resource/:id",
+    "/constructionproject/construction-resources/:id",
     ConstructionResourceController.getByProjectId
   );
   route.get(
-    "/construction-resource-search",
+    "/construction-resource-searches",
     ConstructionResourceController.search
   );
   route.post(
-    "/construction-resource",
+    "/construction-resources",
     validateData.constructionResourceValidate,
     ConstructionResourceController.save
   );
@@ -277,64 +277,64 @@ module.exports = function (express) {
     ConstructionResourceController.update
   );
   route.delete(
-    "/construction-resource/:id",
+    "/construction-resources/:id",
     ConstructionResourceController.delete
   );
   //Building envelop material
   route.get(
-    "/building-envelop-material",
+    "/building-envelop-materials",
     BuildingEnvelopMaterialController.getAll
   );
   route.get(
-    "/building-envelop-material/:id",
+    "/building-envelop-materials/:id",
     BuildingEnvelopMaterialController.get
   );
   route.get(
-    "/project/building-envelop-material/:id",
+    "/project/building-envelop-materials/:id",
     BuildingEnvelopMaterialController.getByProjectId
   );
   route.get(
-    "/building-envelop-material-search",
+    "/building-envelop-material-searches",
     BuildingEnvelopMaterialController.search
   );
   route.post(
-    "/building-envelop-material",
+    "/building-envelop-materials",
     validateData.buildingEnvelopMaterialValidate,
     BuildingEnvelopMaterialController.save
   );
   route.put(
-    "/building-envelop-material/:id",
+    "/building-envelop-materials/:id",
     validateData.buildingEnvelopMaterialValidate,
     BuildingEnvelopMaterialController.update
   );
   route.delete(
-    "/building-envelop-material/:id",
+    "/building-envelop-materials/:id",
     BuildingEnvelopMaterialController.delete
   );
   //Building dimension details
   route.get(
-    "/building-dimension-detail",
+    "/building-dimension-details",
     BuildingDimensionDetailsController.getAll
   );
   route.get(
-    "/building-dimension-detail/:id",
+    "/building-dimension-details/:id",
     BuildingDimensionDetailsController.get
   );
   route.get(
-    "/project/building-dimension-detail/:id",
+    "/project/building-dimension-details/:id",
     BuildingDimensionDetailsController.getByProjectId
   );
   route.get(
-    "/building-dimension-detail-search",
+    "/building-dimension-detail-searches",
     BuildingDimensionDetailsController.search
   );
   route.post(
-    "/building-dimension-detail",
+    "/building-dimension-details",
     validateData.buildingDimensionDetailValidate,
     BuildingDimensionDetailsController.save
   );
   route.put(
-    "/building-dimension-detail/:id",
+    "/building-dimension-details/:id",
     validateData.buildingDimensionDetailValidate,
     BuildingDimensionDetailsController.update
   );
@@ -343,152 +343,152 @@ module.exports = function (express) {
     BuildingDimensionDetailsController.delete
   );
   //Telecom infrastructure
-  route.get("/telecom-infrastructure", TelecomInfrastructureController.getAll);
-  route.get("/telecom-infrastructure/:id", TelecomInfrastructureController.get);
+  route.get("/telecom-infrastructures", TelecomInfrastructureController.getAll);
+  route.get("/telecom-infrastructures/:id", TelecomInfrastructureController.get);
   route.get(
-    "/project/telecom-infrastructure/:id",
+    "/project/telecom-infrastructures/:id",
     TelecomInfrastructureController.getByProjectId
   );
   route.get(
-    "/telecom-infrastructure-search",
+    "/telecom-infrastructure-searches",
     TelecomInfrastructureController.search
   );
   route.post(
-    "/telecom-infrastructure",
+    "/telecom-infrastructures",
     validateData.telecomValidate,
     TelecomInfrastructureController.save
   );
   route.put(
-    "/telecom-infrastructure/:id",
+    "/telecom-infrastructures/:id",
     validateData.telecomValidate,
     TelecomInfrastructureController.update
   );
   route.delete(
-    "/telecom-infrastructure/:id",
+    "/telecom-infrastructures/:id",
     TelecomInfrastructureController.delete
   );
   //Generating capacity
-  route.get("/generating-capacity", GeneratingCapacityController.getAll);
-  route.get("/generating-capacity/:id", GeneratingCapacityController.get);
+  route.get("/generating-capacities", GeneratingCapacityController.getAll);
+  route.get("/generating-capacities/:id", GeneratingCapacityController.get);
   route.get(
-    "/project/generating-capacity/:id",
+    "/project/generating-capacities/:id",
     GeneratingCapacityController.getByProjectId
   );
-  route.get("/generating-capacity-search", GeneratingCapacityController.search);
+  route.get("/generating-capacity-searches", GeneratingCapacityController.search);
   route.post(
-    "/generating-capacity",
+    "/generating-capacities",
     validateData.generatingCapacityValidate,
     GeneratingCapacityController.save
   );
   route.put(
-    "/generating-capacity/:id",
+    "/generating-capacities/:id",
     validateData.generatingCapacityValidate,
     GeneratingCapacityController.update
   );
-  route.delete("/generating-capacity/:id", GeneratingCapacityController.delete);
+  route.delete("/generating-capacities/:id", GeneratingCapacityController.delete);
   //Turbine detail
-  route.get("/turbine-detail", TurbineDetailController.getAll);
-  route.get("/turbine-detail/:id", TurbineDetailController.get);
+  route.get("/turbine-details", TurbineDetailController.getAll);
+  route.get("/turbine-details/:id", TurbineDetailController.get);
   route.get(
-    "/project/turbine-detail/:id",
+    "/project/turbine-details/:id",
     TurbineDetailController.getByProjectId
   );
-  route.get("/turbine-detail-search", TurbineDetailController.search);
+  route.get("/turbine-detail-searches", TurbineDetailController.search);
   route.post(
-    "/turbine-detail",
+    "/turbine-details",
     validateData.turbineInfoValidate,
     TurbineDetailController.save
   );
   route.put(
-    "/turbine-detail/:id",
+    "/turbine-details/:id",
     validateData.turbineInfoValidate,
     TurbineDetailController.update
   );
-  route.delete("/turbine-detail/:id", TurbineDetailController.delete);
+  route.delete("/turbine-details/:id", TurbineDetailController.delete);
   //Hydrolectric dam
-  route.get("/hydro-electric-dam", HydroElectricDamController.getAll);
-  route.get("/hydro-electric-dam/:id", HydroElectricDamController.get);
+  route.get("/hydro-electric-dams", HydroElectricDamController.getAll);
+  route.get("/hydro-electric-dams/:id", HydroElectricDamController.get);
   route.get(
-    "/project/hydro-electric-dam/:id",
+    "/project/hydro-electric-dams/:id",
     HydroElectricDamController.getByProjectId
   );
-  route.get("/hydro-electric-dam-search", HydroElectricDamController.search);
+  route.get("/hydro-electric-dam-searches", HydroElectricDamController.search);
   route.post(
-    "/hydro-electric-dam",
+    "/hydro-electric-dams",
     validateData.hydroElectricDamValidate,
     HydroElectricDamController.save
   );
   route.put(
-    "/hydro-electric-dam/:id",
+    "/hydro-electric-dams/:id",
     validateData.hydroElectricDamValidate,
     HydroElectricDamController.update
   );
-  route.delete("/hydro-electric-dam/:id", HydroElectricDamController.delete);
+  route.delete("/hydro-electric-dams/:id", HydroElectricDamController.delete);
   //Spillways detailf
-  route.get("/spill-way-detail", SpillWaysDetailController.getAll);
-  route.get("/spill-way-detail/:id", SpillWaysDetailController.get);
+  route.get("/spill-way-details", SpillWaysDetailController.getAll);
+  route.get("/spill-way-details/:id", SpillWaysDetailController.get);
   route.get(
-    "/project/spill-way-detail/:id",
+    "/project/spill-way-details/:id",
     SpillWaysDetailController.getByProjectId
   );
-  route.get("/spill-way-detail-search", SpillWaysDetailController.search);
+  route.get("/spill-way-detail-searches", SpillWaysDetailController.search);
   route.post(
-    "/spill-way-detail",
+    "/spill-way-details",
     validateData.spillWayInfoValidate,
     SpillWaysDetailController.save
   );
   route.put(
-    "/spill-way-detail/:id",
+    "/spill-way-details/:id",
     validateData.spillWayInfoValidate,
     SpillWaysDetailController.update
   );
-  route.delete("/spill-way-detail/:id", SpillWaysDetailController.delete);
+  route.delete("/spill-way-details/:id", SpillWaysDetailController.delete);
   //Reservoir detail
-  route.get("/reservoir-detail", ReservoirDetailsController.getAll);
-  route.get("/reservoir-detail/:id", ReservoirDetailsController.get);
+  route.get("/reservoir-details", ReservoirDetailsController.getAll);
+  route.get("/reservoir-details/:id", ReservoirDetailsController.get);
   route.get(
-    "/project/reservoir-detail/:id",
+    "/project/reservoir-details/:id",
     ReservoirDetailsController.getByProjectId
   );
-  route.get("/reservoir-detail-search", ReservoirDetailsController.search);
+  route.get("/reservoir-detail-searches", ReservoirDetailsController.search);
   route.post(
-    "/reservoir-detail",
+    "/reservoir-details",
     validateData.reserviorDetailValidate,
     ReservoirDetailsController.save
   );
   route.put(
-    "/reservoir-detail/:id",
+    "/reservoir-details/:id",
     validateData.reserviorDetailValidate,
     ReservoirDetailsController.update
   );
-  route.delete("/reservoir-detail/:id", ReservoirDetailsController.delete);
+  route.delete("/reservoir-details/:id", ReservoirDetailsController.delete);
   //Irrigation capacity
-  route.get("/irrigation-capacity", IrrigationCapacityController.getAll);
-  route.get("/irrigation-capacity/:id", IrrigationCapacityController.get);
+  route.get("/irrigation-capacities", IrrigationCapacityController.getAll);
+  route.get("/irrigation-capacities/:id", IrrigationCapacityController.get);
   route.get(
-    "/project/irrigation-capacity/:id",
+    "/project/irrigation-capacities/:id",
     IrrigationCapacityController.getByProjectId
   );
-  route.get("/irrigation-capacity-search", IrrigationCapacityController.search);
+  route.get("/irrigation-capacity-searches", IrrigationCapacityController.search);
   route.post(
-    "/irrigation-capacity",
+    "/irrigation-capacities",
     validateData.irrigationCapacityValidate,
     IrrigationCapacityController.save
   );
   route.put(
-    "/irrigation-capacity/:id",
+    "/irrigation-capacities/:id",
     validateData.irrigationCapacityValidate,
     IrrigationCapacityController.update
   );
-  route.delete("/irrigation-capacity/:id", IrrigationCapacityController.delete);
+  route.delete("/irrigation-capacities/:id", IrrigationCapacityController.delete);
 
   
-  route.get("/project/cpm", ProjectController.getAllCPMProject);
-  route.get("/project/", ProjectController.getAll);
-  route.get("/project/:id", ProjectController.get);
-  route.get("/project-search", ProjectController.search);
-  route.post("/project/filter/", ProjectController.getProjectByTypeId);
-  route.post("/project", validateData.projectValidate, ProjectController.save);
+  route.get("/projects/cpm", ProjectController.getAllCPMProject);
+  route.get("/projects/", ProjectController.getAll);
+  route.get("/projects/:id", ProjectController.get);
+  route.get("/project-searches", ProjectController.search);
+  route.post("/projects/filter/", ProjectController.getProjectByTypeId);
+  route.post("/projects", validateData.projectValidate, ProjectController.save);
   route.get("/project-analysis/:id", ProjectController.getProjectAnalysis);
 
   route.put(
@@ -496,7 +496,7 @@ module.exports = function (express) {
     validateData.projectValidate,
     ProjectController.update
   );
-  route.delete("/project/:id", ProjectController.delete);
+  route.delete("/projects/:id", ProjectController.delete);
   route.get(
     "/project-general-information/:id",
     ProjectController.getProjectDetail
@@ -509,363 +509,363 @@ module.exports = function (express) {
 
   
   //project finance route
-  route.get("/project-finance/", ProjectFinanceController.getAll);
-  route.get("/project-finance/:id", ProjectFinanceController.get);
+  route.get("/project-finances/", ProjectFinanceController.getAll);
+  route.get("/project-finances/:id", ProjectFinanceController.get);
   route.get(
-    "/project-finance/project/:id",
+    "/project-finances/project/:id",
     ProjectFinanceController.getByProjectId
   );
-  route.get("/project-finance-search", ProjectFinanceController.search);
+  route.get("/project-finance-searches", ProjectFinanceController.search);
   route.post(
     "/project-finance",
     validateData.projectFinanceValidate,
     ProjectFinanceController.save
   );
   route.put(
-    "/project-finance/:id",
+    "/project-finances/:id",
     validateData.projectFinanceValidate,
     ProjectFinanceController.update
   );
-  route.delete("/project-finance/:id", ProjectFinanceController.delete);
+  route.delete("/project-finances/:id", ProjectFinanceController.delete);
 
   //project variation route
-  route.get("/project-variation/", ProjectVariationController.getAll);
-  route.get("/project-variation/:id", ProjectVariationController.get);
+  route.get("/project-variations/", ProjectVariationController.getAll);
+  route.get("/project-variations/:id", ProjectVariationController.get);
   route.get(
-    "/project/project-variation/:id",
+    "/project/project-variations/:id",
     ProjectVariationController.getByProjectId
   );
   route.get(
-    "/type/project-variation",
+    "/type/project-variations",
     ProjectVariationController.getByProjectType
   );
-  route.get("/project-variation-search", ProjectVariationController.search);
+  route.get("/project-variation-searches", ProjectVariationController.search);
   route.post(
-    "/project-variation",
+    "/project-variations",
     validateData.projectVariationValidate,
     ProjectVariationController.save
   );
   route.put(
-    "/project-variation/:id",
+    "/project-variations/:id",
     validateData.projectVariationValidate,
     ProjectVariationController.update
   );
-  route.delete("/project-variation/:id", ProjectVariationController.delete);
+  route.delete("/project-variations/:id", ProjectVariationController.delete);
 
   //extensions
-  route.get("/project-extension-time/", ProjectExtensionTimeController.getAll);
-  route.get("/project-extension-time/:id", ProjectExtensionTimeController.get);
+  route.get("/project-extension-times/", ProjectExtensionTimeController.getAll);
+  route.get("/project-extension-times/:id", ProjectExtensionTimeController.get);
   route.get(
-    "/project/project-extension-time/:id",
+    "/project/project-extension-times/:id",
     ProjectExtensionTimeController.getByProjectId
   );
   route.get(
-    "/project-extension-time-search",
+    "/project-extension-time-searches",
     ProjectExtensionTimeController.search
   );
   route.post(
-    "/project-extension-time",
+    "/project-extension-times",
     validateData.projectExtensionTimeValidate,
     ProjectExtensionTimeController.save
   );
   route.put(
-    "/project-extension-time/:id",
+    "/project-extension-times/:id",
     validateData.projectExtensionTimeValidate,
     ProjectExtensionTimeController.update
   );
   route.delete(
-    "/project-extension-time/:id",
+    "/project-extension-times/:id",
     ProjectExtensionTimeController.delete
   );
 
   //project time
-  route.get("/project-time", ProjectTimeController.getAll);
-  route.get("/project-time/:id", ProjectTimeController.get);
-  route.get("/project/project-time/:id", ProjectTimeController.getByProjectId);
-  route.get("/project-time-search", ProjectTimeController.search);
+  route.get("/project-times", ProjectTimeController.getAll);
+  route.get("/project-times/:id", ProjectTimeController.get);
+  route.get("/project/project-times/:id", ProjectTimeController.getByProjectId);
+  route.get("/project-time-searches", ProjectTimeController.search);
   route.post(
-    "/project-time",
+    "/project-times",
     validateData.projectTimeValidate,
     ProjectTimeController.save
   );
   route.put(
-    "/project-time/:id",
+    "/project-times/:id",
     validateData.projectTimeValidate,
     ProjectTimeController.update
   );
-  route.delete("/project-time/:id", ProjectTimeController.delete);
+  route.delete("/project-times/:id", ProjectTimeController.delete);
 
   route.get("/project-time-analysis/:id", ProjectController.getContractTimeAnalysis)
 
   //project bond
-  route.get("/project-bond/", ProjectBondController.getAll);
-  route.get("/project-bond/:id", ProjectBondController.get);
-  route.get("/project/project-bond/:id", ProjectBondController.getByProjectId);
-  route.get("/type/project-bond", ProjectBondController.getByProjectType);
-  route.get("/project-bond-search", ProjectBondController.search);
+  route.get("/project-bonds/", ProjectBondController.getAll);
+  route.get("/project-bonds/:id", ProjectBondController.get);
+  route.get("/project/project-bonds/:id", ProjectBondController.getByProjectId);
+  route.get("/type/project-bonds", ProjectBondController.getByProjectType);
+  route.get("/project-bond-searches", ProjectBondController.search);
   route.post(
-    "/project-bond",
+    "/project-bonds",
     validateData.projectBondValidate,
     ProjectBondController.save
   );
   route.put(
-    "/project-bond/:id",
+    "/project-bonds/:id",
     validateData.projectBondValidate,
     ProjectBondController.update
   );
-  route.delete("/project-bond/:id", ProjectBondController.delete);
+  route.delete("/project-bonds/:id", ProjectBondController.delete);
 
   //road info
-  route.get("/road-info/", RoadInfoController.getAll);
-  route.get("/road-info/:id", RoadInfoController.get);
-  route.get("/project/road-info/:id", RoadInfoController.getByProjectId);
-  route.get("/road-info-search", RoadInfoController.search);
+  route.get("/road-infos/", RoadInfoController.getAll);
+  route.get("/road-infos/:id", RoadInfoController.get);
+  route.get("/project/road-infos/:id", RoadInfoController.getByProjectId);
+  route.get("/road-info-searches", RoadInfoController.search);
   route.post(
-    "/road-info",
+    "/road-infos",
     validateData.roadDetailValidate,
     RoadInfoController.save
   );
   route.put(
-    "/road-info/:id",
+    "/road-infos/:id",
     validateData.roadDetailValidate,
     RoadInfoController.update
   );
-  route.delete("/road-info/:id", RoadInfoController.delete);
+  route.delete("/road-infos/:id", RoadInfoController.delete);
 
   //road segment
-  route.get("/road-segment/", RoadSegmentController.getAll);
-  route.get("/road-segment/:id", RoadSegmentController.get);
-  route.get("/project/road-segment/:id", RoadSegmentController.getByProjectId);
-  route.get("/road-segment-search", RoadSegmentController.search);
+  route.get("/road-segments/", RoadSegmentController.getAll);
+  route.get("/road-segments/:id", RoadSegmentController.get);
+  route.get("/project/road-segments/:id", RoadSegmentController.getByProjectId);
+  route.get("/road-segment-searchs", RoadSegmentController.search);
   route.post(
-    "/road-segment",
+    "/road-segments",
     validateData.roadSegmentValidate,
     RoadSegmentController.save
   );
   route.put(
-    "/road-segment/:id",
+    "/road-segments/:id",
     validateData.roadSegmentValidate,
     RoadSegmentController.update
   );
-  route.delete("/road-segment/:id", RoadSegmentController.delete);
+  route.delete("/road-segments/:id", RoadSegmentController.delete);
 
   //road layer
-  route.get("/road-layer/", RoadLayerController.getAll);
-  route.get("/road-layer/:id", RoadLayerController.get);
-  route.get("/project/road-layer/:id", RoadLayerController.getByProjectId);
-  route.get("/road-layer-search", RoadLayerController.search);
+  route.get("/road-layers/", RoadLayerController.getAll);
+  route.get("/road-layers/:id", RoadLayerController.get);
+  route.get("/project/road-layers/:id", RoadLayerController.getByProjectId);
+  route.get("/road-layer-searches", RoadLayerController.search);
   route.post(
-    "/road-layer",
+    "/road-layers",
     validateData.roadLayerValidate,
     RoadLayerController.save
   );
   route.put(
-    "/road-layer/:id",
+    "/road-layers/:id",
     validateData.roadLayerValidate,
     RoadLayerController.update
   );
-  route.delete("/road-layer/:id", RoadLayerController.delete);
+  route.delete("/road-layers/:id", RoadLayerController.delete);
 
   //solar energy
-  route.get("/solar-energy", SolarEnergyController.getAll);
-  route.get("/solar-energy/:id", SolarEnergyController.get);
-  route.get("/project/solar-energy/:id", SolarEnergyController.getByProjectId);
-  route.get("/solar-enegy-search", SolarEnergyController.search);
+  route.get("/solar-energies", SolarEnergyController.getAll);
+  route.get("/solar-energies/:id", SolarEnergyController.get);
+  route.get("/project/solar-energies/:id", SolarEnergyController.getByProjectId);
+  route.get("/solar-enegy-searches", SolarEnergyController.search);
   route.post(
-    "/solar-energy",
+    "/solar-energies",
     validateData.solarEnergyValidate,
     SolarEnergyController.save
   );
   route.put(
-    "/solar-energy/:id",
+    "/solar-energies/:id",
     validateData.solarEnergyValidate,
     SolarEnergyController.update
   );
-  route.delete("/solar-energy/:id", SolarEnergyController.delete);
+  route.delete("/solar-energies/:id", SolarEnergyController.delete);
 
   //wind energy
-  route.get("/wind-energy", WindEnergyController.getAll);
-  route.get("/wind-energy/:id", WindEnergyController.get);
-  route.get("/project/wind-energy/:id", WindEnergyController.getByProjectId);
-  route.get("/wind-enegy-search", WindEnergyController.search);
+  route.get("/wind-energies", WindEnergyController.getAll);
+  route.get("/wind-energies/:id", WindEnergyController.get);
+  route.get("/project/wind-energies/:id", WindEnergyController.getByProjectId);
+  route.get("/wind-enegy-searches", WindEnergyController.search);
   route.post(
-    "/wind-energy",
+    "/wind-energies",
     validateData.windEnergyValidate,
     WindEnergyController.save
   );
   route.put(
-    "/wind-energy/:id",
+    "/wind-energies/:id",
     validateData.windEnergyValidate,
     WindEnergyController.update
   );
-  route.delete("/wind-energy/:id", WindEnergyController.delete);
+  route.delete("/wind-energies/:id", WindEnergyController.delete);
 
   //transformer
-  route.get("/transformer", TransformerController.getAll);
-  route.get("/transformer/:id", TransformerController.get);
-  route.get("/project/transformer/:id", TransformerController.getByProjectId);
-  route.get("/transformer-search", TransformerController.search);
+  route.get("/transformers", TransformerController.getAll);
+  route.get("/transformers/:id", TransformerController.get);
+  route.get("/project/transformers/:id", TransformerController.getByProjectId);
+  route.get("/transformer-searches", TransformerController.search);
   route.post(
-    "/transformer",
+    "/transformers",
     validateData.transformerValidate,
     TransformerController.save
   );
   route.put(
-    "/transformer/:id",
+    "/transformers/:id",
     validateData.transformerValidate,
     TransformerController.update
   );
-  route.delete("/transformer/:id", TransformerController.delete);
+  route.delete("/transformers/:id", TransformerController.delete);
 
   //transformer type
-  route.get("/transformer-type", TransformerTypeController.getAll);
-  route.get("/transformer-type/:id", TransformerTypeController.get);
+  route.get("/transformer-types", TransformerTypeController.getAll);
+  route.get("/transformer-types/:id", TransformerTypeController.get);
   route.get(
-    "/project/transformer-type/:id",
+    "/project/transformer-types/:id",
     TransformerTypeController.getByProjectId
   );
-  route.get("/transformer-type-search", TransformerTypeController.search);
+  route.get("/transformer-type-searches", TransformerTypeController.search);
   route.post(
-    "/transformer-type",
+    "/transformer-types",
     validateData.transformerTypeValidate,
     TransformerTypeController.save
   );
   route.put(
-    "/transformer-type/:id",
+    "/transformer-types/:id",
     validateData.transformerTypeValidate,
     TransformerTypeController.update
   );
-  route.delete("/transformer-type/:id", TransformerTypeController.delete);
+  route.delete("/transformer-types/:id", TransformerTypeController.delete);
 
   //transmission lines
-  route.get("/transmission-line", TransmissionLineController.getAll);
-  route.get("/transmission-line/:id", TransmissionLineController.get);
+  route.get("/transmission-lines", TransmissionLineController.getAll);
+  route.get("/transmission-lines/:id", TransmissionLineController.get);
   route.get(
-    "/project/transmission-line/:id",
+    "/project/transmission-lines/:id",
     TransmissionLineController.getByProjectId
   );
-  route.get("/transmission-line-search", TransmissionLineController.search);
+  route.get("/transmission-line-searches", TransmissionLineController.search);
   route.post(
-    "/transmission-line",
+    "/transmission-lines",
     validateData.transmissionLineValidate,
     TransmissionLineController.save
   );
   route.put(
-    "/transmission-line/:id",
+    "/transmission-lines/:id",
     validateData.transmissionLineValidate,
     TransmissionLineController.update
   );
-  route.delete("/transmission-line/:id", TransmissionLineController.delete);
+  route.delete("/transmission-lines/:id", TransmissionLineController.delete);
 
   //electric tower
-  route.get("/electric-tower", ElectricTowerController.getAll);
-  route.get("/electric-tower/:id", ElectricTowerController.get);
+  route.get("/electric-towers", ElectricTowerController.getAll);
+  route.get("/electric-towers/:id", ElectricTowerController.get);
   route.get(
-    "/project/electric-tower/:id",
+    "/project/electric-towers/:id",
     ElectricTowerController.getByProjectId
   );
-  route.get("/electric-tower-search", ElectricTowerController.search);
+  route.get("/electric-tower-searches", ElectricTowerController.search);
   route.post(
-    "/electric-tower",
+    "/electric-towers",
     validateData.electricTowerValidate,
     ElectricTowerController.save
   );
   route.put(
-    "/electric-tower/:id",
+    "/electric-towers/:id",
     validateData.electricTowerValidate,
     ElectricTowerController.update
   );
-  route.delete("/electric-tower/:id", ElectricTowerController.delete);
+  route.delete("/electric-towers/:id", ElectricTowerController.delete);
 
   //railway
-  route.get("/railway", RailwayController.getAll);
-  route.get("/railway/:id", RailwayController.get);
-  route.get("/project/railway/:id", RailwayController.getByProjectId);
-  route.get("/railway-search", RailwayController.search);
-  route.post("/railway", validateData.railWayValidate, RailwayController.save);
+  route.get("/railways", RailwayController.getAll);
+  route.get("/railways/:id", RailwayController.get);
+  route.get("/project/railways/:id", RailwayController.getByProjectId);
+  route.get("/railway-searches", RailwayController.search);
+  route.post("/railways", validateData.railWayValidate, RailwayController.save);
   route.put(
-    "/railway/:id",
+    "/railways/:id",
     validateData.railWayValidate,
     RailwayController.update
   );
-  route.delete("/railway/:id", RailwayController.delete);
+  route.delete("/railways/:id", RailwayController.delete);
 
   //railway station
-  route.get("/railway-station", RailwayStationController.getAll);
-  route.get("/railway-station/:id", RailwayStationController.get);
+  route.get("/railway-stations", RailwayStationController.getAll);
+  route.get("/railway-stations/:id", RailwayStationController.get);
   route.get(
-    "/project/railway-station/:id",
+    "/project/railway-stations/:id",
     RailwayStationController.getByProjectId
   );
-  route.get("/railway-station-search", RailwayStationController.search);
+  route.get("/railway-station-searches", RailwayStationController.search);
   route.post(
-    "/railway-station",
+    "/railway-stations",
     validateData.railWayStationValidate,
     RailwayStationController.save
   );
   route.put(
-    "/railway-station/:id",
+    "/railway-stations/:id",
     validateData.railWayStationValidate,
     RailwayStationController.update
   );
-  route.delete("/railway-station/:id", RailwayStationController.delete);
+  route.delete("/railway-stations/:id", RailwayStationController.delete);
 
   //water irrigation dam
-  route.get("/water-irrigation-dam", WaterIrrigationDamController.getAll);
-  route.get("/water-irrigation-dam/:id", WaterIrrigationDamController.get);
+  route.get("/water-irrigation-dams", WaterIrrigationDamController.getAll);
+  route.get("/water-irrigation-dams/:id", WaterIrrigationDamController.get);
   route.get(
-    "/project/water-irrigation-dam/:id",
+    "/project/water-irrigation-dams/:id",
     WaterIrrigationDamController.getByProjectId
   );
   route.get(
-    "/water-irrigation-dam-search",
+    "/water-irrigation-dam-searches",
     WaterIrrigationDamController.search
   );
   route.post(
-    "/water-irrigation-dam",
+    "/water-irrigation-dams",
     validateData.waterIrrigationValidate,
     WaterIrrigationDamController.save
   );
   route.put(
-    "/water-irrigation-dam/:id",
+    "/water-irrigation-dams/:id",
     validateData.waterIrrigationValidate,
     WaterIrrigationDamController.update
   );
   route.delete(
-    "/water-irrigation-dam/:id",
+    "/water-irrigation-dams/:id",
     WaterIrrigationDamController.delete
   );
 
   //port
-  route.get("/port", PortController.getAll);
-  route.get("/port/:id", PortController.get);
-  route.get("/project/port/:id", PortController.getByProjectId);
+  route.get("/ports", PortController.getAll);
+  route.get("/ports/:id", PortController.get);
+  route.get("/project/ports/:id", PortController.getByProjectId);
   route.get("/port", PortController.search);
-  route.post("/port", validateData.portValidate, PortController.save);
-  route.put("/port/:id", validateData.portValidate, PortController.update);
-  route.delete("/port/:id", PortController.delete);
+  route.post("/ports", validateData.portValidate, PortController.save);
+  route.put("/ports/:id", validateData.portValidate, PortController.update);
+  route.delete("/ports/:id", PortController.delete);
 
   //payment
-  route.get("/payment", PaymentController.getAll);
-  route.get("/payment/:id", PaymentController.get);
-  route.get("/type/project/payment", PaymentController.getByProjectIdAndType);
-  route.get("/project/payment/:id", PaymentController.getByProjectId);
-  route.get("/payment", PaymentController.search);
-  route.post("/payment", validateData.paymentValidate, PaymentController.save);
+  route.get("/payments", PaymentController.getAll);
+  route.get("/payments/:id", PaymentController.get);
+  route.get("/type/project/payments", PaymentController.getByProjectIdAndType);
+  route.get("/project/payments/:id", PaymentController.getByProjectId);
+  route.get("/paymenst", PaymentController.search);
+  route.post("/payments", validateData.paymentValidate, PaymentController.save);
   route.put(
-    "/payment/:id",
+    "/payments/:id",
     validateData.paymentValidate,
     PaymentController.update
   );
-  route.delete("/payment/:id", PaymentController.delete);
+  route.delete("/payments/:id", PaymentController.delete);
 
   //summary
   route.get(
-    "/matrix/project",
+    "/matrix/projects",
     ProjectController.countAllProjectWithProjectType
   );
   route.get(
-    "/count/project/projectcategory",
+    "/count/project/projectcategories",
     ProjectController.countAllProjectWithProjectCategory
   );
   return route;

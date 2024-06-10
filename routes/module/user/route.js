@@ -19,13 +19,13 @@ module.exports = function (express) {
 
   //user route
   
-  route.get("/user", UserController.getAll);
-  route.get("/user/:id", UserController.get);
+  route.get("/users", UserController.getAll);
+  route.get("/users/:id", UserController.get);
   route.get("/user_search/:key", UserController.search);
-  route.post("/user", validateInput.createUser, UserController.save);
-  route.put("/user/:id", validateInput.createUser, UserController.update);
-  route.delete("/user/:id", UserController.delete);
-  route.get("/department-users/:id", UserController.getDepartmentUsers);
+  route.post("/users", validateInput.createUser, UserController.save);
+  route.put("/users/:id", validateInput.createUser, UserController.update);
+  route.delete("/users/:id", UserController.delete);
+  route.get("/users/department/:id", UserController.getDepartmentUsers);
 
   route.put("/account-activate/:id", validateInput.createUser, UserController.activateAccount);
   route.put("/account-deactivate/:id", validateInput.createUser, UserController.deactivateAccount);
@@ -38,18 +38,18 @@ module.exports = function (express) {
   route.get("/user-check-status/:id", UserController.checkUserStatus);
 
   //position route
-  route.get("/position", positionController.getAll);
+  route.get("/positions", positionController.getAll);
   route.get("/position-permissions", positionController.givePositionPermissions);
 
   
-  route.get("/position/:id", positionController.get);
+  route.get("/positions/:id", positionController.get);
   route.get("/position_search", positionController.search);
   route.post(
-    "/position",
+    "/positions",
     validateInput.positionValidate,
     positionController.save
   );
-  route.put("/position/:id", positionController.update);
+  route.put("/positions/:id", positionController.update);
   route.delete("/position/:id", positionController.delete);
   route.get(
     "/department-positions/:id",
@@ -57,20 +57,20 @@ module.exports = function (express) {
   );
 
   //department route
-  route.get("/department", departmentController.getAll);
-  route.get("/department/:id", departmentController.get);
+  route.get("/departments", departmentController.getAll);
+  route.get("/departments/:id", departmentController.get);
   route.get("/department_search", departmentController.search);
   route.post(
-    "/department",
+    "/departments",
     validateInput.departmentValidate,
     departmentController.save
   );
   route.put(
-    "/department/:id",
+    "/departments/:id",
     [validateInput.departmentValidate, checkEditable.checkEditability],
     departmentController.update
   );
-  route.delete("/department/:id", departmentController.delete);
+  route.delete("/departments/:id", departmentController.delete);
   route.get("/sub-departments/:id", departmentController.getSubDepartments);
   route.get("/parent-department", departmentController.getParentDepartment);
 
@@ -87,24 +87,24 @@ module.exports = function (express) {
   route.get("/all-parents/:id", departmentController.getToRoot);
 
   //Role route
-  route.get("/role", roleController.getAll);
-  route.get("/role/:id", roleController.get);
+  route.get("/roles", roleController.getAll);
+  route.get("/roles/:id", roleController.get);
   route.get("/role_search", roleController.search);
-  route.post("/role", validateInput.roleValidate, roleController.save);
-  route.put("/role/:id", validateInput.roleValidate, roleController.update);
-  route.delete("/role/:id", roleController.delete);
+  route.post("/roles", validateInput.roleValidate, roleController.save);
+  route.put("/roles/:id", validateInput.roleValidate, roleController.update);
+  route.delete("/roles/:id", roleController.delete);
 
   //Role route
-  route.get("/permission", PermissionController.getAll);
-  route.get("/permission/:id", PermissionController.get);
+  route.get("/permissions", PermissionController.getAll);
+  route.get("/permissions/:id", PermissionController.get);
   route.get("/permission_search", PermissionController.search);
   route.post(
-    "/permission",
+    "/permissions",
     validateInput.permissionValidate,
     PermissionController.save
   );
-  route.put("/permission/:id", PermissionController.update);
-  route.delete("/permission/:id", PermissionController.delete);
+  route.put("/permissions/:id", PermissionController.update);
+  route.delete("/permissions/:id", PermissionController.delete);
   route.get("/generate-permission", PermissionController.initPermission);
   route.get("/models", PermissionController.getModels);
 
@@ -134,7 +134,7 @@ module.exports = function (express) {
   );
   route.get("/permission-modules", PermissionController.getPermissionModules);
   //Photo route
-  // route.get("/photo", UserPhotoController.getAll);
+  // route.get("/photos", UserPhotoController.getAll);
   // route.get("/photo/:id", UserPhotoController.get);
   // route.post("/photo/:id", UserPhotoController.save);
   // route.put("/photo/:id", validateInput.userPhotoValidate, UserPhotoController.update);
@@ -142,88 +142,88 @@ module.exports = function (express) {
 
   //hr for
   //Role route
-  route.get("/education-status", EducationStatusController.getAll);
-  route.get("/education-status/:id", EducationStatusController.get);
-  route.get("/education-status-search", EducationStatusController.search);
+  route.get("/education-statuses", EducationStatusController.getAll);
+  route.get("/education-statuses/:id", EducationStatusController.get);
+  route.get("/education-status-searches", EducationStatusController.search);
   route.post(
-    "/education-status",
+    "/education-statuses",
     validateInput.educationStatusValidate,
     EducationStatusController.save
   );
   route.put(
-    "/education-status/:id",
+    "/education-statuses/:id",
     validateInput.educationStatusValidate,
     EducationStatusController.update
   );
-  route.delete("/education-status/:id", roleController.delete);
+  route.delete("/education-statuses/:id", roleController.delete);
 
   //child
 
-  route.get("/child", ChildController.getAll);
-  route.get("/child/:id", ChildController.get);
+  route.get("/childs", ChildController.getAll);
+  route.get("/childs/:id", ChildController.get);
   route.get("/child_search", ChildController.search);
-  route.post("/child", validateInput.childValidate, ChildController.save);
-  route.put("/child/:id", validateInput.childValidate, ChildController.update);
-  route.delete("/child/:id", ChildController.delete);
+  route.post("/childs", validateInput.childValidate, ChildController.save);
+  route.put("/childs/:id", validateInput.childValidate, ChildController.update);
+  route.delete("/childs/:id", ChildController.delete);
 
   //family status
-  route.get("/family-status", FamilyStatusController.getAll);
-  route.get("/family-status/:id", FamilyStatusController.get);
-  route.get("/family-status-search", FamilyStatusController.search);
+  route.get("/family-statuses", FamilyStatusController.getAll);
+  route.get("/family-statuses/:id", FamilyStatusController.get);
+  route.get("/family-status-searches", FamilyStatusController.search);
   route.post(
-    "/family-status",
+    "/family-statuses",
     validateInput.familyStatusValidate,
     FamilyStatusController.save
   );
   route.put(
-    "/family-status/:id",
+    "/family-statuses/:id",
     validateInput.familyStatusValidate,
     FamilyStatusController.update
   );
-  route.delete("/family-status/:id", FamilyStatusController.delete);
+  route.delete("/family-statuses/:id", FamilyStatusController.delete);
 
   //Role route
-  route.get("/contact-person", ContactPersonController.getAll);
-  route.get("/contact-person/:id", ContactPersonController.get);
-  route.get("/contact-person-search", ContactPersonController.search);
+  route.get("/contact-people", ContactPersonController.getAll);
+  route.get("/contact-people/:id", ContactPersonController.get);
+  route.get("/contact-people-searches", ContactPersonController.search);
   route.post(
-    "/contact-person",
+    "/contact-people",
     validateInput.contactPersonValidate,
     ContactPersonController.save
   );
   route.put(
-    "/contact-person/:id",
+    "/contact-people/:id",
     validateInput.contactPersonValidate,
     ContactPersonController.update
   );
-  route.delete("/contact-person/:id", ContactPersonController.delete);
+  route.delete("/contact-people/:id", ContactPersonController.delete);
   //job experience
 
   //Role route
-  route.get("/job-experience", JobExperienceController.getAll);
-  route.get("/job-experience/:id", JobExperienceController.get);
-  route.get("/job-experience-search", JobExperienceController.search);
+  route.get("/job-experiences", JobExperienceController.getAll);
+  route.get("/job-experiences/:id", JobExperienceController.get);
+  route.get("/job-experience-searches", JobExperienceController.search);
   route.post(
-    "/job-experience",
+    "/job-experiences",
     validateInput.jobExperienceValidate,
     JobExperienceController.save
   );
   route.put(
-    "/job-experience/:id",
+    "/job-experiences/:id",
     validateInput.jobExperienceValidate,
     JobExperienceController.update
   );
-  route.delete("/job-experience/:id", JobExperienceController.delete);
+  route.delete("/job-experiences/:id", JobExperienceController.delete);
 
   //user hr routing
 
   route.get(
-    "/education-status/user/:id",
+    "/education-statuses/user/:id",
     EducationStatusController.getByUserId
   );
-  route.get("/family-status/user/:id", FamilyStatusController.getByUserId);
-  route.get("/contact-person/user/:id", ContactPersonController.getByUserId);
-  route.get("/job-experience/user/:id", JobExperienceController.getByUserId);
+  route.get("/family-statuses/user/:id", FamilyStatusController.getByUserId);
+  route.get("/contact-people/user/:id", ContactPersonController.getByUserId);
+  route.get("/job-experiences/user/:id", JobExperienceController.getByUserId);
   //test
   route.post("/change-language", UserController.changeLanguage);
   route.get("/test", departmentController.test);

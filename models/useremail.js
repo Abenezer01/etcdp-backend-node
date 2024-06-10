@@ -12,7 +12,10 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      UserEmail.belongsTo(models.User, {
+        foreignKey: "user_id",
+        as: "user",
+      });
     }
   }
   UserEmail.init(
@@ -28,6 +31,10 @@ module.exports = (sequelize, DataTypes) => {
       user_id: {
         type: DataTypes.UUID,
         allowNull: false,
+        references: {
+          model: "User", 
+          key: 'id'
+        }
       },
       email: {
         type: DataTypes.TEXT,

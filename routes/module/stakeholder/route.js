@@ -14,7 +14,7 @@ const EmployeeAgeController = require("../../../controllers/stakeholder/Employee
 const EmployeeEducationController = require("../../../controllers/stakeholder/EmployeeEducationController");
 const WorkExperienceLevelController = require("../../../controllers/stakeholder/WorkExperienceLevelController");
 const WorkExperienceController = require("../../../controllers/stakeholder/WorkExperienceController");
-const StakeHolderTrainingController = require("../../../controllers/stakeholder/StakeholderTrainingController.js");
+const StakeholderTrainingController = require("../../../controllers/stakeholder/StakeholderTrainingController.js");
 const RegulationController = require("../../../controllers/stakeholder/RegulationController");
 const StudyFieldController = require("../../../controllers/stakeholder/StudyFieldController");
 const StakeholderStudyFieldController = require("../../../controllers/stakeholder/StakeholderStudyFieldController");
@@ -32,169 +32,169 @@ const validateData = require("../../../middleware/validate/module/stakeholder/va
 module.exports = function (express) {
   const route = express.Router();
   //ownership route
-  route.get("/ownership/", ownershiptypeController.getAll);
-  route.get("/ownership/:id", ownershiptypeController.get);
-  route.get("/ownership-search", ownershiptypeController.search);
+  route.get("/ownerships/", ownershiptypeController.getAll);
+  route.get("/ownerships/:id", ownershiptypeController.get);
+  route.get("/ownership-searches", ownershiptypeController.search);
   route.post(
-    "/ownership",
+    "/ownerships",
     validateData.ownerShipValidate,
     ownershiptypeController.save
   );
   route.put(
-    "/ownership/:id",
+    "/ownerships/:id",
     validateData.ownerShipValidate,
     ownershiptypeController.update
   );
   route.delete("/ownership/:id", ownershiptypeController.delete);
   //business field route
-  route.get("/business-field/", BusinessFieldController.getAll);
-  route.get("/business-field/:id", BusinessFieldController.get);
-  route.get("/business-field-search", BusinessFieldController.search);
+  route.get("/business-fields/", BusinessFieldController.getAll);
+  route.get("/business-fields/:id", BusinessFieldController.get);
+  route.get("/business-field-searches", BusinessFieldController.search);
   route.post(
-    "/business-field",
+    "/business-fields",
     validateData.buisnessFieldValidate,
     BusinessFieldController.save
   );
   route.put(
-    "/business-field/:id",
+    "/business-fields/:id",
     validateData.buisnessFieldValidate,
     BusinessFieldController.update
   );
-  route.delete("/business-field/:id", BusinessFieldController.delete);
+  route.delete("/business-fields/:id", BusinessFieldController.delete);
   //stakeholder category route
-  route.get("/stakeholder-category/", stakeholderCategoryController.getAll);
-  route.get("/stakeholder-category/:id", stakeholderCategoryController.get);
+  route.get("/stakeholder-categories/", stakeholderCategoryController.getAll);
+  route.get("/stakeholder-categories/:id", stakeholderCategoryController.get);
   route.get(
-    "/stakeholder-category/stakeholder-type/:id",
+    "/stakeholder-categories/stakeholder-type/:id",
     stakeholderCategoryController.getAllCatByTypeId
   );
   // route.get("/stakeholder-category/staketype/:id", stakeholderCategoryController.getCatByTypeId);
   route.get(
-    "/stakeholder-category-search",
+    "/stakeholder-category-searches",
     stakeholderCategoryController.search
   );
   route.post(
-    "/stakeholder-category",
+    "/stakeholder-categories",
     validateData.stakeholderCategoryValidate,
     stakeholderCategoryController.save
   );
   route.put(
-    "/stakeholder-category/:id",
+    "/stakeholder-categories/:id",
     validateData.stakeholderCategoryValidate,
     stakeholderCategoryController.update
   );
   route.delete(
-    "/stakeholder-category/:id",
+    "/stakeholder-categories/:id",
     stakeholderCategoryController.delete
   );
   //stakeholder subcategory route
   route.get(
-    "/stakeholder-sub-category/",
+    "/stakeholder-sub-categories/",
     stakeholderSubCategoryController.getAll
   );
   route.get(
-    "/stakeholder-sub-category/:id",
+    "/stakeholder-sub-categories/:id",
     stakeholderSubCategoryController.get
   );
   route.get(
-    "/stakeholder-sub-category-search",
+    "/stakeholder-sub-category-searches",
     stakeholderSubCategoryController.search
   );
   route.post(
-    "/stakeholder-sub-category",
+    "/stakeholder-sub-categories",
     validateData.stakeholderSubCategoryValidate,
     stakeholderSubCategoryController.save
   );
   route.put(
-    "/stakeholder-sub-category/:id",
+    "/stakeholder-sub-categories/:id",
     validateData.stakeholderSubCategoryValidate,
     stakeholderSubCategoryController.update
   );
   route.delete(
-    "/stakeholder-sub-category/:id",
+    "/stakeholder-sub-categories/:id",
     stakeholderSubCategoryController.delete
   );
   //stakeholder type route
-  route.get("/stakeholder-type", stakeholderTypeController.getAll);
-  route.get("/stakeholder-type/:id", stakeholderTypeController.get);
-  route.get("/stakeholder-type-search", stakeholderTypeController.search);
+  route.get("/stakeholder-types", stakeholderTypeController.getAll);
+  route.get("/stakeholder-types/:id", stakeholderTypeController.get);
+  route.get("/stakeholder-type-searches", stakeholderTypeController.search);
   route.post(
-    "/stakeholder-type",
+    "/stakeholder-typse",
     validateData.stakeholderTypeValidate,
     stakeholderTypeController.save
   );
   route.put(
-    "/stakeholder-type/:id",
+    "/stakeholder-types/:id",
     validateData.stakeholderTypeValidate,
     stakeholderTypeController.update
   );
-  route.delete("/stakeholder-type/:id", stakeholderTypeController.delete);
+  route.delete("/stakeholder-types/:id", stakeholderTypeController.delete);
   //stakeholder info route
-  route.get("/stakeholder-info/", stakeholderInfoController.getAll);
-  route.get("/stakeholder-info/:id", stakeholderInfoController.get);
+  route.get("/stakeholder-infos/", stakeholderInfoController.getAll);
+  route.get("/stakeholder-infos/:id", stakeholderInfoController.get);
   route.get(
-    "/stakeholder-info/stakeholder/:id",
+    "/stakeholder-infos/stakeholder/:id",
     stakeholderInfoController.getStakeInfoByStakeHolderId
   );
-  route.get("/stakeholder-info-search", stakeholderInfoController.search);
+  route.get("/stakeholder-info-searches", stakeholderInfoController.search);
   route.post(
-    "/stakeholder-info",
+    "/stakeholder-infos",
     validateData.stakeHolderInfo,
     stakeholderInfoController.save
   );
   route.put(
-    "/stakeholder-info/:id",
+    "/stakeholder-infos/:id",
     validateData.stakeHolderInfo,
     stakeholderInfoController.update
   );
-  route.delete("/stakeholder-info/:id", stakeholderInfoController.delete);
+  route.delete("/stakeholder-infos/:id", stakeholderInfoController.delete);
   //stakeholder route
-  route.get("/stakeholder", StakeholderController.getAll);
-  route.get("/stakeholder/:id", StakeholderController.get);
+  route.get("/stakeholders", StakeholderController.getAll);
+  route.get("/stakeholders/:id", StakeholderController.get);
   route.post(
     "/stakeholder/filter/stakeholder-type/",
     StakeholderController.getStakeHolderByTypeId
   );
-  route.get("/stakeholder-search", StakeholderController.search);
+  route.get("/stakeholder-searches", StakeholderController.search);
   route.post(
-    "/stakeholder",
+    "/stakeholders",
     validateData.stakeHolderValidate,
     StakeholderController.save
   );
   route.put(
-    "/stakeholder/:id",
+    "/stakeholders/:id",
     validateData.stakeHolderValidate,
     StakeholderController.update
   );
-  route.delete("/stakeholder/:id", StakeholderController.delete);
+  route.delete("/stakeholders/:id", StakeholderController.delete);
 
-  route.get("/general-info/:id", StakeholderController.getStakeholderData);
+  route.get("/general-infos/:id", StakeholderController.getStakeholderData);
 
   //stakeholder contact person
   route.get(
-    "/stakeholder-contact-person",
+    "/stakeholder-contact-people",
     StakeholderContactPersonController.getAll
   );
   route.get(
-    "/stakeholder-contact-person/:id",
+    "/stakeholder-contact-people/:id",
     StakeholderContactPersonController.get
   );
   route.get(
-    "/stakeholder-contact-person-search",
+    "/stakeholder-contact-person-searches",
     StakeholderContactPersonController.search
   );
   route.post(
-    "/stakeholder-contact-person",
+    "/stakeholder-contact-people",
     validateData.stakeholderContactPersonValidate,
     StakeholderContactPersonController.save
   );
   route.put(
-    "/stakeholder-contact-person/:id",
+    "/stakeholder-contact-people/:id",
     validateData.stakeholderContactPersonValidate,
     StakeholderContactPersonController.update
   );
   route.delete(
-    "/stakeholder-contact-person/:id",
+    "/stakeholder-contact-people/:id",
     StakeholderContactPersonController.delete
   );
   route.get(
@@ -203,367 +203,367 @@ module.exports = function (express) {
   );
 
   //certificate route
-  route.get("/certificate/", CertificateController.getAll);
-  route.get("/certificate/:id", CertificateController.get);
+  route.get("/certificates/", CertificateController.getAll);
+  route.get("/certificates/:id", CertificateController.get);
   route.get(
-    "/certificate/stakeholder/:id",
+    "/certificates/stakeholder/:id",
     CertificateController.getCertificateWithStakeholderId
   );
-  route.get("/certificate-search", CertificateController.search);
+  route.get("/certificate-searches", CertificateController.search);
   route.post(
-    "/certificate",
+    "/certificates",
     validateData.certificateValidate,
     CertificateController.save
   );
   route.put(
-    "/certificate/:id",
+    "/certificates/:id",
     validateData.certificateValidate,
     CertificateController.update
   );
-  route.delete("/certificate/:id", CertificateController.delete);
+  route.delete("/certificates/:id", CertificateController.delete);
   //total employee route
-  route.get("/total-employee/", TotalEmployeeController.getAll);
-  route.get("/total-employee/:id", TotalEmployeeController.get);
+  route.get("/total-employees/", TotalEmployeeController.getAll);
+  route.get("/total-employees/:id", TotalEmployeeController.get);
   route.get(
-    "/employee_years/total-employee",
+    "/employee_years/total-employese",
     TotalEmployeeController.getTotalEmployeeAllYears
   );
   route.get(
-    "/total-employee/stakeholder/:id",
+    "/total-employees/stakeholder/:id",
     TotalEmployeeController.getTotalEmployeeWithStakeholderId
   );
-  route.get("/total-employee-search", TotalEmployeeController.search);
+  route.get("/total-employee-searches", TotalEmployeeController.search);
   route.post(
-    "/total-employee",
+    "/total-employees",
     validateData.totalEmployeeValidate,
     TotalEmployeeController.save
   );
   route.put(
-    "/total-employee/:id",
+    "/total-employees/:id",
     validateData.totalEmployeeValidate,
     TotalEmployeeController.update
   );
-  route.delete("/total-employee/:id", TotalEmployeeController.delete);
+  route.delete("/total-employees/:id", TotalEmployeeController.delete);
   //age level route
-  route.get("/age-level/", AgeLevelController.getAll);
-  route.get("/age-level/:id", AgeLevelController.get);
-  route.get("/age-level-search", AgeLevelController.search);
+  route.get("/age-levels/", AgeLevelController.getAll);
+  route.get("/age-levels/:id", AgeLevelController.get);
+  route.get("/age-level-searches", AgeLevelController.search);
   route.post(
-    "/age-level",
+    "/age-levels",
     validateData.ageLevelValidate,
     AgeLevelController.save
   );
   route.put(
-    "/age-level/:id",
+    "/age-levels/:id",
     validateData.ageLevelValidate,
     AgeLevelController.update
   );
-  route.delete("/age-level/:id", AgeLevelController.delete);
+  route.delete("/age-levels/:id", AgeLevelController.delete);
   //employee age route
-  route.get("/employee-age/", EmployeeAgeController.getAll);
-  route.get("/employee-age/:id", EmployeeAgeController.get);
+  route.get("/employee-ages/", EmployeeAgeController.getAll);
+  route.get("/employee-ages/:id", EmployeeAgeController.get);
   route.get(
-    "/employee-age/stakeholder/:id",
+    "/employee-ages/stakeholder/:id",
     EmployeeAgeController.getEmployeeAgeByStakeholderId
   );
-  route.get("/employee-age-search", EmployeeAgeController.search);
+  route.get("/employee-age-searches", EmployeeAgeController.search);
   route.post(
-    "/employee-age",
+    "/employee-ages",
     validateData.employeeAgeValidate,
     EmployeeAgeController.save
   );
   route.put(
-    "/employee-age",
+    "/employee-ages",
     validateData.employeeAgeValidate,
     EmployeeAgeController.update
   );
-  route.delete("/employee-age/:id", EmployeeAgeController.delete);
+  route.delete("/employee-ages/:id", EmployeeAgeController.delete);
   //study level route
-  route.get("/study-level/", StudyLevelController.getAll);
-  route.get("/study-level/:id", StudyLevelController.get);
-  route.get("/study-level-search", StudyLevelController.search);
+  route.get("/study-levels/", StudyLevelController.getAll);
+  route.get("/study-levels/:id", StudyLevelController.get);
+  route.get("/study-level-searches", StudyLevelController.search);
   route.post(
-    "/study-level",
+    "/study-levels",
     validateData.studyLevelValidate,
     StudyLevelController.save
   );
   route.put(
-    "/study-level/:id",
+    "/study-levels/:id",
     validateData.studyLevelValidate,
     StudyLevelController.update
   );
-  route.delete("/study-level/:id", StudyLevelController.delete);
+  route.delete("/study-levels/:id", StudyLevelController.delete);
   //employee education route
-  route.get("/employee-education/", EmployeeEducationController.getAll);
+  route.get("/employee-educations/", EmployeeEducationController.getAll);
   route.get("/collection/", EmployeeEducationController.getCollectionOfData);
-  route.get("/employee-education/:id", EmployeeEducationController.get);
+  route.get("/employee-educations/:id", EmployeeEducationController.get);
   route.get(
-    "/employee-education/stakeholder/:id",
+    "/employee-educations/stakeholder/:id",
     EmployeeEducationController.getEmployeeEducationByStakeholderId
   );
-  route.get("/employee-education-search", EmployeeEducationController.search);
-  route.post("/employee-education", EmployeeEducationController.save);
+  route.get("/employee-education-searches", EmployeeEducationController.search);
+  route.post("/employee-educations", EmployeeEducationController.save);
   route.put(
-    "/employee-education/",
+    "/employee-educations/",
     validateData.educationValidate,
     EmployeeEducationController.update
   );
-  route.delete("/employee-education/:id", EmployeeEducationController.delete);
+  route.delete("/employee-educations/:id", EmployeeEducationController.delete);
 
   //work experience level route
-  route.get("/work-experience-level/", WorkExperienceLevelController.getAll);
-  route.get("/work-experience-level/:id", WorkExperienceLevelController.get);
+  route.get("/work-experience-levels/", WorkExperienceLevelController.getAll);
+  route.get("/work-experience-levels/:id", WorkExperienceLevelController.get);
   route.get(
-    "/work-experience-level-search",
+    "/work-experience-level-searches",
     WorkExperienceLevelController.search
   );
   route.post(
-    "/work-experience-level",
+    "/work-experience-levels",
     validateData.workExperienceLevelValidate,
     WorkExperienceLevelController.save
   );
   route.put(
-    "/work-experience-level/:id",
+    "/work-experience-levels/:id",
     validateData.workExperienceLevelValidate,
     WorkExperienceLevelController.update
   );
   route.delete(
-    "/work-experience-level/:id",
+    "/work-experience-levels/:id",
     WorkExperienceLevelController.delete
   );
   //work experience
-  route.get("/work-experience/", WorkExperienceController.getAll);
-  route.get("/work-experience/:id", WorkExperienceController.get);
+  route.get("/work-experiences/", WorkExperienceController.getAll);
+  route.get("/work-experiences/:id", WorkExperienceController.get);
   route.get(
-    "/work-experience/stakeholder/:id",
+    "/work-experiences/stakeholder/:id",
     WorkExperienceController.getWorkExperienceByStakeholderId
   );
-  route.get("/work-experience-search", WorkExperienceController.search);
+  route.get("/work-experience-searches", WorkExperienceController.search);
   route.post(
-    "/work-experience",
+    "/work-experiences",
     validateData.workExperienceValidate,
     WorkExperienceController.save
   );
   route.put(
-    "/work-experience",
+    "/work-experiences",
     validateData.workExperienceValidate,
     WorkExperienceController.update
   );
-  route.delete("/work-experience/:id", WorkExperienceController.delete);
+  route.delete("/work-experiences/:id", WorkExperienceController.delete);
   //stakeholder training/ support
-  route.get("/training/", StakeHolderTrainingController.getAll);
-  route.get("/training/:id", StakeHolderTrainingController.get);
+  route.get("/trainings/", StakeholderTrainingController.getAll);
+  route.get("/trainings/:id", StakeholderTrainingController.get);
   route.get(
-    "/training/stakeholder/:id",
-    StakeHolderTrainingController.getTrainingByStakeholderId
+    "/trainings/stakeholder/:id",
+    StakeholderTrainingController.getTrainingByStakeholderId
   );
-  route.get("/training-search", StakeHolderTrainingController.search);
+  route.get("/training-searches", StakeholderTrainingController.search);
   route.post(
-    "/training",
+    "/trainings",
     validateData.trainingValidate,
-    StakeHolderTrainingController.save
+    StakeholderTrainingController.save
   );
   route.put(
-    "/training/:id",
+    "/trainings/:id",
     validateData.trainingValidate,
-    StakeHolderTrainingController.update
+    StakeholderTrainingController.update
   );
-  route.delete("/training/:id", StakeHolderTrainingController.delete);
+  route.delete("/trainings/:id", StakeholderTrainingController.delete);
   //stakeholder regulation
-  route.get("/regulation/", RegulationController.getAll);
-  route.get("/regulation/:id", RegulationController.get);
+  route.get("/regulations/", RegulationController.getAll);
+  route.get("/regulations/:id", RegulationController.get);
   route.get(
-    "/regulation/stakeholder/:id",
+    "/regulations/stakeholder/:id",
     RegulationController.getRegulationByStakeholderId
   );
-  route.get("/regulation-search", RegulationController.search);
+  route.get("/regulation-searches", RegulationController.search);
   route.post(
-    "/regulation",
+    "/regulations",
     validateData.regulationValidate,
     RegulationController.save
   );
   route.put(
-    "/regulation/:id",
+    "/regulations/:id",
     validateData.regulationValidate,
     RegulationController.update
   );
-  route.delete("/regulation/:id", RegulationController.delete);
+  route.delete("/regulations/:id", RegulationController.delete);
   //study field
-  route.get("/study-field/", StudyFieldController.getAll);
-  route.get("/study-field/:id", StudyFieldController.getStudyFieldById);
-  route.get("/study-field-search", StudyFieldController.search);
+  route.get("/study-fields/", StudyFieldController.getAll);
+  route.get("/study-fields/:id", StudyFieldController.getStudyFieldById);
+  route.get("/study-field-searches", StudyFieldController.search);
   route.post(
-    "/study-field",
+    "/study-fields",
     validateData.studyFieldValidate,
     StudyFieldController.save
   );
   route.put(
-    "/study-field/:id",
+    "/study-fields/:id",
     validateData.studyFieldValidate,
     StudyFieldController.update
   );
-  route.delete("/study-field/:id", StudyFieldController.delete);
+  route.delete("/study-fields/:id", StudyFieldController.delete);
   //stakeholder study field
   route.get(
-    "/stakeholder-study-field",
+    "/stakeholder-study-fields",
     StakeholderStudyFieldController.getAll
   );
   route.get(
-    "/stakeholder-study-field/:id",
+    "/stakeholder-study-fields/:id",
     StakeholderStudyFieldController.get
   );
   route.get(
-    "/stakeholder-study-field/stakeholder/:id",
+    "/stakeholder-study-fields/stakeholder/:id",
     StakeholderStudyFieldController.getStakeholderStudyFieldByStakeholderId
   );
   route.get(
-    "/stakeholder-study-field-search",
+    "/stakeholder-study-field-searches",
     StakeholderStudyFieldController.search
   );
   route.post(
-    "/stakeholder-study-field",
+    "/stakeholder-study-fields",
     validateData.stakeholderStudyFieldValidate,
     StakeholderStudyFieldController.save
   );
   route.put(
-    "/stakeholder-study-field/:id",
+    "/stakeholder-study-fields/:id",
     validateData.stakeholderStudyFieldValidate,
     StakeholderStudyFieldController.update
   );
   route.delete(
-    "/stakeholder-study-field/:id",
+    "/stakeholder-study-fields/:id",
     StakeholderStudyFieldController.delete
   );
   //study program
-  route.get("/study-program/", StudyProgramController.getAll);
-  route.get("/study-program/:id", StudyProgramController.get);
-  route.get("/study-program-search", StudyProgramController.search);
+  route.get("/study-programs/", StudyProgramController.getAll);
+  route.get("/study-programs/:id", StudyProgramController.get);
+  route.get("/study-program-searches", StudyProgramController.search);
   route.post(
-    "/study-program",
+    "/study-programs",
     validateData.studyProgramValidate,
     StudyProgramController.save
   );
   route.put(
-    "/study-program/:id",
+    "/study-programs/:id",
     validateData.studyProgramValidate,
     StudyProgramController.update
   );
-  route.delete("/study-program/:id", StudyProgramController.delete);
+  route.delete("/study-programs/:id", StudyProgramController.delete);
   //study period cost
-  route.get("/study-period-cost/", StudyPeriodCostController.getAll);
-  route.get("/study-period-cost/:id", StudyPeriodCostController.get);
+  route.get("/study-period-costs/", StudyPeriodCostController.getAll);
+  route.get("/study-period-costs/:id", StudyPeriodCostController.get);
   route.get(
-    "/study-period-cost/higher-institute/:id",
+    "/study-period-costs/higher-institute/:id",
     StudyPeriodCostController.getByHigherInstituteId
   );
   route.get(
-    "/study-period-cost/study-field/:id",
+    "/study-period-costs/study-field/:id",
     StudyPeriodCostController.getByStudyFieldId
   );
-  route.get("/study-period-cost-search", StudyPeriodCostController.search);
+  route.get("/study-period-cost-searches", StudyPeriodCostController.search);
   route.post(
-    "/study-period-cost",
+    "/study-period-costs",
     validateData.studyPeriodCostValidate,
     StudyPeriodCostController.save
   );
   route.put(
-    "/study-period-cost/:id",
+    "/study-period-costs/:id",
     validateData.studyPeriodCostValidate,
     StudyPeriodCostController.update
   );
-  route.delete("/study-period-cost/:id", StudyPeriodCostController.delete);
+  route.delete("/study-period-costs/:id", StudyPeriodCostController.delete);
   //Graduate
-  route.get("/graduate/", GraduateController.getAll);
-  route.get("/graduate/:id", GraduateController.get);
+  route.get("/graduates/", GraduateController.getAll);
+  route.get("/graduates/:id", GraduateController.get);
   route.get(
-    "/graduate/higher-institute/:id",
+    "/graduates/higher-institute/:id",
     GraduateController.getByHigherInstituteId
   );
-  route.get("/graduate-search", GraduateController.search);
+  route.get("/graduate-searches", GraduateController.search);
   route.post(
-    "/graduate",
+    "/graduates",
     validateData.graduateValidate,
     GraduateController.save
   );
   route.put(
-    "/graduate/:id",
+    "/graduates/:id",
     validateData.graduateValidate,
     GraduateController.update
   );
-  route.delete("/graduate/:id", GraduateController.delete);
+  route.delete("/graduates/:id", GraduateController.delete);
   //Construction related service
   route.get(
-    "/construction-related-service/",
+    "/construction-related-services/",
     ConstructionRelatedServiceController.getAll
   );
   route.get(
-    "/construction-related-service/:id",
+    "/construction-related-services/:id",
     ConstructionRelatedServiceController.get
   );
   route.get(
-    "/construction-related-service/stakeholder/:id",
+    "/construction-related-services/stakeholder/:id",
     ConstructionRelatedServiceController.getConstructionRelatedServiceByStakeholderId
   );
   route.get(
-    "/construction-related-service-search",
+    "/construction-related-service-searches",
     ConstructionRelatedServiceController.search
   );
   route.post(
-    "/construction-related-service",
+    "/construction-related-services",
     validateData.constructionRelatedServiceValidate,
     ConstructionRelatedServiceController.save
   );
   route.put(
-    "/construction-related-service/:id",
+    "/construction-related-services/:id",
     validateData.constructionRelatedServiceValidate,
     ConstructionRelatedServiceController.update
   );
   route.delete(
-    "/construction-related-service/:id",
+    "/construction-related-services/:id",
     ConstructionRelatedServiceController.delete
   );
   //Stakeholder service
-  route.get("/stakeholder-service/", StakeholderServiceController.getAll);
-  route.get("/stakeholder-service/:id", StakeholderServiceController.get);
+  route.get("/stakeholder-services/", StakeholderServiceController.getAll);
+  route.get("/stakeholder-services/:id", StakeholderServiceController.get);
   route.get(
-    "/stakeholder-service/stakeholder/:id",
+    "/stakeholder-services/stakeholder/:id",
     StakeholderServiceController.getStakeServiceByStakeHolderId
   );
-  route.get("/stakeholder-service-search", StakeholderServiceController.search);
+  route.get("/stakeholder-service-searches", StakeholderServiceController.search);
   route.post(
-    "/stakeholder-service",
+    "/stakeholder-services",
     validateData.StakeholderServiceValidate,
     StakeholderServiceController.save
   );
   route.put(
-    "/stakeholder-service/:id",
+    "/stakeholder-services/:id",
     validateData.StakeholderServiceValidate,
     StakeholderServiceController.update
   );
-  route.delete("/stakeholder-service/:id", StakeholderServiceController.delete);
+  route.delete("/stakeholder-services/:id", StakeholderServiceController.delete);
   //Stakeholder operation location
   route.get(
-    "/stakeholder-operation-location/",
+    "/stakeholder-operation-locations/",
     OperationlocationController.getAll
   );
   route.get(
-    "/stakeholder-operation-location/:id",
+    "/stakeholder-operation-locations/:id",
     OperationlocationController.getByStakeholderId
   );
   route.get(
-    "/stakeholder-operation-location-search",
+    "/stakeholder-operation-location-searches",
     OperationlocationController.search
   );
   route.post(
-    "/stakeholder-operation-location",
+    "/stakeholder-operation-locations",
     OperationlocationController.save
   );
   route.put(
-    "/stakeholder-operation-location",
+    "/stakeholder-operation-locations",
     OperationlocationController.update
   );
   route.delete(
-    "/stakeholder-operation-location/:id",
+    "/stakeholder-operation-locations/:id",
     OperationlocationController.delete
   );
   //summary
@@ -577,23 +577,23 @@ module.exports = function (express) {
   // );
   //Stakeholder email and phone
   route.get(
-    "/stakeholder-email",
+    "/stakeholder-emails",
     StakeholderEmailController.getAll
   );
   route.get(
-    "/stakeholder-phone",
+    "/stakeholder-phones",
     StakeholderPhoneController.getAll
   );
-  route.post("/stakeholder-email", StakeholderEmailController.save);
-  route.post("/stakeholder-phone", StakeholderPhoneController.save);
-  route.put("/stakeholder-email/:id", StakeholderEmailController.update);
-  route.put("/stakeholder-phone/:id", StakeholderPhoneController.update);
+  route.post("/stakeholder-emails", StakeholderEmailController.save);
+  route.post("/stakeholder-phones", StakeholderPhoneController.save);
+  route.put("/stakeholder-emails/:id", StakeholderEmailController.update);
+  route.put("/stakeholder-phones/:id", StakeholderPhoneController.update);
   route.get(
-    "/stakeholder-email/:id",
+    "/stakeholder-emails/:id",
     StakeholderEmailController.getEmailAndPhone
   );
-  route.put("/stakeholder-email", StakeholderEmailController.update);
-  route.delete("/stakeholder-email/:id", StakeholderEmailController.delete);
-  route.delete("/stakeholder-phone/:id", StakeholderPhoneController.delete);
+  route.put("/stakeholder-emails", StakeholderEmailController.update);
+  route.delete("/stakeholder-emails/:id", StakeholderEmailController.delete);
+  route.delete("/stakeholder-phones/:id", StakeholderPhoneController.delete);
   return route;
 };
