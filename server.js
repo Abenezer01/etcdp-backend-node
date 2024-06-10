@@ -48,16 +48,16 @@ app.use(
 );
 
 //app.use("/api", userRoute(express), polymorphicRoute(express), loginRoute(express), stakeCategory(express), ProjectRoute(express));
-app.use("/api/auth", loginRoute(express));
-app.use("/api/departments", departmentRoute(express));
-app.use("/api/accounts", loginRoute(express));
-app.use("/api/projects", projectRoute(express));
-app.use("/api/stakeholders", stakeholderRoute(express));
-app.use("/api/resource", resourceRoute(express));
-app.use("/api/documents", documentRoute(express));
-app.use("/api/resources", resourceRoute(express));
-app.use("/api/generics", polymorphicRoute(express));
-app.use("/api/analytics", analyticRoute(express));
+app.use("/api/v1/auth", loginRoute(express));
+app.use("/api/v1/departments", departmentRoute(express));
+app.use("/api/v1/accounts", loginRoute(express));
+app.use("/api/v1/projects", projectRoute(express));
+app.use("/api/v1/stakeholders", stakeholderRoute(express));
+app.use("/api/v1/resource", resourceRoute(express));
+app.use("/api/v1/documents", documentRoute(express));
+app.use("/api/v1/resources", resourceRoute(express));
+app.use("/api/v1/generics", polymorphicRoute(express));
+app.use("/api/v1/analytics", analyticRoute(express));
 
 app.use("/", route_view(express));
 app.listen(7500, () => {

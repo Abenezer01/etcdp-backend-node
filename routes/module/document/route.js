@@ -8,65 +8,65 @@ module.exports = function (express) {
   const route = express.Router();
 
   //construction document type controller
-  route.get("/document-type", documentTypeController.getAll);
-  route.get("/document-type/:id", documentTypeController.get);
+  route.get("/document-types", documentTypeController.getAll);
+  route.get("/document-types/:id", documentTypeController.get);
   route.get("/document-type_search", documentTypeController.search);
   route.post(
-    "/document-type",
+    "/document-types",
     validateData.documentTypeValidate,
     documentTypeController.save
   );
   route.put(
-    "/document-type/:id",
+    "/document-types/:id",
     validateData.documentTypeValidate,
     documentTypeController.update
   );
-  route.delete("/document-type/:id", documentTypeController.delete);
+  route.delete("/document-types/:id", documentTypeController.delete);
   //construction document category controller
-  route.get("/document-category", DocumentCategoryController.getAll);
-  route.get("/document-category/:id", DocumentCategoryController.get);
+  route.get("/document-categories", DocumentCategoryController.getAll);
+  route.get("/document-categories/:id", DocumentCategoryController.get);
   route.get(
-    "/type/document-category/:id",
+    "/type/document-categories/:id",
     DocumentCategoryController.getCRCBydocumentTypeId
   );
   route.get("/document-category_search", DocumentCategoryController.search);
   route.post(
-    "/document-category",
+    "/document-categories",
     validateData.documentCategoryValidate,
     DocumentCategoryController.save
   );
   route.put(
-    "/document-category/:id",
+    "/document-categories/:id",
     validateData.documentCategoryValidate,
     DocumentCategoryController.update
   );
-  route.delete("/document-category/:id", DocumentCategoryController.delete);
+  route.delete("/document-categories/:id", DocumentCategoryController.delete);
   //construction document subcategory controller
-  route.get("/document-subcategory", DocumentSubCategoryController.getAll);
-  route.get("/document-subcategory/:id", DocumentSubCategoryController.get);
+  route.get("/document-subcategories", DocumentSubCategoryController.getAll);
+  route.get("/document-subcategories/:id", DocumentSubCategoryController.get);
   route.get(
     "/document-subcategory_search",
     DocumentSubCategoryController.search
   );
   route.post(
-    "/document-subcategory",
+    "/document-subcategories",
     validateData.documentSubCategoryValidate,
     DocumentSubCategoryController.save
   );
   route.put(
-    "/document-subcategory/:id",
+    "/document-subcategories/:id",
     validateData.documentSubCategoryValidate,
     DocumentSubCategoryController.update
   );
   route.delete(
-    "/document-subcategory/:id",
+    "/document-subcategories/:id",
     DocumentSubCategoryController.delete
   );
   //construction document registration controller
-  route.get("/document", DocumentController.getAll);
-  route.get("/document/:id", DocumentController.get);
-  route.get("/binary/document/:id", DocumentController.getdocument);
-  route.get("/filter/document", DocumentController.filter);
+  route.get("/documents", DocumentController.getAll);
+  route.get("/documents/:id", DocumentController.get);
+  route.get("/binary/documents/:id", DocumentController.getdocument);
+  route.get("/filter/documents", DocumentController.filter);
   route.get("/document_search", DocumentController.search);
   route.post(
     "/document",
@@ -74,14 +74,14 @@ module.exports = function (express) {
     DocumentController.save
   );
   route.put(
-    "/document/:id",
+    "/documents/:id",
     validateData.documentUpdateValidate,
     DocumentController.update
   );
-  route.delete("/document/:id", DocumentController.delete);
+  route.delete("/documents/:id", DocumentController.delete);
   //summary
   route.get(
-    "/matrix/document",
+    "/matrix/documents",
     DocumentController.countAllDocumentWithDocumentType
   );
   return route;

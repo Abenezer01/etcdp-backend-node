@@ -115,21 +115,64 @@ self.getAlll = async(req, res) => {
 // let one = "Ss"
 // let queryString = `SELECT * FROM users as U WHERE U.id=${one};`
 
+// self.getAll = async (req, res) => {
+//   try {
+//     const paginatedResult = await paginationHelper(User, req);
+
+//     // Use the response formatter to send the success response
+//     res.apiSuccess({
+//       data: paginatedResult.data,
+//       total: paginatedResult.total,
+//     }, paginatedResult.pagination);
+
+//   } catch (error) {
+//     console.error("Error in getAll method:", error);
+//     res.apiError(error);
+//   }
+// };
+
 self.getAll = async (req, res) => {
-  try {
-    const paginatedResult = await paginationHelper(User, req);
 
-    // Use the response formatter to send the success response
-    res.apiSuccess({
-      data: paginatedResult.data,
-      total: paginatedResult.total,
-    }, paginatedResult.pagination);
+   
+    try {
+      const whereCondition = { }
+  
+      const includeOptions = [
+        {
+            model: UserEmail,
+            as: 'useremails',
+            attributes: ['email'] 
+        },
+        {
+            model: UserPhone,
+            as: 'userphones',
+            attributes: ['phone'] 
+        }
+      ];
 
-  } catch (error) {
-    console.error("Error in getAll method:", error);
-    res.apiError(error);
-  }
-};
+  
+      const paginatedResult = await paginationHelper(User, req, whereCondition, includeOptions);
+  
+
+      const usersWithEmail = paginatedResult.data.map(user => {
+        const userJson = user.toJSON();
+        userJson.email = userJson.useremails ? userJson.useremails.email : null;
+        userJson.phone = userJson.userphones ? userJson.userphones.phone : null;
+        delete userJson.useremails; // Remove the nested emailInfo object
+        delete userJson.userphones; // Remove the nested emailInfo object
+        return userJson;
+      });
+      // Use the response formatter to send the success response
+      res.apiSuccess({
+        data: usersWithEmail,
+        total: paginatedResult.total,
+      }, paginatedResult.pagination);
+  
+    } catch (error) {
+      console.error("Error in getAll method:", error);
+      res.apiError(error);
+    }
+  };
 
 self.get = async(req, res) => {
     try {
@@ -138,7 +181,14 @@ self.get = async(req, res) => {
             where: {
                 id: id,
             },
+            include: {
+                model: models.UserEmail,
+                as: 'emailInfo',
+                attributes: ['email']
+              }
         });
+
+        return res.json(data)
 
         if (data) {
             let usEmail = await UserEmail.findOne({

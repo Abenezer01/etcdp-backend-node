@@ -5,7 +5,7 @@ const {
   UserPosition,
   ActionState,
   Sequelize,
-} = require("./../../models");
+} = require("../../models");
 const usrData = require("../../utils/userDataFromToken");
 const actionHelper = require("../utils/action-helper");
 const paginationHelper = require("../utils/pagination-helper")

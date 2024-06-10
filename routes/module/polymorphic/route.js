@@ -15,17 +15,17 @@ module.exports = function (express) {
   const route = express.Router();
 
   //address route
-  route.get("/address", AddressController.getAll);
-  route.get("/address/:id", AddressController.get);
-  route.get("/address/model/:id", AddressController.getAddressByModelId);
+  route.get("/addresses", AddressController.getAll);
+  route.get("/addresses/:id", AddressController.get);
+  route.get("/addresses/model/:id", AddressController.getAddressByModelId);
   route.get("/address_search", AddressController.search);
-  route.post("/address", validateData.addressValidate, AddressController.save);
+  route.post("/addresses", validateData.addressValidate, AddressController.save);
   route.put(
-    "/address/:id",
+    "/addresses/:id",
     validateData.addressValidate,
     AddressController.update
   );
-  route.delete("/address/:id", AddressController.delete);
+  route.delete("/addresses/:id", AddressController.delete);
 
   //action state route
   route.get("/action-state", ActionStateController.getAll);
@@ -38,18 +38,18 @@ module.exports = function (express) {
   // route.put("/reject/:model/:id", validateData.actionStateValidate, ActionStateController.reject);
   route.get("/model-action-data/:id", ActionStateController.getModelAction);
   //Photo
-  route.get("/photo", PhotoController.getAll);
-  route.post("/photo/:id", validateData.photoValidate, PhotoController.save);
-  route.get("/photo/:type/:id", PhotoController.servePhoto);
-  route.get("/multiple/photo/:id", PhotoController.serveMultiplePhoto);
-  route.put("/photo/:id", validateData.photoValidate, PhotoController.update);
-  route.delete("/photo/:id", PhotoController.delete);
+  route.get("/photos", PhotoController.getAll);
+  route.post("/photos/:id", validateData.photoValidate, PhotoController.save);
+  route.get("/photos/:type/:id", PhotoController.servePhoto);
+  route.get("/multiple/photos/:id", PhotoController.serveMultiplePhoto);
+  route.put("/photos/:id", validateData.photoValidate, PhotoController.update);
+  route.delete("/photos/:id", PhotoController.delete);
   //File
-  route.get("/file", FileController.getAll);
-  route.get("/file/:id", FileController.get);
-  route.get("/file/reference/:id", FileController.getMyFiles);
+  route.get("/files", FileController.getAll);
+  route.get("/files/:id", FileController.get);
+  route.get("/files/reference/:id", FileController.getMyFiles);
   route.get(
-    "/filter/file",
+    "/filter/files",
     validateData.filterValidate,
     FileController.getMyFilteredFiles
   );
@@ -59,44 +59,44 @@ module.exports = function (express) {
     FileController.getFilesByModelAndType
   );
   route.get("/file_search", FileController.search);
-  route.post("/file", validateData.fileValidate, FileController.save);
-  route.put("/file/:id", validateData.fileValidate, FileController.update);
-  route.delete("/file/:id", FileController.delete);
+  route.post("/files", validateData.fileValidate, FileController.save);
+  route.put("/files/:id", validateData.fileValidate, FileController.update);
+  route.delete("/files/:id", FileController.delete);
   route.get("/link-files/:model/:id", FileController.linkfiles);
 
   //reply
-  route.get("/reply", ReplyController.getAll);
-  route.get("/reply/:id", ReplyController.get);
-  route.post("/reply", validateData.replyValidate, ReplyController.save);
-  route.put("/reply/:id", ReplyController.update);
-  route.delete("/reply/:id", ReplyController.delete);
+  route.get("/replies", ReplyController.getAll);
+  route.get("/replies/:id", ReplyController.get);
+  route.post("/replies", validateData.replyValidate, ReplyController.save);
+  route.put("/replies/:id", ReplyController.update);
+  route.delete("/replies/:id", ReplyController.delete);
   route.get("/action-replies/:id", ReplyController.getActionReplies);
 
   //note
 
-  route.get("/note", NoteController.getAll);
-  route.get("/note/:id", NoteController.get);
-  route.post("/note", validateData.noteValidate, NoteController.save);
-  route.put("/note/:id", NoteController.update);
-  route.delete("/note/:id", NoteController.delete);
+  route.get("/notes", NoteController.getAll);
+  route.get("/notes/:id", NoteController.get);
+  route.post("/notes", validateData.noteValidate, NoteController.save);
+  route.put("/notes/:id", NoteController.update);
+  route.delete("/notes/:id", NoteController.delete);
   route.get("/model-notes/:id", NoteController.getNoteByModelId);
 
   // route.get("/address/:id", AddressController.get);
-  // route.get("/address-search", AddressController.search);
+  // route.get("/address-searches", AddressController.search);
   // route.post("/address", AddressController.save);
   // route.put("/address/:id", AddressController.update);
   // route.delete("/address/:id", AddressController.delete);
   //Model Menu
 
-  route.get("/model-menu", ModelMenuController.getAll);
-  route.get("/model-menu/:id", ModelMenuController.get);
+  route.get("/model-menus", ModelMenuController.getAll);
+  route.get("/model-menus/:id", ModelMenuController.get);
   route.post(
-    "/model-menu",
+    "/model-menus",
     validateData.modelMenuValidate,
     ModelMenuController.save
   );
-  route.put("/model-menu/:id", ModelMenuController.update);
-  route.delete("/model-menu/:id", ModelMenuController.delete);
+  route.put("/model-menus/:id", ModelMenuController.update);
+  route.delete("/model-menus/:id", ModelMenuController.delete);
   route.get(
     "/module-model-menus/:id",
     ModelMenuController.getModelMenuByModule
@@ -109,12 +109,12 @@ module.exports = function (express) {
     ModelMenuController.editModuleTypeModels
   );
 
-  route.get("/notification/:limit/:page_no", NotificationController.getAll);
+  route.get("/notifications/:limit/:page_no", NotificationController.getAll);
   route.get(
-    "/unread-notification/:count",
+    "/unread-notifications/:count",
     NotificationController.unreadNotification
   );
-  route.post("/notification/:id", NotificationController.get);
+  route.post("/notifications/:id", NotificationController.get);
 
   return route;
 };
