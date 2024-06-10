@@ -2,6 +2,8 @@ const { Address, Sequelize } = require("../../models");
 const usrData = require("../../utils/userDataFromToken");
 const actionHelper = require("../utils/action-helper");
 const paginationHelper = require("../utils/pagination-helper")
+const { getRecordById, updateRecord, deleteRecord } = require('../utils/format-helper');
+
 const Op = Sequelize.Op;
 
 let self = {};
@@ -22,46 +24,9 @@ self.getAll = async (req, res) => {
     res.apiError(error);
   }
 };
-self.getWithItems = async (req, res) => {
-  try {
-    let data = await Address.findAll({
-      attributes: ["id", "name"],
-      // include:[
-      // 	{
-      // 		model:item,
-      // 		as:'items',
-      // 		attributes:["id","name","price","stock"]
-      // 	}
-      // ]
-    });
-    return res.json({
-      status: "ok",
-      data: data,
-    });
-  } catch (error) {
-    res.status(500).json({
-      status: "error",
-      data: error,
-    });
-  }
-};
 
 self.get = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let data = await Address.findOne({
-      where: {
-        id: id,
-      },
-    });
-    return res.status(200).json({
-      data: data,
-    });
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+  getRecordById(Address, req, res);
 };
 self.getAddressByModelId = async (req, res) => {
   try {
@@ -157,36 +122,12 @@ self.save = async (req, res) => {
 };
 
 self.update = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let body = req.body;
-    let data = await Address.update(body, {
-      where: {
-        id: id,
-      },
-    });
-    return res.status(200).json({ message: "Address updated successfully" });
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+  updateRecord(Address, req, res);
 };
 
 self.delete = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let data = await Address.destroy({
-      where: {
-        id: id,
-      },
-    });
-    return res.json(data);
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+  deleteRecord(Address, req, res);
+
 };
 
 module.exports = self;

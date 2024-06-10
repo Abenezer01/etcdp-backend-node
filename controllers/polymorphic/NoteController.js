@@ -2,6 +2,8 @@ const { Note, Sequelize } = require("../../models");
 const usrData = require("../../utils/userDataFromToken");
 const actionHelper = require("../utils/action-helper");
 const paginationHelper = require("../utils/pagination-helper")
+const { getRecordById, updateRecord, deleteRecord } = require('../utils/format-helper');
+
 const Op = Sequelize.Op;
 
 let self = {};
@@ -23,21 +25,7 @@ self.getAll = async (req, res) => {
 };
 
 self.get = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let data = await Note.findOne({
-      where: {
-        id: id,
-      },
-    });
-    return res.status(200).json({
-      data: data,
-    });
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+  getRecordById(Note, req, res);
 };
 
 self.save = async (req, res) => {
@@ -69,58 +57,28 @@ self.save = async (req, res) => {
 };
 
 self.update = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let body = req.body;
-    let data = await Note.update(body, {
-      where: {
-        id: id,
-      },
-    });
-    return res.status(200).json({ message: "Reply updated successfully" });
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+  updateRecord(Note, req, res);
 };
 
 self.delete = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let data = await Note.destroy({
-      where: {
-        id: id,
-      },
-    });
-    return res.json(data);
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+  deleteRecord(Note, req, res);
 };
 
 self.getNoteByModelId = async (req, res) => {
-  let id = req.params.id;
+  const { id } = req.params;
   try {
-    let data = await Note.findAll({
-      // include: [
-      // 	{
-      // 		model: file,
-      // 		as: 'files'
-      // 	}
-      // ],
-      where: {
-        model_id: id,
-      },
-    });
+    const whereCondition = { model_id: id }
+    const paginatedResult = await paginationHelper(Note, req, whereCondition);
 
-    return res.json(data);
+    // Use the response formatter to send the success response
+    res.apiSuccess({
+      data: paginatedResult.data,
+      total: paginatedResult.total,
+    }, paginatedResult.pagination);
+
   } catch (error) {
-    return res.status(500).json({
-      message: error.message,
-    });
+    console.error("Error in getAll method:", error);
+    res.apiError(error);
   }
 };
 

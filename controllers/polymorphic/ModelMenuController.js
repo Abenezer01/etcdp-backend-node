@@ -5,6 +5,9 @@ const paginationHelper = require("../utils/pagination-helper")
 const master = require("../../config/master");
 const Op = Sequelize.Op;
 const dotenv = require("dotenv");
+const { getRecordById, saveRecord, updateRecord, deleteRecord } = require('../utils/format-helper');
+const { Model } = require("sequelize");
+
 dotenv.config();
 
 let self = {};
@@ -27,33 +30,34 @@ self.getAll = async (req, res) => {
 };
 
 self.get = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let data = await ModelMenu.findOne({
-      where: {
-        id: id,
-      },
-    });
-    return res.status(200).json(data);
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+  getRecordById(BuildingDimensionDetail, req, res);
 };
+
+
+self.update = async (req, res) => {
+  updateRecord(ModelMenu, req, res);
+};
+
+self.delete = async (req, res) => {
+  deleteRecord(ModelMenu, req, res);
+};
+
 self.getByProjectId = async (req, res) => {
+  const { id } = req.params;
   try {
-    let id = req.params.id;
-    let data = await ModelMenu.findOne({
-      where: {
-        project_id: id,
-      },
-    });
-    return res.status(200).json(data);
+    const whereCondition = { project_id: id }
+
+    const paginatedResult = await paginationHelper(ModelMenu, req, whereCondition);
+
+    // Use the response formatter to send the success response
+    res.apiSuccess({
+      data: paginatedResult.data,
+      total: paginatedResult.total,
+    }, paginatedResult.pagination);
+
   } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
+    console.error("Error in getAll method:", error);
+    res.apiError(error);
   }
 };
 self.search = async (req, res) => {
@@ -124,26 +128,6 @@ self.save = async (req, res) => {
     });
   }
 };
-self.update = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let body = req.body;
-
-    await ModelMenu.update(body, {
-      where: {
-        id: id,
-      },
-    });
-
-    return res.status(200).json({
-      message: "Successfully Updated!",
-    });
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
-};
 
 self.editModuleTypeModels = async (req, res) => {
   try {
@@ -201,38 +185,27 @@ self.editModuleTypeModels = async (req, res) => {
     });
   }
 };
-self.delete = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let data = await ModelMenu.destroy({
-      where: {
-        id: id,
-      },
-    });
-    return res.json(data);
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
-};
+
 
 self.getModelMenuByModule = async (req, res) => {
-  let id = req.params.id;
+  const { id } = req.params;
   try {
-    let data = await ModelMenu.findAll({
-      where: {
-        module_type_id: id,
-      },
-    });
+    const whereCondition = { module_type_id: id }
 
-    return res.json(data);
+    const paginatedResult = await paginationHelper(ModelMenu, req, whereCondition);
+
+    // Use the response formatter to send the success response
+    res.apiSuccess({
+      data: paginatedResult.data,
+      total: paginatedResult.total,
+    }, paginatedResult.pagination);
+
   } catch (error) {
-    return res.status(500).json({
-      message: error.message,
-    });
+    console.error("Error in getAll method:", error);
+    res.apiError(error);
   }
 };
+
 
 self.getModuleExtraModels = async (req, res) => {
   let module = req.params.module;

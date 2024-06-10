@@ -11,6 +11,8 @@ const Op = Sequelize.Op;
 const usrData = require("../../utils/userDataFromToken");
 const actionHelper = require("../utils/action-helper");
 const paginationHelper = require("../utils/pagination-helper")
+const { getRecordById, saveRecord, updateRecord, deleteRecord } = require('../utils/format-helper');
+
 const { url } = require("inspector");
 let self = {};
 
@@ -32,39 +34,27 @@ self.getAll = async (req, res) => {
 };
 
 self.get = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let data = await File.findOne({
-      where: {
-        id: id,
-      },
-    });
-    return res.status(200).json({
-      data: data,
-    });
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+  getRecordById(File, req, res);
 };
+
 self.getMyFiles = async (req, res) => {
+  const { id } = req.params;
   try {
-    let id = req.params.id;
-    let data = await File.findAll({
-      where: {
-        reference_id: id,
-      },
-    });
-    return res.status(200).json({
-      data: data,
-    });
+    const whereCondition = { reference_id: id }
+    const paginatedResult = await paginationHelper(File, req, whereCondition);
+
+    // Use the response formatter to send the success response
+    res.apiSuccess({
+      data: paginatedResult.data,
+      total: paginatedResult.total,
+    }, paginatedResult.pagination);
+
   } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
+    console.error("Error in getAll method:", error);
+    res.apiError(error);
   }
 };
+
 self.getMyFilteredFiles = async (req, res) => {
   try {
     let id = req.query.id;
@@ -372,13 +362,6 @@ self.linkfiles = async (req, res) => {
         }
       }
     }
-    // models.forEach(model => {
-    //   files.forEach(doc => {
-    //     const tempfile = doc.toJSON();
-    //     tempfile.reference_id = model.id;
-    //     await File.create(tempfile);
-    //   });
-    // });
 
     return res.json({
       message: "Files linked successfully",
