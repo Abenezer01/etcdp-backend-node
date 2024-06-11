@@ -1,7 +1,8 @@
 const { Permission, PositionPermission, Sequelize } = require("../../models");
-const actionHelper = require("../utils/action-helper");
 const paginationHelper = require("../utils/pagination-helper")
 const usrData = require("../../utils/userDataFromToken");
+const { getRecordById, saveRecord, updateRecord, deleteRecord } = require('../utils/format-helper');
+
 const Op = Sequelize.Op;
 const master = require("../../config/master");
 
@@ -23,33 +24,21 @@ self.getAll = async (req, res) => {
   }
 };
 
+
 self.get = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let data = await Permission.findOne({
-      where: {
-        id: id,
-      },
-    });
-    if (data) {
-      let usr = await usrData.userData(req, res);
-      await actionHelper.saveActionState(
-        data.id,
-        "Permission",
-        "REGISTER",
-        usr.usrID,
-        req,
-        res
-      );
-    }
-    return res.status(200).json({
-      data: data,
-    });
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+  getRecordById(Permission, req, res);
+};
+
+self.save = async (req, res) => {
+  saveRecord(Permission, req, res);
+};
+
+self.update = async (req, res) => {
+  updateRecord(Permission, req, res);
+};
+
+self.delete = async (req, res) => {
+  deleteRecord(Permission, req, res);
 };
 
 self.search = async (req, res) => {
@@ -60,62 +49,6 @@ self.search = async (req, res) => {
         name: {
           [Op.like]: "%" + text + "%",
         },
-      },
-    });
-    return res.json(data);
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
-};
-
-self.save = async (req, res) => {
-  try {
-    let body = req.body;
-    let data = await Permission.create(body);
-    if (data) {
-      let usr = await usrData.userData(req, res);
-      actionHelper.saveActionState(
-        data.id,
-        "Permission",
-        "REGISTER",
-        usr.usrID,
-        req,
-        res
-      );
-    }
-    return res.json(data);
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
-};
-
-self.update = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let body = req.body;
-    let data = await Permission.update(body, {
-      where: {
-        id: id,
-      },
-    });
-    return res.json(data);
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
-};
-
-self.delete = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let data = await Permission.destroy({
-      where: {
-        id: id,
       },
     });
     return res.json(data);
@@ -138,18 +71,20 @@ self.getModels = async (req, res) => {
 };
 
 self.getPermissionsByModule = async (req, res) => {
+  const { module } = req.params;
   try {
-    let module = req.params.module;
-    let data = await Permission.findAll({
-      where: {
-        module: module,
-      },
-    });
-    return res.json(data);
+    const whereCondition = {  module: module, }
+    const paginatedResult = await paginationHelper(Permission, req, whereCondition);
+
+    // Use the response formatter to send the success response
+    res.apiSuccess({
+      data: paginatedResult.data,
+      total: paginatedResult.total,
+    }, paginatedResult.pagination);
+
   } catch (error) {
-    return res.status(500).json({
-      message: error.message,
-    });
+    console.error("Error in getAll method:", error);
+    res.apiError(error);
   }
 };
 self.getGroupedPermissions = async (req, res) => {
@@ -392,26 +327,6 @@ self.getUserPermission = async (req, res) => {
 
     return res.json(filteredArr);
 
-    // let usr = await usrData.userData(req, res)
-    // let positionpermissions = await PositionPermission.findAll({
-    //     where:{
-    //         position_id: usr.position_id
-    //     }
-    // })
-
-    // let perArr = []
-    // for(let posper of positionpermissions){
-    //     let data = await Permission.findOne({
-    //         where: {
-    //             id: posper.permission_id
-    //         }
-    //     })
-    //     if(data){
-    //         perArr.push(data.name)
-    //     }
-
-    // }
-    // return res.json(perArr)
   } catch (error) {
     return res.status(500).json({
       message: error.message,

@@ -20,16 +20,7 @@ const dotenv = require("dotenv");
 dotenv.config();
 const usrData = require("../../utils/userDataFromToken");
 const { userInfo } = require("../../utils/userInfo");
-const {
-    getChildren,
-    encrypt,
-    decrypt,
-    saveActionState,
-} = require("../../utils/helper");
 
-const helper = require("../../utils/helper");
-
-const paginate = require("../../utils/pagination");
 const actionHelper = require("../utils/action-helper");
 const cipherHelper = require("../utils/cipher-helper");
 const jwt = require("jsonwebtoken");
@@ -40,6 +31,7 @@ var nodemailer = require("nodemailer");
 var smtpTransport = require("nodemailer-smtp-transport");
 const emailValidator = require("deep-email-validator");
 const paginationHelper = require("../utils/pagination-helper")
+const { getRecordById, saveRecord, updateRecord, deleteRecord } = require('../utils/format-helper');
 
 
 let TOKEN_KEY = process.env.ACCESS_TOKEN_KEY;
@@ -47,89 +39,6 @@ let REFRESH_TOKEN_KEY = process.env.REFRESH_TOKEN_KEY;
 let TOKEN_MAX_AGE = process.env.TOKEN_MAX_AGE;
 
 let self = {};
-self.getAlll = async(req, res) => {
-    let userData = await User.findAll();
-
-    console.log("The datas are", userData[0].id);
-    let otherArr = [];
-    let dd;
-    var arr = [];
-    //console.log("The other is", other)
-    for (let act of userData) {
-        dd = await ActionState.findOne({
-            where: {
-                model_id: act.id,
-                action: "REGISTER",
-                model: "User",
-            },
-        });
-        if (dd) {
-            arr.push(act);
-        }
-    }
-    let { page, size, order } = req.query;
-    if (page == null && size == null) {
-        (page = process.env.page), (size = process.env.size);
-    }
-    if (order == null) {
-        order = process.env.order;
-    }
-    const { limit, offset } = paginate.getPagination(Number(page), Number(size));
-    let usr = [];
-    for (let ar of arr) {
-        let ll = await User.findAndCountAll({
-            attributes: ["id"],
-            where: {
-                id: ar.id,
-            },
-        });
-        if (ll) {
-            usr.push(ar);
-        }
-    }
-    let uf = [];
-    for (let i = 0; i < usr.length; i++) {
-        let usrID = usr[i].id;
-        if (usrID) {
-            uf.push(usrID);
-        }
-    }
-    console.log("Hey", uf);
-    let dat = await User.findAndCountAll({
-        limit: limit,
-        offset: offset,
-        order: [
-            ["createdAt", order]
-        ],
-        where: {
-            id: {
-                [Sequelize.Op.in]: uf,
-            },
-        },
-    });
-    const response = paginate.getPagingData(dat, page, limit);
-    //console.log("Other array", usr[0].first_name)
-
-    res.send(response);
-};
-// let one = "Ss"
-// let queryString = `SELECT * FROM users as U WHERE U.id=${one};`
-
-// self.getAll = async (req, res) => {
-//   try {
-//     const paginatedResult = await paginationHelper(User, req);
-
-//     // Use the response formatter to send the success response
-//     res.apiSuccess({
-//       data: paginatedResult.data,
-//       total: paginatedResult.total,
-//     }, paginatedResult.pagination);
-
-//   } catch (error) {
-//     console.error("Error in getAll method:", error);
-//     res.apiError(error);
-//   }
-// };
 
 self.getAll = async (req, res) => {
 
@@ -180,15 +89,8 @@ self.get = async(req, res) => {
         let data = await User.findOne({
             where: {
                 id: id,
-            },
-            include: {
-                model: models.UserEmail,
-                as: 'emailInfo',
-                attributes: ['email']
-              }
+            }
         });
-
-        return res.json(data)
 
         if (data) {
             let usEmail = await UserEmail.findOne({
@@ -434,43 +336,18 @@ self.save = async(req, res) => {
     }
 };
 
-self.update = async(req, res) => {
-    try {
-        let id = req.params.id;
-        let body = req.body;
-        let data = await User.update(body, {
-            where: {
-                id: id,
-            },
-        });
-        
-        return res.status(200).json({ message: "User updated succesfully" });
-    } catch (error) {
-        res.status(500).json({
-            message: error.message,
-        });
-    }
-};
+self.update = async (req, res) => {
+    updateRecord(User, req, res);
+  };
+  
+  self.delete = async (req, res) => {
+    deleteRecord(User, req, res);
+  };
 
-self.delete = async(req, res) => {
-    try {
-        let id = req.params.id;
-        let data = await User.destroy({
-            where: {
-                id: id,
-            },
-        });
-        return res.json(data);
-    } catch (error) {
-        res.status(500).json({
-            message: error.message,
-        });
-    }
-};
+  self.getDepartmentUsers = async (req, res) => {
 
-self.getDepartmentUsers = async(req, res) => {
+    const { id } = req.params;
     try {
-        let id = req.params.id;
 
         let pos = await UserPosition.findAll({
             attributes: ["user_id"],
@@ -481,22 +358,24 @@ self.getDepartmentUsers = async(req, res) => {
 
         let userId = [...new Set(pos.map((item) => item.user_id))].filter((n) => n);
 
-        let users = await User.findAll({
-            where: {
-                id: {
-                    [Op.in]: userId,
-                },
-            },
-        });
-        
+        const whereCondition = {  id: {
+            [Op.in]: userId,
+        }, }
 
-        return res.json(users);
+        const paginatedResult = await paginationHelper(User, req, whereCondition);
+    
+        // Use the response formatter to send the success response
+        res.apiSuccess({
+            data: paginatedResult.data,
+            total: paginatedResult.total,
+        }, paginatedResult.pagination);
+    
     } catch (error) {
-        return res.status(500).json({
-            message: error.message,
-        });
+      console.error("Error in getAll method:", error);
+      res.apiError(error);
     }
-};
+  };
+
 
 self.assignPosition = async(req, res) => {
     try {
@@ -720,13 +599,6 @@ self.getAllUserPositions = async(req, res) => {
         });
     }
 };
-
-// self.addContactPerson = async(req, res) => {
-//     try {
-//         let data = await
-//     } catch (error) {
-//     }
-// }
 self.sendMail = async(req, res) => {
     let body = req.body;
     let email = body.email;
@@ -1035,19 +907,6 @@ self.changeLanguage = async(req, res) =>{
 
         let body = req.body 
         let lang = body.lang
-
-
-        // let users = await User.findAll()
-        // for(let u of users){
-        //     let ux = await User.update({lang:lang}, {
-        //         where: {
-        //             id:u.id
-        //         }
-        //     })
-        // }
-        // return res.status(200).json({
-        //     message: "Language changed successfully!"
-        // })
 
 
         let usr = await usrData.userData(req, res);

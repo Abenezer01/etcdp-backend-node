@@ -1,7 +1,6 @@
-const actionHelper = require("../utils/action-helper");
 const { Position, Permission, PositionPermission, Sequelize } = require("../../models");
-const usrData = require("../../utils/userDataFromToken");
 const paginationHelper = require("../utils/pagination-helper")
+const { getRecordById, saveRecord, updateRecord, deleteRecord } = require('../utils/format-helper');
 
 const Op = Sequelize.Op;
 
@@ -24,22 +23,21 @@ self.getAll = async (req, res) => {
   }
 };
 
+
 self.get = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let data = await Position.findOne({
-      where: {
-        id: id,
-      },
-    });
-    return res.status(200).json({
-      data: data,
-    });
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+  getRecordById(Position, req, res);
+};
+
+self.save = async (req, res) => {
+  saveRecord(Position, req, res);
+};
+
+self.update = async (req, res) => {
+  updateRecord(Position, req, res);
+};
+
+self.delete = async (req, res) => {
+  deleteRecord(Position, req, res);
 };
 
 self.search = async (req, res) => {
@@ -60,94 +58,38 @@ self.search = async (req, res) => {
   }
 };
 
-self.save = async (req, res) => {
-  try {
-    let body = req.body;
-    let data = await Position.create(body);
-    if (data) {
-      let usr = await usrData.userData(req, res);
-      await actionHelper.saveActionState(
-        data.id,
-        "Position",
-        "REGISTER",
-        usr.usrID,
-        req,
-        res
-      );
-    }
-    return res.json(data);
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
-};
-
-self.update = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let body = req.body;
-    let data = await Position.update(body, {
-      where: {
-        id: id,
-      },
-    });
-    return res.json(data);
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
-};
-
-self.delete = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let data = await Position.destroy({
-      where: {
-        id: id,
-      },
-    });
-    return res.json(data);
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
-};
-
 self.getParentDepartment = async (req, res) => {
   try {
-    let data = await department.findOne({
-      where: {
-        parent_department_id: null,
-      },
-    });
+    const whereCondition = {  parent_department_id: null }
+    const paginatedResult = await paginationHelper(department, req, whereCondition);
 
-    if (data) {
-      return res.json(data);
-    }
+    // Use the response formatter to send the success response
+    res.apiSuccess({
+      data: paginatedResult.data,
+      total: paginatedResult.total,
+    }, paginatedResult.pagination);
+
   } catch (error) {
-    return res.json({
-      message: error.message,
-    });
+    console.error("Error in getAll method:", error);
+    res.apiError(error);
   }
 };
 
 self.getDepartmentPositions = async (req, res) => {
+  const { id } = req.params;
   try {
-    let id = req.params.id;
+    const whereCondition = { department_id: id}
+    const paginatedResult = await paginationHelper(Position, req, whereCondition);
 
-    let positions = await Position.findAll({
-      where: {
-        department_id: id,
-      },
-    });
-    return res.json(positions);
+    // Use the response formatter to send the success response
+    res.apiSuccess({
+      data: paginatedResult.data,
+      total: paginatedResult.total,
+    }, paginatedResult.pagination);
+
   } catch (error) {
-    return res.status(500).json({
-      message: error.message,
-    });
+    console.error("Error in getAll method:", error);
+    res.apiError(error);
   }
 };
 
