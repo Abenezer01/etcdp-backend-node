@@ -1,27 +1,27 @@
-const documentTypeController = require("../../../controllers/document/documentTypeController");
-const DocumentCategoryController = require("../../../controllers/document/documentCategoryController");
-const DocumentSubCategoryController = require("../../../controllers/document/documentSubCategoryController");
-const DocumentController = require("../../../controllers/document/documentController");
+const DocumentTypeController = require("../../../controllers/document/DocumentTypeController");
+const DocumentCategoryController = require("../../../controllers/document/DocumentCategoryController");
+const DocumentSubCategoryController = require("../../../controllers/document/DocumentSubCategoryController");
+const DocumentController = require("../../../controllers/document/DocumentController");
 
 const validateData = require("../../../middleware/validate/module/document/validate");
 module.exports = function (express) {
   const route = express.Router();
 
   //construction document type controller
-  route.get("/document-types", documentTypeController.getAll);
-  route.get("/document-types/:id", documentTypeController.get);
-  route.get("/document-type_search", documentTypeController.search);
+  route.get("/document-types", DocumentTypeController.getAll);
+  route.get("/document-types/:id", DocumentTypeController.get);
+  route.get("/document-type_search", DocumentTypeController.search);
   route.post(
     "/document-types",
     validateData.documentTypeValidate,
-    documentTypeController.save
+    DocumentTypeController.save
   );
   route.put(
     "/document-types/:id",
     validateData.documentTypeValidate,
-    documentTypeController.update
+    DocumentTypeController.update
   );
-  route.delete("/document-types/:id", documentTypeController.delete);
+  route.delete("/document-types/:id", DocumentTypeController.delete);
   //construction document category controller
   route.get("/document-categories", DocumentCategoryController.getAll);
   route.get("/document-categories/:id", DocumentCategoryController.get);

@@ -11,6 +11,7 @@ const actionHelper = require("../utils/action-helper");
 const paginationHelper = require("../utils/pagination-helper")
 const Op = Sequelize.Op;
 const paginate = require("../../utils/pagination");
+const { deleteRecord } = require('../utils/format-helper');
 const dotenv = require("dotenv");
 dotenv.config();
 let self = {};
@@ -388,19 +389,7 @@ self.update = async (req, res) => {
 };
 
 self.delete = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let data = await Document.destroy({
-      where: {
-        id: id,
-      },
-    });
-    return res.json(data);
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+  deleteRecord(Document, req, res);
 };
 
 module.exports = self;
