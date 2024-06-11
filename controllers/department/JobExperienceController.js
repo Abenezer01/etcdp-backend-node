@@ -1,7 +1,6 @@
 const { JobExperience, Sequelize } = require("../../models");
-const actionHelper = require("../utils/action-helper");
-const usrData = require("../../utils/userDataFromToken");
 const paginationHelper = require("../utils/pagination-helper")
+const { getRecordById, saveRecord, updateRecord, deleteRecord } = require('../utils/format-helper');
 
 const Op = Sequelize.Op;
 
@@ -25,22 +24,21 @@ self.getAll = async (req, res) => {
 };
 
 self.get = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let data = await JobExperience.findOne({
-      where: {
-        id: id,
-      },
-    });
-    return res.status(200).json({
-      data: data,
-    });
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+  getRecordById(JobExperience, req, res);
 };
+
+self.save = async (req, res) => {
+  saveRecord(JobExperience, req, res);
+};
+
+self.update = async (req, res) => {
+  updateRecord(JobExperience, req, res);
+};
+
+self.delete = async (req, res) => {
+  deleteRecord(JobExperience, req, res);
+};
+
 
 self.search = async (req, res) => {
   try {
@@ -60,77 +58,21 @@ self.search = async (req, res) => {
   }
 };
 
-self.save = async (req, res) => {
-  try {
-    let body = req.body;
-    let data = await JobExperience.create(body);
-
-    if (data) {
-      let usr = await usrData.userData(req, res);
-      await actionHelper.saveActionState(
-        data.id,
-        "JobExperience",
-        "REGISTER",
-        usr.usrID,
-        req,
-        res
-      );
-    }
-    return res.json(data);
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
-};
-
-self.update = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let body = req.body;
-    let data = await JobExperience.update(body, {
-      where: {
-        id: id,
-      },
-    });
-    return res.json(data);
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
-};
-
-self.delete = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let data = await JobExperience.destroy({
-      where: {
-        id: id,
-      },
-    });
-    return res.json(data);
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
-};
-
 self.getByUserId = async (req, res) => {
+  const { id } = req.params;
   try {
-    let id = req.params.id;
-    let data = await JobExperience.findAll({
-      where: {
-        user_id: id,
-      },
-    });
+    const whereCondition = { user_id: id, }
+    const paginatedResult = await paginationHelper(JobExperience, req, whereCondition);
 
-    return res.json(data);
+    // Use the response formatter to send the success response
+    res.apiSuccess({
+      data: paginatedResult.data,
+      total: paginatedResult.total,
+    }, paginatedResult.pagination);
+
   } catch (error) {
-    return res.status(500).json({
-      message: error.message,
-    });
+    console.error("Error in getAll method:", error);
+    res.apiError(error);
   }
 };
 module.exports = self;

@@ -9,7 +9,7 @@ const {
 const usrData = require("../../utils/userDataFromToken");
 const actionHelper = require("../utils/action-helper");
 const paginationHelper = require("../utils/pagination-helper")
-const languageHelper = require("../utils/language-helper");
+const { getRecordById, updateRecord, deleteRecord } = require('../utils/format-helper');
 let master = require("../../config/master");
 
 const { EtDatetime, ETC, BahireHasab, ConvertToEthiopic } = require('abushakir')
@@ -46,22 +46,15 @@ self.getAll = async (req, res) => {
 };
 
 self.get = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let data = await Department.findOne({
-      where: {
-        id: id,
-      },
-    });
+  getRecordById(Department, req, res);
+};
 
-    return res.status(200).json({
-      data: data,
-    });
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+self.update = async (req, res) => {
+  updateRecord(Department, req, res);
+};
+
+self.delete = async (req, res) => {
+  deleteRecord(Department, req, res);
 };
 
 self.search = async (req, res) => {
@@ -146,70 +139,41 @@ self.save = async (req, res) => {
   }
 };
 
-self.update = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let body = req.body;
-    let data = await Department.update(body, {
-      where: {
-        id: id,
-      },
-    });
-    return res.status(200).json({
-      message: "Department updated successfully",
-    });
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
-};
 
-self.delete = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let data = await Department.destroy({
-      where: {
-        id: id,
-      },
-    });
-    return res.json(data);
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
-};
+
 self.getSubDepartments = async (req, res) => {
+  const { id } = req.params;
   try {
-    let id = req.params.id;
-    let data = await Department.findAll({
-      where: {
-        parent_department_id: id,
-      },
-    });
-    return res.json(data);
+    const whereCondition = { parent_department_id: id }
+    const paginatedResult = await paginationHelper(Department, req, whereCondition);
+
+    // Use the response formatter to send the success response
+    res.apiSuccess({
+      data: paginatedResult.data,
+      total: paginatedResult.total,
+    }, paginatedResult.pagination);
+
   } catch (error) {
-    return res.status(500).json({
-      message: error.message,
-    });
+    console.error("Error in getAll method:", error);
+    res.apiError(error);
   }
 };
-self.getParentDepartment = async (req, res) => {
-  try {
-    let data = await Department.findOne({
-      where: {
-        parent_department_id: null,
-      },
-    });
 
-    if (data) {
-      return res.json(data);
-    }
+self.getParentDepartment = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const whereCondition = { parent_department_id: null }
+    const paginatedResult = await paginationHelper(Department, req, whereCondition);
+
+    // Use the response formatter to send the success response
+    res.apiSuccess({
+      data: paginatedResult.data,
+      total: paginatedResult.total,
+    }, paginatedResult.pagination);
+
   } catch (error) {
-    return res.json({
-      message: error.message,
-    });
+    console.error("Error in getAll method:", error);
+    res.apiError(error);
   }
 };
 

@@ -1,7 +1,6 @@
 const { Child, Sequelize } = require("../../models");
-const actionHelper = require("../utils/action-helper");
 const paginationHelper = require("../utils/pagination-helper")
-const usrData = require("../../utils/userDataFromToken");
+const { getRecordById, saveRecord, updateRecord, deleteRecord } = require('../utils/format-helper');
 
 const Op = Sequelize.Op;
 let self = {};
@@ -24,21 +23,19 @@ self.getAll = async (req, res) => {
 };
 
 self.get = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let data = await Child.findOne({
-      where: {
-        id: id,
-      },
-    });
-    return res.status(200).json({
-      data: data,
-    });
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+  getRecordById(Child, req, res);
+};
+
+self.save = async (req, res) => {
+  saveRecord(Child, req, res);
+};
+
+self.update = async (req, res) => {
+  updateRecord(Child, req, res);
+};
+
+self.delete = async (req, res) => {
+  deleteRecord(Child, req, res);
 };
 
 self.search = async (req, res) => {
@@ -59,91 +56,6 @@ self.search = async (req, res) => {
   }
 };
 
-self.save = async (req, res) => {
-  try {
-    let body = req.body;
-    let data = await Child.create(body);
-    if (data) {
-      let usr = await usrData.userData(req, res);
-      await actionHelper.saveActionState(
-        data.id,
-        "Child",
-        "REGISTER",
-        usr.usrID,
-        req,
-        res
-      );
-    }
-    return res.json(data);
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
-};
-self.update = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let body = req.body;
-    let data = await Child.update(body, {
-      where: {
-        id: id,
-      },
-    });
-    return res.json(data);
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
-};
-self.delete = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let data = await Child.destroy({
-      where: {
-        id: id,
-      },
-    });
-    return res.json(data);
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
-};
 
-self.update = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let body = req.body;
-    let data = await Child.update(body, {
-      where: {
-        id: id,
-      },
-    });
-    return res.json(data);
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
-};
-
-self.delete = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let data = await Child.destroy({
-      where: {
-        id: id,
-      },
-    });
-    return res.json(data);
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
-};
 
 module.exports = self;

@@ -6,6 +6,7 @@ const fs = require("fs");
 const actionHelper = require("../utils/action-helper");
 const paginationHelper = require("../utils/pagination-helper")
 const usrData = require("../../utils/userDataFromToken");
+const { getRecordById, saveRecord, updateRecord, deleteRecord } = require('../utils/format-helper');
 
 const Op = Sequelize.Op;
 
@@ -29,21 +30,7 @@ self.getAll = async (req, res) => {
 };
 
 self.get = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let data = await Photo.findOne({
-      where: {
-        id: id,
-      },
-    });
-    return res.status(200).json({
-      data: data,
-    });
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+  getRecordById(Photo, req, res);
 };
 
 self.search = async (req, res) => {
@@ -225,19 +212,7 @@ self.update = async (req, res) => {
 };
 
 self.delete = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let data = await Photo.destroy({
-      where: {
-        id: id,
-      },
-    });
-    return res.json(data);
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+  deleteRecord(Photo, req, res);
 };
 
 module.exports = self;
