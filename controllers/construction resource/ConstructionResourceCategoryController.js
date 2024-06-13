@@ -1,60 +1,41 @@
-const { ResourceCategory, Sequelize } = require("../../models");
-const usrData = require("../../utils/userDataFromToken");
-const actionHelper = require("../utils/action-helper");
+const { ResourceCategory, ResourceSubCategory, Sequelize } = require("../../models");
 const Op = Sequelize.Op;
-const paginate = require("../../utils/pagination");
+const paginationHelper = require("../utils/pagination-helper")
+const { getRecordById, saveRecord, updateRecord, deleteRecord } = require('../utils/format-helper');
 const dotenv = require("dotenv");
 dotenv.config();
 let self = {};
 
 self.getAll = async (req, res) => {
-  const {
-    page = process.env.page,
-    size = process.env.size,
-    order = process.env.order,
-  } = req.query;
-
-  const { limit, offset } = paginate.getPagination(page, size);
-
   try {
-    const { rows, count } = await ResourceCategory.findAndCountAll({
-      limit,
-      offset,
-      order: [["createdAt", order]],
-    });
+    const paginatedResult = await paginationHelper(ResourceCategory, req);
 
-    const response = paginate.getPagingData(
-      { rows, count },
-      page,
-      limit,
-      count
-    );
+    // Use the response formatter to send the success response
+    res.apiSuccess({
+      data: paginatedResult.data,
+      total: paginatedResult.total,
+    }, paginatedResult.pagination);
 
-    res.send(response);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send({
-      message: err.message || "An error occurred while retrieving data.",
-    });
+  } catch (error) {
+    console.error("Error in getAll method:", error);
+    res.apiError(error);
   }
 };
 
 self.get = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let data = await ResourceCategory.findOne({
-      where: {
-        id: id,
-      },
-    });
-    return res.status(200).json({
-      data: data ? data : {},
-    });
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+  getRecordById(ResourceCategory, req, res);
+};
+
+self.save = async (req, res) => {
+  saveRecord(ResourceCategory, req, res);
+};
+
+self.update = async (req, res) => {
+  updateRecord(ResourceCategory, req, res);
+};
+
+self.delete = async (req, res) => {
+  deleteRecord(ResourceCategory, req, res);
 };
 
 self.search = async (req, res) => {
@@ -74,90 +55,31 @@ self.search = async (req, res) => {
     });
   }
 };
+
+
 self.getCRCByResourceTypeId = async (req, res) => {
-  const id = req.params.id;
-  const page = req.query.page || process.env.page;
-  const size = req.query.size || process.env.size;
-  const order = req.query.order || process.env.order;
+  const { id } = req.params;
+  try {
+    const whereCondition = { resourcetype_id: id }
 
-  try {
-    const { limit, offset } = paginate.getPagination(page, size);
-    const data = await ResourceCategory.findAndCountAll({
-      limit,
-      offset,
-      order: [["createdAt", order]],
-      where: {
-        resourcetype_id: id,
-      },
-      include: ["resourcesubcategories"],
-    });
-    const response = paginate.getPagingData(data, page, limit);
-    res.send(response);
+    const includeOptions = [
+      { model: ResourceSubCategory, as: 'resourcesubcategories' } // Example association
+    ];
+   
+
+    const paginatedResult = await paginationHelper(ResourceCategory, req, whereCondition, includeOptions);
+
+    // Use the response formatter to send the success response
+    res.apiSuccess({
+      data: paginatedResult.data,
+      total: paginatedResult.total,
+    }, paginatedResult.pagination);
+
   } catch (error) {
-    res.status(500).send({
-      message: error.message || "Some error occurred while retrieving data.",
-    });
-  }
-};
-self.save = async (req, res) => {
-  try {
-    let usr = await usrData.userData(req, res);
-    let body = req.body;
-    if (usr) {
-      let data = await ResourceCategory.create(body);
-      if (data) {
-        let us = usr.usrID;
-        await actionHelper.saveActionState(
-          data.id,
-          "ResourceCategory",
-          "REGISTER",
-          us,
-          req,
-          res
-        );
-      }
-      return res.json(data);
-    }
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
+    console.error("Error in getAll method:", error);
+    res.apiError(error);
   }
 };
 
-self.update = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let body = req.body;
-    let data = await ResourceCategory.update(body, {
-      where: {
-        id: id,
-      },
-    });
-    return res.status(200).json({
-      message: "Success",
-    });
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
-};
-
-self.delete = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let data = await ResourceCategory.destroy({
-      where: {
-        id: id,
-      },
-    });
-    return res.json(data);
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
-};
 
 module.exports = self;
