@@ -194,7 +194,15 @@ self.getParentOrGivenId = async (req, res) => {
         },
       });
     }
-    return res.json(data);
+  
+
+    res.apiSuccess({
+      data: data,
+      total: 1 // Assuming a single user is being returned
+    }, {
+      pageSize: 1,
+      page: 1
+    });
   } catch (error) {
     return res.status(500).json({
       message: error.message,

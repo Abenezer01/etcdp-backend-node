@@ -29,7 +29,7 @@ const formatResponse = (req, res, next) => {
       res.json(response);
     };
   
-    res.apiError = (error) => {
+    res.apiError = (error,status=500) => {
       const response = {
         _links: {
           previousPage: null,
@@ -42,7 +42,7 @@ const formatResponse = (req, res, next) => {
         _generated: new Date().toISOString(),
       };
   
-      res.status(500).json(response);
+      res.status(status).json(response);
     };
   
     next();

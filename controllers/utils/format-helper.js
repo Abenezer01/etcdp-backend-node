@@ -30,6 +30,7 @@ const getRecordById = async (model, req, res) => {
         
       const body = req.body;
       const data = await model.create(body);
+      
   
       if (data) {
         const usr = await usrData.userData(req, res);

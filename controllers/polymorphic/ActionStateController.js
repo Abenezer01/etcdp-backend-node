@@ -41,12 +41,15 @@ self.get = async (req, res) => {
 
 self.check = async (req, res) => {
   try {
-    let id = req.params.id;
-    let model = req.params.model;
+
+    let body = req.body
+    let id = body.model_id;
+    let model = body.model;
 
     let usr = await usrData.userData(req, res);
 
     if (usr) {
+
       let data = await ActionState.findOne({
         where: {
           model_id: id,
@@ -54,12 +57,25 @@ self.check = async (req, res) => {
           action: "CHECK",
         },
       });
+  
 
       if (data) {
-        return res.status(400).json({
-          message: "already checked!",
-        });
+        const errorResponse = {
+          _links: {
+            previousPage: null,
+            nextPage: null
+          },
+          _warning: [],
+          payload: [],
+          _attributes: {},
+          _errors: {
+            message: ["already checked"]
+          },
+          _generated: new Date().toISOString()
+        };
+        return res.status(400).json(errorResponse);
       } else {
+
         let action = await ActionState.findOne({
             where: {
                 model_id: id,
@@ -69,37 +85,60 @@ self.check = async (req, res) => {
         })
 
         if (action) {
-            return res.status(422).json({
-                message: 'You are not allowed to check the data as you are the register'
-            })
+
+            const errorResponse = {
+              _links: {
+                previousPage: null,
+                nextPage: null
+              },
+              _warning: [],
+              payload: [],
+              _attributes: {},
+              _errors: {
+                message: ["You are not allowed to check the data as you are the register"]
+              },
+              _generated: new Date().toISOString()
+            };
+            return res.status(401).json(errorResponse);
+           
         } else {
-        let action = await ActionState.create({
-          model_id: id,
-          model: model,
-          action: "CHECK",
-          user_id: usr.usrID,
-          position_id: usr.position_id,
-          time: new Date(),
-        });
+          let action = await ActionState.create({
+            model_id: id,
+            model: model,
+            action: "CHECK",
+            user_id: usr.usrID,
+            position_id: usr.position_id,
+            time: new Date(),
+          });
 
         if(action){
           await actorHelper.notifyActor(action,'approve', usr.usrID, usr.departmentID)
         }
 
-        return res.json(action);
+        res.apiSuccess({
+          data: action,
+          total: 1 // Assuming a single user is being returned
+        }, {
+          pageSize: 1,
+          page: 1
+        });
+
+        
         }
       }
     }
   } catch (error) {
-    return res.status(500).json({
-      message: error.message,
-    });
+    console.error("Error:", error);
+    res.apiError(error);
   }
 };
 self.approve = async (req, res) => {
   try {
-    let id = req.params.id;
-    let model = req.params.model;
+    let body = req.body
+    let id = body.model_id;
+    let model = body.model;
+
+
     let usr = await usrData.userData(req, res);
 
     if (usr) {
@@ -111,9 +150,22 @@ self.approve = async (req, res) => {
         },
       });
       if (data) {
-        return res.status(400).json({
-          message: "Already Approve!",
-        });
+
+        const errorResponse = {
+          _links: {
+            previousPage: null,
+            nextPage: null
+          },
+          _warning: [],
+          payload: [],
+          _attributes: {},
+          _errors: {
+            message: ["Already Approve!"]
+          },
+          _generated: new Date().toISOString()
+        };
+        return res.status(401).json(errorResponse);
+    
       } else {
         let action = await ActionState.findAll({
             where: {
@@ -126,9 +178,22 @@ self.approve = async (req, res) => {
         })
 
         if (action.length != 0) {
-            return res.status(422).json({
-                message: 'You can not approve as you either register or check the data'
-            })
+
+          const errorResponse = {
+            _links: {
+              previousPage: null,
+              nextPage: null
+            },
+            _warning: [],
+            payload: [],
+            _attributes: {},
+            _errors: {
+              message: ["You can not approve as you either register or check the data!"]
+            },
+            _generated: new Date().toISOString()
+          };
+          return res.status(422).json(errorResponse);
+           
         } else {
         let action = await ActionState.create({
           model: model.toLowerCase(),
@@ -142,22 +207,28 @@ self.approve = async (req, res) => {
 
           await actorHelper.notifyActor(action,'authorize', usr.usrID, usr.departmentID)
         }
-        return res.status(200).json(action);
+        res.apiSuccess({
+          data: action,
+          total: 1 // Assuming a single user is being returned
+        }, {
+          pageSize: 1,
+          page: 1
+        });
         }
       }
     }
   } catch (error) {
-    return res.status(500).json({
-      message: error.message,
-    });
+    console.error("Error:", error);
+    res.apiError(error);
   }
 };
 
 self.reject = async (req, res) => {
   try {
     let usr = await usrData.userData(req, res);
-    let id = req.params.id;
-    let model = req.params.model;
+    let body = req.body
+    let id = body.model_id;
+    let model = body.model;
 
     let us = {
       id: usr.usrID,
@@ -170,9 +241,22 @@ self.reject = async (req, res) => {
         },
       });
       if (data) {
-        return res.status(400).json({
-          message: "Already Rejected",
-        });
+
+        const errorResponse = {
+          _links: {
+            previousPage: null,
+            nextPage: null
+          },
+          _warning: [],
+          payload: [],
+          _attributes: {},
+          _errors: {
+            message: ["Already Rejected!"]
+          },
+          _generated: new Date().toISOString()
+        };
+        return res.status(400).json(errorResponse);
+      
       } else {
         let action = await ActionState.findAll({
             where: {
@@ -186,9 +270,23 @@ self.reject = async (req, res) => {
         })
 
         if (action.length != 0) {
-            return res.status(422).json({
-                message: 'You can not approve as you either register or check or approver the data'
-            })
+
+            const errorResponse = {
+              _links: {
+                previousPage: null,
+                nextPage: null
+              },
+              _warning: [],
+              payload: [],
+              _attributes: {},
+              _errors: {
+                message: ["You can not reject as you either register or check or approver the data!"]
+              },
+              _generated: new Date().toISOString()
+            };
+            return res.status(422).json(errorResponse);
+
+
         } else {
         let action = await ActionState.create({
           model: model.toLowerCase(),
@@ -199,21 +297,28 @@ self.reject = async (req, res) => {
           time: new Date(),
         });
 
-        return res.status(200).json(action);
+        res.apiSuccess({
+          data: action,
+          total: 1 // Assuming a single user is being returned
+        }, {
+          pageSize: 1,
+          page: 1
+        });
         }
       }
     }
   } catch (error) {
-    return res.status(500).json({
-      message: error.message,
-    });
+    console.error("Error:", error);
+    res.apiError(error);
   }
 };
 
 self.authorize = async (req, res) => {
   try {
-    let id = req.params.id;
-    let model = req.params.model;
+    let body = req.body
+    let id = body.model_id;
+    let model = body.model;
+    
     let usr = await usrData.userData(req, res);
 
     if (usr) {
@@ -225,9 +330,23 @@ self.authorize = async (req, res) => {
       });
 
       if (data) {
-        return res.status(400).json({
-          message: "Already Authorized",
-        });
+
+          const errorResponse = {
+            _links: {
+              previousPage: null,
+              nextPage: null
+            },
+            _warning: [],
+            payload: [],
+            _attributes: {},
+            _errors: {
+              message: ["Already Authorized"]
+            },
+            _generated: new Date().toISOString()
+          };
+          return res.status(400).json(errorResponse);
+
+
       } else {
         let action = await ActionState.findAll({
             model_id: id,
@@ -239,9 +358,22 @@ self.authorize = async (req, res) => {
         })
 
         if (action.length != 0) {
-            return res.status(422).json({
-                message: 'You can not approve as you either register or check or approver the data'
-            })
+
+            const errorResponse = {
+              _links: {
+                previousPage: null,
+                nextPage: null
+              },
+              _warning: [],
+              payload: [],
+              _attributes: {},
+              _errors: {
+                message: ["You can not approve as you either register or check or approver the data"]
+              },
+              _generated: new Date().toISOString()
+            };
+            return res.status(422).json(errorResponse);
+
         } else {
 
         let action = await ActionState.create({
@@ -253,14 +385,19 @@ self.authorize = async (req, res) => {
           time: new Date(),
         });
 
-        return res.status(200).json(action);
+        res.apiSuccess({
+          data: action,
+          total: 1 // Assuming a single user is being returned
+        }, {
+          pageSize: 1,
+          page: 1
+        });
         }
       }
     }
   } catch (error) {
-    return res.status(500).json({
-      message: error.message,
-    });
+    console.error("Error:", error);
+    res.apiError(error);
   }
 };
 
@@ -289,20 +426,19 @@ self.getModelAction = async (req, res) => {
           register.user_id,
           register.id
         );
-        element.registeredData = {
-          by: register.user_id,
-          user: registerUser,
-          time: register.time,
+
+        element.registered_data = {
+          ... register.toJSON(),
+          "user": registerUser
         };
       }
 
       if (check) {
         const checkUser = await self.getUserData(check.user_id, check.id);
         // const checkedFiles = await self.getFileData(check.id, 'CHECK');
-        element.checkedData = {
-          by: check.user_id,
-          user: checkUser,
-          time: check.time,
+        element.checked_data = {
+          ... check.toJSON(),
+          "user": checkUser
           // files: checkedFiles.rows,
           // fileCount: checkedFiles.count,
         };
@@ -311,10 +447,9 @@ self.getModelAction = async (req, res) => {
       if (approve) {
         const approveUser = await self.getUserData(approve.user_id, approve.id);
         // const approvedFiles = await self.getFileData(approve.id, 'APPROVE');
-        element.approvedData = {
-          by: approve.user_id,
-          user: approveUser,
-          time: approve.time,
+        element.approved_data = {
+          ... approve.toJSON(),
+          "user": approveUser
           //     files: approvedFiles.rows,
           //     fileCount: approvedFiles.count,
         };
@@ -326,10 +461,9 @@ self.getModelAction = async (req, res) => {
           authorize.id
         );
         // const authorizedFiles = await self.getFileData(authorize.id, 'AUTHORIZE');
-        element.authorizedData = {
-          by: authorize.user_id,
-          user: authorizeUser,
-          time: authorize.time,
+        element.authorized_data = {
+          ... authorize.toJSON(),
+          "user": authorizeUser
           // files: authorizedFiles.rows,
           // fileCount: authorizedFiles.count,
         };
@@ -339,9 +473,8 @@ self.getModelAction = async (req, res) => {
         const rejectUser = await self.getUserData(reject.user_id, reject.id);
         // const rejectedFiles = await self.getFileData(reject.id, 'REJECT');
         element.rejectedData = {
-          by: reject.user_id,
-          user: rejectUser,
-          time: reject.time,
+          ... reject.toJSON(),
+          "user": rejectUser
           // files: rejectedFiles.rows,
           // fileCount: rejectedFiles.count,
         };
@@ -369,9 +502,23 @@ self.getModelAction = async (req, res) => {
 
       element.id = id;
       element.status = status;
-      element.descripton;
+      // element.descripton;
 
-      return res.json(element);
+      res.apiSuccess({
+       
+        data: {
+          id, 
+          status,
+          "authorization_data": element
+        },
+        total: 1 // Assuming a single user is being returned
+      }, {
+        pageSize: 1,
+        page: 1
+      });
+
+
+
     }
   } catch (error) {
     return res.status(500).json({
