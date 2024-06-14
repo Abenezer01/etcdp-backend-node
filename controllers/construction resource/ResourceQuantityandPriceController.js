@@ -28,7 +28,7 @@ self.getAll = async (req, res) => {
     const { rows, count } = await ResourceQuantityAndPrice.findAndCountAll({
       limit,
       offset,
-      order: [["createdAt", order]],
+      order: [["created_at", order]],
     });
 
     const response = paginate.getPagingData(
@@ -63,7 +63,7 @@ self.getByProjectId = async (req, res) => {
       where: {
         project_id: id,
       },
-      order: [["createdAt", order]],
+      order: [["created_at", order]],
       include: [
         {
           model: ResourceBrand,

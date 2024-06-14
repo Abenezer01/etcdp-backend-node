@@ -73,7 +73,7 @@ self.getByProjectIdAndPopulate = async (req, res) => {
       limit,
       offset,
       where: { project_id: id },
-      order: [["createdAt", order]],
+      order: [["created_at", order]],
 
       include: ["ProjectPlan"],
     });

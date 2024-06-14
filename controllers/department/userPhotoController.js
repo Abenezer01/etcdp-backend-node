@@ -135,7 +135,7 @@ self.getUserPhoto = async (req, res) => {
       where: {
         model_id: id,
       },
-      order: [["createdAt", "DESC"]],
+      order: [["created_at", "DESC"]],
     });
 
     let prePath = "/home/kaleb/Desktop/etcdp-backend-node/public";

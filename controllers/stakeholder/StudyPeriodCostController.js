@@ -50,7 +50,7 @@ self.getByHigherInstituteId = async (req, res) => {
     .findAndCountAll({
       limit: limiter.limit,
       offset: limiter.offset,
-      order: [["createdAt", order]],
+      order: [["created_at", order]],
       where: {
         higher_institute_id: id,
       },

@@ -20,7 +20,7 @@
 //             limit,
 //             offset,
 //             order: [
-//                 ["createdAt", order]
+//                 ["created_at", order]
 //             ],
 //         });
 
@@ -86,7 +86,7 @@
 //             limit,
 //             offset,
 //             order: [
-//                 ["createdAt", order]
+//                 ["created_at", order]
 //             ],
 //             where: {
 //                 resourcetype_id: id,

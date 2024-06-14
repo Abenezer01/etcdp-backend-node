@@ -46,7 +46,7 @@ self.getTrainingByStakeholderId = async (req, res) => {
       where: {
         stakeholder_id: id,
       },
-      order: [["createdAt", order]],
+      order: [["created_at", order]],
     });
 
     const response = paginate.getPagingData(

@@ -42,7 +42,7 @@ self.getByStakeholderId = async (req, res) => {
       limit,
       offset,
       where: { stakeholder_id: id, status: true },
-      order: [["createdAt", order]],
+      order: [["created_at", order]],
     });
 
     const response = paginate.getPagingData(data, page, limit);

@@ -117,7 +117,7 @@ self.servePhoto = async (req, res) => {
       where: {
         [Op.and]: [{ model_id: id }, { type: type }],
       },
-      order: [["createdAt", "DESC"]],
+      order: [["created_at", "DESC"]],
     });
     // return res.send(img)
     if (!img) {
@@ -143,7 +143,7 @@ self.serveMultiplePhoto = async (req, res) => {
       where: {
         model_id: id,
       },
-      order: [["createdAt", "DESC"]],
+      order: [["created_at", "DESC"]],
     });
     let arr = [];
     for (const im of img) {

@@ -50,7 +50,7 @@ self.get = async (req, res) => {
 };
 
 self.update = async (req, res) => {
-  updateRecord(Department, req, res);
+updateRecord(Department, req, res);
 };
 
 self.delete = async (req, res) => {

@@ -47,7 +47,7 @@ self.getEmployeeAgeByStakeholderId = async (req, res) => {
       limit,
       offset,
       where: { stakeholder_id: id },
-      order: [["createdAt", order]],
+      order: [["created_at", order]],
       include: ["agelevel"],
     });
 

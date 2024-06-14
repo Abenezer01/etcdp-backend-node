@@ -23,7 +23,7 @@ self.getAll = async (req, res) => {
     const { rows, count } = await DetailResourceType.findAndCountAll({
       limit,
       offset,
-      order: [["createdAt", order]],
+      order: [["created_at", order]],
     });
 
     const response = paginate.getPagingData(
@@ -77,7 +77,7 @@ self.getByResourceId = async (req, res) => {
       limit,
       offset,
       where: { resource_id: id },
-      order: [["createdAt", order]],
+      order: [["created_at", order]],
       raw: true,
     });
 

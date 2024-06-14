@@ -58,7 +58,7 @@ self.getByProjectIdAndType = async (req, res) => {
     const { rows, count } = await Payment.findAndCountAll({
       limit,
       offset,
-      order: [["createdAt", order]],
+      order: [["created_at", order]],
       where: {
         [Op.and]: [{ project_id: project_id }, { type: type }],
       },

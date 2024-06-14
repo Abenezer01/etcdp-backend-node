@@ -44,7 +44,8 @@ const validateReply = async (body, validationRule, res, next) => {
         return acc;
       }, {});
 
-      return res.status(412).json(formatErrorResponse(errors));
+      return res.status(422).json(formatErrorResponse(errors));
+    
     } else {
       next();
     }

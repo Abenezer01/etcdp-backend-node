@@ -45,7 +45,7 @@ self.getCertificateWithStakeholderId = async (req, res) => {
       limit,
       offset,
       where: { stakeholder_id: id },
-      order: [["createdAt", order]],
+      order: [["created_at", order]],
     });
 
     const response = paginate.getPagingData(data, page, limit);

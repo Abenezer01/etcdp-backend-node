@@ -86,7 +86,7 @@ self.getStakeHolderByTypeId = async (req, res) => {
     const data = await Stakeholder.findAndCountAll({
       limit,
       offset,
-      order: [["createdAt", order]],
+      order: [["created_at", order]],
       where: {
         [Op.and]: filter,
       },

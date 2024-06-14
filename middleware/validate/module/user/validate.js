@@ -153,7 +153,9 @@ const childValidate = async (req, res, next) => {
   await validateReply.validateReply(req.body, validationRule, res, next);
 };
 const departmentValidate = async (req, res, next) => {
+
   let param = await validateReply.checkParam(req, res, next);
+  
   if (param == "failed") {
     return res.status(400).json({
       message: "Invalid id",
@@ -163,7 +165,10 @@ const departmentValidate = async (req, res, next) => {
     name: "required|string",
   };
 
+
   await validateReply.validateReply(req.body, validationRule, res, next);
+  
+
 };
 const roleValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);

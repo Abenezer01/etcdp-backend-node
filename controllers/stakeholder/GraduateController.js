@@ -45,7 +45,7 @@ self.getByHigherInstituteId = async (req, res) => {
       limit,
       offset,
       where: { higher_institute_id: id },
-      order: [["createdAt", order]],
+      order: [["created_at", order]],
       include: [
         "studyfield",
         "studyprogram",

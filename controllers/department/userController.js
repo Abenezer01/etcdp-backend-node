@@ -713,7 +713,7 @@ self.requestPasswordReset = async(req, res) => {
 
             // let data = await PasswordReset.findOne({
             //     order: [
-            //         ["createdAt", "DESC"]
+            //         ["created_at", "DESC"]
             //     ],
             //     where: {
             //         user_id: us.id,
@@ -814,7 +814,7 @@ self.resetPassword = async(req, res) => {
 
         let existing = await PasswordReset.findOne({
             order: [
-                ["createdAt", "DESC"]
+                ["created_at", "DESC"]
             ],
             where: {
                 user_id,

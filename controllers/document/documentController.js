@@ -105,7 +105,7 @@ self.filter = async (req, res) => {
     .findAndCountAll({
       limit,
       offset,
-      order: [["createdAt", order]],
+      order: [["created_at", order]],
       where: {
         [Op.and]: filter(),
       },

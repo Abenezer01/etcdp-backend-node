@@ -52,7 +52,7 @@ self.getStakeholderStudyFieldByStakeholderId = async (req, res) => {
         stakeholder_id: id,
       },
       include: ["studyfield", "studyprogram", "studylevel"],
-      order: [["createdAt", order]],
+      order: [["created_at", order]],
     });
 
     // console.log("The status", rows[0].id);

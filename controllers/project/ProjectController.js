@@ -195,7 +195,7 @@ self.getProjectByTypeId = async (req, res) => {
           [Sequelize.Op.in]: uf,
         },
       },
-      order: [["createdAt", order]],
+      order: [["created_at", order]],
       raw: true,
     });
 
@@ -272,7 +272,7 @@ self.getProjectByTypeId = async (req, res) => {
 
 self.getProjectStatus = async (pro) => {
   const proStatus = await ProjectStatus.findOne({
-    order: [["createdAt", "DESC"]],
+    order: [["created_at", "DESC"]],
     where: { project_id: pro.id },
   });
   const stat = proStatus
@@ -301,7 +301,7 @@ self.getProjectByTypeIdPast = async (req, res) => {
     const result = await Project.findAndCountAll({
       limit,
       offset,
-      order: [["createdAt", order]],
+      order: [["created_at", order]],
       where: {
         [Op.and]: filter,
       },
@@ -329,7 +329,7 @@ self.getAlll = async (req, res) => {
     let exist = await getChildren(department_id);
 
     let other = await Project.findAll({
-      order: [["createdAt", "DESC"]],
+      order: [["created_at", "DESC"]],
       where: {
         department_id: {
           [Op.in]: exist,
@@ -409,7 +409,7 @@ self.get = async (req, res) => {
     });
 
     let stat = await ProjectStatus.findOne({
-      order: [["createdAt", "DESC"]],
+      order: [["created_at", "DESC"]],
       where: {
         project_id: id,
       },
@@ -504,7 +504,7 @@ self.update = async (req, res) => {
     });
 
     const proStatus = await ProjectStatus.findOne({
-      order: [["createdAt", "DESC"]],
+      order: [["created_at", "DESC"]],
       where: { project_id: id },
     });
     let updatedStatus = await ProjectStatus.update(

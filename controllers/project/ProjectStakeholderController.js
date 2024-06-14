@@ -166,7 +166,7 @@ self.getByStakeholderId = async (req, res) => {
           [Sequelize.Op.in]: uf,
         },
       },
-      order: [["createdAt", order]],
+      order: [["created_at", order]],
       raw: true,
     });
 

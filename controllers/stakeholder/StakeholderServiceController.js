@@ -48,7 +48,7 @@ self.getStakeServiceByStakeHolderId = async (req, res) => {
         stakeholder_id: id,
       },
       include: ["constructionrelatedservice"],
-      order: [["createdAt", order]],
+      order: [["created_at", order]],
     });
 
     const response = paginate.getPagingData(

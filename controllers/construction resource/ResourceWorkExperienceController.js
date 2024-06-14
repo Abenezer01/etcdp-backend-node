@@ -22,7 +22,7 @@ self.getAll = async (req, res) => {
     const { rows, count } = await ResourceWorkExperience.findAndCountAll({
       limit,
       offset,
-      order: [["createdAt", order]],
+      order: [["created_at", order]],
     });
 
     const response = paginate.getPagingData(
@@ -76,7 +76,7 @@ self.getByResourceId = async (req, res) => {
         resource_id: id,
       },
       include: ["workexperience"],
-      order: [["createdAt", order]],
+      order: [["created_at", order]],
     });
 
     const response = paginate.getPagingData(

@@ -99,7 +99,7 @@ self.check = async (req, res) => {
               },
               _generated: new Date().toISOString()
             };
-            return res.status(401).json(errorResponse);
+            return res.status(422).json(errorResponse);
            
         } else {
           let action = await ActionState.create({
@@ -171,7 +171,7 @@ self.approve = async (req, res) => {
             where: {
                 model_id: id,
                 action: {
-                    [Op.in]: ['REGISTSER', 'CHECK']
+                    [Op.in]: ['REGISTER', 'CHECK']
                 },
                 user_id: usr.usrID
             }
@@ -230,9 +230,6 @@ self.reject = async (req, res) => {
     let id = body.model_id;
     let model = body.model;
 
-    let us = {
-      id: usr.usrID,
-    };
     if (usr) {
       let data = await ActionState.findOne({
         where: {
@@ -264,7 +261,7 @@ self.reject = async (req, res) => {
                 action: {
                     [Op.in]: ['REGISTER', 'CHECK', "APPROVE"]
                 },
-                user_id: us.id
+                user_id: usr.usrID
             }
 
         })
@@ -292,7 +289,7 @@ self.reject = async (req, res) => {
           model: model.toLowerCase(),
           model_id: id,
           action: "REJECT",
-          user_id: us.id,
+          user_id: usr.usrID,
           position_id: usr.position_id,
           time: new Date(),
         });
@@ -351,9 +348,9 @@ self.authorize = async (req, res) => {
         let action = await ActionState.findAll({
             model_id: id,
             action: {
-                [Op.in]: ['REGISTSER', 'CHECK', "APPROVE"]
+                [Op.in]: ['REGISTER', 'CHECK', "APPROVE"]
             },
-            user_id: us.id
+            user_id: usr.usrID
 
         })
 

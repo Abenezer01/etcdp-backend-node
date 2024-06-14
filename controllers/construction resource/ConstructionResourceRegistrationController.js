@@ -53,7 +53,7 @@ self.filter = async (req, res) => {
     const { rows, count } = await Resource.findAndCountAll({
       limit: limiter.limit,
       offset: limiter.offset,
-      order: [["createdAt", order]],
+      order: [["created_at", order]],
       where: {
         [Op.and]: filter,
       },

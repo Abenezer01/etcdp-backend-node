@@ -67,21 +67,21 @@ const getRecordById = async (model, req, res) => {
   
       if (updated) {
         const updatedData = await model.findOne({ where: { id } });
-        res.apiSuccess({
-            data: updatedData,
-            total: 1 // Assuming a single user is being returned
-          }, {
-            pageSize: 1,
-            page: 1
-          });
-    
+        return res.apiSuccess({
+          data: updatedData,
+          total: 1 // Assuming a single user is being returned
+        }, {
+          pageSize: 1,
+          page: 1
+        });
       }
   
       throw new Error("Record not found");
     } catch (error) {
-      res.status(500).json({ message: error.message });
+      return res.status(500).json({ message: error.message });
     }
   };
+  
   
   const deleteRecord = async (model, req, res) => {
     try {

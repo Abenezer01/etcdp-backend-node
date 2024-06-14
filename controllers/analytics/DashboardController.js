@@ -1274,7 +1274,7 @@ self.getProjectYearlyFinancialPlan = async(req, res) => {
                     where: {
                         model_id: plan.id
                     },
-                    order: [["createdAt", "DESC"]]
+                    order: [["created_at", "DESC"]]
                 })
 
                 let temp = plan.toJSON()
@@ -1342,7 +1342,7 @@ self.getProjectYearlyFinancialReport = async(req, res) => {
                     where: {
                         model_id: report.id
                     },
-                    order: [["createdAt", "DESC"]]
+                    order: [["created_at", "DESC"]]
                 })
 
                 let temp = report.toJSON()

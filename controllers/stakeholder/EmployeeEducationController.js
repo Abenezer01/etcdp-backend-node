@@ -47,7 +47,7 @@ self.getEmployeeEducationByStakeholderId = async (req, res) => {
       limit: limiter.limit,
       offset: limiter.offset,
       where: { stakeholder_id: id },
-      order: [["createdAt", order]],
+      order: [["created_at", order]],
       include: ["studylevel"],
     });
 

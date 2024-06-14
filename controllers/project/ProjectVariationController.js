@@ -66,7 +66,7 @@ self.getByProjectType = async (req, res) => {
           type: type,
           project_id: project_id,
         },
-        order: [["createdAt", order]],
+        order: [["created_at", order]],
       })
       .then(function (datas) {
         return res.json({
