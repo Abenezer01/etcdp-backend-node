@@ -33,14 +33,13 @@ module.exports = (sequelize, DataTypes) => {
       revision_no: DataTypes.INTEGER,
     },
     {
+      createdAt: 'created_at',
+      updatedAt: 'updated_at' ,     
       sequelize,
       modelName: "BuildingEnvelopMaterial",
       tableName: "buildingenvelopmaterials",
 
       timestamps: true,
-      createdAt: 'created_at',
-      updatedAt: 'updated_at'
-
     }
   );
   return BuildingEnvelopMaterial;

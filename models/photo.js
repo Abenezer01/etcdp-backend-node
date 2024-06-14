@@ -23,6 +23,8 @@ module.exports = (sequelize, DataTypes) => {
       model_id: DataTypes.UUID,
     },
     {
+      createdAt: 'created_at',
+      updatedAt: 'updated_at' ,     
       sequelize,
       modelName: "Photo",
       tableName: "photos"

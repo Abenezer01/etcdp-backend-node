@@ -17,6 +17,8 @@ module.exports = (sequelize, DataTypes) => {
       permission_id: DataTypes.UUID,
     },
     {
+      createdAt: 'created_at',
+      updatedAt: 'updated_at' ,     
       sequelize,
       modelName: "RolePermission",
       tableName: "rolespermissions"

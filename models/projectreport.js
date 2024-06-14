@@ -105,6 +105,8 @@ module.exports = (sequelize, DataTypes) => {
       file_id: DataTypes.UUID,
     },
     {
+      createdAt: 'created_at',
+      updatedAt: 'updated_at' ,     
       sequelize,
       modelName: "ProjectReport",
       tableName: "projectreports"

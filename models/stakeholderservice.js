@@ -24,6 +24,8 @@ module.exports = (sequelize, DataTypes) => {
       unit_price: DataTypes.DOUBLE,
     },
     {
+      createdAt: 'created_at',
+      updatedAt: 'updated_at' ,     
       sequelize,
       modelName: "StakeholderService",
       tableName: "stakeholderservices"

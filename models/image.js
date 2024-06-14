@@ -21,6 +21,8 @@ module.exports = (sequelize, DataTypes) => {
       url: DataTypes.STRING,
     },
     {
+      createdAt: 'created_at',
+      updatedAt: 'updated_at' ,     
       sequelize,
       modelName: "Image",
       tableName: "images"

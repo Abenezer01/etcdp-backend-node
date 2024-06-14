@@ -24,6 +24,8 @@ module.exports = (sequelize, DataTypes) => {
       description: DataTypes.STRING,
     },
     {
+      createdAt: 'created_at',
+      updatedAt: 'updated_at' ,     
       sequelize,
       modelName: "ResourceStudyLevel",
       tableName: "resourcestudylevels"

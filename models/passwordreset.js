@@ -35,6 +35,8 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     {
+      createdAt: 'created_at',
+      updatedAt: 'updated_at' ,     
       sequelize,
       modelName: "PasswordReset",
       tableName: "passwordresets"
