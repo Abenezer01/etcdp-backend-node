@@ -45,7 +45,11 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "ActionState",
-      tableName: "actionstates"
+      tableName: "actionstates",
+
+      timestamps: true,
+      createdAt: 'created_at',
+      updatedAt: 'updated_at'
     }
   );
 

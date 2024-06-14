@@ -29,7 +29,10 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "AgeLevel",
-      tableName: "agelevels"
+      tableName: "agelevels",
+      timestamps: true,
+      createdAt: 'created_at',
+      updatedAt: 'updated_at'
     }
   );
   return AgeLevel;

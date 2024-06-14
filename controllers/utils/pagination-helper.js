@@ -15,7 +15,7 @@ const paginationHelper = async (Model, req, where = {}, include = []) => {
         include: include,
         offset: offset,
         limit: pageSize,
-        order: [["createdAt", "DESC"]],
+        order: [["created_at", "DESC"]],
       });
   
       return {

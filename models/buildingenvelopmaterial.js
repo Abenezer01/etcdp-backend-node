@@ -35,7 +35,12 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "BuildingEnvelopMaterial",
-      tableName: "buildingenvelopmaterials"
+      tableName: "buildingenvelopmaterials",
+
+      timestamps: true,
+      createdAt: 'created_at',
+      updatedAt: 'updated_at'
+
     }
   );
   return BuildingEnvelopMaterial;

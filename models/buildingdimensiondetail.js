@@ -38,7 +38,11 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "BuildingDimensionDetail",
-      tableName: "buildingdimensiondetails"
+      tableName: "buildingdimensiondetails",
+
+      timestamps: true,
+      createdAt: 'created_at',
+      updatedAt: 'updated_at'
     }
   );
   return BuildingDimensionDetail;

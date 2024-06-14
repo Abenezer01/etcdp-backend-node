@@ -49,7 +49,11 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "Address",
-      tableName: "addresses"
+      tableName: "addresses",
+
+      timestamps: true,
+      createdAt: 'created_at',
+      updatedAt: 'updated_at'
     }
   );
   return Address;

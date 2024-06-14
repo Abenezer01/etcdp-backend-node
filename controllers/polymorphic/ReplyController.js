@@ -10,6 +10,8 @@ let self = {};
 
 
 self.getAll = async (req, res) => {
+
+  
   try {
     const paginatedResult = await paginationHelper(Reply, req);
 
@@ -31,8 +33,6 @@ self.get = async (req, res) => {
 
 self.save = async (req, res) => {
   let usr = await usrData.userData(req, res);
-
-  
   req.body.creator_id = usr.usrID
 
   saveRecord(Reply, req, res);
