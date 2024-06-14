@@ -22,7 +22,7 @@ module.exports = {
       specification_detail: {
         type: Sequelize.STRING,
       },
-      unit_of_measurenment: {
+      unit_of_measurement: {
         type: Sequelize.STRING,
       },
       createdAt: {

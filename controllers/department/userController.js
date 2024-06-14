@@ -362,11 +362,33 @@ self.update = async (req, res) => {
             [Op.in]: userId,
         }, }
 
-        const paginatedResult = await paginationHelper(User, req, whereCondition);
+        const includeOptions = [
+            {
+                model: UserEmail,
+                as: 'useremails',
+                attributes: ['email'] 
+            },
+            {
+                model: UserPhone,
+                as: 'userphones',
+                attributes: ['phone'] 
+            }
+          ];
+
+        const paginatedResult = await paginationHelper(User, req, whereCondition, includeOptions);
+
+        const usersWithEmail = paginatedResult.data.map(user => {
+            const userJson = user.toJSON();
+            userJson.email = userJson.useremails ? userJson.useremails.email : null;
+            userJson.phone = userJson.userphones ? userJson.userphones.phone : null;
+            delete userJson.useremails; // Remove the nested emailInfo object
+            delete userJson.userphones; // Remove the nested emailInfo object
+            return userJson;
+          });
     
         // Use the response formatter to send the success response
         res.apiSuccess({
-            data: paginatedResult.data,
+            data: usersWithEmail,
             total: paginatedResult.total,
         }, paginatedResult.pagination);
     

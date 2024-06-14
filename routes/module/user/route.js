@@ -25,7 +25,7 @@ module.exports = function (express) {
   route.post("/users", validateInput.createUser, UserController.save);
   route.put("/users/:id", validateInput.createUser, UserController.update);
   route.delete("/users/:id", UserController.delete);
-  route.get("/users/department/:id", UserController.getDepartmentUsers);
+  route.get("/department-users/:id", UserController.getDepartmentUsers);
 
   route.put("/account-activate/:id", validateInput.createUser, UserController.activateAccount);
   route.put("/account-deactivate/:id", validateInput.createUser, UserController.deactivateAccount);
@@ -80,8 +80,8 @@ module.exports = function (express) {
   );
 
   route.get("/search-department/:id?", departmentController.getParentOrGivenId);
-  route.get("/department-structure", departmentController.getStructure);
-  route.get("/department-structure/:id", departmentController.getChildren);
+  route.get("/department-structure", departmentController.getDepartments);
+  route.get("/department-structure/:id", departmentController.getDepartments);
 
   route.get("/department-head/:id", departmentController.getDepartmentHead);
   route.get("/all-parents/:id", departmentController.getToRoot);

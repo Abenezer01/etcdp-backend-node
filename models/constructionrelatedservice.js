@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
       parent_id: DataTypes.UUID,
       type_of_service: DataTypes.STRING,
       specification_detail: DataTypes.STRING,
-      unit_of_measurenment: DataTypes.STRING,
+      unit_of_measurement: DataTypes.STRING,
     },
     {
       createdAt: 'created_at',
