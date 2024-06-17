@@ -78,7 +78,8 @@ const getRecordById = async (model, req, res) => {
   
       throw new Error("Record not found");
     } catch (error) {
-      return res.status(500).json({ message: error.message });
+      console.error("Error in getAll method:", error);
+      res.apiError(error);
     }
   };
   
@@ -96,7 +97,8 @@ const getRecordById = async (model, req, res) => {
   
       throw new Error("Record not found");
     } catch (error) {
-      res.status(500).json({ message: error.message });
+      console.error("Error in getAll method:", error);
+      res.apiError(error);
     }
   };
   

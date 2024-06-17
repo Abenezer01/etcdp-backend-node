@@ -337,8 +337,59 @@ self.save = async(req, res) => {
 };
 
 self.update = async (req, res) => {
-    updateRecord(User, req, res);
-  };
+    try {
+        let id = req.params.id;
+        let body = req.body;
+
+        const [updated] = await User.update(body, {
+            where: { id },
+          });
+
+          if (updated) {
+
+            if(body.email){
+                let primary_email = await UserEmail.findOne({
+                    where: {
+                        is_primary: true,
+                        user_id: id
+                    }
+                })
+    
+                primary_email.email = body.email
+                await primary_email.save();
+            }
+            
+            if(body.phone){
+                let primary_phone = await UserPhone.findOne({
+                    where: {
+                        is_primary: true,
+                        user_id: id
+                    }
+                })
+    
+                primary_phone.phone = body.phone
+                await primary_phone.save();
+            }
+
+            const updatedData = await User.findOne({ where: { id } });
+
+
+            return res.apiSuccess({
+              data: updatedData,
+              total: 1 // Assuming a single user is being returned
+            }, {
+              pageSize: 1,
+              page: 1
+            });
+          }
+      
+          throw new Error("Record not found");
+        } catch (error) {
+          return res.status(500).json({ message: error.message });
+        }
+};
+      
+
   
   self.delete = async (req, res) => {
     deleteRecord(User, req, res);
