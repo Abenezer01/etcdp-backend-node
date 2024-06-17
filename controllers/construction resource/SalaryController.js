@@ -1,8 +1,4 @@
 const { Salary, Sequelize } = require("../../models");
-const usrData = require("../../utils/userDataFromToken");
-const actionHelper = require("../utils/action-helper");
-const Op = Sequelize.Op;
-const paginate = require("../../utils/pagination");
 const { getRecordById, saveRecord, updateRecord, deleteRecord } = require('../utils/format-helper');
 const paginationHelper = require("../utils/pagination-helper")
 const dotenv = require("dotenv");
@@ -10,131 +6,57 @@ dotenv.config();
 let self = {};
 
 self.getAll = async (req, res) => {
-  const {
-    page = process.env.page,
-    size = process.env.size,
-    order = process.env.order,
-  } = req.query;
-
-  const { limit, offset } = paginate.getPagination(page, size);
-
   try {
-    const { rows, count } = await Salary.findAndCountAll({
-      limit,
-      offset,
-      order: [["created_at", order]],
-    });
+    const paginatedResult = await paginationHelper(Salary, req);
 
-    const response = paginate.getPagingData(
-      { rows, count },
-      page,
-      limit,
-      count
-    );
+    // Use the response formatter to send the success response
+    res.apiSuccess({
+      data: paginatedResult.data,
+      total: paginatedResult.total,
+    }, paginatedResult.pagination);
 
-    res.send(response);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send({
-      message: err.message || "An error occurred while retrieving data.",
-    });
+  } catch (error) {
+    console.error("Error in getAll method:", error);
+    res.apiError(error);
   }
 };
 
+
 self.get = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let data = await Salary.findOne({
-      where: {
-        id: id,
-      },
-    });
-    return res.status(200).json({
-      data: data ? data : {},
-    });
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+  getRecordById(Salary, req, res);
 };
 
 self.save = async (req, res) => {
-  try {
-    let usr = await usrData.userData(req, res);
-    let body = req.body;
-    if (usr) {
-      let data = await Salary.create(body);
-      if (data) {
-        let us = usr.usrID;
-        await actionHelper.saveActionState(
-          data.id,
-          "Salary",
-          "REGISTER",
-          us,
-          req,
-          res
-        );
-      }
-      return res.json(data);
-    }
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+  saveRecord(Salary, req, res);
 };
 
 self.update = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let body = req.body;
-    let data = await Salary.update(body, {
-      where: {
-        id: id,
-      },
-    });
-    return res.status(200).json({
-      message: "Success",
-    });
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+  updateRecord(Salary, req, res);
 };
 
 self.delete = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let data = await Salary.destroy({
-      where: {
-        id: id,
-      },
-    });
-    return res.json(data);
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+  deleteRecord(Salary, req, res);
 };
 
-self.getByResourceId = async(req, res) => {
-  
-    try {
-        let id = req.params.id
-        let data = await Salary.findAll({
-            where:{
-                resource_id: id
-            }
-        })
-        return res.json(data)
-    } catch (error) {
-        return res.status(500).json({
-            message: error.message
-        })
-    }
-}
+
+self.getByResourceId = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const whereCondition = { resource_id: id }
+    const paginatedResult = await paginationHelper(Salary, req, whereCondition);
+
+    // Use the response formatter to send the success response
+    res.apiSuccess({
+      data: paginatedResult.data,
+      total: paginatedResult.total,
+    }, paginatedResult.pagination);
+
+  } catch (error) {
+    console.error("Error in getAll method:", error);
+    res.apiError(error);
+  }
+
+};
+
 
 module.exports = self;

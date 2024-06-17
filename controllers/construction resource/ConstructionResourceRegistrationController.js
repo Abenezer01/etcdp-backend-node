@@ -102,24 +102,10 @@ self.search = async (req, res) => {
 self.save = async (req, res) => {
   try {
     let usr = await usrData.userData(req, res);
-    let body = req.body;
-    if (usr) {
-      let data = await Resource.create(body);
-      if (data) {
-        let us = usr.usrID;
-        data.department_id = us.departmentID;
-        await data.save();
-        await actionHelper.saveActionState(
-          data.id,
-          "Resource",
-          "REGISTER",
-          us,
-          req,
-          res
-        );
-      }
-      return res.json(data);
-    }
+    req.body.department_id = usr.department_id
+
+    saveRecord(Resource, req, res);
+
   } catch (error) {
     res.status(500).json({
       message: error.message,

@@ -10,55 +10,28 @@ dotenv.config();
 let self = {};
 const path = require("path");
 const fs = require("fs");
+
+
 self.getAll = async (req, res) => {
-  const {
-    page = process.env.page,
-    size = process.env.size,
-    order = process.env.order,
-  } = req.query;
-
-  const { limit, offset } = paginate.getPagination(page, size);
-
   try {
-    const { rows, count } = await DetailResourceType.findAndCountAll({
-      limit,
-      offset,
-      order: [["created_at", order]],
-    });
+    const paginatedResult = await paginationHelper(DetailResourceType, req);
 
-    const response = paginate.getPagingData(
-      { rows, count },
-      page,
-      limit,
-      count
-    );
+    // Use the response formatter to send the success response
+    res.apiSuccess({
+      data: paginatedResult.data,
+      total: paginatedResult.total,
+    }, paginatedResult.pagination);
 
-    res.send(response);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send({
-      message: err.message || "An error occurred while retrieving data.",
-    });
+  } catch (error) {
+    console.error("Error in getAll method:", error);
+    res.apiError(error);
   }
 };
 
 self.get = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let data = await DetailResourceType.findOne({
-      where: {
-        id: id,
-      },
-    });
-    return res.status(200).json({
-      data: data ? data : {},
-    });
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+  getRecordById(DetailResourceType, req, res);
 };
+
 self.getByResourceId = async (req, res) => {
   const { id } = req.params;
   let {
@@ -239,91 +212,8 @@ self.update = async (req, res) => {
   }
 };
 
-// self.updatee = async(req, res) => {
-//     try {
-//         let id = req.params.id
-//         let usr = await usrData.userData(req, res)
-//         let body = req.body;
-//         const file = req.files
-//         console.log("the file", file)
-//         let pat
-//         if (file) {
-
-//             const ext = req.files.image.mimetype.split("/")[1];
-//             let rand = Math.floor(100000 + Math.random() * 900000)
-//             var name = req.files.image.name;
-//             let parsedName = path.parse(name).name;
-//             checkedNew = parsedName.concat(rand);
-//             const filePath = path.join(__dirname, '../../public', 'images/detailresourcetypeimage', checkedNew + '.' +
-//                 `${ext}`)
-//             console.log("The file path is ", filePath)
-//             var filePathh = filePath.split("public").pop();
-//             console.log("The file path is ", filePathh)
-//                 //return res.send(filePathh)
-
-//             body.image = filePathh
-//             pat = filePath
-//         }
-//         // if (!file) {
-//         //     body.image = ''
-//         // }
-
-//         if (usr) {
-//             if (pat) {
-//                 const filee = req.files.image
-//                 let data = await DetailResourceType.findOne({
-//                     where: {
-//                         id: id
-//                     },
-//                 });
-//                 if (data.image) {
-//                     let f = "/home/kaleb/Desktop/etcdp-backend-node/public"
-//                     let fc = f + data.image
-
-//                     if (fs.existsSync(fc)) {
-//                         fs.unlink(fc, (err) => {
-//                             if (err) {
-//                                 throw err;
-//                             }
-
-//                             console.log("Deleted File successfully.");
-//                         });
-//                     }
-
-//                 }
-//                 filee.mv(pat, err => {
-//                     if (err) return res.status(500).send(err)
-//                         // res.redirect('/')
-//                 })
-//             }
-//             let data = await DetailResourceType.update(body, {
-//                 where: {
-//                     id: id
-//                 },
-//             });
-//             return res.json({ message: "Success" })
-//         }
-//     } catch (error) {
-//         res.status(500).json({
-//             message: error.message
-//         })
-//     }
-// }
-
 self.delete = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let data = await DetailResourceType.destroy({
-      where: {
-        id: id,
-      },
-    });
-    return res.json(data);
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+  deleteRecord(DetailResourceType, req, res);
 };
 
 module.exports = self;
