@@ -307,6 +307,8 @@ self.getUserPermission = async (req, res) => {
       },
     });
 
+    // return res.json(positionpermissions)
+
     const perArr = await Promise.all(
       positionpermissions.map(async (posper) => {
         const data = await Permission.findOne({
@@ -315,8 +317,8 @@ self.getUserPermission = async (req, res) => {
           },
         });
         let obj = {
-          action: data ? data.name : null,
-          subject: data ? data.module : null,
+          action: data ? (data.name).split('_')[0] : null,
+          subject: data ? data.module : null
         };
         return obj;
       })
@@ -325,12 +327,12 @@ self.getUserPermission = async (req, res) => {
     // Remove any null values from the array
     const filteredArr = perArr.filter(Boolean);
 
-    return res.json(filteredArr);
-
-  } catch (error) {
-    return res.status(500).json({
-      message: error.message,
+    res.apiSuccess({
+      data: filteredArr,
     });
+  } catch (error) {
+    console.error("Error:", error);
+    res.apiError(error);
   }
 };
 self.initPermission = async (req, res) => {

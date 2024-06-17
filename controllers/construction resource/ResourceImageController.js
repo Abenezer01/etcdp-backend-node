@@ -12,38 +12,22 @@ let self = {};
 
 self.getAll = async (req, res) => {
   try {
-    let data = await Image.findAll();
-    return res.status(200).json({
-      data,
-    });
+    const paginatedResult = await paginationHelper(Image, req);
+
+    // Use the response formatter to send the success response
+    res.apiSuccess({
+      data: paginatedResult.data,
+      total: paginatedResult.total,
+    }, paginatedResult.pagination);
+
   } catch (error) {
-    // if (err.message === 'Error') {
-    //     res.status(500).json({
-    //         message: error.message
-    //     })
-    // }
-    res.status(500).json({
-      message: error.message,
-    });
+    console.error("Error in getAll method:", error);
+    res.apiError(error);
   }
 };
 
 self.get = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let data = await Image.findOne({
-      where: {
-        id: id,
-      },
-    });
-    return res.status(200).json({
-      data: data,
-    });
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+  getRecordById(Image, req, res);
 };
 
 self.search = async (req, res) => {
@@ -152,73 +136,6 @@ self.getImage = async (req, res) => {
   }
 };
 
-// self.updatee = async(req, res) => {
-//     let id = req.params.id;
-//     const file = req.files.image
-//     if (!id) {
-//         return res.status(412).json({
-//             message: "Can't get user id"
-
-//         })
-//     }
-//     let contentLength = parseInt(req.headers['content-length']);
-//     fileSizeinKB = Math.round(parseInt(contentLength) / 1024 * 100) / 100;
-//     let approx = Math.round(fileSizeinKB);
-//     //return res.status(200).json(approx)
-//     try {
-//         let resourceData = await Resource.findOne({
-//             where: {
-//                 id: id
-//             }
-//         });
-//         let image_id = resourceData.image_id
-//         if (image_id) {
-//             let resourceImageData = await Image.findOne({
-//                 where: {
-//                     id: image_id
-//                 }
-//             })
-//             let f = "/home/kaleb/Desktop/etcdp-backend-node/public"
-//             let fc = f + resourceImageData.url
-//             if (fs.existsSync(fc)) {
-//                 fs.unlink(fc, (err) => {
-//                     if (err) {
-//                         throw err;
-//                     }
-
-//                     console.log("Deleted File successfully.");
-//                 });
-//             }
-
-//         }
-//         const ext = req.files.Image.mimetype.split("/")[1];
-//         let rand = Math.floor(100000 + Math.random() * 900000)
-//         var name = req.files.Image.name;
-//         let parsedName = path.parse(name).name;
-//         checkedNew = parsedName.concat(rand);
-//         const filePath = path.join(__dirname, '../../public', 'images/resourceimages', checkedNew + '.' +
-//                 `${ext}`)
-//             //console.log("The file path is ", filePath)
-
-//         file.mv(filePath, err => {
-//             if (err) return res.status(500).send(err)
-//                 // res.redirect('/')
-//         })
-//         var filePathh = filePath.split("public").pop();
-//         await Image.update({
-//             url: filePathh
-//         }, {
-//             where: { id: image_id },
-//         })
-//         return res.status(200).json({
-//             message: "Success"
-//         })
-//     } catch (error) {
-//         res.status(500).json({
-//             message: error.message
-//         })
-//     }
-// }
 
 self.update = async (req, res) => {
   const id = req.params.id;
@@ -268,19 +185,6 @@ self.update = async (req, res) => {
 };
 
 self.delete = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let data = await Image.destroy({
-      where: {
-        id: id,
-      },
-    });
-    return res.json(data);
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+  deleteRecord(Image, req, res);
 };
-
 module.exports = self;

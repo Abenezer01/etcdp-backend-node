@@ -1,8 +1,5 @@
-const { ResourceWorkExperience, Image, Sequelize } = require("../../models");
-const usrData = require("../../utils/userDataFromToken");
-const actionHelper = require("../utils/action-helper");
+const { ResourceWorkExperience, WorkExperience, Image, Sequelize } = require("../../models");
 const Op = Sequelize.Op;
-const paginate = require("../../utils/pagination");
 const { getRecordById, saveRecord, updateRecord, deleteRecord } = require('../utils/format-helper');
 const paginationHelper = require("../utils/pagination-helper")
 const dotenv = require("dotenv");
@@ -10,90 +7,50 @@ dotenv.config();
 let self = {};
 
 self.getAll = async (req, res) => {
-  const {
-    page = process.env.page,
-    size = process.env.size,
-    order = process.env.order,
-  } = req.query;
-
-  const { limit, offset } = paginate.getPagination(page, size);
-
   try {
-    const { rows, count } = await ResourceWorkExperience.findAndCountAll({
-      limit,
-      offset,
-      order: [["created_at", order]],
-    });
+    const paginatedResult = await paginationHelper(ResourceWorkExperience, req);
 
-    const response = paginate.getPagingData(
-      { rows, count },
-      page,
-      limit,
-      count
-    );
+    // Use the response formatter to send the success response
+    res.apiSuccess({
+      data: paginatedResult.data,
+      total: paginatedResult.total,
+    }, paginatedResult.pagination);
 
-    res.send(response);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send({
-      message: err.message || "An error occurred while retrieving data.",
-    });
+  } catch (error) {
+    console.error("Error in getAll method:", error);
+    res.apiError(error);
   }
 };
 
 self.get = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let data = await ResourceWorkExperience.findOne({
-      where: {
-        id: id,
-      },
-      //include: { model: Image, as: "Image", attributes: ["url"] },
-    });
-    return res.status(200).json({
-      data: data ? data : {},
-    });
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+  getRecordById(ResourceWorkExperience, req, res);
 };
+
 self.getByResourceId = async (req, res) => {
-  const {
-    page = process.env.page,
-    size = process.env.size,
-    order = process.env.order,
-  } = req.query;
-  const id = req.params.id;
-  const { limit, offset } = paginate.getPagination(page, size);
-
+  const { id } = req.params;
   try {
-    const { rows, count } = await ResourceWorkExperience.findAndCountAll({
-      limit,
-      offset,
-      where: {
-        resource_id: id,
-      },
-      include: ["workexperience"],
-      order: [["created_at", order]],
-    });
+    const whereCondition = { resource_id: id }
 
-    const response = paginate.getPagingData(
-      { rows, count },
-      page,
-      limit,
-      count
-    );
+    const includeOptions = [
+      { model: WorkExperience, as: 'workexperience' } // Example association
+    ];
+   
 
-    res.send(response);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send({
-      message: err.message || "An error occurred while retrieving data.",
-    });
+    const paginatedResult = await paginationHelper(ResourceWorkExperience, req, whereCondition, includeOptions);
+
+    // Use the response formatter to send the success response
+    res.apiSuccess({
+      data: paginatedResult.data,
+      total: paginatedResult.total,
+    }, paginatedResult.pagination);
+
+  } catch (error) {
+    console.error("Error in getAll method:", error);
+    res.apiError(error);
   }
 };
+
+
 self.search = async (req, res) => {
   try {
     let text = req.query.text;
@@ -113,65 +70,15 @@ self.search = async (req, res) => {
 };
 
 self.save = async (req, res) => {
-  try {
-    let usr = await usrData.userData(req, res);
-    let body = req.body;
-    if (usr) {
-      let data = await ResourceWorkExperience.create(body);
-      if (data) {
-        let us = usr.usrID;
-        await data.save();
-        await actionHelper.saveActionState(
-          data.id,
-          "ResourceWorkExperience",
-          "REGISTER",
-          us,
-          req,
-          res
-        );
-      }
-      return res.json(data);
-    }
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+  saveRecord(ResourceWorkExperience, req, res);
 };
 
 self.update = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let body = req.body;
-    let data = await ResourceWorkExperience.update(body, {
-      where: {
-        id: id,
-      },
-    });
-    return res.status(200).json({
-      message: "Success",
-    });
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+  updateRecord(ResourceWorkExperience, req, res);
 };
 
 self.delete = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let data = await ResourceWorkExperience.destroy({
-      where: {
-        id: id,
-      },
-    });
-    return res.json(data);
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+  deleteRecord(ResourceWorkExperience, req, res);
 };
 
 module.exports = self;
