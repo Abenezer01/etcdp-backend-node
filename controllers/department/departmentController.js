@@ -329,11 +329,15 @@ self.getToRoot = async (req, res) => {
     let id = req.params.id;
     let data = await Department.findAll();
     await self.getPath(data, id);
-    return res.json(all);
-  } catch (error) {
-    return res.status(500).json({
-      message: error.message,
+
+
+    res.apiSuccess({
+      data: data,
+      total: 1 // Assuming a single user is being returned
     });
+  } catch (error) {
+    console.error("Error:", error);
+    res.apiError(error);
   }
 };
 
