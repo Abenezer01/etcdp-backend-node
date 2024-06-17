@@ -332,7 +332,7 @@ self.getToRoot = async (req, res) => {
 
 
     res.apiSuccess({
-      data: data,
+      data: all,
       total: 1 // Assuming a single user is being returned
     });
   } catch (error) {
