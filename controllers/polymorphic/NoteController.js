@@ -29,31 +29,10 @@ self.get = async (req, res) => {
 };
 
 self.save = async (req, res) => {
-  try {
-    let usr = await usrData.userData(req, res);
-    let body = req.body;
-    if (usr) {
-      let data = await Note.create(body);
-      data.user_id = usr.usrID;
-      await data.save();
-      if (data) {
-        let usrID = usr.usrID;
-        await actionHelper.saveActionState(
-          data.id,
-          "Note",
-          "REGISTER",
-          usrID,
-          req,
-          res
-        );
-      }
-      return res.json(data);
-    }
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+
+  let usr = await usrData.userData(req, res);
+  req.body.user_id = usr.usrID
+  saveRecord(Note, req, res);
 };
 
 self.update = async (req, res) => {

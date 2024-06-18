@@ -116,11 +116,7 @@ self.check = async (req, res) => {
         }
 
         res.apiSuccess({
-          data: action,
-          total: 1 // Assuming a single user is being returned
-        }, {
-          pageSize: 1,
-          page: 1
+          data: action
         });
 
         
@@ -208,11 +204,7 @@ self.approve = async (req, res) => {
           await actorHelper.notifyActor(action,'authorize', usr.usrID, usr.departmentID)
         }
         res.apiSuccess({
-          data: action,
-          total: 1 // Assuming a single user is being returned
-        }, {
-          pageSize: 1,
-          page: 1
+          data: action
         });
         }
       }
@@ -295,11 +287,7 @@ self.reject = async (req, res) => {
         });
 
         res.apiSuccess({
-          data: action,
-          total: 1 // Assuming a single user is being returned
-        }, {
-          pageSize: 1,
-          page: 1
+          data: action
         });
         }
       }
@@ -383,11 +371,7 @@ self.authorize = async (req, res) => {
         });
 
         res.apiSuccess({
-          data: action,
-          total: 1 // Assuming a single user is being returned
-        }, {
-          pageSize: 1,
-          page: 1
+          data: action
         });
         }
       }
@@ -507,12 +491,8 @@ self.getModelAction = async (req, res) => {
           id, 
           status,
           "authorization_data": element
-        },
-        total: 1 // Assuming a single user is being returned
-      }, {
-        pageSize: 1,
-        page: 1
-      });
+        }}
+      );
 
 
 

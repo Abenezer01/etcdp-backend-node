@@ -100,10 +100,11 @@ self.save = async (req, res) => {
       if (err) return res.status(500).send(err);
     });
 
-    console.log(`The Photo id is: ${photoData.id}`);
-    return res.status(200).send({ message: photoData });
+    res.apiSuccess({
+      data: photoData
+    })
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.apiError(error)
   }
 };
 
@@ -149,7 +150,10 @@ self.serveMultiplePhoto = async (req, res) => {
     for (const im of img) {
       arr.push({ id: im.id, path: im.url });
     }
-    res.status(200).send(arr);
+
+    res.apiSuccess({
+      data: arr
+    })
     // for (i = 0; i < img.length; i++) {
     //     const imagePath = path.join(prePath, img[i].url);
     //     res.sendFile(imagePath);
