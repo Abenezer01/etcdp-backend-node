@@ -191,23 +191,25 @@ self.getByProjectIdAndPopulate = async (req, res) => {
     });
   }
 };
+
 self.getByMonthlyId = async (req, res) => {
+  const { id } = req.params;
   try {
-    let id = req.params.id;
-    let data = await ProjectReport.findOne({
-      where: {
-        monthlyreport_id: id,
-      },
-    });
-    return res.status(200).json({
-      data: data ? data : {},
-    });
+    const whereCondition = { monthlyreport_id: id }
+    const paginatedResult = await paginationHelper(ProjectReport, req, whereCondition);
+
+    // Use the response formatter to send the success response
+    res.apiSuccess({
+      data: paginatedResult.data,
+      total: paginatedResult.total,
+    }, paginatedResult.pagination);
+
   } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
+    console.error("Error in getAll method:", error);
+    res.apiError(error);
   }
 };
+
 self.search = async (req, res) => {
   try {
     let text = req.query.text;
@@ -286,12 +288,11 @@ self.save = async (req, res) => {
           res
         );
       }
-      return res.json(data);
+
+      return res.apiSuccess({data})
     }
   } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
+    res.apiError(error)
   }
 };
 
@@ -387,22 +388,26 @@ self.getMonthlyProjectReport = async (req, res) => {
 self.getProjectYearlyReports = async (req, res) => {
   const { id, year } = req.params;
   try {
-    let reports = await ProjectReport.findAll({
-      where: {
-        project_id: id,
-        year: year,
-      },
-      include: {
-        model: file,
-        as: "file",
-      },
-    });
+    const whereCondition = { 
+      project_id: id,
+      year: year
+     }
 
-    return res.json(reports);
+    const includeOptions = [
+      { model: File, as: 'file' } // Example association
+    ];
+  
+    const paginatedResult = await paginationHelper(ProjectReport, req, whereCondition, includeOptions);
+
+    // Use the response formatter to send the success response
+    res.apiSuccess({
+      data: paginatedResult.data,
+      total: paginatedResult.total,
+    }, paginatedResult.pagination);
+
   } catch (error) {
-    return res.status(500).json({
-      message: error.message,
-    });
+    console.error("Error in getAll method:", error);
+    res.apiError(error);
   }
 };
 module.exports = self;

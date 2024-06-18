@@ -1,4 +1,3 @@
-const actionHelper = require("../utils/action-helper");
 const paginationHelper = require("../utils/pagination-helper");
 const { getRecordById, saveRecord, updateRecord, deleteRecord } = require('../utils/format-helper');
 const {
@@ -106,11 +105,12 @@ self.update = async (req, res) => {
         );
       }
     }
-    return res.json(data);
+
+    return res.apiSuccess({
+      data
+    })
   } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
+    res.apiError(error)
   }
 };
 
