@@ -1,4 +1,4 @@
-const { StudyField, Sequelize } = require("../../models");
+const { StudyField, StudyLevel, StudyProgram, Sequelize } = require("../../models");
 const paginate = require("../../utils/pagination");
 const dotenv = require("dotenv");
 dotenv.config();
@@ -27,23 +27,16 @@ self.getAll = async (req, res) => {
 };
 
 self.getStudyFieldById = async (req, res) => {
-  let id = req.params.id;
-  StudyField
-    .findOne({
-      where: {
-        id: id,
-      },
-      include: ["studylevel", "studyprogram"],
-    })
-    .then((data) => {
-      res.send(data);
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message: err.message || "Some error occurred while retrieving data.",
-      });
-    });
+
+    let includeOptions = [
+      {model: StudyLevel, as : "studylevel"},
+      {model: StudyProgram, as : "studyprogram"}
+    ];
+
+    getRecordById(StudyField, req, res, includeOptions);
+
 };
+
 self.get = async (req, res) => {
   getRecordById(StudyField, req, res);
 };

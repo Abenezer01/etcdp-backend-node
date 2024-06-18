@@ -4,10 +4,6 @@ const Op = Sequelize.Op;
 const dotenv = require("dotenv");
 dotenv.config();
 let self = {};
-const paginate = require("../../utils/pagination");
-const usrData = require("../../utils/userDataFromToken");
-const { saveActionState, getChildren } = require("../../utils/helper");
-const actionHelper = require("../utils/action-helper");
 const paginationHelper = require("../utils/pagination-helper");
 const { getRecordById, saveRecord, updateRecord, deleteRecord } = require('../utils/format-helper');
 
@@ -31,29 +27,22 @@ self.getAll = async (req, res) => {
 self.get = async (req, res) => {
   getRecordById(Certificate, req, res);
 };
+
 self.getCertificateWithStakeholderId = async (req, res) => {
   const { id } = req.params;
-  const {
-    page = process.env.page,
-    size = process.env.size,
-    order = process.env.order,
-  } = req.query;
-
-  const { limit, offset } = paginate.getPagination(page, size);
   try {
-    const data = await Certificate.findAndCountAll({
-      limit,
-      offset,
-      where: { stakeholder_id: id },
-      order: [["created_at", order]],
-    });
+    const whereCondition = { stakeholder_id: id }
+    const paginatedResult = await paginationHelper(Certificate, req, whereCondition);
 
-    const response = paginate.getPagingData(data, page, limit);
-    res.send(response);
+    // Use the response formatter to send the success response
+    res.apiSuccess({
+      data: paginatedResult.data,
+      total: paginatedResult.total,
+    }, paginatedResult.pagination);
+
   } catch (error) {
-    res.status(500).send({
-      message: error.message || "Some error occurred while retrieving data.",
-    });
+    console.error("Error in getAll method:", error);
+    res.apiError(error);
   }
 };
 

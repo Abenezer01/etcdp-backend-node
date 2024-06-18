@@ -37,34 +37,30 @@ self.get = async(req, res) => {
     getRecordById(WorkExperience, req, res);
 }
 
-self.getWorkExperienceByStakeholderId = async(req, res) => {
-    const { page = process.env.page, size = process.env.size, order = process.env.order } = req.query;
-    const { id } = req.params
-    const { limit, offset } = paginate.getPagination(page, size);
 
+self.getWorkExperienceByStakeholderId = async (req, res) => {
+    const { id } = req.params;
     try {
-        const { rows, count } = await WorkExperience.findAndCountAll({
-            limit,
-            offset,
-            where: {
-                stakeholder_id: id
-            },
-            include: ["experiencelevel"],
-            order: [
-                ['createdAt', order]
-            ]
-        });
-
-        const response = paginate.getPagingData({ rows, count }, page, limit, count);
-
-        res.send(response);
-    } catch (err) {
-        console.error(err);
-        res.status(500).send({
-            message: err.message || "Some error occurred while retrieving data."
-        });
+      const whereCondition = { stakeholder_id: id }
+  
+      const includeOptions = [
+        { model: ExperienceLevel, as: 'experiencelevel' } // Example association
+      ];
+     
+      const paginatedResult = await paginationHelper(WorkExperience, req, whereCondition, includeOptions);
+  
+      // Use the response formatter to send the success response
+      res.apiSuccess({
+        data: paginatedResult.data,
+        total: paginatedResult.total,
+      }, paginatedResult.pagination);
+  
+    } catch (error) {
+      console.error("Error in getAll method:", error);
+      res.apiError(error);
     }
-}
+};
+
 self.search = async(req, res) => {
     try {
         let text = req.query.text;

@@ -10,6 +10,11 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+
+      StakeholderEmail.belongsTo(models.Stakeholder, {
+        as: "stakeholder",
+        foreignKey: "stakeholder_id",
+      });
     }
   }
   StakeholderEmail.init(

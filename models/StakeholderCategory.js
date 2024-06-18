@@ -10,6 +10,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       StakeholderCategory.hasMany(models.StakeholderSubCategory, {
+        as: "stakeholdersubcategories",
         foreignKey: "stakecategory_id",
       });
     }

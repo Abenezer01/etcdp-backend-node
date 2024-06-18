@@ -32,48 +32,32 @@ self.getAll = async (req, res) => {
   }
 };
 
+
 self.getAllCatByTypeId = async (req, res) => {
-  const {
-    page = process.env.cust_page,
-    size = process.env.size,
-    order = process.env.order,
-  } = req.query;
   const { id } = req.params;
-  const { limit, offset } = paginate.getPagination(page, size);
-  let limiter = { limit, offset };
-  page == -1 ? (limiter = {}) : limiter;
-
   try {
-    const { rows, count } = await StakeholderCategory.findAndCountAll({
-      limit: limiter.limit,
-      offset: limiter.offset,
+    const whereCondition = { stakeholdertype_id: id }
 
-      include: [
-        {
-          model: StakeholderSubCategory,
-          as: "stakesubcategories",
-          required: false,
-        },
-      ],
-      where: {
-        stakeholdertype_id: id,
+    const includeOptions = [
+      {
+        model: StakeholderSubCategory,
+        as: "stakeholdersubcategories",
+        required: false,
       },
-      order: [["created_at", order]],
-    });
+    ];
+   
 
-    const response = paginate.getPagingData(
-      { rows, count },
-      page,
-      limit,
-      count
-    );
+    const paginatedResult = await paginationHelper(StakeholderCategory, req, whereCondition, includeOptions);
 
-    res.send(response);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send({
-      message: err.message || "An error occurred while retrieving data.",
-    });
+    // Use the response formatter to send the success response
+    res.apiSuccess({
+      data: paginatedResult.data,
+      total: paginatedResult.total,
+    }, paginatedResult.pagination);
+
+  } catch (error) {
+    console.error("Error in getAll method:", error);
+    res.apiError(error);
   }
 };
 

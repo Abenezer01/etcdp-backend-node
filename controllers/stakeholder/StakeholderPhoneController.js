@@ -25,22 +25,24 @@ self.getAll = async (req, res) => {
 };
 
 self.getPrimaryphone = async (req, res) => {
+  const { id } = req.params;
   try {
-    let id = req.query;
-    let data = await StakeholderPhone.findOne({
-      where: {
-        [Op.and]: [{ stakeholder_id: id }, { is_primary: true }]
-      }
-    });
-    return res.status(200).json({
-      data: data ? data : {}
-    });
+    const whereCondition = { [Op.and]: [{ stakeholder_id: id }, { is_primary: true }] }
+    const paginatedResult = await paginationHelper(StakeholderPhone, req, whereCondition);
+
+    // Use the response formatter to send the success response
+    res.apiSuccess({
+      data: paginatedResult.data,
+      total: paginatedResult.total,
+    }, paginatedResult.pagination);
+
   } catch (error) {
-    res.status(500).json({
-      message: error.message
-    });
+    console.error("Error in getAll method:", error);
+    res.apiError(error);
   }
 };
+
+
 self.get = async (req, res) => {
   getRecordById(StakeholderPhone, req, res);
 };
