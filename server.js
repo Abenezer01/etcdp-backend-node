@@ -2,10 +2,8 @@ const express = require("express");
 const polymorphicRoute = require("./routes/module/polymorphic/route");
 
 const project = require("./routes/module/project/route");
-const constructionresource = require("./routes/module/construction resource/route");
 
 const projectRoute = require("./routes/module/project/route");
-const userRoute = require("./routes/module/user/route");
 const departmentRoute = require("./routes/module/user/route");
 const loginRoute = require("./routes/module/auth/route");
 const stakeholderRoute = require("./routes/module/stakeholder/route");
@@ -38,13 +36,8 @@ app.use("/public", express.static("public"));
 app.set("view engine", "ejs");
 
 app.use(
-  "/api",
-  userRoute(express),
-  polymorphicRoute(express),
+  "/api/v1",
   loginRoute(express),
-  stakeholderRoute(express),
-  project(express),
-  constructionresource(express)
 );
 
 //app.use("/api", userRoute(express), polymorphicRoute(express), loginRoute(express), stakeCategory(express), ProjectRoute(express));

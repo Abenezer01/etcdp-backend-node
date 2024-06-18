@@ -35,27 +35,32 @@ module.exports = (sequelize, DataTypes) => {
       tableName: "operationlocations"
     }
   );
-  //   OperationLocation.associate = function (models) {
-  //     OperationLocation.belongsTo(models.studyfield, {
-  //       as: "studyfield",
-  //       foreignKey: "studyfield_id",
-  //     });
-  //     OperationLocation.belongsTo(models.studyprogram, {
-  //       as: "studyprogram",
-  //       foreignKey: "study_program_id",
-  //     });
-  //     OperationLocation.belongsTo(models.studylevel, {
-  //       as: "studylevel",
-  //       foreignKey: "studylevel_id",
-  //     });
-  //     OperationLocation.belongsTo(models.studyperiodcost, {
-  //       as: "studyperiod",
-  //       foreignKey: "study_period_id",
-  //     });
-  //     OperationLocation.belongsTo(models.agelevel, {
-  //       as: "agelevel",
-  //       foreignKey: "agelevel_id",
-  //     });
-  //   };
+    OperationLocation.associate = function (models) {
+      // OperationLocation.belongsTo(models.studyfield, {
+      //   as: "studyfield",
+      //   foreignKey: "studyfield_id",
+      // });
+      // OperationLocation.belongsTo(models.studyprogram, {
+      //   as: "studyprogram",
+      //   foreignKey: "study_program_id",
+      // });
+      // OperationLocation.belongsTo(models.studylevel, {
+      //   as: "studylevel",
+      //   foreignKey: "studylevel_id",
+      // });
+      // OperationLocation.belongsTo(models.studyperiodcost, {
+      //   as: "studyperiod",
+      //   foreignKey: "study_period_id",
+      // });
+      // OperationLocation.belongsTo(models.agelevel, {
+      //   as: "agelevel",
+      //   foreignKey: "agelevel_id",
+      // });
+
+      OperationLocation.belongsTo(models.Stakeholder, {
+        as: "stakeholder",
+        foreignKey: "stakeholder_id",
+      });
+    };
   return OperationLocation;
 };

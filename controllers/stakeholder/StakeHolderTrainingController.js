@@ -31,39 +31,23 @@ self.get = async (req, res) => {
 };
 
 self.getTrainingByStakeholderId = async (req, res) => {
-  const {
-    page = process.env.page,
-    size = process.env.size,
-    order = process.env.order,
-  } = req.query;
   const { id } = req.params;
-  const { limit, offset } = paginate.getPagination(page, size);
-
   try {
-    const { rows, count } = await Training.findAndCountAll({
-      limit,
-      offset,
-      where: {
-        stakeholder_id: id,
-      },
-      order: [["created_at", order]],
-    });
+    const whereCondition = { stakeholder_id: id }
+    const paginatedResult = await paginationHelper(Training, req, whereCondition);
 
-    const response = paginate.getPagingData(
-      { rows, count },
-      page,
-      limit,
-      count
-    );
+    // Use the response formatter to send the success response
+    res.apiSuccess({
+      data: paginatedResult.data,
+      total: paginatedResult.total,
+    }, paginatedResult.pagination);
 
-    res.send(response);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send({
-      message: err.message || "Some error occurred while retrieving data.",
-    });
+  } catch (error) {
+    console.error("Error in getAll method:", error);
+    res.apiError(error);
   }
 };
+
 self.search = async (req, res) => {
   try {
     let text = req.query.text;

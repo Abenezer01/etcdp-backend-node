@@ -33,32 +33,31 @@ self.getAll = async (req, res) => {
 self.get = async (req, res) => {
   getRecordById(EmployeeAge, req, res);
 };
+
 self.getEmployeeAgeByStakeholderId = async (req, res) => {
   const { id } = req.params;
-  const {
-    page = process.env.page,
-    size = process.env.size,
-    order = process.env.order,
-  } = req.query;
-
-  const { limit, offset } = paginate.getPagination(page, size);
   try {
-    const data = await EmployeeAge.findAndCountAll({
-      limit,
-      offset,
-      where: { stakeholder_id: id },
-      order: [["created_at", order]],
-      include: ["agelevel"],
-    });
+    const whereCondition = { stakeholder_id: id }
 
-    const response = paginate.getPagingData(data, page, limit);
-    res.send(response);
+    const includeOptions = [
+      { model: AgeLevel, as: 'agelevel' } // Example association
+    ];
+   
+
+    const paginatedResult = await paginationHelper(EmployeeAge, req, whereCondition, includeOptions);
+
+    // Use the response formatter to send the success response
+    res.apiSuccess({
+      data: paginatedResult.data,
+      total: paginatedResult.total,
+    }, paginatedResult.pagination);
+
   } catch (error) {
-    res.status(500).send({
-      message: error.message || "Some error occurred while retrieving data.",
-    });
+    console.error("Error in getAll method:", error);
+    res.apiError(error);
   }
 };
+
 self.search = async (req, res) => {
   try {
     let text = req.query.text;

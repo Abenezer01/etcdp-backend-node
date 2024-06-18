@@ -97,23 +97,23 @@ self.getByHigherInstituteId = async (req, res) => {
 };
 
 self.getByStudyFieldId = async (req, res) => {
+  const { id } = req.params;
   try {
-    let fieldId = req.params.id;
-    let data = await studyperiod.findAll({
-      where: {
-        study_program_id: fieldId,
-      },
-    });
-    return res.status(200).json({
-      data: data ? data : {},
-    });
+    const whereCondition = { study_program_id: fieldId }
+    const paginatedResult = await paginationHelper(StudyPeriodCost, req, whereCondition);
+
+    // Use the response formatter to send the success response
+    res.apiSuccess({
+      data: paginatedResult.data,
+      total: paginatedResult.total,
+    }, paginatedResult.pagination);
+
   } catch (error) {
-    console.log("The error is", error);
-    res.status(500).json({
-      message: error.message,
-    });
+    console.error("Error in getAll method:", error);
+    res.apiError(error);
   }
 };
+
 self.search = async (req, res) => {
   try {
     let text = req.query.text;
@@ -133,48 +133,19 @@ self.search = async (req, res) => {
 };
 
 self.save = async (req, res) => {
-  try {
-    let usr = await usrData.userData(req, res);
+
     let body = req.body;
-    let studyFieldId = body.stake_study_field_id;
+
     let studyData = await StakeholderStudyField.findOne({
       where: {
-        id: studyFieldId,
+        id: body.stake_study_field_id,
       },
       include: ["StudyField"],
     });
-    //console.log("Study data", studyData.studyfield_id)
-    //body.study_field_id = studyData.studyfield_id
-    let da = {
-      higher_institute_id: body.higher_institute_id,
-      stake_study_field_id: body.stake_study_field_id,
-      description: body.description,
-      study_program_id: body.study_program_id,
-      studylevel_id: body.studylevel_id,
-      total_month: body.total_month,
-      study_cost: body.study_cost,
-      studyfield_id: studyData.studyfield_id,
-    };
-    if (usr) {
-      let data = await StudyPeriodCost.create(da);
-      if (data) {
-        let us = usr.usrID;
-        await actionHelper.saveActionState(
-          data.id,
-          "StudyPeriodCost",
-          "REGISTER",
-          us,
-          req,
-          res
-        );
-      }
-      return res.json(data);
-    }
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+
+    req.body.studyfield_id = studyData.studyFieldId
+
+    saveRecord(StudyPeriodCost, req, res);
 };
 
 

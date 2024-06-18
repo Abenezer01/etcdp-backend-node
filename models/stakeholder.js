@@ -77,15 +77,15 @@ module.exports = (sequelize, DataTypes) => {
     //     foreignKey: "address_id"
     // })
     Stakeholder.belongsTo(models.StakeholderType, {
-      as: "staketype",
+      as: "stakeholdertype",
       foreignKey: "stakeholdertype_id",
     });
     Stakeholder.belongsTo(models.StakeholderCategory, {
-      as: "stakecategory",
+      as: "stakeholdercategory",
       foreignKey: "stakecategory_id",
     });
     Stakeholder.belongsTo(models.StakeholderSubCategory, {
-      as: "stakesubcategory",
+      as: "stakeholdersubcategory",
       foreignKey: "stakesubcategory_id",
     });
     Stakeholder.belongsTo(models.Ownership, {
@@ -100,6 +100,22 @@ module.exports = (sequelize, DataTypes) => {
       as: "department",
       foreignKey: "department_id",
     });
+
+
+    Stakeholder.hasMany(models.StakeholderEmail, {
+      as: "stakeholderemails",
+      foreignKey: "stakeholder_id",
+    })
+
+    Stakeholder.hasMany(models.StakeholderPhone, {
+      as: "stakeholderphones",
+      foreignKey: "stakeholder_id",
+    })
+
+    Stakeholder.hasMany(models.OperationLocation, {
+      as: "operationlocations",
+      foreignKey: "stakeholder_id",
+    })
   };
   return Stakeholder;
 };

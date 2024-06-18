@@ -59,20 +59,21 @@ self.update = async (req, res) => {
 self.delete = async (req, res) => {
   deleteRecord(StakeholderContactPerson, req, res);
 };
-self.getByStakeholderId = async (req, res) => {
-  try {
-    let id = req.params.id;
-    let data = await StakeholderContactPerson.findAll({
-      where: {
-        stakeholder_id: id,
-      },
-    });
 
-    return res.json(data);
+self.getByStakeholderId = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const whereCondition = { stakeholder_id: id }
+    const paginatedResult = await paginationHelper(StakeholderContactPerson, req, whereCondition);
+    
+    res.apiSuccess({
+      data: paginatedResult.data,
+      total: paginatedResult.total,
+    }, paginatedResult.pagination);
+
   } catch (error) {
-    return res.status(500).json({
-      message: error.message,
-    });
+    console.error("Error in getAll method:", error);
+    res.apiError(error);
   }
 };
 

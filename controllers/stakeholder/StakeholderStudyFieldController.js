@@ -1,6 +1,9 @@
 const {
   StakeholderStudyField,
   ActionState,
+  StudyField,
+  StudyProgram,
+  StudyLevel,
   Sequelize,
 } = require("../../models");
 const paginate = require("../../utils/pagination");
@@ -13,7 +16,7 @@ const paginationHelper = require("../utils/pagination-helper");
 const { getRecordById, saveRecord, updateRecord, deleteRecord } = require('../utils/format-helper');
 const actionHelper = require("../utils/action-helper");
 const { getModelAction } = require("../polymorphic/ActionStateController");
-//const getModelAction = require("../polymorphic/ActionStateController");
+
 let self = {};
 
 self.getAll = async (req, res) => {
@@ -36,50 +39,75 @@ self.get = async (req, res) => {
 };
 
 self.getStakeholderStudyFieldByStakeholderId = async (req, res) => {
-  const {
-    page = process.env.page,
-    size = process.env.size,
-    order = process.env.order,
-  } = req.query;
   const { id } = req.params;
-  const { limit, offset } = paginate.getPagination(page, size);
-
   try {
-    const { rows, count } = await StakeholderStudyField.findAndCountAll({
-      limit,
-      offset,
-      where: {
-        stakeholder_id: id,
-      },
-      include: ["studyfield", "studyprogram", "studylevel"],
-      order: [["created_at", order]],
-    });
+    const whereCondition = {stakeholder_id: id }
 
-    // console.log("The status", rows[0].id);
-    let newData = await Promise.all(
-      rows.map(async (item) => {
-        //console.log("The item id", item.dataValues);
-        return {
-          ...item.dataValues,
-          status: await actionHelper.getAction(item.dataValues.id),
-        };
-      })
-    );
-    const response = paginate.getPagingData(
-      { rows: newData, count },
-      page,
-      limit,
-      count
-    );
+    const includeOptions = [
+      { model: StudyField, as: 'studyfield' },
+      { model: StudyProgram, as: 'studyprogram' },
+      { model: StudyLevel, as: 'studylevel' }
+    ];
 
-    res.send(response);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send({
-      message: err.message || "Some error occurred while retrieving data.",
-    });
+    const paginatedResult = await paginationHelper(StakeholderStudyField, req, whereCondition, includeOptions);
+
+    // Use the response formatter to send the success response
+    res.apiSuccess({
+      data: paginatedResult.data,
+      total: paginatedResult.total,
+    }, paginatedResult.pagination);
+
+  } catch (error) {
+    console.error("Error in getAll method:", error);
+    res.apiError(error);
   }
 };
+
+// self.getStakeholderStudyFieldByStakeholderId = async (req, res) => {
+//   const {
+//     page = process.env.page,
+//     size = process.env.size,
+//     order = process.env.order,
+//   } = req.query;
+//   const { id } = req.params;
+//   const { limit, offset } = paginate.getPagination(page, size);
+
+//   try {
+//     const { rows, count } = await StakeholderStudyField.findAndCountAll({
+//       limit,
+//       offset,
+//       where: {
+//         stakeholder_id: id,
+//       },
+//       include: ["studyfield", "studyprogram", "studylevel"],
+//       order: [["created_at", order]],
+//     });
+
+//     // console.log("The status", rows[0].id);
+//     let newData = await Promise.all(
+//       rows.map(async (item) => {
+//         //console.log("The item id", item.dataValues);
+//         return {
+//           ...item.dataValues,
+//           status: await actionHelper.getAction(item.dataValues.id),
+//         };
+//       })
+//     );
+//     const response = paginate.getPagingData(
+//       { rows: newData, count },
+//       page,
+//       limit,
+//       count
+//     );
+
+//     res.send(response);
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).send({
+//       message: err.message || "Some error occurred while retrieving data.",
+//     });
+//   }
+// };
 self.search = async (req, res) => {
   try {
     let text = req.query.text;

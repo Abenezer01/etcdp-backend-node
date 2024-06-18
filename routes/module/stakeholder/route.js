@@ -527,7 +527,7 @@ module.exports = function (express) {
   route.get("/stakeholder-services/:id", StakeholderServiceController.get);
   route.get(
     "/stakeholder-services/stakeholder/:id",
-    StakeholderServiceController.getStakeServiceByStakeHolderId
+    StakeholderServiceController.getStakeholderServiceByStakeholderId
   );
   route.get("/stakeholder-service-searches", StakeholderServiceController.search);
   route.post(

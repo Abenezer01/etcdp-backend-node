@@ -1,11 +1,12 @@
 const usrData = require("../../utils/userDataFromToken");
 const actionHelper = require("../utils/action-helper")
 
-const getRecordById = async (model, req, res) => {
+const getRecordById = async (model, req, res, include = []) => {
     try {
       const id = req.params.id;
       const data = await model.findOne({
         where: { id },
+        include: include,
       });
   
       if (!data) {
