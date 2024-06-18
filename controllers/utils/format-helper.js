@@ -15,11 +15,7 @@ const getRecordById = async (model, req, res, include = []) => {
 
 
       res.apiSuccess({
-        data: data,
-        total: 1 // Assuming a single user is being returned
-      }, {
-        pageSize: 1,
-        page: 1
+        data: data
       });
     } catch (error) {
       console.error("Error:", error);
@@ -46,11 +42,7 @@ const getRecordById = async (model, req, res, include = []) => {
       }
   
       res.apiSuccess({
-        data: data,
-        total: 1 // Assuming a single user is being returned
-      }, {
-        pageSize: 1,
-        page: 1
+        data: data
       });
     } catch (error) {
       console.error("Error:", error);
@@ -69,11 +61,7 @@ const getRecordById = async (model, req, res, include = []) => {
       if (updated) {
         const updatedData = await model.findOne({ where: { id } });
         return res.apiSuccess({
-          data: updatedData,
-          total: 1 // Assuming a single user is being returned
-        }, {
-          pageSize: 1,
-          page: 1
+          data: updatedData
         });
       }
   

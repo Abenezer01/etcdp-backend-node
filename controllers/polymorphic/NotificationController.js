@@ -67,11 +67,12 @@ self.get = async (req, res) => {
       );
     }
 
-    return res.json(data);
+
+    res.apiSuccess({
+      data
+    })
   } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
+    res.apiError(error)
   }
 };
 

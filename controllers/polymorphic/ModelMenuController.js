@@ -116,7 +116,11 @@ self.save = async (req, res) => {
           }
         }
       }
-      return res.json(arr);
+      
+      res.apiSuccess({
+        data: arr
+      });
+
     } else {
       return res.status(404).json({
         message: "Empty Models!",
@@ -211,6 +215,10 @@ self.getModuleExtraModels = async (req, res) => {
   let module = req.params.module;
   try {
     let models = master.modulemodels[module];
+
+    res.apiSuccess({
+      data: model
+    })
 
     return res.json(models);
   } catch (error) {

@@ -55,40 +55,45 @@ self.getMyFiles = async (req, res) => {
   }
 };
 
+
 self.getMyFilteredFiles = async (req, res) => {
+  
+  const { id, project_type} = req.query;
   try {
-    let id = req.query.id;
-    let projectType = req.query.project_type;
-    let data = await File.findAll({
-      where: {
-        reference_id: id,
-        project_type: projectType,
-      },
-    });
-    return res.status(200).json({
-      data: data,
-    });
+    const whereCondition = { 
+      reference_id: id,
+      project_type: project_type,
+     }
+    const paginatedResult = await paginationHelper(File, req, whereCondition);
+
+    // Use the response formatter to send the success response
+    res.apiSuccess({
+      data: paginatedResult.data,
+      total: paginatedResult.total,
+    }, paginatedResult.pagination);
+
   } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
+    console.error("Error in getAll method:", error);
+    res.apiError(error);
   }
 };
+
 self.getFilesByModelAndType = async (req, res) => {
+  const { id, type } = req.query;
   try {
-    const { id, type } = req.query;
-    let data = await File.findAll({
-      where: {
-        [Op.and]: [{ reference_id: id }, { type: type }],
-      },
-    });
-    return res.status(200).json({
-      data: data,
-    });
+    const whereCondition = { [Op.and]: [{ reference_id: id }, { type: type }] }
+
+    const paginatedResult = await paginationHelper(File, req, whereCondition);
+
+    // Use the response formatter to send the success response
+    res.apiSuccess({
+      data: paginatedResult.data,
+      total: paginatedResult.total,
+    }, paginatedResult.pagination);
+
   } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
+    console.error("Error in getAll method:", error);
+    res.apiError(error);
   }
 };
 self.search = async (req, res) => {
@@ -166,14 +171,15 @@ self.save = async (req, res) => {
           req,
           res
         );}
-      //   return res.json(ac);
-      // }
+      
+      res.apiSuccess({
+        data: doc
+      });
 
-      return res.status(200).send({ data: doc });
     }
   } catch (error) {
-    console.log("The error", error);
-    return res.status(500).send({ message: error });
+    console.error("Error:", error);
+    res.apiError(error);
   }
 };
 

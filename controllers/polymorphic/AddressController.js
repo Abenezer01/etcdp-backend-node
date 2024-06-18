@@ -43,11 +43,13 @@ self.getAddressByModelId = async (req, res) => {
         data[0] = data[i];
       }
     }
-    return res.status(200).json(data ? data : []);
+    
+    res.apiSuccess({
+      data
+    })
+    
   } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
+    res.apiError(error)
   }
 };
 self.search = async (req, res) => {
@@ -111,13 +113,14 @@ self.save = async (req, res) => {
           req,
           res
         );
-        return res.json(data);
+
+        res.apiSuccess({
+          data: data
+        })
       }
     }
   } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
+    res.apiError(error)
   }
 };
 
