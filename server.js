@@ -7,6 +7,7 @@ const projectRoute = require("./routes/module/project/route");
 const departmentRoute = require("./routes/module/user/route");
 const loginRoute = require("./routes/module/auth/route");
 const stakeholderRoute = require("./routes/module/stakeholder/route");
+const masterdataRoute = require("./routes/module/masterdata/route");
 
 const resourceRoute = require("./routes/module/construction resource/route");
 const documentRoute = require("./routes/module/document/route");
@@ -44,6 +45,7 @@ app.use(
 app.use("/api/v1/auth", loginRoute(express));
 app.use("/api/v1/departments", departmentRoute(express));
 app.use("/api/v1/accounts", loginRoute(express));
+app.use("/api/v1/masterdata", masterdataRoute(express));
 app.use("/api/v1/projects", projectRoute(express));
 app.use("/api/v1/stakeholders", stakeholderRoute(express));
 app.use("/api/v1/resource", resourceRoute(express));

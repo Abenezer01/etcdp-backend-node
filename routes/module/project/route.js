@@ -1,7 +1,3 @@
-const ProjectTypeController = require("../../../controllers/project/ProjectTypeController.js");
-const ProjectCategoryController = require("../../../controllers/project/ProjectCategoryController.js");
-const ProjectSubCategoryController = require("../../../controllers/project/ProjectSubCategoryController.js");
-const StatusController = require("../../../controllers/project/StatusController.js");
 const ProjectStatusController = require("../../../controllers/project/ProjectStatusController.js");
 const ProjectController = require("../../../controllers/project/ProjectController.js");
 const ProjectStakeholderController = require("../../../controllers/project/ProjectStakeholderController.js");
@@ -18,11 +14,6 @@ const HydroElectricDamController = require("../../../controllers/project/HydroEl
 const SpillWaysDetailController = require("../../../controllers/project/SpillWaysDetailController.js");
 const ReservoirDetailsController = require("../../../controllers/project/ReservoirDetailsController.js");
 const IrrigationCapacityController = require("../../../controllers/project/IrrigationCapacityController.js");
-const validateData = require("../../../middleware/validate/module/project/validate");
-
-// const ProjectController = require("../../../controllers/project/ProjectController.js")
-// const ProjectCategoryController = require("../../../controllers/project/ProjectCategoryController.js")
-// const ProjectSubCategoryController = require("../../../controllers/project/ProjectSubCategoryController.js")
 const ProjectFinanceController = require("../../../controllers/project/ProjectFinanceController.js");
 const ProjectVariationController = require("../../../controllers/project/ProjectVariationController.js");
 const ProjectExtensionTimeController = require("../../../controllers/project/ProjectExtensionTimeController.js");
@@ -45,85 +36,12 @@ const RailwayStationController = require("../../../controllers/project/RailwaySt
 const WaterIrrigationDamController = require("../../../controllers/project/WaterIrrigationDamController.js");
 const PortController = require("../../../controllers/project/PortController.js");
 const PaymentController = require("../../../controllers/project/PaymentController.js");
+const validateData = require("../../../middleware/validate/module/project/validate");
 
-// const middleware = require("../../../middleware/middleware")
-// const stakeCategoryValidate = require("../../../middleware/validate")
 
 module.exports = function (express) {
   const route = express.Router();
 
-  //project route
-
-  route.get("/project-types", ProjectTypeController.getAll);
-  route.get("/project-types/:id", ProjectTypeController.get);
-  route.get("/project-type-searches", ProjectTypeController.search);
-  route.post(
-    "/project-types",
-    validateData.projectTypeValidate,
-    ProjectTypeController.save
-  );
-  route.put(
-    "/project-typse/:id",
-    validateData.projectTypeValidate,
-    ProjectTypeController.update
-  );
-  route.delete("/project-types/:id", ProjectTypeController.delete);
-  //project category
-  route.get("/project-categories", ProjectCategoryController.getAll);
-  route.get(
-    "/project-categories/projecttype/:id",
-    ProjectCategoryController.getAllProCatByTypeId
-  );
-  route.get("/project-categories/:id", ProjectCategoryController.get);
-  route.get("/project-categories-searches", ProjectCategoryController.search);
-  
-  route.post(
-    "/project-categories",
-    validateData.projectCategoryValidate,
-    ProjectCategoryController.save
-  );
-  route.put(
-    "/project-categories/:id",
-    validateData.projectCategoryValidate,
-    ProjectCategoryController.update
-  );
-  route.delete("/project-categories/:id", ProjectCategoryController.delete);
-  //project subcategory
-  route.get("/project-sub-categories", ProjectSubCategoryController.getAll);
-  route.get("/project-sub-categories/:id", ProjectSubCategoryController.get);
-  route.get(
-    "/project-category/project-sub-categories/:id",
-    ProjectSubCategoryController.getByProjectCategoryId
-  );
-  route.get(
-    "/project-sub-category-searches",
-    ProjectSubCategoryController.search
-  );
-  route.post(
-    "/project-sub-categories",
-    validateData.projectSubCategoryValidate,
-    ProjectSubCategoryController.save
-  );
-  route.put(
-    "/project-sub-categories/:id",
-    validateData.projectSubCategoryValidate,
-    ProjectSubCategoryController.update
-  );
-  route.delete(
-    "/project-sub-categories/:id",
-    ProjectSubCategoryController.delete
-  );
-  //status
-  route.get("/statuses", StatusController.getAll);
-  route.get("/statuses/:id", StatusController.get);
-  route.get("/status-searches", StatusController.search);
-  route.post("/statuses", validateData.statusValidate, StatusController.save);
-  route.put(
-    "/statuses/:id",
-    validateData.statusValidate,
-    StatusController.update
-  );
-  route.delete("/statuses/:id", StatusController.delete);
   //Project status
   route.get("/project-statuses", ProjectStatusController.getAll);
   route.get("/project-statuses/:id", ProjectStatusController.get);
