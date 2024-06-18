@@ -27,7 +27,6 @@ const actionHelper = require("../utils/action-helper");
 const cipherHelper = require("../utils/cipher-helper");
 const apiHelper = require("../utils/API-helper");
 const paginationHelper = require("../utils/pagination-helper");
-const fetch = require('node-fetch')
 
 
 let self = {};
@@ -42,8 +41,11 @@ self.getAllCPMProject = async(req, res) => {
     const cpmProjects = await apiHelper.getExternalData('project')
     let projects = await Project.findAll()
     const mergedData = cpmProjects.concat(projects)
+    
+    return res.apiSuccess({
+      data: mergedData
+    })
 
-    return res.json(mergedData)
 
     //Stakeholder
     // const cpmStakeholders = await apiHelper.getExternalData('stakeholder')
@@ -87,6 +89,7 @@ self.getProjectByTypeId = async (req, res) => {
     size = process.env.size,
     order = process.env.order,
   } = req.query;
+
   const { projecttype_id, projectcategory_id, projectsubcategory_id } =
     req.body;
   const { id } = req.params;
@@ -173,6 +176,7 @@ self.getProjectByTypeId = async (req, res) => {
                 planItem.financial_performance) *
               100
             : 0;
+
         return {
           project_id: reportItem.project_id,
           sv: sv,
@@ -280,41 +284,35 @@ self.getProjectStatus = async (pro) => {
     : null;
   return { ...pro, status: stat ? stat.title : null };
 };
+
 self.getProjectByTypeIdPast = async (req, res) => {
-  const {
-    page = process.env.page,
-    size = process.env.size,
-    order = process.env.order,
-  } = req.query;
-  const { projecttype_id, projectcategory_id, projectsubcategory_id } =
-    req.body;
-  const filter = [{ projecttype_id: projecttype_id }];
-  if (projectcategory_id) {
-    filter.push({ projectcategory_id: projectcategory_id });
-  }
-  if (projectsubcategory_id) {
-    filter.push({ projectsubcategory_id: projectsubcategory_id });
-  }
-  const { limit, offset } = paginate.getPagination(page, size);
 
   try {
-    const result = await Project.findAndCountAll({
-      limit,
-      offset,
-      order: [["created_at", order]],
-      where: {
-        [Op.and]: filter,
-      },
-    });
+    const { projecttype_id, projectcategory_id, projectsubcategory_id } =
+      req.body;
+    const filter = [{ projecttype_id: projecttype_id }];
+    if (projectcategory_id) {
+      filter.push({ projectcategory_id: projectcategory_id });
+    }
+    if (projectsubcategory_id) {
+      filter.push({ projectsubcategory_id: projectsubcategory_id });
+    }
 
-    const pagingData = paginate.getPagingData(result, page, limit);
-    res.send(pagingData);
-  } catch (err) {
-    res.status(500).send({
-      message: err.message || "Some error occurred while retrieving data.",
-    });
+    const whereCondition = { [Op.and]: filter }
+    const paginatedResult = await paginationHelper(Project, req, whereCondition);
+
+    // Use the response formatter to send the success response
+    res.apiSuccess({
+      data: paginatedResult.data,
+      total: paginatedResult.total,
+    }, paginatedResult.pagination);
+
+  } catch (error) {
+    console.error("Error in getAll method:", error);
+    res.apiError(error);
   }
 };
+
 
 self.getAlll = async (req, res) => {
   try {
@@ -364,28 +362,6 @@ self.getAlll = async (req, res) => {
     });
   }
 };
-self.getArr = async (arr) => {
-  try {
-    const otherArr = await Promise.all(
-      arr.map(async (da) => {
-        const action = await ActionState.findOne({
-          where: {
-            model_id: da.id,
-            action: "APPROVE",
-          },
-        });
-
-        if (action) return da;
-      })
-    );
-
-    return otherArr.filter((x) => x);
-  } catch (error) {
-    return {
-      message: error.message,
-    };
-  }
-};
 
 self.get = async (req, res) => {
   try {
@@ -413,17 +389,18 @@ self.get = async (req, res) => {
       where: {
         project_id: id,
       },
-      include: [{ model: status, as: "status", attributes: ["title"] }],
+      include: [{ model: Status, as: "status", attributes: ["title"] }],
     });
 
     data = data.toJSON();
     data.ProjectStatus = stat;
 
-    return res.status(200).json({ data: data ? data : {} });
+    return res.apiSuccess({
+      data
+    })
+
   } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
+    res.apiError(error)
   }
 };
 
@@ -479,18 +456,13 @@ self.save = async (req, res) => {
           );
         }
       }
-      // let arr = [{ name: "Client", id: body.clientId }, { name: "Consultant", id: body.consultantId }, { name: "Contractor", id: body.contractorId }]
-      // for (let i = 0; i < arr.length; i++) {
-      //     let body = { project_id: data.id, stakeholder_id: arr[i].id, title: arr[i].name }
-      //     ProjectStakeholder.create(body)
-
-      // }
-      return res.json(data);
+      
+      return res.apiSuccess({
+        data
+      })
     }
   } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
+    res.apiError(error)
   }
 };
 self.update = async (req, res) => {
@@ -515,13 +487,13 @@ self.update = async (req, res) => {
         },
       }
     );
-    return res.status(200).json({
-      message: "Success",
-    });
+
+    return res.apiSuccess({
+      data: updatedStatus
+    })
+    
   } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
+    res.apiError(error)
   }
 };
 
@@ -597,21 +569,22 @@ self.getProjectDetail = async (req, res) => {
       ? await Status.findOne({ where: { id: proStatus.status_id } })
       : null;
 
-    return res.json({
-      project_name: pro ? pro.name : null,
-      client,
-      contractor,
-      consultant,
-      main_contract_price_amount: finance
-        ? finance.main_contract_price_amount
-        : null,
-      time: time,
-      project_status: stat ? stat.title : null,
-    });
+    return res.apiSuccess({
+      data: {
+        project_name: pro ? pro.name : null,
+        client,
+        contractor,
+        consultant,
+        main_contract_price_amount: finance
+          ? finance.main_contract_price_amount
+          : null,
+        time: time,
+        project_status: stat ? stat.title : null,
+      }
+    })
+
   } catch (error) {
-    return res.json({
-      message: error.messge,
-    });
+    res.apiError(error)
   }
 };
 self.getStakeholderName = async (id) => {
@@ -624,27 +597,10 @@ self.getStakeholderName = async (id) => {
 
     return data ? data.trade_name : null;
   } catch (error) {
-    return {
-      message: error.message,
-    };
+    res.apiError(error)
   }
 };
 
-self.countAllProjectWithProjectType = async (req, res) => {
-  try {
-    let queryString =
-      "SELECT projecttypes.title AS type, COALESCE(COUNT(projects.id), 0) AS total FROM projecttypes LEFT JOIN projects ON projecttypes.id = projects.projecttype_id GROUP BY projecttypes.title;";
-    let projectData = await sequelize.query(queryString, {
-      type: sequelize.QueryTypes.SELECT,
-    });
-
-    res.send(projectData);
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
-};
 self.countAllProjectWithProjectCategory = async (req, res) => {
   try {
     let queryString =
@@ -653,11 +609,11 @@ self.countAllProjectWithProjectCategory = async (req, res) => {
       type: sequelize.QueryTypes.SELECT,
     });
 
-    res.send(projectData);
+    return res.apiSuccess({
+      data: projectData
+    })
   } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
+    res.apiError(error)
   }
 };
 
@@ -782,130 +738,33 @@ self.getProjectData = async (req, res) => {
       ? await self.getStakeholderName(consultantStake.stakeholder_id)
       : null;
 
-    return res.json({
-      name: pro.name,
-      client,
-      consultant,
-      contractor,
-      contract_duration: time ? time.original_contract_duration : null,
-      total_contract_amount: total_contract_price,
-      commencement_date,
-      elapsed_time: used_time,
-      completion_date,
-      cpi,
-      spi,
-      cv,
-      sv,
-      paid_ipc,
-      earned_revenue: earned_value,
-      planned_revenue: plannedFinance,
-      actual_cost: actualCost,
-    });
+    return res.apiSuccess({
+      data: {
+        name: pro.name,
+        client,
+        consultant,
+        contractor,
+        contract_duration: time ? time.original_contract_duration : null,
+        total_contract_amount: total_contract_price,
+        commencement_date,
+        elapsed_time: used_time,
+        completion_date,
+        cpi,
+        spi,
+        cv,
+        sv,
+        paid_ipc,
+        earned_revenue: earned_value,
+        planned_revenue: plannedFinance,
+        actual_cost: actualCost,
+      }
+    })
+    
   } catch (error) {
-    return res.status(500).json({
-      message: error.message,
-    });
+    res.apiError(error)
   }
 };
 
-self.getProjectDetail = async (req, res) => {
-  let id = req.params.id;
-  try {
-    let [
-      clientStake,
-      consultantStake,
-      contractorStake,
-      pro,
-      finance,
-      time,
-      proStatus,
-    ] = await Promise.all([
-      ProjectStakeholder.findOne({
-        where: {
-          project_id: id,
-          title: "Client",
-        },
-      }),
-      ProjectStakeholder.findOne({
-        where: {
-          project_id: id,
-          title: "Consultant",
-        },
-      }),
-      ProjectStakeholder.findOne({
-        where: {
-          project_id: id,
-          title: "Contractor",
-        },
-      }),
-      Project.findOne({
-        where: {
-          id: id,
-        },
-      }),
-      ProjectFinance.findOne({
-        where: {
-          project_id: id,
-        },
-      }),
-      ProjectTime.findOne({
-        where: {
-          project_id: id,
-        },
-      }),
-      ProjectStatus.findOne({
-        where: {
-          project_id: id,
-        },
-      }),
-    ]);
-
-    let client = clientStake
-      ? await self.getStakeholderName(clientStake.stakeholder_id)
-      : null;
-    let contractor = contractorStake
-      ? await self.getStakeholderName(contractorStake.stakeholder_id)
-      : null;
-    let consultant = consultantStake
-      ? await self.getStakeholderName(consultantStake.stakeholder_id)
-      : null;
-
-    let stat = proStatus
-      ? await Status.findOne({ where: { id: proStatus.status_id } })
-      : null;
-
-    return res.json({
-      project_name: pro ? pro.name : null,
-      client,
-      contractor,
-      consultant,
-      main_contract_price_amount: finance
-        ? finance.main_contract_price_amount
-        : null,
-      time: time,
-      project_status: stat ? stat.title : null,
-    });
-  } catch (error) {
-    return res.json({
-      message: error.messge,
-    });
-  }
-};
-self.getStakeholderName = async (id) => {
-  try {
-    let data = await Stakeholder.findOne({
-      where: {
-        id: id,
-      },
-    });
-
-    return data ? data.trade_name : null;
-  } catch (error) {
-    return {
-      message: error.message,
-    };
-  }
-};
 
 self.countAllProjectWithProjectType = async (req, res) => {
   try {
@@ -966,177 +825,14 @@ self.countAllProjectWithProjectType = async (req, res) => {
       Result.push(typeNewObj);
     });
 
-    res.send(Result);
+    return res.apiSuccess({
+      data: Result
+    })
   } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
-};
-self.countAllProjectWithProjectCategory = async (req, res) => {
-  try {
-    let queryString =
-      "SELECT projectcategories.title AS category, COALESCE(COUNT(projects.id), 0) AS total FROM projectcategories LEFT JOIN projectholders ON projectcategories.id = projects.projectcategory_id GROUP BY projectcategories.title;";
-    let projectData = await sequelize.query(queryString, {
-      type: sequelize.QueryTypes.SELECT,
-    });
-
-    res.send(projectData);
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
+    res.apiError(error)
   }
 };
 
-self.getProjectData = async (req, res) => {
-  let id = req.params.id;
-  try {
-    let [pro, time, finance, clientStake, consultantStake, contractorStake] =
-      await Promise.all([
-        Project.findOne({
-          where: {
-            id: id,
-          },
-        }),
-        ProjectTime.findOne({
-          where: {
-            project_id: id,
-          },
-        }),
-        ProjectFinance.findOne({
-          where: {
-            project_id: id,
-          },
-        }),
-        ProjectStakeholder.findOne({
-          where: {
-            project_id: id,
-            title: "Client",
-          },
-        }),
-        ProjectStakeholder.findOne({
-          where: {
-            project_id: id,
-            title: "Consultant",
-          },
-        }),
-        ProjectStakeholder.findOne({
-          where: {
-            project_id: id,
-            title: "Contractor",
-          },
-        }),
-      ]);
-
-    let total_contract_price = finance
-      ? finance.main_contract_price_amount
-      : null;
-
-    let commencement_date = time ? time.commencement_date : null;
-    let contract_duration = time ? time.original_contract_duration : null;
-    let used_time = moment().diff(commencement_date, "days");
-
-    let extensions = await ProjectVariation.findAll({
-      where: {
-        project_id: id,
-      },
-    });
-
-    let extensionDays = extensions.reduce(
-      (total, item) => total + item.extension_time,
-      0
-    );
-
-    let completion_date = moment(commencement_date).add(
-      contract_duration + extensionDays,
-      "days"
-    );
-
-    let plans = await ProjectPlan.findAll({
-      where: {
-        project_id: id,
-      },
-    });
-
-    let reports = await ProjectReport.findAll({
-      where: {
-        project_id: id,
-      },
-    });
-
-    let earned_value = reports.reduce(
-      (total, item) => total + item.financial_performance,
-      0
-    );
-
-    let actualCost = reports.reduce(
-      (total, item) => total + item.project_expense,
-      0
-    );
-    let plannedFinance = plans.reduce(
-      (total, item) => total + item.financial_performance,
-      0
-    );
-
-    let actualFinance = reports.reduce(
-      (total, item) => total + item.financial_performance,
-      0
-    );
-    let spi =
-      (actualFinance / (plannedFinance == 0 ? 1 : plannedFinance)) * 100;
-    let cpi = (actualFinance / (actualCost == 0 ? 1 : actualCost)) * 100;
-
-    let sv = actualFinance - plannedFinance;
-    let cv = actualFinance - actualCost;
-
-    let interims = await Payment.findAll({
-      where: {
-        project_id: id,
-        type: "INTERIM_PAYMENT",
-      },
-    });
-    let paid_ipc = interims.reduce(
-      (total, item) => total + item.net_payment,
-      0
-    );
-
-    //stakeholders
-    let client = clientStake
-      ? await self.getStakeholderName(clientStake.stakeholder_id)
-      : null;
-    let contractor = contractorStake
-      ? await self.getStakeholderName(contractorStake.stakeholder_id)
-      : null;
-    let consultant = consultantStake
-      ? await self.getStakeholderName(consultantStake.stakeholder_id)
-      : null;
-
-    return res.json({
-      name: pro ? pro.name : null,
-      client,
-      consultant,
-      contractor,
-      contract_duration: contract_duration,
-      total_contract_amount: total_contract_price,
-      commencement_date,
-      elapsed_time: used_time,
-      completion_date,
-      cpi,
-      spi,
-      cv,
-      sv,
-      paid_ipc,
-      earned_revenue: earned_value,
-      planned_revenue: plannedFinance,
-      actual_cost: actualCost,
-    });
-  } catch (error) {
-    return res.status(500).json({
-      message: error.message,
-    });
-  }
-};
 self.getProjectAnalysis = async (req, res) => {
   let id = req.params.id;
 
@@ -1331,38 +1027,40 @@ self.getProjectAnalysis = async (req, res) => {
       specials.reduce((total, item) => total + item.value, 0) -
       omissions.reduce((total, item) => total + item.value, 0);
 
-    return res.json({
-      physical,
-      financial: actualFinance,
-      financial_percent:
-        (actualFinance / (totalContractAmount == 0 ? 1 : totalContractAmount)) *
-        100,
-      paid,
-      paid_percent:
-        (paid / (totalContractAmount == 0 ? 1 : totalContractAmount)) * 100,
-      time: used_time,
-      time_percent: (used_time / (all_duration == 0 ? 1 : all_duration)) * 100,
-      repaid: repaid,
-      repaid_percent:
-        (repaid / (totalContractAmount == 0 ? 1 : totalContractAmount)) * 100,
-      performance_bond,
-      performance_status: performanceStatus,
+    
+    return res.apiSuccess({
+      data: {
+        physical,
+        financial: actualFinance,
+        financial_percent:
+          (actualFinance / (totalContractAmount == 0 ? 1 : totalContractAmount)) *
+          100,
+        paid,
+        paid_percent:
+          (paid / (totalContractAmount == 0 ? 1 : totalContractAmount)) * 100,
+        time: used_time,
+        time_percent: (used_time / (all_duration == 0 ? 1 : all_duration)) * 100,
+        repaid: repaid,
+        repaid_percent:
+          (repaid / (totalContractAmount == 0 ? 1 : totalContractAmount)) * 100,
+        performance_bond,
+        performance_status: performanceStatus,
+  
+        advance_bond,
+        advance_status: advanceStatus,
+  
+        bid_bond,
+        bid_status: bidStatus,
+  
+        spi,
+        cpi,
+        sv,
+        cv,
+      }
+    })
 
-      advance_bond,
-      advance_status: advanceStatus,
-
-      bid_bond,
-      bid_status: bidStatus,
-
-      spi,
-      cpi,
-      sv,
-      cv,
-    });
   } catch (error) {
-    return res.status(500).json({
-      message: error.message,
-    });
+    res.apiError(error)
   }
 };
 
@@ -1400,21 +1098,23 @@ self.getFinancialNumbers = async (req, res) => {
       0
     );
 
-    return res.json({
-      main_contract_price_amount: finance
-        ? finance.main_contract_price_amount
-        : null,
-      rebate: finance ? finance.rebate : null,
-      price_after_rebate: finance ? finance.price_after_rebate : null,
-      variation_total,
-      supplement_total,
-      special_total,
-      omission_total,
-    });
+
+    return res.apiSuccess({
+      data: {
+        main_contract_price_amount: finance
+          ? finance.main_contract_price_amount
+          : null,
+        rebate: finance ? finance.rebate : null,
+        price_after_rebate: finance ? finance.price_after_rebate : null,
+        variation_total,
+        supplement_total,
+        special_total,
+        omission_total,
+      }
+    })
+   
   } catch (error) {
-    return res.status(500).json({
-      message: error.message,
-    });
+    res.apiError(error)
   }
 };
 
@@ -1467,24 +1167,26 @@ self.getContractTimeAnalysis = async(req, res) => {
 				status = "ACTIVE"
 			}extension
 		}
-		return res.json({
-			contract_signing_date : time.contract_signing_date,
-			site_handover_date: time.site_handover_date,
-			mobilization_days: time.mobilization_days,
-			commencement_date: time.commencement_date,
-			contract_duration: time.original_contract_duration,
-			extension_time : extension,
-			extension_count: extensions.length,
-			total_time: totalTime,
-			completion_time,
-			remaining_day,
-			status,
-			spi: (actualRevenue/(plannedRevenue == 0 ? 1:plannedRevenue)*100)
-		})
+
+    return res.apiSuccess({
+      data : {
+        contract_signing_date : time.contract_signing_date,
+        site_handover_date: time.site_handover_date,
+        mobilization_days: time.mobilization_days,
+        commencement_date: time.commencement_date,
+        contract_duration: time.original_contract_duration,
+        extension_time : extension,
+        extension_count: extensions.length,
+        total_time: totalTime,
+        completion_time,
+        remaining_day,
+        status,
+        spi: (actualRevenue/(plannedRevenue == 0 ? 1:plannedRevenue)*100)
+      }
+    })
+		
 	} catch (error) {
-		return res.status(500).json({
-			message: error.message
-		})
+		res.apiError(error)
 	}
 }
 module.exports = self;

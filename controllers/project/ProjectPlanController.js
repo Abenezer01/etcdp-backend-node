@@ -134,8 +134,9 @@ self.save = async (req, res) => {
         );
       }
 
-      //console.log("The ll", ll);
-      return res.json(data);
+      return res.apiSuccess({
+        data
+      })
     }
   } catch (error) {
     res.status(500).json({
@@ -155,22 +156,27 @@ self.delete = async (req, res) => {
 self.getProjectYearlyPlans = async (req, res) => {
   const { id, year } = req.params;
   try {
-    let plans = await ProjectPlan.findAll({
-      where: {
-        project_id: id,
-        year: year,
-      },
-      include: {
-        model: File,
-        as: "File",
-      },
-    });
+    const whereCondition = { 
+      project_id: id,
+      year: year
+    }
+    const includeOptions = [
+      { model: File, as: 'file' } // Example association
+    ];
 
-    return res.json(plans);
+    const paginatedResult = await paginationHelper(ProjectPlan, req, whereCondition, includeOptions);
+
+    // Use the response formatter to send the success response
+    res.apiSuccess({
+      data: paginatedResult.data,
+      total: paginatedResult.total,
+    }, paginatedResult.pagination);
+
   } catch (error) {
-    return res.status(500).json({
-      message: error.message,
-    });
+    console.error("Error in getAll method:", error);
+    res.apiError(error);
   }
 };
+
+
 module.exports = self;

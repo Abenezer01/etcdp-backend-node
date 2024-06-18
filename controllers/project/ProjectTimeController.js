@@ -58,14 +58,9 @@ self.getByProjectId = async (req, res) => {
     data = data.toJSON();
     data.revised_completion_date = revised_completion_date;
 
-
     res.apiSuccess({
-      data: data,
-      total: 1 // Assuming a single user is being returned
-    }, {
-      pageSize: 1,
-      page: 1
-    });
+      data
+    })
   } catch (error) {
     console.error("Error:", error);
     res.apiError(error);

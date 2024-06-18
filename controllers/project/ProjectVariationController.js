@@ -69,17 +69,16 @@ self.getByProjectType = async (req, res) => {
         order: [["created_at", order]],
       })
       .then(function (datas) {
-        return res.json({
-          data: datas,
+
+        return res.apiSuccess({
+          data: datas
         });
       })
       .catch(function (error) {
         console.log(error);
       });
   } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
+    res.apiError(error)
   }
 };
 
@@ -140,12 +139,13 @@ self.save = async (req, res) => {
           }
         }
       }
-      return res.json(data);
+
+      return res.apiSuccess({
+        data
+      })
     }
   } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
+    res.apiError(error)
   }
 };
 
@@ -177,11 +177,11 @@ self.update = async (req, res) => {
       }
     }
 
-    return res.json(data);
+    return res.apiSuccess({
+      data: data
+    })
   } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
+    res.apiError(error)
   }
 };
 
