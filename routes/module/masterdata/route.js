@@ -1,4 +1,4 @@
-const ownershiptypeController = require("../../../controllers/stakeholder/OwnershiptypeController");
+const OwnershipTypeController = require("../../../controllers/stakeholder/OwnershipTypeController");
 const StudyLevelController = require("../../../controllers/stakeholder/StudyLevelController");
 const BusinessFieldController = require("../../../controllers/stakeholder/BusinessFieldController");
 const StudyProgramController = require("../../../controllers/stakeholder/StudyProgramController");
@@ -10,9 +10,9 @@ const WorkExperienceController = require("../../../controllers/stakeholder/WorkE
 const StatusController = require("../../../controllers/project/StatusController.js");
 
 
-const stakeholderCategoryController = require("../../../controllers/stakeholder/StakeholderCategoryController.js");
-const stakeholderSubCategoryController = require("../../../controllers/stakeholder/StakeholderSubCategoryController.js");
-const stakeholderTypeController = require("../../../controllers/stakeholder/StakeholderTypeController.js");
+const StakeholderCategoryController = require("../../../controllers/stakeholder/StakeholderCategoryController.js");
+const StakeholderSubCategoryController = require("../../../controllers/stakeholder/StakeholderSubCategoryController.js");
+const StakeholderTypeController = require("../../../controllers/stakeholder/StakeholderTypeController.js");
 
 const ProjectTypeController = require("../../../controllers/project/ProjectTypeController.js");
 const ProjectCategoryController = require("../../../controllers/project/ProjectCategoryController.js");
@@ -30,108 +30,112 @@ const DocumentSubCategoryController = require("../../../controllers/document/Doc
 
 const ConstructionRelatedServiceController = require("../../../controllers/stakeholder/ConstructionRelatedServiceController");
 
-const validateData = require("../../../middleware/validate/module/stakeholder/validate");
+const validateStakeholderData = require("../../../middleware/validate/module/stakeholder/validate");
+const validateResourceData = require("../../../middleware/validate/module/construction resource/validate.js");
+const validateProjectData = require("../../../middleware/validate/module/project/validate.js");
+const validateDocumentData = require("../../../middleware/validate/module/document/validate.js");
 
 module.exports = function (express) {
   const route = express.Router();
+  
   //ownership route
-  route.get("/ownerships/", ownershiptypeController.getAll);
-  route.get("/ownerships/:id", ownershiptypeController.get);
-  route.get("/ownership-searches", ownershiptypeController.search);
+  route.get("/ownerships/", OwnershipTypeController.getAll);
+  route.get("/ownerships/:id", OwnershipTypeController.get);
+  route.get("/ownership-searches", OwnershipTypeController.search);
   route.post(
     "/ownerships",
-    validateData.ownerShipValidate,
-    ownershiptypeController.save
+    validateStakeholderData.ownerShipValidate,
+    OwnershipTypeController.save
   );
   route.put(
     "/ownerships/:id",
-    validateData.ownerShipValidate,
-    ownershiptypeController.update
+    validateStakeholderData.ownerShipValidate,
+    OwnershipTypeController.update
   );
-  route.delete("/ownership/:id", ownershiptypeController.delete);
+  route.delete("/ownership/:id", OwnershipTypeController.delete);
   //business field route
   route.get("/business-fields/", BusinessFieldController.getAll);
   route.get("/business-fields/:id", BusinessFieldController.get);
   route.get("/business-field-searches", BusinessFieldController.search);
   route.post(
     "/business-fields",
-    validateData.buisnessFieldValidate,
+    validateStakeholderData.buisnessFieldValidate,
     BusinessFieldController.save
   );
   route.put(
     "/business-fields/:id",
-    validateData.buisnessFieldValidate,
+    validateStakeholderData.buisnessFieldValidate,
     BusinessFieldController.update
   );
   route.delete("/business-fields/:id", BusinessFieldController.delete);
   //stakeholder category route
-  route.get("/stakeholder-categories/", stakeholderCategoryController.getAll);
-  route.get("/stakeholder-categories/:id", stakeholderCategoryController.get);
+  route.get("/stakeholder-categories/", StakeholderCategoryController.getAll);
+  route.get("/stakeholder-categories/:id", StakeholderCategoryController.get);
   route.get(
     "/stakeholder-categories/stakeholder-type/:id",
-    stakeholderCategoryController.getAllCatByTypeId
+    StakeholderCategoryController.getAllCatByTypeId
   );
-  // route.get("/stakeholder-category/staketype/:id", stakeholderCategoryController.getCatByTypeId);
+  // route.get("/stakeholder-category/staketype/:id", StakeholderCategoryController.getCatByTypeId);
   route.get(
     "/stakeholder-category-searches",
-    stakeholderCategoryController.search
+    StakeholderCategoryController.search
   );
   route.post(
     "/stakeholder-categories",
-    validateData.stakeholderCategoryValidate,
-    stakeholderCategoryController.save
+    validateStakeholderData.stakeholderCategoryValidate,
+    StakeholderCategoryController.save
   );
   route.put(
     "/stakeholder-categories/:id",
-    validateData.stakeholderCategoryValidate,
-    stakeholderCategoryController.update
+    validateStakeholderData.stakeholderCategoryValidate,
+    StakeholderCategoryController.update
   );
   route.delete(
     "/stakeholder-categories/:id",
-    stakeholderCategoryController.delete
+    StakeholderCategoryController.delete
   );
   //stakeholder subcategory route
   route.get(
     "/stakeholder-sub-categories/",
-    stakeholderSubCategoryController.getAll
+    StakeholderSubCategoryController.getAll
   );
   route.get(
     "/stakeholder-sub-categories/:id",
-    stakeholderSubCategoryController.get
+    StakeholderSubCategoryController.get
   );
   route.get(
     "/stakeholder-sub-category-searches",
-    stakeholderSubCategoryController.search
+    StakeholderSubCategoryController.search
   );
   route.post(
     "/stakeholder-sub-categories",
-    validateData.stakeholderSubCategoryValidate,
-    stakeholderSubCategoryController.save
+    validateStakeholderData.stakeholderSubCategoryValidate,
+    StakeholderSubCategoryController.save
   );
   route.put(
     "/stakeholder-sub-categories/:id",
-    validateData.stakeholderSubCategoryValidate,
-    stakeholderSubCategoryController.update
+    validateStakeholderData.stakeholderSubCategoryValidate,
+    StakeholderSubCategoryController.update
   );
   route.delete(
     "/stakeholder-sub-categories/:id",
-    stakeholderSubCategoryController.delete
+    StakeholderSubCategoryController.delete
   );
   //stakeholder type route
-  route.get("/stakeholder-types", stakeholderTypeController.getAll);
-  route.get("/stakeholder-types/:id", stakeholderTypeController.get);
-  route.get("/stakeholder-type-searches", stakeholderTypeController.search);
+  route.get("/stakeholder-types", StakeholderTypeController.getAll);
+  route.get("/stakeholder-types/:id", StakeholderTypeController.get);
+  route.get("/stakeholder-type-searches", StakeholderTypeController.search);
   route.post(
-    "/stakeholder-typse",
-    validateData.stakeholderTypeValidate,
-    stakeholderTypeController.save
+    "/stakeholder-types",
+    validateStakeholderData.stakeholderTypeValidate,
+    StakeholderTypeController.save
   );
   route.put(
     "/stakeholder-types/:id",
-    validateData.stakeholderTypeValidate,
-    stakeholderTypeController.update
+    validateStakeholderData.stakeholderTypeValidate,
+    StakeholderTypeController.update
   );
-  route.delete("/stakeholder-types/:id", stakeholderTypeController.delete);
+  route.delete("/stakeholder-types/:id", StakeholderTypeController.delete);
   //stakeholder info route
  
   //age level route
@@ -140,12 +144,12 @@ module.exports = function (express) {
   route.get("/age-level-searches", AgeLevelController.search);
   route.post(
     "/age-levels",
-    validateData.ageLevelValidate,
+    validateStakeholderData.ageLevelValidate,
     AgeLevelController.save
   );
   route.put(
     "/age-levels/:id",
-    validateData.ageLevelValidate,
+    validateStakeholderData.ageLevelValidate,
     AgeLevelController.update
   );
   route.delete("/age-levels/:id", AgeLevelController.delete);
@@ -156,12 +160,12 @@ module.exports = function (express) {
   route.get("/study-level-searches", StudyLevelController.search);
   route.post(
     "/study-levels",
-    validateData.studyLevelValidate,
+    validateStakeholderData.studyLevelValidate,
     StudyLevelController.save
   );
   route.put(
     "/study-levels/:id",
-    validateData.studyLevelValidate,
+    validateStakeholderData.studyLevelValidate,
     StudyLevelController.update
   );
   route.delete("/study-levels/:id", StudyLevelController.delete);
@@ -177,12 +181,12 @@ module.exports = function (express) {
   route.get("/work-experience-searches", WorkExperienceController.search);
   route.post(
     "/work-experiences",
-    validateData.workExperienceValidate,
+    validateStakeholderData.workExperienceValidate,
     WorkExperienceController.save
   );
   route.put(
     "/work-experiences",
-    validateData.workExperienceValidate,
+    validateStakeholderData.workExperienceValidate,
     WorkExperienceController.update
   );
   route.delete("/work-experiences/:id", WorkExperienceController.delete);
@@ -193,12 +197,12 @@ module.exports = function (express) {
   route.get("/study-field-searches", StudyFieldController.search);
   route.post(
     "/study-fields",
-    validateData.studyFieldValidate,
+    validateStakeholderData.studyFieldValidate,
     StudyFieldController.save
   );
   route.put(
     "/study-fields/:id",
-    validateData.studyFieldValidate,
+    validateStakeholderData.studyFieldValidate,
     StudyFieldController.update
   );
   route.delete("/study-fields/:id", StudyFieldController.delete);
@@ -209,12 +213,12 @@ module.exports = function (express) {
   route.get("/study-program-searches", StudyProgramController.search);
   route.post(
     "/study-programs",
-    validateData.studyProgramValidate,
+    validateStakeholderData.studyProgramValidate,
     StudyProgramController.save
   );
   route.put(
     "/study-programs/:id",
-    validateData.studyProgramValidate,
+    validateStakeholderData.studyProgramValidate,
     StudyProgramController.update
   );
   route.delete("/study-programs/:id", StudyProgramController.delete);
@@ -238,12 +242,12 @@ module.exports = function (express) {
   );
   route.post(
     "/construction-related-services",
-    validateData.constructionRelatedServiceValidate,
+    validateStakeholderData.constructionRelatedServiceValidate,
     ConstructionRelatedServiceController.save
   );
   route.put(
     "/construction-related-services/:id",
-    validateData.constructionRelatedServiceValidate,
+    validateStakeholderData.constructionRelatedServiceValidate,
     ConstructionRelatedServiceController.update
   );
   route.delete(
@@ -255,10 +259,10 @@ module.exports = function (express) {
   route.get("/statuses", StatusController.getAll);
   route.get("/statuses/:id", StatusController.get);
   route.get("/status-searches", StatusController.search);
-  route.post("/statuses", validateData.statusValidate, StatusController.save);
+  route.post("/statuses", validateProjectData.statusValidate, StatusController.save);
   route.put(
     "/statuses/:id",
-    validateData.statusValidate,
+    validateProjectData.statusValidate,
     StatusController.update
   );
   route.delete("/statuses/:id", StatusController.delete);
@@ -271,12 +275,12 @@ module.exports = function (express) {
   route.get("/project-type-searches", ProjectTypeController.search);
   route.post(
     "/project-types",
-    validateData.projectTypeValidate,
+    validateProjectData.projectTypeValidate,
     ProjectTypeController.save
   );
   route.put(
     "/project-typse/:id",
-    validateData.projectTypeValidate,
+    validateProjectData.projectTypeValidate,
     ProjectTypeController.update
   );
   route.delete("/project-types/:id", ProjectTypeController.delete);
@@ -291,12 +295,12 @@ module.exports = function (express) {
   
   route.post(
     "/project-categories",
-    validateData.projectCategoryValidate,
+    validateProjectData.projectCategoryValidate,
     ProjectCategoryController.save
   );
   route.put(
     "/project-categories/:id",
-    validateData.projectCategoryValidate,
+    validateProjectData.projectCategoryValidate,
     ProjectCategoryController.update
   );
   route.delete("/project-categories/:id", ProjectCategoryController.delete);
@@ -313,12 +317,12 @@ module.exports = function (express) {
   );
   route.post(
     "/project-sub-categories",
-    validateData.projectSubCategoryValidate,
+    validateProjectData.projectSubCategoryValidate,
     ProjectSubCategoryController.save
   );
   route.put(
     "/project-sub-categories/:id",
-    validateData.projectSubCategoryValidate,
+    validateProjectData.projectSubCategoryValidate,
     ProjectSubCategoryController.update
   );
   route.delete(
@@ -341,12 +345,12 @@ module.exports = function (express) {
   );
   route.post(
     "/construction-resource-types",
-    validateData.constructionResourceTypeValidate,
+    validateResourceData.constructionResourceTypeValidate,
     ConstructionResourceTypeController.save
   );
   route.put(
     "/construction-resource-types/:id",
-    validateData.constructionResourceTypeValidate,
+    validateResourceData.constructionResourceTypeValidate,
     ConstructionResourceTypeController.update
   );
   route.delete(
@@ -374,12 +378,12 @@ module.exports = function (express) {
   );
   route.post(
     "/construction-resource-categories",
-    validateData.constructionResourceCategoryValidate,
+    validateResourceData.constructionResourceCategoryValidate,
     ConstructionResourceCategoryController.save
   );
   route.put(
     "/construction-resource-categories/:id",
-    validateData.constructionResourceCategoryValidate,
+    validateResourceData.constructionResourceCategoryValidate,
     ConstructionResourceCategoryController.update
   );
   route.delete(
@@ -401,12 +405,12 @@ module.exports = function (express) {
   );
   route.post(
     "/construction-resource-subcategories",
-    validateData.constructionResourceSubCategoryValidate,
+    validateResourceData.constructionResourceSubCategoryValidate,
     ConstructionResourceSubCategoryController.save
   );
   route.put(
     "/construction-resource-subcategories/:id",
-    validateData.constructionResourceSubCategoryValidate,
+    validateResourceData.constructionResourceSubCategoryValidate,
     ConstructionResourceSubCategoryController.update
   );
   route.delete(
@@ -421,12 +425,12 @@ module.exports = function (express) {
   route.get("/document-type_search", DocumentTypeController.search);
   route.post(
     "/document-types",
-    validateData.documentTypeValidate,
+    validateDocumentData.documentTypeValidate,
     DocumentTypeController.save
   );
   route.put(
     "/document-types/:id",
-    validateData.documentTypeValidate,
+    validateDocumentData.documentTypeValidate,
     DocumentTypeController.update
   );
   route.delete("/document-types/:id", DocumentTypeController.delete);
@@ -440,12 +444,12 @@ module.exports = function (express) {
   route.get("/document-category_search", DocumentCategoryController.search);
   route.post(
     "/document-categories",
-    validateData.documentCategoryValidate,
+    validateDocumentData.documentCategoryValidate,
     DocumentCategoryController.save
   );
   route.put(
     "/document-categories/:id",
-    validateData.documentCategoryValidate,
+    validateDocumentData.documentCategoryValidate,
     DocumentCategoryController.update
   );
   route.delete("/document-categories/:id", DocumentCategoryController.delete);
@@ -458,12 +462,12 @@ module.exports = function (express) {
   );
   route.post(
     "/document-subcategories",
-    validateData.documentSubCategoryValidate,
+    validateDocumentData.documentSubCategoryValidate,
     DocumentSubCategoryController.save
   );
   route.put(
     "/document-subcategories/:id",
-    validateData.documentSubCategoryValidate,
+    validateDocumentData.documentSubCategoryValidate,
     DocumentSubCategoryController.update
   );
   route.delete(
