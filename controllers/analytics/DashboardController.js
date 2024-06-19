@@ -3,8 +3,8 @@ const {
     Note, 
     Stakeholder, 
     StakeholderType, 
-    StakeCategory, 
-    StakeSubCategory, 
+    StakeholderCategory, 
+    StakeholderSubCategory, 
     Project, 
     ProjectType, 
     ProjectCategory, 
@@ -98,16 +98,20 @@ self.getGeneralAnalysis = async(req, res) => {
             count: stake.count,
         };
 
-        return res.status(200).json(first);
+        return res.apiSuccess({
+            data: first
+        })
+
     } catch (error) {
-        res.status(500).json({
-            message: error.message,
-        });
+        res.apiError(error)
     }
 };
 
 self.getGeneralAnalysisCategory = async(req, res) => {
+
     try {
+        
+
         let module = req.params.module;
         let id = req.params.id;
 
@@ -116,6 +120,7 @@ self.getGeneralAnalysisCategory = async(req, res) => {
         const Model = moduleArr[0];
         const CategoryModel = moduleArr[2];
         const SubCategoryModel = moduleArr[3];
+
 
         let modulecategory = await eval(CategoryModel).findOne({
             where: {
@@ -128,20 +133,21 @@ self.getGeneralAnalysisCategory = async(req, res) => {
                 message: `${module} category not found`,
             });
         }
-
+        const categoryId = `${moduleArr[2]}_id`.toLowerCase()
+       
         let stake = await eval(Model).findAndCountAll({
             where: {
-                [`${moduleArr[2]}_id`]:  Model.id,
+                [categoryId]:  id,
             },
         });
-
-        // let str = `${moduleArr[1]}_id`
 
         let subcategories = await eval(SubCategoryModel).findAll({
             where: {
-                [`${moduleArr[2]}_id`]: modulecategory.id,
+                [categoryId]: modulecategory.id,
             },
         });
+
+        const subcategoryId = `${moduleArr[3]}_id`.toLowerCase();
 
         let subcategoryelement = {};
 
@@ -149,7 +155,7 @@ self.getGeneralAnalysisCategory = async(req, res) => {
             for (let subcategory of subcategories) {
                 let catestake = await eval(Model).findAll({
                     where: {
-                        [`${moduleArr[3]}_id`]: subcategory.id,
+                        [subcategoryId]: subcategory.id,
                     },
                 });
 
@@ -163,11 +169,12 @@ self.getGeneralAnalysisCategory = async(req, res) => {
             count: stake.count,
         };
 
-        return res.status(200).json(first);
+        return res.apiSuccess({
+            data: first
+        })
+
     } catch (error) {
-        res.status(500).json({
-            message: error.message,
-        });
+        res.apiError(error)
     }
 };
 
@@ -191,38 +198,40 @@ self.getGeneralAnalysisDepartments = async(req, res) => {
             },
         });
 
+        const typeId = `${moduleArr[1]}_id`.toLowerCase()
         let stake = await eval(Model).findAndCountAll({
             where: {
-                [`${moduleArr[1]}_id`]: moduletype.id,
+                [typeId]: moduletype.id,
             },
         });
 
-        // let str = `${moduleArr[1]}_id`
+
 
         let categories = await eval(CategoryModel).findAll({
             where: {
-                [`${moduleArr[1]}_id`]: moduletype.id,
+                [typeId]: moduletype.id,
             },
         });
 
         let categoryelement = [];
+        let categoryId = `${moduleArr[2]}_id`
 
         if (categories.length > 0) {
             for (let category of categories) {
                 let catestake = await eval(Model).findAll({
                     where: {
-                        [`${moduleArr[2]}_id`]: category.id,
+                        [categoryId]: category.id,
                     },
                     include: [{
                         model: Department,
-                        as: "Department",
+                        as: "department",
                     }, ],
                 });
 
                 const countByName = catestake.reduce((acc, obj) => {
                     const department_id = obj.department_id;
 
-                    acc[obj.Department.name] = (acc[department_id] || 0) + 1;
+                    acc[obj.department.name] = (acc[department_id] || 0) + 1;
                     return acc;
                 }, {});
 
@@ -260,11 +269,12 @@ self.getGeneralAnalysisDepartments = async(req, res) => {
             count: stake.count,
         };
 
-        return res.status(200).json(first);
+        return res.apiSuccess({
+            data: first
+        })
+
     } catch (error) {
-        return res.status(500).json({
-            message: error.message,
-        });
+        res.apiError(error)
     }
 };
 
@@ -321,43 +331,49 @@ self.getGeneralAnalysisDepartmentsByCategory = async(req, res) => {
         let usr = await usrData.userData(req, res);
 
         let departments = await self.getChildren(usr.departmentID);
-
+    
         let modulecategory = await eval(CategoryModel).findOne({
             where: {
                 id: id,
             },
         });
 
+
+        const typeId = `${moduleArr[1]}_id`.toLowerCase()
+
         let stake = await eval(Model).findAndCountAll({
             where: {
-                [`${moduleArr[1]}_id`]: modulecategory.id,
+                [typeId]: modulecategory.projecttype_id,
             },
         });
+        
+        const categoryId = `${moduleArr[2]}_id`.toLowerCase()
 
         let subcategories = await eval(SubCategoryModel).findAll({
             where: {
-                [`${moduleArr[1]}_id`]: modulecategory.id,
+                [categoryId]: modulecategory.id,
             },
         });
 
         let subcategoryelement = {};
+        let subcategoryId = `${moduleArr[3]}_id`.toLowerCase()
 
         if (subcategories.length > 0) {
             for (let subcategory of subcategories) {
                 let catestake = await eval(Model).findAll({
                     where: {
-                        [`${moduleArr[3]}_id`]: subcategory.id,
+                        [subcategoryId]: subcategory.id,
                     },
                     include: [{
                         model: Department,
-                        as: "Department",
+                        as: "department",
                     }, ],
                 });
 
                 const countByName = catestake.reduce((acc, obj) => {
                     const department_id = obj.department_id;
 
-                    acc[obj.Department.name] = (acc[department_id] || 0) + 1;
+                    acc[obj.department.name] = (acc[department_id] || 0) + 1;
                     return acc;
                 }, {});
 
@@ -392,15 +408,17 @@ self.getGeneralAnalysisDepartmentsByCategory = async(req, res) => {
             count: stake.count,
         };
 
-        return res.status(200).json(first);
+        return res.apiSuccess({
+            data: first
+        })
+
     } catch (error) {
-        return res.status(500).json({
-            message: error.message,
-        });
+        res.apiError(error)
     }
 };
 
 self.getModuleTypesAnalysis = async(req, res) => {
+    
     let module = req.params.module;
     try {
         const moduleArr = mainanalysismodules[module];
@@ -460,10 +478,10 @@ self.getModuleTypesAnalysis = async(req, res) => {
 
 
 self.getStakeholderTypesAnalysis = async(req, res) => {
-    let module = req.params.module;
+
     try {
 
-        let stakeholdertypes = await stakeholdertype.findAll();
+        let stakeholdertypes = await StakeholderType.findAll();
 
         let year = moment().year();
         let last_year = year - 1;
@@ -472,13 +490,13 @@ self.getStakeholderTypesAnalysis = async(req, res) => {
 
         let arr = await Promise.all(
             stakeholdertypes.map(async(item) => {
-                let model = await stakeholder.findAndCountAll({
+                let model = await Stakeholder.findAndCountAll({
                     where: {
                         stakeholdertype_id: item.id,
                     },
                 });
 
-                let this_year_model = await stakeholder.findAndCountAll({
+                let this_year_model = await Stakeholder.findAndCountAll({
                     where: {
                         stakeholdertype_id: item.id,
                         license_issued_date: {
@@ -487,7 +505,7 @@ self.getStakeholderTypesAnalysis = async(req, res) => {
                         },
                     },
                 });
-                let last_year_model = await stakeholder.findAndCountAll({
+                let last_year_model = await Stakeholder.findAndCountAll({
                     where: {
                         stakeholdertype_id: item.id,
                         license_issued_date: {
@@ -505,19 +523,18 @@ self.getStakeholderTypesAnalysis = async(req, res) => {
             })
         );
 
-        return res.json(arr);
+        return res.apiSuccess({
+            data: arr
+        })
     } catch (error) {
-        return res.status(500).json({
-            message: error.message,
-        });
+        res.apiError(error)
     }
 };
 
 self.getProjectTypesAnalysis = async(req, res) => {
-    let module = req.params.module;
     try {
 
-        let projecttypes = await projecttype.findAll();
+        let projecttypes = await ProjectType.findAll();
 
         let year = moment().year();
         let last_year = year - 1;
@@ -526,18 +543,18 @@ self.getProjectTypesAnalysis = async(req, res) => {
 
         let arr = await Promise.all(
             projecttypes.map(async(item) => {
-                let model = await project.findAndCountAll({
+                let model = await Project.findAndCountAll({
                     where: {
                         projecttype_id: item.id,
                     }
                 });
 
-                let this_year_model = await project.findAndCountAll({
+                let this_year_model = await Project.findAndCountAll({
                     where: {
                         projecttype_id: item.id
                     },
                     include: [{
-                        model: projecttime,
+                        model: ProjectTime,
                         where: {
                             commencement_date: {
                                 [Op.gte]: new Date(year, 0, 1), // Start of the year
@@ -546,12 +563,12 @@ self.getProjectTypesAnalysis = async(req, res) => {
                         }
                     }]
                 });
-                let last_year_model = await project.findAndCountAll({
+                let last_year_model = await Project.findAndCountAll({
                     where: {
                         projecttype_id: item.id
                     },
                     include: [{
-                        model: projecttime,
+                        model: ProjectTime,
                         where: {
                             commencement_date: {
                                 [Op.gte]: new Date(last_year, 0, 1), // Start of the year
@@ -569,18 +586,18 @@ self.getProjectTypesAnalysis = async(req, res) => {
             })
         );
 
-        return res.json(arr);
+        return res.apiSuccess({
+            data: arr
+        })
     } catch (error) {
-        return res.status(500).json({
-            message: error.message,
-        });
+        res.apiError(error)
     }
 };
 
 self.getResourceTypesAnalysis = async(req, res) => {
-    let module = req.params.module;
+
     try {
-        let resourcetypes = await projecttype.findAll();
+        let resourcetypes = await ResourceType.findAll();
 
         let year = moment().year();
         let last_year = year - 1;
@@ -589,25 +606,25 @@ self.getResourceTypesAnalysis = async(req, res) => {
 
         let arr = await Promise.all(
             resourcetypes.map(async(item) => {
-                let model = await resource.findAndCountAll({
+                let model = await Resource.findAndCountAll({
                     where: {
                         resourcetype_id: item.id,
                     },
                 });
 
-                let this_year_model = await resource.findAndCountAll({
+                let this_year_model = await Resource.findAndCountAll({
                     where: {
                         resourcetype_id: item.id,
-                        createdAt: {
+                        created_at: {
                             [Op.gte]: new Date(year, 0, 1), // Start of the year
                             [Op.lt]: new Date(year + 1, 0, 1), // Start of the next year
                         },
                     },
                 });
-                let last_year_model = await resource.findAndCountAll({
+                let last_year_model = await Resource.findAndCountAll({
                     where: {
                         resourcetype_id: item.id,
-                        createdAt: {
+                        created_at: {
                             [Op.gte]: new Date(last_year, 0, 1), // Start of the year
                             [Op.lt]: new Date(last_year + 1, 0, 1), // Start of the next year
                         },
@@ -622,20 +639,20 @@ self.getResourceTypesAnalysis = async(req, res) => {
             })
         );
 
-        return res.json(arr);
+        return res.apiSuccess({
+            data: arr
+        })
     } catch (error) {
-        return res.status(500).json({
-            message: error.message,
-        });
+        res.apiError(error)
     }
 };
 
 
 
 self.getDocumentTypesAnalysis = async(req, res) => {
-    let module = req.params.module;
+
     try {
-        let documenttypes = await documenttype.findAll();
+        let documenttypes = await DocumentType.findAll();
 
         let year = moment().year();
         let last_year = year - 1;
@@ -644,25 +661,25 @@ self.getDocumentTypesAnalysis = async(req, res) => {
 
         let arr = await Promise.all(
             documenttypes.map(async(item) => {
-                let model = await document.findAndCountAll({
+                let model = await Document.findAndCountAll({
                     where: {
                         documenttype_id: item.id,
                     },
                 });
 
-                let this_year_model = await document.findAndCountAll({
+                let this_year_model = await Document.findAndCountAll({
                     where: {
                         documenttype_id: item.id,
-                        createdAt: {
+                        created_at: {
                             [Op.gte]: new Date(year, 0, 1), // Start of the year
                             [Op.lt]: new Date(year + 1, 0, 1), // Start of the next year
                         },
                     },
                 });
-                let last_year_model = await document.findAndCountAll({
+                let last_year_model = await Document.findAndCountAll({
                     where: {
                         documenttype_id: item.id,
-                        createdAt: {
+                        created_at: {
                             [Op.gte]: new Date(last_year, 0, 1), // Start of the year
                             [Op.lt]: new Date(last_year + 1, 0, 1), // Start of the next year
                         },
@@ -677,7 +694,8 @@ self.getDocumentTypesAnalysis = async(req, res) => {
             })
         );
 
-        return res.json(arr);
+        return res.apiSuccess(arr);
+
     } catch (error) {
         return res.status(500).json({
             message: error.message,
@@ -689,7 +707,9 @@ self.getDocumentTypesAnalysis = async(req, res) => {
 
 
 self.getModuleEachTypesAnalysis = async(req, res) => {
+
     try {
+        
         let module = req.params.module;
         let id = req.params.id;
 
@@ -713,7 +733,7 @@ self.getModuleEachTypesAnalysis = async(req, res) => {
             const stake = await eval(Model).findAndCountAll({
                 where: {
                     [`${moduleArr[1]}_id`]: moduletype.id,
-                    createdAt: {
+                    created_at: {
                         [Op.gte]: new Date(yr, 0, 1), // Start of the year
                         [Op.lt]: new Date(yr + 1, 0, 1), // Start of the next year
                     },
@@ -726,18 +746,20 @@ self.getModuleEachTypesAnalysis = async(req, res) => {
         const results = await Promise.all(queries);
 
         const obj = Object.fromEntries(results);
-        return res.json({
-            years: Object.keys(obj),
-            series: Object.values(obj),
-        });
+
+        return res.apiSuccess({
+            data: {
+                years: Object.keys(obj),
+                series: Object.values(obj)
+            }
+        })
     } catch (error) {
-        return res.status(500).json({
-            message: error.message,
-        });
+        res.apiError(error)
     }
 };
 
 self.getModuleEachCategoriesAnalysis = async(req, res) => {
+
     try {
         let module = req.params.module;
         let id = req.params.id;
@@ -746,6 +768,7 @@ self.getModuleEachCategoriesAnalysis = async(req, res) => {
 
         const Model = moduleArr[0];
         const CategoryModel = moduleArr[2];
+
 
         let modulecategory = await eval(CategoryModel).findOne({
             where: {
@@ -758,11 +781,14 @@ self.getModuleEachCategoriesAnalysis = async(req, res) => {
             (_, index) => currentYear - (4 - index)
         );
 
+        const categoryId = `${moduleArr[2]}_id`.toLowerCase();
+
         const queries = yearArray.map(async(yr) => {
+
             const stake = await eval(Model).findAndCountAll({
                 where: {
-                    [`${moduleArr[2]}_id`]: modulecategory.id,
-                    createdAt: {
+                    [categoryId]: modulecategory.id,
+                    created_at: {
                         [Op.gte]: new Date(yr, 0, 1), // Start of the year
                         [Op.lt]: new Date(yr + 1, 0, 1), // Start of the next year
                     },
@@ -775,14 +801,15 @@ self.getModuleEachCategoriesAnalysis = async(req, res) => {
         const results = await Promise.all(queries);
 
         const obj = Object.fromEntries(results);
-        return res.json({
-            years: Object.keys(obj),
-            series: Object.values(obj),
-        });
+
+        return res.apiSuccess({
+            data: {
+                years: Object.keys(obj),
+                series: Object.values(obj),
+            }
+        })
     } catch (error) {
-        return res.status(500).json({
-            message: error.message,
-        });
+        res.apiError(error)
     }
 };
 
@@ -800,11 +827,11 @@ self.getCategoriesByTypeId = async(req, res) => {
             },
         });
 
-        return res.json(modulecategories);
+        return res.apiSuccess({
+            data: modulecategories
+        })
     } catch (error) {
-        return res.status(500).json({
-            message: error.message,
-        });
+        res.apiError(error)
     }
 };
 
@@ -822,11 +849,10 @@ self.getSubCategoriesByModuleCategoryId = async(req, res) => {
             },
         });
 
-        return res.json(modulesubcategories);
+        return res.apiSuccess(modulesubcategories)
+
     } catch (error) {
-        return res.status(500).json({
-            message: error.message,
-        });
+        res.apiError(error)
     }
 };
 
@@ -843,8 +869,11 @@ self.getGeneralAnalysisSubCategoryDepartments = async (req, res) => {
             id: departmentID
         }
       })
+
       let departments = await departmentHelper.getChildren(departmentID);
+
       departments.unshift(rootdepartment)
+
   
       const modulesubcategory = await eval(SubCategoryModel).findOne({ where: { id } });
   
@@ -865,21 +894,24 @@ self.getGeneralAnalysisSubCategoryDepartments = async (req, res) => {
         departments: deptmap,
       };
   
-      return res.json(data);
+      return res.apiSuccess({
+        data: data
+      })
+
     } catch (error) {
       console.error(error);
-      return res.status(500).json({ message: error.message });
+      res.apiError(error)
     }
 }
 
 
 self.getProjectGeneralFinancialAnalysis = async(req, res) => {
     try {
-        let projecttypes = await projecttype.findAll()
+        let projecttypes = await ProjectType.findAll()
 
         let arr  = []
         for(let type of projecttypes) {
-            let projects = await project.findAll({
+            let projects = await Project.findAll({
                 where: {
                     projecttype_id: type.id
                 }
@@ -889,7 +921,7 @@ self.getProjectGeneralFinancialAnalysis = async(req, res) => {
 
             //main contract finance
 
-            let maincontractpriceamount = await projectfinance.findAll({
+            let maincontractpriceamount = await ProjectFinance.findAll({
                 where: {
                     project_id: {
                         [Op.in]: proIDs
@@ -910,18 +942,19 @@ self.getProjectGeneralFinancialAnalysis = async(req, res) => {
 
         }
 
-        return res.json(arr)
-    } catch (error) {
-        return res.status(500).json({
-            message: error.message
+        return res.apiSuccess({
+            data: arr
         })
+
+    } catch (error) {
+        res.apiError(error)
     }
 }
 
 self.getProjectTypeCategoriesFinancialAnalysis = async(req, res) => {
     let {id} = req.params
     try {
-        let projectcategories = await projectcategory.findAll({
+        let projectcategories = await ProjectCategory.findAll({
             where: {
                 projecttype_id: id
             }
@@ -931,7 +964,7 @@ self.getProjectTypeCategoriesFinancialAnalysis = async(req, res) => {
         let arr  = []
 
         for(let category of projectcategories) {
-            let projects = await project.findAll({
+            let projects = await Project.findAll({
                 where: {
                     projectcategory_id: category.id
                 }
@@ -941,7 +974,7 @@ self.getProjectTypeCategoriesFinancialAnalysis = async(req, res) => {
 
             //main contract finance
 
-            let maincontractpriceamount = await projectfinance.findAll({
+            let maincontractpriceamount = await ProjectFinance.findAll({
                 where: {
                     project_id: {
                         [Op.in]: proIDs
@@ -974,16 +1007,15 @@ self.getProjectTypeFinancialInformation = async(req, res) => {
 
         let {id} = req.params
 
-        let projects = await project.findAll({
+        let projects = await Project.findAll({
             where: {
                 projecttype_id: id
             }
         })
 
-        
         let proIDs = projects.map((item)=> item.id).filter(n=>n)
 
-        let maincontractpriceamount = await projectfinance.findAll({
+        let maincontractpriceamount = await ProjectFinance.findAll({
             where: {
                 project_id: {
                     [Op.in]: proIDs
@@ -994,7 +1026,7 @@ self.getProjectTypeFinancialInformation = async(req, res) => {
         const maincontractpricetotal  = maincontractpriceamount.reduce((total, item) => total + item.main_contract_price_amount, 0);
 
 
-        let variationsupplements = await projectvariation.findAll({
+        let variationsupplements = await ProjectVariation.findAll({
             where: {
                 project_id: {
                     [Op.in]: proIDs
@@ -1018,18 +1050,18 @@ self.getProjectTypeFinancialInformation = async(req, res) => {
 
         let totalcontractamount = maincontractpricetotal + variation_total + supplement_total - omission_total
         
-        
-        return res.json({
-            total_contract_amount: totalcontractamount,
-            main_contract: maincontractpricetotal,
-            supplement: supplement_total,
-            variation: variation_total,
-            omission: omission_total
+        return res.apiSuccess({
+            data: {
+                total_contract_amount: totalcontractamount,
+                main_contract: maincontractpricetotal,
+                supplement: supplement_total,
+                variation: variation_total,
+                omission: omission_total
+            }
         })
+    
     } catch (error) {
-        return res.status(500).json({
-            message: error.message
-        })
+        res.apiError(error)
     }
 }
 
@@ -1043,17 +1075,19 @@ self.getProjectTypeFinancialInformationDepartments = async(req, res) => {
 
         let departments = await self.getChildren(usr.departmentID);
 
-        let modulecategory = await projectcategory.findOne({
+        let modulecategory = await ProjectCategory.findOne({
             where: {
                 id: id,
             },
         });
 
-        let models = await project.findAll({
+
+        let models = await Project.findAll({
             where: {
                 projectcategory_id: modulecategory.id,
             },
         });
+
 
 
         let series = []
@@ -1061,7 +1095,7 @@ self.getProjectTypeFinancialInformationDepartments = async(req, res) => {
             const departmentprojects = models.filter((model) => model.department_id === dept.id);
             let proIDs = departmentprojects.map((item)=> item.id).filter(n=>n)
 
-            let maincontractpriceamount = projectfinance.findAll({
+            let maincontractpriceamount = ProjectFinance.findAll({
                 where: {
                     project_id: {
                         [Op.in]: proIDs
@@ -1077,7 +1111,7 @@ self.getProjectTypeFinancialInformationDepartments = async(req, res) => {
             }
 
 
-            let variationsupplements = projectvariation.findAll({
+            let variationsupplements = ProjectVariation.findAll({
                 where: {
                     project_id: {
                         [Op.in]: proIDs
@@ -1123,20 +1157,19 @@ self.getProjectTypeFinancialInformationDepartments = async(req, res) => {
                 }
             ]
 
-        
-        
-        return res.status(200).json({
-            data: seriesArr,
-            departments: [...new Set(departments.map((item) => item.name))].filter(
-                (n) => n
-            ),
 
-        });
+
+        return res.apiSuccess({
+            data: {
+                data: seriesArr,
+                departments: [...new Set(departments.map((item) => item.name))].filter(
+                    (n) => n
+                ),
+    
+            }
+        })
     } catch (error) {
-        return res.status(500).json({
-            message: error.message
-    });
-  
+        res.apiError(error)
     }
 }
 
@@ -1145,7 +1178,7 @@ self.getProjectCategoryLocationInformation = async(req, res) => {
 
         let {id} = req.params
 
-        let projects = await project.findAll({
+        let projects = await Project.findAll({
             where: {
                 projectcategory_id: id
             }
@@ -1154,7 +1187,7 @@ self.getProjectCategoryLocationInformation = async(req, res) => {
         let arr = []
 
         for(let pro of projects){
-            let proaddress =  await address.findOne({
+            let proaddress =  await Address.findOne({
                 where: {
                     model_id: pro.id
                 }
@@ -1169,7 +1202,10 @@ self.getProjectCategoryLocationInformation = async(req, res) => {
             }
         }
 
-        return res.json(arr)
+
+        return res.apiSuccess({
+            data: arr
+        })
 
 
     } catch (error) {
@@ -1206,16 +1242,16 @@ self.getStakeholderCategoryLocationInformation = async(req, res) => {
 
         let {id} = req.params
 
-        let stakeholders = await stakeholder.findAll({
+        let stakeholders = await Stakeholder.findAll({
             where: {
-                stakecategory_id: id
+                stakeholdercategory_id: id
             }
         })
 
         let arr = []
 
         for(let stake of stakeholders){
-            let stakeaddress =  await address.findOne({
+            let stakeaddress =  await Address.findOne({
                 where: {
                     model_id: stake.id
                 }
@@ -1230,13 +1266,11 @@ self.getStakeholderCategoryLocationInformation = async(req, res) => {
             }
         }
 
-        return res.json(arr)
-        
-        return res.json(locations)
-    } catch (error) {
-        return res.status(500).json({
-            message: error.message
+        return res.apiSuccess({
+            data: arr
         })
+    } catch (error) {
+        res.apiError(error)
     }
 }
 
@@ -1247,7 +1281,7 @@ self.getProjectYearlyFinancialPlan = async(req, res) => {
 
         
 
-        let projects = await project.findAll({
+        let projects = await Project.findAll({
             where: {
                 projecttype_id: id
             }
@@ -1258,7 +1292,7 @@ self.getProjectYearlyFinancialPlan = async(req, res) => {
 
 
 
-        let plans = await projectreport.findAll({
+        let plans = await ProjectReport.findAll({
             where: {
                 year: Number(year),
                 project_id: {
@@ -1270,7 +1304,7 @@ self.getProjectYearlyFinancialPlan = async(req, res) => {
 
         let plansArr = await Promise.all(
             plans.map(async(plan) => {
-                let action = await actionstate.findOne({
+                let action = await ActionState.findOne({
                     where: {
                         model_id: plan.id
                     },
@@ -1301,13 +1335,13 @@ self.getProjectYearlyFinancialPlan = async(req, res) => {
             }
         })
 
-        return res.json(statusArr)
+        return res.apiSuccess({
+            data: statusArr
+        })
 
         
     } catch (error) {
-        return res.status(500).json({
-            message: error.mesage
-        })
+        res.apiError(error)
     }
 }
 
@@ -1315,7 +1349,7 @@ self.getProjectYearlyFinancialReport = async(req, res) => {
     try {
         let {id, year} = req.params
 
-        let projects = await project.findAll({
+        let projects = await Project.findAll({
             where: {
                 projecttype_id: id
             }
@@ -1326,7 +1360,7 @@ self.getProjectYearlyFinancialReport = async(req, res) => {
 
 
 
-        let reports = await projectreport.findAll({
+        let reports = await ProjectReport.findAll({
             where: {
                 year: Number(year),
                 project_id: {
@@ -1338,7 +1372,7 @@ self.getProjectYearlyFinancialReport = async(req, res) => {
 
         let reportsArr = await Promise.all(
             reports.map(async(report) => {
-                let action = await actionstate.findOne({
+                let action = await ActionState.findOne({
                     where: {
                         model_id: report.id
                     },
@@ -1369,18 +1403,20 @@ self.getProjectYearlyFinancialReport = async(req, res) => {
             }
         })
 
-        return res.json(statusArr)
+        return res.apiSuccess({
+            data: statusArr
+        })
 
         
     } catch (error) {
-        return res.status(500).json({
-            message: error.mesage
-        })
+        res.apiError(error)
     }
 }
 
 self.getProjectYearlyPerformance = async(req, res) => {
+
     try {
+
         let {id,year, attr} = req.params
         let cpm = req.query.cpm
         if(cpm==Boolean(true)){
@@ -1420,28 +1456,29 @@ self.getProjectYearlyPerformance = async(req, res) => {
                 }
             ]
 
-            return res.json(performanceArr)
+            return res.apiSuccess(performanceArr)
         }else{
             
        
-            let projects = await project.findAll({
+            let projects = await Project.findAll({
                 where: {
                     projecttype_id: id
                 }
             })
 
+
             let proIDs = projects.map((item)=> item.id)
 
-            let plans = await projectplan.findAll({
+            let plans = await ProjectPlan.findAll({
                 where: {
                     year: Number(year),
                     project_id: {
                         [Op.in]: proIDs
                     }
                 }
-            })
+            });
 
-            let reports = await projectreport.findAll({
+            let reports = await ProjectReport.findAll({
                 where: {
                     year: Number(year),
                     project_id: {
@@ -1480,14 +1517,14 @@ self.getProjectYearlyPerformance = async(req, res) => {
                 }
             ]
 
-            return res.json(performanceArr)
+            return res.apiSuccess({
+                data: performanceArr
+            })
         }
 
         
     } catch (error) {
-        return res.status(500).json({
-            message: error.mesage
-        })
+        res.apiError(error)
     }
 }
 
@@ -1496,7 +1533,7 @@ self.getProjectAnnualCostAndScheduleVariances = async(req, res) => {
 
         let {id, year} = req.params
 
-        let projects = await project.findAll({
+        let projects = await Project.findAll({
             where: {
                 projecttype_id: id
             }
@@ -1504,7 +1541,10 @@ self.getProjectAnnualCostAndScheduleVariances = async(req, res) => {
 
         let proIDs = projects.map((item)=> item.id)
 
-        let plans = await projectplan.findAll({
+        
+
+
+        let plans = await ProjectPlan.findAll({
             where: {
                 year: Number(year),
                 project_id: {
@@ -1512,6 +1552,7 @@ self.getProjectAnnualCostAndScheduleVariances = async(req, res) => {
                 }
             }
         })
+
 
 
         const cpmplans = await apiHelper.getExternalData('plan')
@@ -1590,12 +1631,17 @@ self.getProjectAnnualCostAndScheduleVariances = async(req, res) => {
             spi_cpi,
             sv_cv
         })
+    
+        return res.apiSuccess({
+            data: {
+                spi_cpi,
+                sv_cv
+            }
+        })
 
         
     } catch (error) {
-        return res.status(500).json({
-            message: error.mesage
-        })
+        res.apiError(error)
     }
 }
 

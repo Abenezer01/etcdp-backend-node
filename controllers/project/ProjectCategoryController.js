@@ -3,24 +3,22 @@ const {
   ProjectSubCategory,
   Sequelize,
 } = require("../../models");
-//const ProjectType = require("../../models/ProjectType");
-
-const usrData = require("../../utils/userDataFromToken");
-const actionHelper = require("../utils/action-helper");
 const paginationHelper = require("../utils/pagination-helper")
 const { getRecordById, saveRecord, updateRecord, deleteRecord } = require('../utils/format-helper');
 const Op = Sequelize.Op;
 
 let self = {};
 
-const paginate = require("../../utils/pagination");
 const dotenv = require("dotenv");
 dotenv.config();
 
 
 
 self.getAll = async (req, res) => {
+
+ 
   try {
+
     const paginatedResult = await paginationHelper(ProjectCategory, req);
 
     // Use the response formatter to send the success response
@@ -37,29 +35,29 @@ self.getAll = async (req, res) => {
 
 
 
-self.getAllProCatByTypeId = async (req, res) => {
-  const { id } = req.params;
-  try {
-    const whereCondition = { projecttype_id: id }
+// self.getAllProCatByTypeId = async (req, res) => {
+//   const { id } = req.params;
+//   try {
+//     const whereCondition = { projecttype_id: id }
 
-    const includeOptions = [
-      { model: ProjectSubCategory, as: 'projectsubcategories' } // Example association
-    ];
+//     const includeOptions = [
+//       { model: ProjectSubCategory, as: 'projectsubcategories' } // Example association
+//     ];
    
 
-    const paginatedResult = await paginationHelper(ProjectCategory, req, whereCondition, includeOptions);
+//     const paginatedResult = await paginationHelper(ProjectCategory, req, whereCondition, includeOptions);
 
-    // Use the response formatter to send the success response
-    res.apiSuccess({
-      data: paginatedResult.data,
-      total: paginatedResult.total,
-    }, paginatedResult.pagination);
+//     // Use the response formatter to send the success response
+//     res.apiSuccess({
+//       data: paginatedResult.data,
+//       total: paginatedResult.total,
+//     }, paginatedResult.pagination);
 
-  } catch (error) {
-    console.error("Error in getAll method:", error);
-    res.apiError(error);
-  }
-};
+//   } catch (error) {
+//     console.error("Error in getAll method:", error);
+//     res.apiError(error);
+//   }
+// };
 
 
 self.get = async (req, res) => {

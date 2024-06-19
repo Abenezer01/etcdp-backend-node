@@ -26,7 +26,7 @@ module.exports = {
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
       },
-      stakecategory_id: {
+      stakeholdercategory_id: {
         type: Sequelize.UUID,
         allowNull: false,
         references: {
@@ -36,9 +36,9 @@ module.exports = {
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
       },
-      stakesubcategory_id: {
+      stakeholdersubcategory_id: {
         type: Sequelize.UUID,
-        references: {
+        references: { 
           model: "stakesubcategories",
           key: "id",
         },

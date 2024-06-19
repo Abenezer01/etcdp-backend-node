@@ -31,6 +31,9 @@ module.exports = (sequelize, DataTypes) => {
         remark: DataTypes.TEXT,
         revision_no: DataTypes.INTEGER,
     }, {
+        
+        createdAt: 'created_at',
+        updatedAt: 'updated_at' ,     
         sequelize,
         modelName: "ProjectVariation",
         tableName: "projectvariations"

@@ -25,8 +25,6 @@ module.exports = (sequelize, DataTypes) => {
       },
       description: DataTypes.TEXT,
       revision_no: DataTypes.INTEGER,
-
-      file_id: DataTypes.UUID,
     },
     {
       createdAt: 'created_at',

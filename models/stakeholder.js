@@ -27,11 +27,11 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.UUID,
         allowNull: false,
       },
-      stakecategory_id: {
+      stakeholdercategory_id: {
         type: DataTypes.UUID,
         allowNull: false,
       },
-      stakesubcategory_id: DataTypes.UUID,
+      stakeholdersubcategory_id: DataTypes.UUID,
       trade_name: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -82,11 +82,11 @@ module.exports = (sequelize, DataTypes) => {
     });
     Stakeholder.belongsTo(models.StakeholderCategory, {
       as: "stakeholdercategory",
-      foreignKey: "stakecategory_id",
+      foreignKey: "stakeholdercategory_id",
     });
     Stakeholder.belongsTo(models.StakeholderSubCategory, {
       as: "stakeholdersubcategory",
-      foreignKey: "stakesubcategory_id",
+      foreignKey: "stakeholdersubcategory_id",
     });
     Stakeholder.belongsTo(models.Ownership, {
       as: "ownership",

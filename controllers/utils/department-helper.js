@@ -1,4 +1,4 @@
-const { department } = require("../../models");
+const { Department } = require("../../models");
 const usrData = require("../../utils/userDataFromToken");
 const crypto = require("crypto");
 const self = {};
@@ -7,7 +7,7 @@ let children = []
 self.getAllChildren = async(arr) => {
 
 	for(var i=0; i<arr.length; i++){
-		let dd = await department.findAll({
+		let dd = await Department.findAll({
 			where: {
 				parent_department_id: arr[i].id
 			}
@@ -23,7 +23,7 @@ self.getAllChildren = async(arr) => {
 self.getChildren = async(id) => {
 
 	try {
-		let data = await department.findAll({
+		let data = await Department.findAll({
 			where: {
 				parent_department_id: id
 			}
@@ -46,7 +46,7 @@ module.exports = self;
 //   let children = [];
 
 //   for (let i = 0; i < arr.length; i++) {
-//     const dd = await department.findAll({
+//     const dd = await Department.findAll({
 //       where: {
 //         parent_department_id: arr[i].id,
 //       },
@@ -64,7 +64,7 @@ module.exports = self;
 
 // self.getChildren = async (id) => {
 //   try {
-//     const data = await department.findAll({
+//     const data = await Department.findAll({
 //       where: {
 //         parent_department_id: id,
 //       },
