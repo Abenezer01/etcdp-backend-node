@@ -1,6 +1,3 @@
-const ConstructionResourceTypeController = require("../../../controllers/construction resource/ConstructionResourceTypeController");
-const ConstructionResourceCategoryController = require("../../../controllers/construction resource/ConstructionResourceCategoryController");
-const ConstructionResourceSubCategoryController = require("../../../controllers/construction resource/ConstructionResourceSubCategoryController");
 const ConstructionResourceRegistrationController = require("../../../controllers/construction resource/ConstructionResourceRegistrationController");
 //const ConstructionResourceQuantityAndPriceController = require("../../../controllers/construction resource/ConstructionResourceQuantityAndPriceController")
 const DetailResourceTypeController = require("../../../controllers/construction resource/DetailResourceTypeController");
@@ -18,33 +15,7 @@ const validateData = require("../../../middleware/validate/module/construction r
 module.exports = function (express) {
   const route = express.Router();
 
-  //construction resource type controller
-  route.get(
-    "/construction-resource-types",
-    ConstructionResourceTypeController.getAll
-  );
-  route.get(
-    "/construction-resource-types/:id",
-    ConstructionResourceTypeController.get
-  );
-  route.get(
-    "/construction-resource-type-search",
-    ConstructionResourceTypeController.search
-  );
-  route.post(
-    "/construction-resource-types",
-    validateData.constructionResourceTypeValidate,
-    ConstructionResourceTypeController.save
-  );
-  route.put(
-    "/construction-resource-types/:id",
-    validateData.constructionResourceTypeValidate,
-    ConstructionResourceTypeController.update
-  );
-  route.delete(
-    "/construction-resource-types/:id",
-    ConstructionResourceTypeController.delete
-  );
+ 
   //Resource study field controller
   route.get("/resource-study-fields", ResourceStudyFieldController.getAll);
   route.get("/resource-study-fields/:id", ResourceStudyFieldController.get);
@@ -115,64 +86,7 @@ module.exports = function (express) {
     "/resource-work-experiences/:id",
     ResourceWorkExperienceController.delete
   );
-  //construction resource category controller
-  route.get(
-    "/construction-resource-categories",
-    ConstructionResourceCategoryController.getAll
-  );
-  route.get(
-    "/construction-resource-categories/:id",
-    ConstructionResourceCategoryController.get
-  );
-  route.get(
-    "/type/construction-resource-categories/:id",
-    ConstructionResourceCategoryController.getCRCByResourceTypeId
-  );
-  route.get(
-    "/construction-resource-category_search",
-    ConstructionResourceCategoryController.search
-  );
-  route.post(
-    "/construction-resource-categories",
-    validateData.constructionResourceCategoryValidate,
-    ConstructionResourceCategoryController.save
-  );
-  route.put(
-    "/construction-resource-categories/:id",
-    validateData.constructionResourceCategoryValidate,
-    ConstructionResourceCategoryController.update
-  );
-  route.delete(
-    "/construction-resource-categories/:id",
-    ConstructionResourceCategoryController.delete
-  );
-  //construction resource subcategory controller
-  route.get(
-    "/construction-resource-subcategories",
-    ConstructionResourceSubCategoryController.getAll
-  );
-  route.get(
-    "/construction-resource-subcategories/:id",
-    ConstructionResourceSubCategoryController.get
-  );
-  route.get(
-    "/construction-resource-subcategory-searches",
-    ConstructionResourceSubCategoryController.search
-  );
-  route.post(
-    "/construction-resource-subcategories",
-    validateData.constructionResourceSubCategoryValidate,
-    ConstructionResourceSubCategoryController.save
-  );
-  route.put(
-    "/construction-resource-subcategories/:id",
-    validateData.constructionResourceSubCategoryValidate,
-    ConstructionResourceSubCategoryController.update
-  );
-  route.delete(
-    "/construction-resource-subcategories/:id",
-    ConstructionResourceSubCategoryController.delete
-  );
+  
   //construction resource registration controller
   route.get("/resources", ConstructionResourceRegistrationController.getAll);
   route.get("/resources/:id", ConstructionResourceRegistrationController.get);
