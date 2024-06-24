@@ -11,6 +11,47 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      
+      Stakeholder.belongsTo(models.StakeholderType, {
+        as: "stakeholdertype",
+        foreignKey: "stakeholdertype_id",
+      });
+      Stakeholder.belongsTo(models.StakeholderCategory, {
+        as: "stakeholdercategory",
+        foreignKey: "stakeholdercategory_id",
+      });
+      Stakeholder.belongsTo(models.StakeholderSubCategory, {
+        as: "stakeholdersubcategory",
+        foreignKey: "stakeholdersubcategory_id",
+      });
+      Stakeholder.belongsTo(models.Ownership, {
+        as: "ownership",
+        foreignKey: "ownership_id",
+      });
+      Stakeholder.belongsTo(models.BusinessField, {
+        as: "businessfield",
+        foreignKey: "businessfield_id",
+      });
+      Stakeholder.belongsTo(models.Department, {
+        as: "department",
+        foreignKey: "department_id",
+      });
+
+
+      Stakeholder.hasMany(models.StakeholderEmail, {
+        as: "stakeholderemails",
+        foreignKey: "stakeholder_id",
+      });
+
+      Stakeholder.hasMany(models.StakeholderPhone, {
+        as: "stakeholderphones",
+        foreignKey: "stakeholder_id",
+      });
+
+      Stakeholder.hasMany(models.OperationLocation, {
+        as: "operationlocations",
+        foreignKey: "stakeholder_id",
+      });
     }
   }
 
@@ -64,58 +105,13 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     {
-      createdAt: 'created_at',
-      updatedAt: 'updated_at' ,     
+      createdAt: "created_at",
+      updatedAt: "updated_at" ,     
       sequelize,
       modelName: "Stakeholder",
       tableName: "stakeholders"
     }
   );
-  Stakeholder.associate = function (models) {
-    // Stakeholder.belongsTo(models.Address, {
-    //     as: "address",
-    //     foreignKey: "address_id"
-    // })
-    Stakeholder.belongsTo(models.StakeholderType, {
-      as: "stakeholdertype",
-      foreignKey: "stakeholdertype_id",
-    });
-    Stakeholder.belongsTo(models.StakeholderCategory, {
-      as: "stakeholdercategory",
-      foreignKey: "stakeholdercategory_id",
-    });
-    Stakeholder.belongsTo(models.StakeholderSubCategory, {
-      as: "stakeholdersubcategory",
-      foreignKey: "stakeholdersubcategory_id",
-    });
-    Stakeholder.belongsTo(models.Ownership, {
-      as: "ownership",
-      foreignKey: "ownership_id",
-    });
-    Stakeholder.belongsTo(models.BusinessField, {
-      as: "businessfield",
-      foreignKey: "businessfield_id",
-    });
-    Stakeholder.belongsTo(models.Department, {
-      as: "department",
-      foreignKey: "department_id",
-    });
 
-
-    Stakeholder.hasMany(models.StakeholderEmail, {
-      as: "stakeholderemails",
-      foreignKey: "stakeholder_id",
-    })
-
-    Stakeholder.hasMany(models.StakeholderPhone, {
-      as: "stakeholderphones",
-      foreignKey: "stakeholder_id",
-    })
-
-    Stakeholder.hasMany(models.OperationLocation, {
-      as: "operationlocations",
-      foreignKey: "stakeholder_id",
-    })
-  };
   return Stakeholder;
 };

@@ -1,6 +1,5 @@
 const {
     User,
-    Address,
     ActionState,
     Position,
     UserPosition,
@@ -9,12 +8,9 @@ const {
     Department,
     PasswordReset,
     Photo,
-    Role,
-    sequelize,
     Sequelize,
 } = require("../../models");
 const bcrypt = require("bcrypt");
-let validator = require("../../utils/validator");
 const Op = Sequelize.Op;
 const dotenv = require("dotenv");
 dotenv.config();
@@ -30,13 +26,13 @@ const uuid = require("uuid");
 var nodemailer = require("nodemailer");
 var smtpTransport = require("nodemailer-smtp-transport");
 const emailValidator = require("deep-email-validator");
-const paginationHelper = require("../utils/pagination-helper")
-const { getRecordById, saveRecord, updateRecord, deleteRecord } = require('../utils/format-helper');
+const paginationHelper = require("../utils/pagination-helper");
+const { deleteRecord } = require("../utils/format-helper");
 
 
 let TOKEN_KEY = process.env.ACCESS_TOKEN_KEY;
 let REFRESH_TOKEN_KEY = process.env.REFRESH_TOKEN_KEY;
-let TOKEN_MAX_AGE = process.env.TOKEN_MAX_AGE;
+// let TOKEN_MAX_AGE = process.env.TOKEN_MAX_AGE;
 
 let self = {};
 
@@ -44,18 +40,18 @@ self.getAll = async (req, res) => {
 
    
     try {
-      const whereCondition = { }
+      const whereCondition = { };
   
       const includeOptions = [
         {
             model: UserEmail,
-            as: 'useremails',
-            attributes: ['email'] 
+            as: "useremails",
+            attributes: ["email"] 
         },
         {
             model: UserPhone,
-            as: 'userphones',
-            attributes: ['phone'] 
+            as: "userphones",
+            attributes: ["phone"] 
         }
       ];
 
@@ -78,7 +74,6 @@ self.getAll = async (req, res) => {
       }, paginatedResult.pagination);
   
     } catch (error) {
-      console.error("Error in getAll method:", error);
       res.apiError(error);
     }
   };
@@ -181,7 +176,7 @@ self.save = async(req, res) => {
         //     });
         // }
 
-        const salt = await bcrypt.genSalt(10);
+        // const salt = await bcrypt.genSalt(10);
         var usr = {
             first_name: body.first_name,
             last_name: body.last_name,
@@ -195,7 +190,7 @@ self.save = async(req, res) => {
             lang: "en"
             // password: await bcrypt.hash(body.password, salt)
         };
-        created_user = await User.create(usr);
+        let created_user = await User.create(usr);
 
         if (created_user) {
             let usr = await usrData.userData(req, res);
@@ -270,7 +265,7 @@ self.save = async(req, res) => {
                     })
                 );
 
-                transporter.sendMail(mailOptions, function(error, info) {
+                transporter.sendMail(mailOptions, function(error) {
                     if (error) {
                         return res.json("error" + error);
                     } else {
@@ -353,9 +348,9 @@ self.update = async (req, res) => {
                         is_primary: true,
                         user_id: id
                     }
-                })
+                });
     
-                primary_email.email = body.email
+                primary_email.email = body.email;
                 await primary_email.save();
             }
             
@@ -365,9 +360,9 @@ self.update = async (req, res) => {
                         is_primary: true,
                         user_id: id
                     }
-                })
+                });
     
-                primary_phone.phone = body.phone
+                primary_phone.phone = body.phone;
                 await primary_phone.save();
             }
 
@@ -375,12 +370,8 @@ self.update = async (req, res) => {
 
 
             return res.apiSuccess({
-              data: updatedData,
-              total: 1 // Assuming a single user is being returned
-            }, {
-              pageSize: 1,
-              page: 1
-            });
+              data: updatedData}
+            );
           }
       
           throw new Error("Record not found");
@@ -411,18 +402,18 @@ self.update = async (req, res) => {
 
         const whereCondition = {  id: {
             [Op.in]: userId,
-        }, }
+        }, };
 
         const includeOptions = [
             {
                 model: UserEmail,
-                as: 'useremails',
-                attributes: ['email'] 
+                as: "useremails",
+                attributes: ["email"] 
             },
             {
                 model: UserPhone,
-                as: 'userphones',
-                attributes: ['phone'] 
+                as: "userphones",
+                attributes: ["phone"] 
             }
           ];
 
@@ -444,7 +435,6 @@ self.update = async (req, res) => {
         }, paginatedResult.pagination);
     
     } catch (error) {
-      console.error("Error in getAll method:", error);
       res.apiError(error);
     }
   };
@@ -722,10 +712,9 @@ self.sendMail = async(req, res) => {
                 })
             );
 
-            transporter.sendMail(mailOptions, function(error, info) {
+            transporter.sendMail(mailOptions, function(error) {
                 if (error) {
                     return res.json("error" + error);
-                    console.log(error);
                 } else {
                     return res.json({
                         message: "Email sent successfully",
@@ -849,20 +838,15 @@ self.requestPasswordReset = async(req, res) => {
             );
 
 
-            transporter.sendMail(mailOptions, function(error, info) {
+            transporter.sendMail(mailOptions, function(error) {
 
                 if (error) {
-                    console.log(error);
                     res.apiError(error);
                     // return res.status(500).json(error)
                 } else {
 
                     res.apiSuccess({
-                        data: { message: "Password reset link sent to you email"},
-                        total: 1 // Assuming a single user is being returned
-                      }, {
-                        pageSize: 1,
-                        page: 1
+                        data: { message: "Password reset link sent to you email"}
                       });
 
                     
@@ -940,7 +924,7 @@ self.resetPassword = async(req, res) => {
 self.checkUserStatus = async(req, res) => {
     let id = req.params.id;
     try {
-        let data = await User.findOne({
+        await User.findOne({
             where: {
                 id: id,
             },
@@ -970,16 +954,14 @@ self.checkUserStatus = async(req, res) => {
 
         return res.json(messageArr);
     } catch (error) {
-        return response.json({
-            message: error.message,
-        });
+        res.apiError(error);
     }
 };
 self.changeLanguage = async(req, res) =>{
     try {
 
-        let body = req.body 
-        let lang = body.lang
+        let body = req.body; 
+        let lang = body.lang;
 
 
         let usr = await usrData.userData(req, res);
@@ -987,66 +969,66 @@ self.changeLanguage = async(req, res) =>{
             where: {
                 id:usr.usrID
             }
-        })
+        });
 
         if(us){
             return res.status(200).json({
                 message: "Language changed successfully!"
-            })
+            });
         }else{
             return res.status(500).json({
                 message: "Try Again!"
-            })
+            });
         }
         
     } catch (error) {
         return res.status(500).json({
             message: error.message
-        })
+        });
     }
-} 
+}; 
 self.activateAccount = async(req, res) => {
     try {
-        let {id} = req.params
-        let data = await User.update({is_activated: true}, {
+        let {id} = req.params;
+        await User.update({is_activated: true}, {
             where: {
                 id: id
             }
-        })
+        });
 
         return res.json({
             message: "Account activated successfully"
-        })
+        });
     } catch (error) {
         return res.status(500).json({
             message: error.message
-        })
+        });
     }
-}
+};
 self.deactivateAccount = async(req, res) => {
     try {
-        let {id} = req.params
-        let data = await User.update({is_activated: false}, {
+        let {id} = req.params;
+        await User.update({is_activated: false}, {
             where: {
                 id: id
             }
-        })
+        });
 
         return res.json({
             message: "Account deactivated successfully"
-        })
+        });
     } catch (error) {
         return res.status(500).json({
             message: error.message
-        })
+        });
     }
-}
+};
 
 
 
 self.getMe = async (req, res) => {
   try {
-    const user = await userInfo(req, res)
+    const user = await userInfo(req, res);
 
     // if ( user =! "TOKEN_MISSING" || user != "INVALID_EXPIRED_TOKEN")
     // return res.json(user)
@@ -1063,10 +1045,7 @@ self.getMe = async (req, res) => {
                 _attributes: {},
                 _errors: [{ message: "Authorization token is missing" }],
                 _generated: new Date().toISOString()
-              })
-           
-             
-            break;
+              });
         case "INVALID_EXPIRED_TOKEN":
 
         
@@ -1080,8 +1059,7 @@ self.getMe = async (req, res) => {
                 _attributes: {},
                 _errors: [{ message: "Invalid Authorization header format" }],
                 _generated: new Date().toISOString()
-            })
-            break;
+            });
         case "TOKEN_NOT_FOUND":
 
             return res.status(404).json({
@@ -1094,8 +1072,7 @@ self.getMe = async (req, res) => {
                 _attributes: {},
                 _errors: [{ message: "Authorization token is missing" }],
                 _generated: new Date().toISOString()
-            })
-            break;
+            });
             
     
         default:
@@ -1154,7 +1131,6 @@ self.getMe = async (req, res) => {
       page: 1
     });
   } catch (error) {
-    console.error("Error:", error);
     res.apiError(error);
   }
 };

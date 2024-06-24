@@ -1,8 +1,6 @@
 const {
   ActionState,
-  Note,
   User,
-  UserPosition,
   Position,
   File,
   Sequelize,
@@ -12,9 +10,9 @@ const Op = Sequelize.Op;
 
 let self = {};
 const usrData = require("../../utils/userDataFromToken");
-const actorHelper = require("../utils/actor-helper")
-const paginationHelper = require("../utils/pagination-helper")
-const { getRecordById, saveRecord, updateRecord, deleteRecord } = require('../utils/format-helper');
+const actorHelper = require("../utils/actor-helper");
+const paginationHelper = require("../utils/pagination-helper");
+const { getRecordById, saveRecord, updateRecord, deleteRecord } = require("../utils/format-helper");
 
 
 self.getAll = async (req, res) => {
@@ -28,7 +26,6 @@ self.getAll = async (req, res) => {
     }, paginatedResult.pagination);
 
   } catch (error) {
-    console.error("Error in getAll method:", error);
     res.apiError(error);
   }
 };
@@ -42,7 +39,7 @@ self.get = async (req, res) => {
 self.check = async (req, res) => {
   try {
 
-    let body = req.body
+    let body = req.body;
     let id = body.model_id;
     let model = body.model;
 
@@ -82,7 +79,7 @@ self.check = async (req, res) => {
                 action: "REGISTER",
                 user_id: usr.usrID
             }
-        })
+        });
 
         if (action) {
 
@@ -112,7 +109,7 @@ self.check = async (req, res) => {
           });
 
         if(action){
-          await actorHelper.notifyActor(action,'approve', usr.usrID, usr.departmentID)
+          await actorHelper.notifyActor(action,"approve", usr.usrID, usr.departmentID);
         }
 
         res.apiSuccess({
@@ -124,13 +121,12 @@ self.check = async (req, res) => {
       }
     }
   } catch (error) {
-    console.error("Error:", error);
     res.apiError(error);
   }
 };
 self.approve = async (req, res) => {
   try {
-    let body = req.body
+    let body = req.body;
     let id = body.model_id;
     let model = body.model;
 
@@ -167,13 +163,13 @@ self.approve = async (req, res) => {
             where: {
                 model_id: id,
                 action: {
-                    [Op.in]: ['REGISTER', 'CHECK']
+                    [Op.in]: ["REGISTER", "CHECK"]
                 },
                 user_id: usr.usrID
             }
-        })
+        });
 
-        if (action.length != 0) {
+        if (action.length !== 0) {
 
           const errorResponse = {
             _links: {
@@ -201,7 +197,7 @@ self.approve = async (req, res) => {
         });
         if(action){
 
-          await actorHelper.notifyActor(action,'authorize', usr.usrID, usr.departmentID)
+          await actorHelper.notifyActor(action,"authorize", usr.usrID, usr.departmentID);
         }
         res.apiSuccess({
           data: action
@@ -210,7 +206,6 @@ self.approve = async (req, res) => {
       }
     }
   } catch (error) {
-    console.error("Error:", error);
     res.apiError(error);
   }
 };
@@ -218,7 +213,7 @@ self.approve = async (req, res) => {
 self.reject = async (req, res) => {
   try {
     let usr = await usrData.userData(req, res);
-    let body = req.body
+    let body = req.body;
     let id = body.model_id;
     let model = body.model;
 
@@ -251,14 +246,14 @@ self.reject = async (req, res) => {
             where: {
                 model_id: id,
                 action: {
-                    [Op.in]: ['REGISTER', 'CHECK', "APPROVE"]
+                    [Op.in]: ["REGISTER", "CHECK", "APPROVE"]
                 },
                 user_id: usr.usrID
             }
 
-        })
+        });
 
-        if (action.length != 0) {
+        if (action.length !== 0) {
 
             const errorResponse = {
               _links: {
@@ -293,14 +288,13 @@ self.reject = async (req, res) => {
       }
     }
   } catch (error) {
-    console.error("Error:", error);
     res.apiError(error);
   }
 };
 
 self.authorize = async (req, res) => {
   try {
-    let body = req.body
+    let body = req.body;
     let id = body.model_id;
     let model = body.model;
     
@@ -336,13 +330,13 @@ self.authorize = async (req, res) => {
         let action = await ActionState.findAll({
             model_id: id,
             action: {
-                [Op.in]: ['REGISTER', 'CHECK', "APPROVE"]
+                [Op.in]: ["REGISTER", "CHECK", "APPROVE"]
             },
             user_id: usr.usrID
 
-        })
+        });
 
-        if (action.length != 0) {
+        if (action.length !== 0) {
 
             const errorResponse = {
               _links: {
@@ -377,7 +371,6 @@ self.authorize = async (req, res) => {
       }
     }
   } catch (error) {
-    console.error("Error:", error);
     res.apiError(error);
   }
 };
@@ -560,7 +553,7 @@ self.getLast = async (req, res) => {
 
     return res.json(data.length);
   } catch (error) {
-    res.apiError(error)
+    res.apiError(error);
   }
 };
 

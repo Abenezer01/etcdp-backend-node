@@ -1,4 +1,4 @@
-const { ActionState } = require("../../models")
+const { ActionState } = require("../../models");
 const usrData = require("../../utils/userDataFromToken");
 const self = {};
 

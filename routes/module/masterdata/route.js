@@ -1,6 +1,6 @@
-const OwnershipTypeController = require("../../../controllers/stakeholder/OwnershipTypeController");
+const OwnershipTypeController = require("../../../controllers/stakeholder/OwnershiptypeController.js");
 const StudyLevelController = require("../../../controllers/stakeholder/StudyLevelController");
-const BusinessFieldController = require("../../../controllers/stakeholder/BusinessFieldController");
+const BusinessFieldController = require("../../../controllers/stakeholder/BusinessfieldController.js");
 const StudyProgramController = require("../../../controllers/stakeholder/StudyProgramController");
 const StudyFieldController = require("../../../controllers/stakeholder/StudyFieldController");
 const AgeLevelController = require("../../../controllers/stakeholder/AgeLevelController");
@@ -22,9 +22,9 @@ const ConstructionResourceTypeController = require("../../../controllers/constru
 const ConstructionResourceCategoryController = require("../../../controllers/construction resource/ConstructionResourceCategoryController");
 const ConstructionResourceSubCategoryController = require("../../../controllers/construction resource/ConstructionResourceSubCategoryController");
 
-const DocumentTypeController = require("../../../controllers/document/documentTypeController.js")
-const DocumentCategoryController = require("../../../controllers/document/DocumentCategoryController");
-const DocumentSubCategoryController = require("../../../controllers/document/DocumentSubCategoryController");
+const DocumentTypeController = require("../../../controllers/document/documentTypeController.js");
+const DocumentCategoryController = require("../../../controllers/document/documentCategoryController.js");
+const DocumentSubCategoryController = require("../../../controllers/document/documentSubCategoryController.js");
 
 
 

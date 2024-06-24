@@ -9,18 +9,22 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Resource.belongsTo(models.image, {
+      Resource.belongsTo(models.Department, {
+        as: "department",
+        foreignKey: "department_id",
+      });
+      Resource.belongsTo(models.Image, {
         foreignKey: "image_id",
       });
-      Resource.belongsTo(models.resourcetype, {
+      Resource.belongsTo(models.ResourceType, {
         as: "resourcetype",
         foreignKey: "resourcetype_id",
       });
-      Resource.belongsTo(models.resourcecategory, {
+      Resource.belongsTo(models.ResourceCategory, {
         as: "resourcecategory",
         foreignKey: "resourcecategory_id",
       });
-      Resource.belongsTo(models.resourcesubcategory, {
+      Resource.belongsTo(models.ResourceSubCategory, {
         as: "resourcesubcategory",
         foreignKey: "resourcesubcategory_id",
       });
@@ -45,18 +49,13 @@ module.exports = (sequelize, DataTypes) => {
       revision_no: DataTypes.INTEGER,
     },
     {
-      createdAt: 'created_at',
-      updatedAt: 'updated_at' ,     
+      createdAt: "created_at",
+      updatedAt: "updated_at" ,     
       sequelize,
       modelName: "Resource",
       tableName: "resources"
     }
   );
-  Resource.associate = function (models) {
-    Resource.belongsTo(models.Department, {
-      as: "department",
-      foreignKey: "department_id",
-    });
-  };
+
   return Resource;
 };

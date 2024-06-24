@@ -7,8 +7,8 @@ const {
 } = require("../../models");
 const usrData = require("../../utils/userDataFromToken");
 const actionHelper = require("../utils/action-helper");
-const paginationHelper = require("../utils/pagination-helper")
-const { getRecordById, saveRecord, updateRecord, deleteRecord } = require('../utils/format-helper');
+const paginationHelper = require("../utils/pagination-helper");
+const { getRecordById, updateRecord, deleteRecord } = require("../utils/format-helper");
 const Op = Sequelize.Op;
 const paginate = require("../../utils/pagination");
 const dotenv = require("dotenv");
@@ -26,7 +26,6 @@ self.getAll = async (req, res) => {
     }, paginatedResult.pagination);
 
   } catch (error) {
-    console.error("Error in getAll method:", error);
     res.apiError(error);
   }
 };
@@ -38,10 +37,10 @@ self.get = async (req, res) => {
 self.getByProjectId = async (req, res) => {
   const { id } = req.params;
   try {
-    const whereCondition = { project_id: id }
+    const whereCondition = { project_id: id };
 
     const includeOptions = [
-      { model: File, as: 'file' } // Example association
+      { model: File, as: "file" } // Example association
     ];
    
 
@@ -54,7 +53,6 @@ self.getByProjectId = async (req, res) => {
     }, paginatedResult.pagination);
 
   } catch (error) {
-    console.error("Error in getAll method:", error);
     res.apiError(error);
   }
 };
@@ -107,10 +105,10 @@ self.getByProjectIdAndPopulate = async (req, res) => {
     let totalPlanPhysicalPerformance = 0;
     let totalPlanCostDueToRework = 0;
     let totalPlanoverHeadCost = 0;
-    let arr = [];
+    // let arr = [];
 
     data.rows.forEach((item) => {
-      console.log("Parse", Number(item.ProjectPlan.sub_total_expense));
+      // console.log("Parse", Number(item.ProjectPlan.sub_total_expense));
       //Report
       totalReportProfitOrLoss += Number(item.profit_or_loss);
       totalReportProjectExpense += Number(item.projectexpense);
@@ -142,12 +140,6 @@ self.getByProjectIdAndPopulate = async (req, res) => {
       totalPlanCostDueToRework += item.ProjectPlan.cost_due_to_rework;
       totalPlanoverHeadCost += item.ProjectPlan.over_head_cost;
     });
-    //return res.send(totalProfitOrLoss)
-    // arr.forEach((item) => {
-    //     totalReportProfitOrLoss += item.ProfitOrLoss
-    // });
-    // return res.send(arr)
-    // const newData = rows.map(item => ({...item}));
 
     const response = {
       Report: {
@@ -195,7 +187,7 @@ self.getByProjectIdAndPopulate = async (req, res) => {
 self.getByMonthlyId = async (req, res) => {
   const { id } = req.params;
   try {
-    const whereCondition = { monthlyreport_id: id }
+    const whereCondition = { monthlyreport_id: id };
     const paginatedResult = await paginationHelper(ProjectReport, req, whereCondition);
 
     // Use the response formatter to send the success response
@@ -205,7 +197,6 @@ self.getByMonthlyId = async (req, res) => {
     }, paginatedResult.pagination);
 
   } catch (error) {
-    console.error("Error in getAll method:", error);
     res.apiError(error);
   }
 };
@@ -231,6 +222,7 @@ self.search = async (req, res) => {
 self.save = async (req, res) => {
   try {
     let usr = await usrData.userData(req, res);
+    let usrID = usr.usrID;
     let body = req.body;
     var date = new Date(body.start);
     var lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
@@ -249,7 +241,7 @@ self.save = async (req, res) => {
       let data = await ProjectReport.create(body);
 
       if (data) {
-        let usrID = usr.usrID;
+        
         await actionHelper.saveActionState(
           data.id,
           "ProjectReport",
@@ -259,7 +251,7 @@ self.save = async (req, res) => {
           res
         );
       }
-      let fle = await file.findAll({
+      let fle = await File.findAll({
         where: {
           id: {
             [Sequelize.Op.in]: body.file_ids,
@@ -278,7 +270,7 @@ self.save = async (req, res) => {
       }));
 
       for (const data of fileData) {
-        let f = await file.create(data);
+        let f = await File.create(data);
         await actionHelper.saveActionState(
           f.id,
           "file",
@@ -289,10 +281,10 @@ self.save = async (req, res) => {
         );
       }
 
-      return res.apiSuccess({data})
+      return res.apiSuccess({data});
     }
   } catch (error) {
-    res.apiError(error)
+    res.apiError(error);
   }
 };
 
@@ -321,7 +313,7 @@ self.getMonthlyProjectReport = async (req, res) => {
         quarter: quarter,
       },
       include: {
-        model: file,
+        model: File,
         as: "file",
       },
     });
@@ -367,7 +359,7 @@ self.getMonthlyProjectReport = async (req, res) => {
           projectplan_id: plan.id,
         },
         include: {
-          model: file,
+          model: File,
           as: "file",
         },
       });
@@ -391,10 +383,10 @@ self.getProjectYearlyReports = async (req, res) => {
     const whereCondition = { 
       project_id: id,
       year: year
-     }
+     };
 
     const includeOptions = [
-      { model: File, as: 'file' } // Example association
+      { model: File, as: "file" } // Example association
     ];
   
     const paginatedResult = await paginationHelper(ProjectReport, req, whereCondition, includeOptions);
@@ -406,7 +398,6 @@ self.getProjectYearlyReports = async (req, res) => {
     }, paginatedResult.pagination);
 
   } catch (error) {
-    console.error("Error in getAll method:", error);
     res.apiError(error);
   }
 };

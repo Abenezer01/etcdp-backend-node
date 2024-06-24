@@ -1,11 +1,10 @@
 const paginationHelper = require("../utils/pagination-helper");
-const { getRecordById, saveRecord, updateRecord, deleteRecord } = require('../utils/format-helper');
+const { getRecordById, saveRecord, deleteRecord } = require("../utils/format-helper");
 const {
   ProjectExtensionTime,
   ProjectVariation,
   Sequelize,
 } = require("./../../models");
-const usrData = require("../../utils/userDataFromToken");
 const Op = Sequelize.Op;
 const dotenv = require("dotenv");
 dotenv.config();
@@ -22,7 +21,6 @@ self.getAll = async (req, res) => {
     }, paginatedResult.pagination);
 
   } catch (error) {
-    console.error("Error in getAll method:", error);
     res.apiError(error);
   }
 };
@@ -30,10 +28,10 @@ self.getAll = async (req, res) => {
 self.getByProjectId = async (req, res) => {
   const { id } = req.params;
   try {
-    const whereCondition = { project_id: id }
+    const whereCondition = { project_id: id };
 
     const includeOptions = [
-      { model: ProjectVariation, as: 'variation' } // Example association
+      { model: ProjectVariation, as: "variation" } // Example association
     ];
    
 
@@ -46,7 +44,6 @@ self.getByProjectId = async (req, res) => {
     }, paginatedResult.pagination);
 
   } catch (error) {
-    console.error("Error in getAll method:", error);
     res.apiError(error);
   }
 };
@@ -108,9 +105,9 @@ self.update = async (req, res) => {
 
     return res.apiSuccess({
       data
-    })
+    });
   } catch (error) {
-    res.apiError(error)
+    res.apiError(error);
   }
 };
 

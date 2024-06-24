@@ -4,7 +4,7 @@ dotenv.config();
 const Op = Sequelize.Op;
 const usrData = require("../../utils/userDataFromToken");
 const paginationHelper = require("../utils/pagination-helper");
-const { getRecordById, saveRecord, updateRecord, deleteRecord } = require('../utils/format-helper');
+const { getRecordById, deleteRecord } = require("../utils/format-helper");
 const actionHelper = require("../utils/action-helper");
 let self = {};
 const uuid = require("uuid");
@@ -20,7 +20,6 @@ self.getAll = async (req, res) => {
     }, paginatedResult.pagination);
 
   } catch (error) {
-    console.error("Error in getAll method:", error);
     res.apiError(error);
   }
 };
@@ -32,10 +31,10 @@ self.get = async (req, res) => {
 self.getEmployeeEducationByStakeholderId = async (req, res) => {
   const { id } = req.params;
   try {
-    const whereCondition = { stakeholder_id: id }
+    const whereCondition = { stakeholder_id: id };
 
     const includeOptions = [
-      { model: StudyLevel, as: 'studylevel' } // Example association
+      { model: StudyLevel, as: "studylevel" } // Example association
     ];
    
 
@@ -48,7 +47,6 @@ self.getEmployeeEducationByStakeholderId = async (req, res) => {
     }, paginatedResult.pagination);
 
   } catch (error) {
-    console.error("Error in getAll method:", error);
     res.apiError(error);
   }
 };
@@ -75,7 +73,7 @@ self.getCollectionOfData = async (req, res) => {
   let registeredData = await EmployeeEducation.findAll();
 
   let rD = [];
-  for (i = 0; i < registeredData.length; i++) {
+  for (let i = 0; i < registeredData.length; i++) {
     var date = new Date(registeredData[i].year);
     let yy = date.getFullYear();
     let male = registeredData[i].male;
@@ -90,7 +88,7 @@ self.getCollectionOfData = async (req, res) => {
       stakeholder_id: stakeholder_id,
     });
   }
-  const filteredfrmDBArr = [];
+  // const filteredfrmDBArr = [];
   const result = rD.reduce((acc, curr) => {
     const { year, nationality } = curr;
     // const filtered = rD.filter((item) => item.year === year && item.nationality === nationality);
@@ -115,11 +113,8 @@ self.save = async (req, res) => {
     let body = req.body;
 
     const arr = body.empEduArr;
-    //let ssyy = []
-    console.log("The array", arr[0].stakeholder_id);
 
     let stakeHolderId = arr[0].stakeholder_id;
-    // return res.send(stakeHolderId)
     if (usr) {
       let totalEmployee = await TotalEmployee.findAll({
         where: {
@@ -128,7 +123,6 @@ self.save = async (req, res) => {
       });
 
       let totalEmployeeData = totalEmployee;
-      //console.log("The data", totalEmployeeData);
 
       if (!totalEmployeeData) {
         return res.status(400).json({
@@ -220,7 +214,7 @@ self.save = async (req, res) => {
         stakeholder_id: data.stakeholder_id,
       }));
 
-      const bodDate = new Date(req.body.year);
+      // const bodDate = new Date(req.body.year);
 
       const newArr = filteredReqBodyArr.filter((item) => {
         return rD.some(
@@ -305,12 +299,9 @@ self.save = async (req, res) => {
 self.update = async (req, res) => {
   try {
     let usr = await usrData.userData(req, res);
-
-    let us = usr.usrID;
     let body = req.body;
     const arr = body.empEduArr;
     //let ssyy = []
-    console.log("The array", arr[0].stakeholder_id);
 
     let stakeHolderId = arr[0].stakeholder_id;
     // return res.send(stakeHolderId)
@@ -438,7 +429,7 @@ self.update = async (req, res) => {
       });
 
       if (arr2.length > 0) {
-        for (i = 0; i < arr.length; i++) {
+        for (let i = 0; i < arr.length; i++) {
           let body = {
             id: arr[i].id,
             stakeholder_id: arr[i].stakeholder_id,

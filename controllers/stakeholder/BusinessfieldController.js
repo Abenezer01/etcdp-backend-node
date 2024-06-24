@@ -1,7 +1,7 @@
 const { BusinessField, Sequelize } = require("../../models");
 
 const paginationHelper = require("../utils/pagination-helper");
-const { getRecordById, saveRecord, updateRecord, deleteRecord } = require('../utils/format-helper');
+const { getRecordById, saveRecord, updateRecord, deleteRecord } = require("../utils/format-helper");
 
 const Op = Sequelize.Op;
 const dotenv = require("dotenv");
@@ -20,7 +20,6 @@ self.getAll = async (req, res) => {
     }, paginatedResult.pagination);
 
   } catch (error) {
-    console.error("Error in getAll method:", error);
     res.apiError(error);
   }
 };

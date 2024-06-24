@@ -3,27 +3,15 @@ const {
   Position,
   User,
   UserPosition,
-  ActionState,
   Sequelize,
 } = require("../../models");
 const usrData = require("../../utils/userDataFromToken");
 const actionHelper = require("../utils/action-helper");
-const paginationHelper = require("../utils/pagination-helper")
-const { getRecordById, updateRecord, deleteRecord } = require('../utils/format-helper');
+const paginationHelper = require("../utils/pagination-helper");
+const { getRecordById, updateRecord, deleteRecord } = require("../utils/format-helper");
 let master = require("../../config/master");
 
-const { EtDatetime, ETC, BahireHasab, ConvertToEthiopic } = require('abushakir')
-
-const i18n = require('i18n');
-// const lang = 'en'
-// i18n.configure({
-//   locales: ['en','am', 'es'],
-//   directory: __dirname + '/../../locales',
-//   defaultLocale: lang?lang:'en',
-//   queryParameter: 'lang',
-//   cookie: 'locale',
-//   updateFiles: false, // set this to true if you want i18n to create locale files for missing translations
-// });
+// const { EtDatetime, ETC, BahireHasab, ConvertToEthiopic } = require("abushakir");
 const Op = Sequelize.Op;
 
 let self = {};
@@ -40,7 +28,6 @@ self.getAll = async (req, res) => {
     }, paginatedResult.pagination);
 
   } catch (error) {
-    console.error("Error in getAll method:", error);
     res.apiError(error);
   }
 };
@@ -86,7 +73,7 @@ self.save = async (req, res) => {
       let roles = master.roleName;
       let pos;
       for (let name of roles) {
-        if (name == "Admin") {
+        if (name === "Admin") {
           pos = await Position.create({
             department_id: data.id,
             name: name,
@@ -144,7 +131,7 @@ self.save = async (req, res) => {
 self.getSubDepartments = async (req, res) => {
   const { id } = req.params;
   try {
-    const whereCondition = { parent_department_id: id }
+    const whereCondition = { parent_department_id: id };
     const paginatedResult = await paginationHelper(Department, req, whereCondition);
 
     // Use the response formatter to send the success response
@@ -154,15 +141,14 @@ self.getSubDepartments = async (req, res) => {
     }, paginatedResult.pagination);
 
   } catch (error) {
-    console.error("Error in getAll method:", error);
     res.apiError(error);
   }
 };
 
 self.getParentDepartment = async (req, res) => {
-  const { id } = req.params;
+
   try {
-    const whereCondition = { parent_department_id: null }
+    const whereCondition = { parent_department_id: null };
     const paginatedResult = await paginationHelper(Department, req, whereCondition);
 
     // Use the response formatter to send the success response
@@ -172,7 +158,6 @@ self.getParentDepartment = async (req, res) => {
     }, paginatedResult.pagination);
 
   } catch (error) {
-    console.error("Error in getAll method:", error);
     res.apiError(error);
   }
 };
@@ -198,10 +183,6 @@ self.getParentOrGivenId = async (req, res) => {
 
     res.apiSuccess({
       data: data,
-      total: 1 // Assuming a single user is being returned
-    }, {
-      pageSize: 1,
-      page: 1
     });
   } catch (error) {
     return res.status(500).json({
@@ -209,61 +190,6 @@ self.getParentOrGivenId = async (req, res) => {
     });
   }
 };
-
-// self.getStructure = async (req, res) => {
-//   try {
-//     const departments = await Department.findAll();
-
-//     const arr = await Promise.all(
-//       departments.map(async (dept) => {
-//         const userpos = await UserPosition.findAll({
-//           attributes: ["user_id"],
-//           where: { department_id: dept.id },
-//         });
-//         const userId = [...new Set(userpos.map((item) => item.user_id))].filter(
-//           (n) => n
-//         );
-
-//         const staffs = await User.findAndCountAll({
-//           where: {
-//             id: {
-//               [Op.in]: userId,
-//             },
-//           },
-//         });
-
-//         const pos = await Position.findOne({
-//           where: { department_id: dept.id, is_head: true },
-//         });
-
-//         const uspos = pos
-//           ? await UserPosition.findOne({ where: { position_id: pos.id } })
-//           : null;
-
-//         const head = uspos
-//           ? await User.findOne({ where: { user_id: uspos.user_id } })
-//           : null;
-
-//         return {
-//           id: dept.id,
-//           parent_node_id: dept.parent_department_id,
-//           name: dept.name,
-//           head: head ? head : null,
-//           staff_no: staffs.count,
-//         };
-//       })
-//     );
-
-//     return res.apiSuccess({
-//       data: arr,
-//     });
-
-//   } catch (error) {
-//     return res.status(500).json({
-//       message: error.message,
-//     });
-//   }
-// };
 
 
 self.getDepartmentHead = async (req, res) => {
@@ -336,7 +262,6 @@ self.getToRoot = async (req, res) => {
       total: 1 // Assuming a single user is being returned
     });
   } catch (error) {
-    console.error("Error:", error);
     res.apiError(error);
   }
 };
@@ -344,7 +269,7 @@ self.getToRoot = async (req, res) => {
 self.getPath = async (arr, x) => {
   all = [];
   for (var i = 0; i < arr.length; i++) {
-    if (arr[i].id == x) {
+    if (arr[i].id === x) {
       self.getPath(arr, arr[i].parent_department_id);
       if (arr[i].parent_department_id !== null) {
         let child = await Department.findOne({
@@ -430,89 +355,9 @@ self.getDepartments = async (req, res) => {
     });
 
   } catch (error) {
-    console.error("Error:", error);
     res.apiError(error);
   }
 };
-
-
-// self.getChildren = async (req, res) => {
-//   let id = req.params.id;
-//   try {
-//     let parent = await Department.findOne({
-//       where: {
-//         id: id,
-//       },
-//     });
-//     let data = await Department.findAll({
-//       where: {
-//         parent_department_id: id,
-//       },
-//     });
-//     let all = await self.getAllChildren(data);
-//     Array.prototype.push.apply(all, data);
-//     all.unshift(parent);
-//     let arr = [];
-//     for (let dept of all) {
-//       let posi = await UserPosition.findAll({
-//         attributes: ["user_id"],
-//         where: {
-//           department_id: dept.id,
-//         },
-//       });
-
-//       let userId = [...new Set(posi.map((item) => item.user_id))].filter(
-//         (n) => n
-//       );
-
-//       let staffs = await User.findAndCountAll({
-//         where: {
-//           id: {
-//             [Op.in]: userId,
-//           },
-//         },
-//       });
-
-//       let pos = await Position.findOne({
-//         where: {
-//           department_id: dept.id,
-//           is_head: true,
-//         },
-//       });
-
-//       const uspos = pos
-//         ? await UserPosition.findOne({ where: { position_id: pos.id } })
-//         : null;
-//       const head = uspos
-//         ? await User.findOne({ where: { user_id: uspos.user_id } })
-//         : null;
-
-//       arr.push({
-//         id: dept.id,
-//         parentNodeId: dept.parent_department_id,
-//         name: dept.name,
-//         head: head ? head : null,
-//         staff_no: staffs.count,
-//       });
-//     }
-
-//     // arr.find(department => department.id==id).parentNodeId=null
-//     // return res.json(arr)
-//     const container = arr.map((department) =>
-//       department.id === id ? { ...department, parentNodeId: null } : department
-//     );
-
-//     return res.apiSuccess({
-//       data: container,
-//     });
-
-
-//   } catch (error) {
-//     return res.status(500).json({
-//       message: error.message,
-//     });
-//   }
-// };
 
 self.getDepartmentDashboad = async (req, res) => {
   try {
@@ -549,100 +394,91 @@ self.getDepartmentDashboad = async (req, res) => {
   }
 };
 
-self.translateString = async (str, translateTo) => {
-  try {
-    translate.engine = "libre";
-    const translated_string = await translate(str, translateTo);
-    return translated_string;
-  } catch (error) {
-    return {
-      message: error.message,
-    };
-  }
-};
 
-self.test = async(req, res) => {
-  try{
+// self.test = async(req, res) => {
+//   try{
     
-    const test = new ETC(2015, 10, 1);
-    const testg = new Date(test.moment)
+//     const test = new ETC(2015, 10, 1);
+//     const testg = new Date(test.moment);
 
-    // return res.json(testg)
-    const me = new Date('2023-05-03').getTime()
-    const gregorian1 = Date.now();
-    const ethiopian1  = new EtDatetime(me);
+//     // return res.json(testg)
+//     const me = new Date("2023-05-03").getTime();
+//     const gregorian1 = Date.now();
+//     const ethiopian1  = new EtDatetime(me);
 
-    return res.json({
-      me,
-      gregorian1,
-      ethiopian1
-    })
-    const ethiopian = new EtDatetime();
-    const gregorian = new Date(ethiopian.moment);
-    // const x = i18n.__('greeting');
-    // return res.json(x)
+//     return res.json({
+//       me,
+//       gregorian1,
+//       ethiopian1
+//     });
+//     const ethiopian = new EtDatetime();
+//     const gregorian = new Date(ethiopian.moment);
+//     // const x = i18n.__('greeting');
+//     // return res.json(x)
 
-    const now = new EtDatetime(); // => 2012-07-28 17:18:31.466
-    const nowDate = now.date; // => {year: 2012, month: 7, day: 28}
-    const nowTIme = now.time; // => {h: 17, m: 18, s: 31}
+//     const now = new EtDatetime(); // => 2012-07-28 17:18:31.466
+//     const nowDate = now.date; // => {year: 2012, month: 7, day: 28}
+//     const nowTIme = now.time; // => {h: 17, m: 18, s: 31}
     
-    // const covidFirstConfirmedEpoch = new EtDatetime(covidFirstConfirmed.moment);
-    //
+//     // const covidFirstConfirmedEpoch = new EtDatetime(covidFirstConfirmed.moment);
+//     //
 
-    const ethiopianCalendar = new ETC(2015, 10, 1);
-///
-    let months = ethiopianCalendar.monthDays(true, true); // Iterable Object of the given month
-    let monthDays = ethiopianCalendar.monthDays(); // => [2012, 7, 1, 1]
-    // [year, month, dateNumber, dateNameIndex], Monday as First weekday
+//     const ethiopianCalendar = new ETC(2015, 10, 1);
+// ///
+//     let months = ethiopianCalendar.monthDays(true, true); // Iterable Object of the given month
+//     let monthDays = ethiopianCalendar.monthDays(); // => [2012, 7, 1, 1]
+//     // [year, month, dateNumber, dateNameIndex], Monday as First weekday
 
-    const nextmonth = ethiopianCalendar.nextMonth; // => ETC instance of nextMonth, same year
-    const previousmonth = ethiopianCalendar.prevYear; // => ETC instance of prevYear, same month
-    /**
-     * Bahire Hasab Module [BahireHasab]
-     */
-    const bh = new BahireHasab(2016);
-    //  let bh: BahireHasab = new BahireHasab(); // Get's the current year
+//     const nextmonth = ethiopianCalendar.nextMonth; // => ETC instance of nextMonth, same year
+//     const previousmonth = ethiopianCalendar.prevYear; // => ETC instance of prevYear, same month
+//     /**
+//      * Bahire Hasab Module [BahireHasab]
+//      */
+//     const bh = new BahireHasab(2016);
+//     //  let bh: BahireHasab = new BahireHasab(); // Get's the current year
 
-    let evan = bh.getEvangelist(true); // => ሉቃስ
+//     let evan = bh.getEvangelist(true); // => ሉቃስ
 
-    let holiday = bh.getSingleBealOrTsom('ትንሳኤ'); // {month: ሚያዝያ, date: 20}
+//     let holiday = bh.getSingleBealOrTsom("ትንሳኤ"); // {month: ሚያዝያ, date: 20}
 
-    const allFastings = bh.allAtswamat; // => List of All fasting and Movable holidays
+//     const allFastings = bh.allAtswamat; // => List of All fasting and Movable holidays
 
-    /**
-     * Arabic or English number (1,2,3...) to Ethiopic or GE'EZ number Convertor
-     */
-    const testNums = [1, 10, 15, 20, 25, 78, 105, 333, 450, 600, 1000, 1001, 1010, 1056, 1200, 2013, 9999, 10000];
-    let arr = []
-    for (const num of testNums) {
-      let eachConv = ConvertToEthiopic(num) // [፩, ፲, ፲፭, ፳, ፳፭, ፸፰, ፻፭, ፫፻፴፫, ፬፻፶, ፮፻, ፲፻, ፲፻፩, ፲፻፲, ፲፻፶፮, ፲፪፻, ፳፻፲፫, ፺፱፻፺፱, ፻፻]
-      arr.push(eachConv)
-    }
+//     /**
+//      * Arabic or English number (1,2,3...) to Ethiopic or GE'EZ number Convertor
+//      */
+//     const testNums = [1, 10, 15, 20, 25, 78, 105, 333, 450, 600, 1000, 1001, 1010, 1056, 1200, 2013, 9999, 10000];
+//     let arr = [];
+//     for (const num of testNums) {
+//       let eachConv = ConvertToEthiopic(num); // [፩, ፲, ፲፭, ፳, ፳፭, ፸፰, ፻፭, ፫፻፴፫, ፬፻፶, ፮፻, ፲፻, ፲፻፩, ፲፻፲, ፲፻፶፮, ፲፪፻, ፳፻፲፫, ፺፱፻፺፱, ፻፻]
+//       arr.push(eachConv);
+//     }
 
-    return res.json({
-      gc: new Date(gregorian1).toISOString(),
-      ec: ethiopian1.toIso8601String(),
-      ethiopian: ethiopian.toIso8601String(),
-      gregorian: gregorian.toISOString(),
-      now, 
-      nowDate, 
-      nowTIme, 
-      ethiopianCalendar, 
-      months, 
-      monthDays, 
-      nextmonth, 
-      previousmonth, 
-      bh, 
-      evan, 
-      holiday, 
-      allFastings, 
-      arr
-  })
-} catch (error) {
-  return res.status(500).json({
-    message: error.message
-  })
-}
-}
+//     return res.json({
+//       gc: new Date(gregorian1).toISOString(),
+//       ec: ethiopian1.toIso8601String(),
+//       ethiopian: ethiopian.toIso8601String(),
+//       gregorian: gregorian.toISOString(),
+//       now, 
+//       nowDate, 
+//       nowTIme, 
+//       ethiopianCalendar, 
+//       months, 
+//       monthDays, 
+//       nextmonth, 
+//       previousmonth, 
+//       bh, 
+//       evan, 
+//       holiday, 
+//       allFastings, 
+//       arr
+//   });
+// } catch (error) {
+//   return res.status(500).json({
+//     message: error.message
+//   });
+// }
+
+
+// };
 
 module.exports = self;

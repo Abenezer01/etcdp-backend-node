@@ -1,4 +1,4 @@
-const { User, Sequelize } = require("../../models");
+const { User } = require("../../models");
 
 const jwt = require("jsonwebtoken");
 let self = {};
@@ -6,10 +6,10 @@ let REFRESH_TOKEN_KEY = process.env.REFRESH_TOKEN_KEY;
 self.logout = async (request, response) => {
   try {
     const refTokenn = request.headers.authorization;
-    decoded = jwt.verify(refTokenn, REFRESH_TOKEN_KEY);
+    let decoded = jwt.verify(refTokenn, REFRESH_TOKEN_KEY);
     // const claims = atob(tokenn.split('.')[1])
     // response.status(200).json(decoded)
-    usrID = decoded.id;
+    let usrID = decoded.id;
     User
       .update(
         {
@@ -19,8 +19,7 @@ self.logout = async (request, response) => {
           where: { id: usrID },
         }
       )
-      .then((result) => {
-        console.log("success", result);
+      .then(() => {
         return response.status(200).json({
           message: "User successfully logged out!",
         });

@@ -1,27 +1,20 @@
 const {
   ActionState,
   User,
-  Role,
   Position,
   UserPosition,
   UserEmail,
   UserPhone,
-  Department,
-  Photo,
-  Sequelize
+  Photo
 
 } = require("../../models");
 const dotenv = require("dotenv");
 dotenv.config();
 
-const { response } = require("express");
-const Op = Sequelize.Op;
-const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 let self = {};
 let ACCESS_TOKEN_KEY = process.env.ACCESS_TOKEN_KEY;
 let REFRESH_TOKEN_KEY = process.env.REFRESH_TOKEN_KEY;
-let TOKEN_MAX_AGE = process.env.TOKEN_MAX_AGE;
 
 self.refreshToken = async (request, response, next) => {
   //console.log("The header", request.headers.authorization);
@@ -32,9 +25,9 @@ self.refreshToken = async (request, response, next) => {
     decodetoken = jwt.verify(refTokenn, ACCESS_TOKEN_KEY);
     // const claims = atob(tokenn.split('.')[1])
     // response.status(200).json(decodetoken)
-    userId = decodetoken.id;
-    positionId = decodetoken.position_id;
-    departmentId = decodetoken.department_id;
+    let userId = decodetoken.id;
+    let positionId = decodetoken.position_id;
+    let departmentId = decodetoken.department_id;
 
     let usr = await User.findOne({
       include: [
@@ -54,11 +47,7 @@ self.refreshToken = async (request, response, next) => {
         id: positionId,
       },
     });
-    dept = await Department.findOne({
-      where: {
-        id: departmentId,
-      },
-    });
+  
     let usEmail = await UserEmail.findOne({
       where: {
         user_id: userId,
@@ -93,7 +82,7 @@ self.refreshToken = async (request, response, next) => {
       },
     });
 
-    replyUser = {
+    let replyUser = {
       id: usr.id,
       full_name: usr.full_name,
       first_name: usr.first_name,
@@ -104,8 +93,8 @@ self.refreshToken = async (request, response, next) => {
       gender: usr.gender,
       position_id: positionId,
       position_name: pos.name,
-      department_id: usPos.department_id,
-      user_position_id: usPos.id,
+      department_id: pos.department_id,
+      user_position_id: pos.id,
       avatar: usPhoto.url,
       is_checked: action ? true : false,
       profile_completed: profile_pic ? true : false,
@@ -118,7 +107,7 @@ self.refreshToken = async (request, response, next) => {
     }
 
     // console.log("The position id is", positionID)
-    payload = {
+    let payload = {
       id: userId,
       department_id: departmentId,
       position_id: positionId,
@@ -140,7 +129,7 @@ self.refreshToken = async (request, response, next) => {
           where: { id: userId },
         }
       )
-      .then((result) => {
+      .then(() => {
         return response.status(200).json({
           userData: replyUser,
           accessToken: access_tokener,
@@ -152,6 +141,7 @@ self.refreshToken = async (request, response, next) => {
           message: error,
         });
       });
+      next();
   } catch (error) {
     response.status(500).json({
       message: error.message,

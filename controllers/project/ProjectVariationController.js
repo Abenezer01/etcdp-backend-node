@@ -1,6 +1,6 @@
 const actionHelper = require("../utils/action-helper");
-const paginationHelper = require("../utils/pagination-helper")
-const { getRecordById, saveRecord, updateRecord, deleteRecord } = require('../utils/format-helper');
+const paginationHelper = require("../utils/pagination-helper");
+const { getRecordById, deleteRecord } = require("../utils/format-helper");
 const {
   ProjectVariation,
   ProjectExtensionTime,
@@ -23,7 +23,6 @@ self.getAll = async (req, res) => {
     }, paginatedResult.pagination);
 
   } catch (error) {
-    console.error("Error in getAll method:", error);
     res.apiError(error);
   }
 };
@@ -31,7 +30,7 @@ self.getAll = async (req, res) => {
 self.getByProjectId = async (req, res) => {
   const { id } = req.params;
   try {
-    const whereCondition = { project_id: id }
+    const whereCondition = { project_id: id };
     const paginatedResult = await paginationHelper(ProjectVariation, req, whereCondition);
 
     // Use the response formatter to send the success response
@@ -41,7 +40,6 @@ self.getByProjectId = async (req, res) => {
     }, paginatedResult.pagination);
 
   } catch (error) {
-    console.error("Error in getAll method:", error);
     res.apiError(error);
   }
 };
@@ -75,10 +73,10 @@ self.getByProjectType = async (req, res) => {
         });
       })
       .catch(function (error) {
-        console.log(error);
+        return res.apiError(error);
       });
   } catch (error) {
-    res.apiError(error)
+    res.apiError(error);
   }
 };
 
@@ -142,10 +140,10 @@ self.save = async (req, res) => {
 
       return res.apiSuccess({
         data
-      })
+      });
     }
   } catch (error) {
-    res.apiError(error)
+    res.apiError(error);
   }
 };
 
@@ -179,9 +177,9 @@ self.update = async (req, res) => {
 
     return res.apiSuccess({
       data: data
-    })
+    });
   } catch (error) {
-    res.apiError(error)
+    res.apiError(error);
   }
 };
 

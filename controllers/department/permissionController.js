@@ -1,7 +1,8 @@
 const { Permission, PositionPermission, Sequelize } = require("../../models");
-const paginationHelper = require("../utils/pagination-helper")
+const paginationHelper = require("../utils/pagination-helper");
 const usrData = require("../../utils/userDataFromToken");
-const { getRecordById, saveRecord, updateRecord, deleteRecord } = require('../utils/format-helper');
+
+const { getRecordById, saveRecord, updateRecord, deleteRecord } = require("../utils/format-helper");
 
 const Op = Sequelize.Op;
 const master = require("../../config/master");
@@ -19,7 +20,6 @@ self.getAll = async (req, res) => {
     }, paginatedResult.pagination);
 
   } catch (error) {
-    console.error("Error in getAll method:", error);
     res.apiError(error);
   }
 };
@@ -73,7 +73,7 @@ self.getModels = async (req, res) => {
 self.getPermissionsByModule = async (req, res) => {
   const { module } = req.params;
   try {
-    const whereCondition = {  module: module, }
+    const whereCondition = {  module: module, };
     const paginatedResult = await paginationHelper(Permission, req, whereCondition);
 
     // Use the response formatter to send the success response
@@ -83,7 +83,6 @@ self.getPermissionsByModule = async (req, res) => {
     }, paginatedResult.pagination);
 
   } catch (error) {
-    console.error("Error in getAll method:", error);
     res.apiError(error);
   }
 };
@@ -97,15 +96,15 @@ self.getGroupedPermissions = async (req, res) => {
       Permission.findAll({ where: { module: module } }),
     ]);
 
-    if (ePermissions.length == 0) {
+    if (ePermissions.length === 0) {
       //if no Permission under this module doesnt exist
       //return empty array []
       return res.json([]);
     }
 
     let permissions = rolePos
-      .filter((pos) => pers.some((per) => per.id == pos.permission_id))
-      .map((pos) => pers.find((per) => per.id == pos.permission_id).name);
+      .filter((pos) => pers.some((per) => per.id === pos.permission_id))
+      .map((pos) => pers.find((per) => per.id === pos.permission_id).name);
 
     let newArray = [];
     for (let per of ePermissions) {
@@ -140,11 +139,11 @@ self.getGroupedPermissions = async (req, res) => {
       },
     });
 
-    let model = models.models;
+    let model = master.models;
 
     for (let mod of model) {
-      let x = pers.filter((item) => item.model == mod);
-      if (x.length != 0) {
+      let x = pers.filter((item) => item.model === mod);
+      if (x.length !== 0) {
         let newArray = [];
         for (let per of x) {
           if (permissions.includes(per.name)) {
@@ -171,7 +170,7 @@ self.getGroupedPermissions = async (req, res) => {
         }
 
         // return res.json(newArray)
-        if (newArray.length != 0) {
+        if (newArray.length !== 0) {
           let ele = {
             model: mod,
             permissions: newArray,
@@ -317,7 +316,7 @@ self.getUserPermission = async (req, res) => {
           },
         });
         let obj = {
-          action: data ? (data.name).split('_')[0] : null,
+          action: data ? (data.name).split("_")[0] : null,
           subject: data ? data.module : null
         };
         return obj;
@@ -331,7 +330,6 @@ self.getUserPermission = async (req, res) => {
       data: filteredArr,
     });
   } catch (error) {
-    console.error("Error:", error);
     res.apiError(error);
   }
 };

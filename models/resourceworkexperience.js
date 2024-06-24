@@ -9,6 +9,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      ResourceWorkExperience.belongsTo(models.ExperienceLevel, {
+        as: "workexperience",
+        foreignKey: "workexperience_id",
+      });
     }
   }
   ResourceWorkExperience.init(
@@ -24,18 +28,13 @@ module.exports = (sequelize, DataTypes) => {
       description: DataTypes.STRING,
     },
     {
-      createdAt: 'created_at',
-      updatedAt: 'updated_at' ,     
+      createdAt: "created_at",
+      updatedAt: "updated_at" ,     
       sequelize,
       modelName: "ResourceWorkExperience",
       tableName: "resourceworkexperiences"
     }
   );
-  ResourceWorkExperience.associate = function (models) {
-    ResourceWorkExperience.belongsTo(models.ExperienceLevel, {
-      as: "workexperience",
-      foreignKey: "workexperience_id",
-    });
-  };
+  
   return ResourceWorkExperience;
 };

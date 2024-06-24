@@ -8,11 +8,9 @@ const {
   Sequelize,
 } = require("../../models");
 const moment = require("moment");
-const usrData = require("../../utils/userDataFromToken");
-const actionHelper = require("../utils/action-helper");
 const cipherHelper = require("../utils/cipher-helper");
-const paginationHelper = require("../utils/pagination-helper")
-const { getRecordById, saveRecord, updateRecord, deleteRecord } = require('../utils/format-helper');
+const paginationHelper = require("../utils/pagination-helper");
+const { getRecordById, saveRecord, updateRecord, deleteRecord } = require("../utils/format-helper");
 
 const Op = Sequelize.Op;
 const paginate = require("../../utils/pagination");
@@ -31,7 +29,6 @@ self.getAll = async (req, res) => {
     }, paginatedResult.pagination);
 
   } catch (error) {
-    console.error("Error in getAll method:", error);
     res.apiError(error);
   }
 };
@@ -39,10 +36,10 @@ self.getAll = async (req, res) => {
 self.getByProjectId = async (req, res) => {
   const { id } = req.params;
   try {
-    const whereCondition = { project_id: id }
+    const whereCondition = { project_id: id };
 
     const includeOptions = [
-      { model: Stakeholder, as: 'stakeholder' } // Example association
+      { model: Stakeholder, as: "stakeholder" } // Example association
     ];
    
     const paginatedResult = await paginationHelper(ProjectStakeholder, req, whereCondition, includeOptions);
@@ -54,7 +51,6 @@ self.getByProjectId = async (req, res) => {
     }, paginatedResult.pagination);
 
   } catch (error) {
-    console.error("Error in getAll method:", error);
     res.apiError(error);
   }
 };
@@ -91,7 +87,7 @@ self.getByStakeholderId = async (req, res) => {
       },
     });
     const groupedReportData = reportData.reduce((acc, item) => {
-      const { project_id, financial_performance, project_expense, type } = item;
+      const { project_id, financial_performance, project_expense } = item;
       acc[project_id] = acc[project_id] || {
         project_id,
         financial_performance: 0,
@@ -203,10 +199,10 @@ self.getByStakeholderId = async (req, res) => {
 
       if (matchingBElement) {
         //console.log("the matching", matchingBElement.original_contract_duration)
-        console.log(
-          "The total date",
-          moment().diff(matchingBElement.commencement_date, "days")
-        );
+        // console.log(
+        //   "The total date",
+        //   moment().diff(matchingBElement.commencement_date, "days")
+        // );
         //moment().diff(commencement, 'days') / contract_duration * 100
         return {
           ...aElement,

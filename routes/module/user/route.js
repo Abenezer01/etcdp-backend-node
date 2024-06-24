@@ -1,7 +1,6 @@
 const UserController = require("../../../controllers/department/UserController.js");
 const roleController = require("../../../controllers/department/RoleController.js");
 const PermissionController = require("../../../controllers/department/PermissionController.js");
-const UserPhotoController = require("../../../controllers/department/UserPhotoController.js");
 const positionController = require("../../../controllers/department/PositionController.js");
 const departmentController = require("../../../controllers/department/departmentController.js");
 // const TestController = require("../../../controllers/TestController.js")
@@ -13,7 +12,7 @@ const ContactPersonController = require("../../../controllers/department/Contact
 const JobExperienceController = require("../../../controllers/department/JobExperienceController.js");
 
 const validateInput = require("../../../middleware/validate/module/user/validate");
-const checkEditable = require("../../../middleware/CheckEditable.js")
+const checkEditable = require("../../../middleware/CheckEditable.js");
 module.exports = function (express) {
   const route = express.Router();
 
@@ -226,7 +225,7 @@ module.exports = function (express) {
   route.get("/job-experiences/user/:id", JobExperienceController.getByUserId);
   //test
   route.post("/change-language", UserController.changeLanguage);
-  route.get("/test", departmentController.test);
+  // route.get("/test", departmentController.test);
 
   return route;
 };

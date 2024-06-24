@@ -1,10 +1,7 @@
-const { Note, Sequelize } = require("../../models");
+const { Note } = require("../../models");
 const usrData = require("../../utils/userDataFromToken");
-const actionHelper = require("../utils/action-helper");
-const paginationHelper = require("../utils/pagination-helper")
-const { getRecordById, updateRecord, deleteRecord } = require('../utils/format-helper');
-
-const Op = Sequelize.Op;
+const paginationHelper = require("../utils/pagination-helper");
+const { getRecordById, saveRecord, updateRecord, deleteRecord } = require("../utils/format-helper");
 
 let self = {};
 
@@ -19,7 +16,6 @@ self.getAll = async (req, res) => {
     }, paginatedResult.pagination);
 
   } catch (error) {
-    console.error("Error in getAll method:", error);
     res.apiError(error);
   }
 };
@@ -31,7 +27,7 @@ self.get = async (req, res) => {
 self.save = async (req, res) => {
 
   let usr = await usrData.userData(req, res);
-  req.body.user_id = usr.usrID
+  req.body.user_id = usr.usrID;
   saveRecord(Note, req, res);
 };
 
@@ -46,7 +42,7 @@ self.delete = async (req, res) => {
 self.getNoteByModelId = async (req, res) => {
   const { id } = req.params;
   try {
-    const whereCondition = { model_id: id }
+    const whereCondition = { model_id: id };
     const paginatedResult = await paginationHelper(Note, req, whereCondition);
 
     // Use the response formatter to send the success response
@@ -56,7 +52,6 @@ self.getNoteByModelId = async (req, res) => {
     }, paginatedResult.pagination);
 
   } catch (error) {
-    console.error("Error in getAll method:", error);
     res.apiError(error);
   }
 };

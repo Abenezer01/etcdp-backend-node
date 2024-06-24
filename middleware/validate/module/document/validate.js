@@ -1,9 +1,8 @@
-const validator = require("../../../../utils/validator");
 const validateReply = require("../../../../utils/validateerror");
 
 const documentTypeValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if (param == "failed") {
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid id",
     });
@@ -16,7 +15,7 @@ const documentTypeValidate = async (req, res, next) => {
 };
 const documentCategoryValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if (param == "failed") {
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid id",
     });
@@ -30,7 +29,7 @@ const documentCategoryValidate = async (req, res, next) => {
 };
 const documentSubCategoryValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if (param == "failed") {
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid id",
     });
@@ -44,7 +43,7 @@ const documentSubCategoryValidate = async (req, res, next) => {
 };
 const documentValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if (param == "failed") {
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid id",
     });
@@ -71,7 +70,7 @@ const documentValidate = async (req, res, next) => {
 const documentUpdateValidate = async (req, res, next) => {
   // return res.send("Hi Leul")
   let param = await validateReply.checkParam(req, res, next);
-  if (param == "failed") {
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid id",
     });

@@ -9,6 +9,12 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      UserPosition.belongsTo(models.Position, {
+        foreignKey: "position_id",
+      });
+      UserPosition.belongsTo(models.Department, {
+        foreignKey: "department_id",
+      });
     }
   }
   UserPosition.init(
@@ -42,21 +48,13 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     {
-      createdAt: 'created_at',
-      updatedAt: 'updated_at' ,     
+      createdAt: "created_at",
+      updatedAt: "updated_at" ,     
       sequelize,
       modelName: "UserPosition",
       tableName: "userpositions"
     }
   );
 
-  UserPosition.associate = function (models) {
-    UserPosition.belongsTo(models.Position, {
-      foreignKey: "position_id",
-    });
-    UserPosition.belongsTo(models.Department, {
-      foreignKey: "department_id",
-    });
-  };
   return UserPosition;
 };

@@ -1,6 +1,4 @@
-
-const DocumentController = require("../../../controllers/document/DocumentController");
-
+const DocumentController = require("../../../controllers/document/documentController");
 const validateData = require("../../../middleware/validate/module/document/validate");
 module.exports = function (express) {
   const route = express.Router();

@@ -9,6 +9,18 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      StakeholderStudyField.belongsTo(models.StudyField, {
+        as: "studyfield",
+        foreignKey: "studyfield_id",
+      });
+      StakeholderStudyField.belongsTo(models.StudyProgram, {
+        as: "studyprogram",
+        foreignKey: "studyprogram_id",
+      });
+      StakeholderStudyField.belongsTo(models.StudyLevel, {
+        as: "studylevel",
+        foreignKey: "studylevel_id",
+      });
     }
   }
   StakeholderStudyField.init(
@@ -26,27 +38,13 @@ module.exports = (sequelize, DataTypes) => {
       description: DataTypes.STRING,
     },
     {
-      createdAt: 'created_at',
-      updatedAt: 'updated_at' ,     
+      createdAt: "created_at",
+      updatedAt: "updated_at" ,     
       sequelize,
       modelName: "StakeholderStudyField",
       tableName: "stakeholderstudyfields"
     }
   );
 
-  StakeholderStudyField.associate = function (models) {
-    StakeholderStudyField.belongsTo(models.StudyField, {
-      as: "studyfield",
-      foreignKey: "studyfield_id",
-    });
-    StakeholderStudyField.belongsTo(models.StudyProgram, {
-      as: "studyprogram",
-      foreignKey: "studyprogram_id",
-    });
-    StakeholderStudyField.belongsTo(models.StudyLevel, {
-      as: "studylevel",
-      foreignKey: "studylevel_id",
-    });
-  };
   return StakeholderStudyField;
 };

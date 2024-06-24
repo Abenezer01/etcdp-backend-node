@@ -1,9 +1,8 @@
-const validator = require("../../../../utils/validator");
 const validateReply = require("../../../../utils/validateerror");
 
 const constructionResourceTypeValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if (param == "failed") {
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid id",
     });
@@ -16,7 +15,7 @@ const constructionResourceTypeValidate = async (req, res, next) => {
 };
 const constructionResourceCategoryValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if (param == "failed") {
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid id",
     });
@@ -30,7 +29,7 @@ const constructionResourceCategoryValidate = async (req, res, next) => {
 };
 const constructionResourceSubCategoryValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if (param == "failed") {
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid id",
     });
@@ -43,7 +42,7 @@ const constructionResourceSubCategoryValidate = async (req, res, next) => {
 };
 const constructionResourceValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if (param == "failed") {
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid id",
     });
@@ -58,7 +57,7 @@ const constructionResourceValidate = async (req, res, next) => {
 };
 const constructionResourceQuantityandPriceValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if (param == "failed") {
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid id",
     });
@@ -74,7 +73,7 @@ const constructionResourceQuantityandPriceValidate = async (req, res, next) => {
 };
 const detailResourceTypeValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if (param == "failed") {
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid id",
     });
@@ -88,7 +87,7 @@ const detailResourceTypeValidate = async (req, res, next) => {
 };
 const resourceBrandValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if (param == "failed") {
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid id",
     });
@@ -102,7 +101,7 @@ const resourceBrandValidate = async (req, res, next) => {
 };
 const resourceSpecificationValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if (param == "failed") {
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid id",
     });
@@ -116,7 +115,7 @@ const resourceSpecificationValidate = async (req, res, next) => {
 };
 const resourcePriceValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if (param == "failed") {
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid id",
     });
@@ -132,7 +131,7 @@ const resourcePriceValidate = async (req, res, next) => {
 };
 const resourceQuantityValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if (param == "failed") {
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid id",
     });
@@ -150,7 +149,7 @@ const resourceQuantityValidate = async (req, res, next) => {
 };
 const resourceImageValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if (param == "failed") {
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid id",
     });
@@ -169,7 +168,7 @@ const resourceImageValidate = async (req, res, next) => {
 };
 const resourceStudyFieldValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if (param == "failed") {
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid id",
     });
@@ -183,7 +182,7 @@ const resourceStudyFieldValidate = async (req, res, next) => {
 };
 const resourceStudyLevelValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if (param == "failed") {
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid id",
     });
@@ -197,7 +196,7 @@ const resourceStudyLevelValidate = async (req, res, next) => {
 };
 const resourceWorkExperienceValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if (param == "failed") {
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid id",
     });
@@ -212,7 +211,7 @@ const resourceWorkExperienceValidate = async (req, res, next) => {
 
 const salaryValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if (param == "failed") {
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid id",
     });

@@ -4,9 +4,9 @@ const path = require("path");
 const fs = require("fs");
 
 const actionHelper = require("../utils/action-helper");
-const paginationHelper = require("../utils/pagination-helper")
+const paginationHelper = require("../utils/pagination-helper");
 const usrData = require("../../utils/userDataFromToken");
-const { getRecordById, saveRecord, updateRecord, deleteRecord } = require('../utils/format-helper');
+const { getRecordById, deleteRecord } = require("../utils/format-helper");
 
 const Op = Sequelize.Op;
 
@@ -23,7 +23,6 @@ self.getAll = async (req, res) => {
     }, paginatedResult.pagination);
 
   } catch (error) {
-    console.error("Error in getAll method:", error);
     res.apiError(error);
   }
 };
@@ -97,14 +96,14 @@ self.save = async (req, res) => {
     }
 
     upload.mv(filePath, (err) => {
-      if (err) return res.status(500).send(err);
+      if (err) {return res.status(500).send(err);}
     });
 
     res.apiSuccess({
       data: photoData
-    })
+    });
   } catch (error) {
-    res.apiError(error)
+    res.apiError(error);
   }
 };
 
@@ -133,12 +132,12 @@ self.servePhoto = async (req, res) => {
     }
     return res.sendFile(imagePath);
   } catch (error) {
-    res.apiError(error)
+    res.apiError(error);
   }
 };
 self.serveMultiplePhoto = async (req, res) => {
   try {
-    const { id, type } = req.params;
+    const { id } = req.params;
 
     const img = await Photo.findAll({
       where: {
@@ -153,13 +152,13 @@ self.serveMultiplePhoto = async (req, res) => {
 
     res.apiSuccess({
       data: arr
-    })
+    });
     // for (i = 0; i < img.length; i++) {
     //     const imagePath = path.join(prePath, img[i].url);
     //     res.sendFile(imagePath);
     // }
   } catch (error) {
-    res.apiError(error)
+    res.apiError(error);
   }
 };
 self.update = async (req, res) => {
@@ -189,8 +188,6 @@ self.update = async (req, res) => {
           if (err) {
             throw err;
           }
-
-          console.log("Delete File successfully.");
         });
       }
     }
@@ -205,7 +202,7 @@ self.update = async (req, res) => {
     //console.log("The file path is ", filePath)
 
     file.mv(filePath, (err) => {
-      if (err) return res.status(500).send(err);
+      if (err) {return res.status(500).send(err);}
       // res.redirect('/')
     });
     await Photo.update(
@@ -220,7 +217,7 @@ self.update = async (req, res) => {
       message: "Success",
     });
   } catch (error) {
-    res.apiError(error)
+    res.apiError(error);
   }
 };
 

@@ -9,7 +9,6 @@ const io = new Server(server, { cors: { origin: "*" } });
 let clients = [];
 var Socket = {
   emit: function (event, data) {
-    console.log(event, data);
     let socket_id = Array.from(io.sockets.sockets.keys());
     // io.emit(event, data);
     io.to(socket_id).emit(event, data);

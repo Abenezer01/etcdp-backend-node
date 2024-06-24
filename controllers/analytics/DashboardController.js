@@ -1,22 +1,13 @@
 const {
-
-    Note, 
     Stakeholder, 
     StakeholderType, 
-    StakeholderCategory, 
-    StakeholderSubCategory, 
     Project, 
     ProjectType, 
     ProjectCategory, 
-    ProjectSubCategory, 
     Document, 
     DocumentType, 
-    DocumentCategory, 
-    DocumentSubCategory, 
     Resource, 
     ResourceType, 
-    ResourceCategory, 
-    ResourceSubCategory, 
     Department, 
     ProjectTime, 
     ProjectFinance, 
@@ -30,14 +21,12 @@ const {
 } = require("../../models");
 const usrData = require("../../utils/userDataFromToken");
 const { mainanalysismodules } = require("../../config/master");
-const actionHelper = require("../utils/action-helper");
-const apiHelper = require("../utils/API-helper")
+const apiHelper = require("../utils/API-helper");
 const departmentHelper = require("../utils/department-helper");
 
 const Op = Sequelize.Op;
 
 const moment = require("moment");
-const { saveActionState } = require("../utils/action-helper");
 
 let self = {};
 
@@ -100,10 +89,10 @@ self.getGeneralAnalysis = async(req, res) => {
 
         return res.apiSuccess({
             data: first
-        })
+        });
 
     } catch (error) {
-        res.apiError(error)
+        res.apiError(error);
     }
 };
 
@@ -133,7 +122,7 @@ self.getGeneralAnalysisCategory = async(req, res) => {
                 message: `${module} category not found`,
             });
         }
-        const categoryId = `${moduleArr[2]}_id`.toLowerCase()
+        const categoryId = `${moduleArr[2]}_id`.toLowerCase();
        
         let stake = await eval(Model).findAndCountAll({
             where: {
@@ -171,10 +160,10 @@ self.getGeneralAnalysisCategory = async(req, res) => {
 
         return res.apiSuccess({
             data: first
-        })
+        });
 
     } catch (error) {
-        res.apiError(error)
+        res.apiError(error);
     }
 };
 
@@ -198,7 +187,7 @@ self.getGeneralAnalysisDepartments = async(req, res) => {
             },
         });
 
-        const typeId = `${moduleArr[1]}_id`.toLowerCase()
+        const typeId = `${moduleArr[1]}_id`.toLowerCase();
         let stake = await eval(Model).findAndCountAll({
             where: {
                 [typeId]: moduletype.id,
@@ -214,7 +203,7 @@ self.getGeneralAnalysisDepartments = async(req, res) => {
         });
 
         let categoryelement = [];
-        let categoryId = `${moduleArr[2]}_id`
+        let categoryId = `${moduleArr[2]}_id`;
 
         if (categories.length > 0) {
             for (let category of categories) {
@@ -260,7 +249,7 @@ self.getGeneralAnalysisDepartments = async(req, res) => {
             }
         }
 
-        first = {
+        const first = {
             title: moduletype.title,
             series: categoryelement,
             departments: [...new Set(departments.map((item) => item.name))].filter(
@@ -271,10 +260,10 @@ self.getGeneralAnalysisDepartments = async(req, res) => {
 
         return res.apiSuccess({
             data: first
-        })
+        });
 
     } catch (error) {
-        res.apiError(error)
+        res.apiError(error);
     }
 };
 
@@ -339,7 +328,7 @@ self.getGeneralAnalysisDepartmentsByCategory = async(req, res) => {
         });
 
 
-        const typeId = `${moduleArr[1]}_id`.toLowerCase()
+        const typeId = `${moduleArr[1]}_id`.toLowerCase();
 
         let stake = await eval(Model).findAndCountAll({
             where: {
@@ -347,7 +336,7 @@ self.getGeneralAnalysisDepartmentsByCategory = async(req, res) => {
             },
         });
         
-        const categoryId = `${moduleArr[2]}_id`.toLowerCase()
+        const categoryId = `${moduleArr[2]}_id`.toLowerCase();
 
         let subcategories = await eval(SubCategoryModel).findAll({
             where: {
@@ -356,7 +345,7 @@ self.getGeneralAnalysisDepartmentsByCategory = async(req, res) => {
         });
 
         let subcategoryelement = {};
-        let subcategoryId = `${moduleArr[3]}_id`.toLowerCase()
+        let subcategoryId = `${moduleArr[3]}_id`.toLowerCase();
 
         if (subcategories.length > 0) {
             for (let subcategory of subcategories) {
@@ -410,10 +399,10 @@ self.getGeneralAnalysisDepartmentsByCategory = async(req, res) => {
 
         return res.apiSuccess({
             data: first
-        })
+        });
 
     } catch (error) {
-        res.apiError(error)
+        res.apiError(error);
     }
 };
 
@@ -525,9 +514,9 @@ self.getStakeholderTypesAnalysis = async(req, res) => {
 
         return res.apiSuccess({
             data: arr
-        })
+        });
     } catch (error) {
-        res.apiError(error)
+        res.apiError(error);
     }
 };
 
@@ -588,9 +577,9 @@ self.getProjectTypesAnalysis = async(req, res) => {
 
         return res.apiSuccess({
             data: arr
-        })
+        });
     } catch (error) {
-        res.apiError(error)
+        res.apiError(error);
     }
 };
 
@@ -641,9 +630,9 @@ self.getResourceTypesAnalysis = async(req, res) => {
 
         return res.apiSuccess({
             data: arr
-        })
+        });
     } catch (error) {
-        res.apiError(error)
+        res.apiError(error);
     }
 };
 
@@ -752,9 +741,9 @@ self.getModuleEachTypesAnalysis = async(req, res) => {
                 years: Object.keys(obj),
                 series: Object.values(obj)
             }
-        })
+        });
     } catch (error) {
-        res.apiError(error)
+        res.apiError(error);
     }
 };
 
@@ -807,9 +796,9 @@ self.getModuleEachCategoriesAnalysis = async(req, res) => {
                 years: Object.keys(obj),
                 series: Object.values(obj),
             }
-        })
+        });
     } catch (error) {
-        res.apiError(error)
+        res.apiError(error);
     }
 };
 
@@ -829,9 +818,9 @@ self.getCategoriesByTypeId = async(req, res) => {
 
         return res.apiSuccess({
             data: modulecategories
-        })
+        });
     } catch (error) {
-        res.apiError(error)
+        res.apiError(error);
     }
 };
 
@@ -849,16 +838,16 @@ self.getSubCategoriesByModuleCategoryId = async(req, res) => {
             },
         });
 
-        return res.apiSuccess(modulesubcategories)
+        return res.apiSuccess({data: modulesubcategories});
 
     } catch (error) {
-        res.apiError(error)
+        res.apiError(error);
     }
 };
 
 self.getGeneralAnalysisSubCategoryDepartments = async (req, res) => {
 
-    let {module, id} = req.params
+    let {module, id} = req.params;
     try {
       const [Model, , , SubCategoryModel] = mainanalysismodules[module];
   
@@ -868,11 +857,11 @@ self.getGeneralAnalysisSubCategoryDepartments = async (req, res) => {
         where: {
             id: departmentID
         }
-      })
+      });
 
       let departments = await departmentHelper.getChildren(departmentID);
 
-      departments.unshift(rootdepartment)
+      departments.unshift(rootdepartment);
 
   
       const modulesubcategory = await eval(SubCategoryModel).findOne({ where: { id } });
@@ -896,28 +885,27 @@ self.getGeneralAnalysisSubCategoryDepartments = async (req, res) => {
   
       return res.apiSuccess({
         data: data
-      })
+      });
 
     } catch (error) {
-      console.error(error);
-      res.apiError(error)
+      res.apiError(error);
     }
-}
+};
 
 
 self.getProjectGeneralFinancialAnalysis = async(req, res) => {
     try {
-        let projecttypes = await ProjectType.findAll()
+        let projecttypes = await ProjectType.findAll();
 
-        let arr  = []
+        let arr  = [];
         for(let type of projecttypes) {
             let projects = await Project.findAll({
                 where: {
                     projecttype_id: type.id
                 }
-            })
+            });
 
-            let proIDs = projects.map((item)=> item.id).filter(n=>n)
+            let proIDs = projects.map((item)=> item.id).filter(n=>n);
 
             //main contract finance
 
@@ -927,7 +915,7 @@ self.getProjectGeneralFinancialAnalysis = async(req, res) => {
                         [Op.in]: proIDs
                     }
                 }
-            })
+            });
 
             const maincontractpricetotal  = maincontractpriceamount.reduce((total, item) => total + item.main_contract_price_amount, 0);
 
@@ -937,40 +925,40 @@ self.getProjectGeneralFinancialAnalysis = async(req, res) => {
                 id: type.id,
                 name: type.title,
                 main_contract: maincontractpricetotal
-            })
+            });
 
 
         }
 
         return res.apiSuccess({
             data: arr
-        })
+        });
 
     } catch (error) {
-        res.apiError(error)
+        res.apiError(error);
     }
-}
+};
 
 self.getProjectTypeCategoriesFinancialAnalysis = async(req, res) => {
-    let {id} = req.params
+    let {id} = req.params;
     try {
         let projectcategories = await ProjectCategory.findAll({
             where: {
                 projecttype_id: id
             }
-        })
+        });
 
 
-        let arr  = []
+        let arr  = [];
 
         for(let category of projectcategories) {
             let projects = await Project.findAll({
                 where: {
                     projectcategory_id: category.id
                 }
-            })
+            });
 
-            let proIDs = projects.map((item)=> item.id).filter(n=>n)
+            let proIDs = projects.map((item)=> item.id).filter(n=>n);
 
             //main contract finance
 
@@ -980,7 +968,7 @@ self.getProjectTypeCategoriesFinancialAnalysis = async(req, res) => {
                         [Op.in]: proIDs
                     }
                 }
-            })
+            });
 
             const maincontractpricetotal  = maincontractpriceamount.reduce((total, item) => total + item.main_contract_price_amount, 0);
 
@@ -990,30 +978,30 @@ self.getProjectTypeCategoriesFinancialAnalysis = async(req, res) => {
                 id: category.id,
                 name: category.title,
                 main_contract: maincontractpricetotal
-            })
+            });
 
 
         }
 
-        return res.json(arr)
+        return res.json(arr);
     } catch (error) {
         return res.status(500).json({
             message: error.message
-        })
+        });
     }
-}
+};
 self.getProjectTypeFinancialInformation = async(req, res) => {
     try {
 
-        let {id} = req.params
+        let {id} = req.params;
 
         let projects = await Project.findAll({
             where: {
                 projecttype_id: id
             }
-        })
+        });
 
-        let proIDs = projects.map((item)=> item.id).filter(n=>n)
+        let proIDs = projects.map((item)=> item.id).filter(n=>n);
 
         let maincontractpriceamount = await ProjectFinance.findAll({
             where: {
@@ -1021,7 +1009,7 @@ self.getProjectTypeFinancialInformation = async(req, res) => {
                     [Op.in]: proIDs
                 }
             }
-        })
+        });
 
         const maincontractpricetotal  = maincontractpriceamount.reduce((total, item) => total + item.main_contract_price_amount, 0);
 
@@ -1032,7 +1020,7 @@ self.getProjectTypeFinancialInformation = async(req, res) => {
                     [Op.in]: proIDs
                 }
             }
-        })
+        });
         
         
         
@@ -1048,7 +1036,7 @@ self.getProjectTypeFinancialInformation = async(req, res) => {
         const omission_total = omissions.reduce((total, item) => total + item.amount, 0);
         // const special_total = specials.reduce((total, item) => total + item.amount, 0);
 
-        let totalcontractamount = maincontractpricetotal + variation_total + supplement_total - omission_total
+        let totalcontractamount = maincontractpricetotal + variation_total + supplement_total - omission_total;
         
         return res.apiSuccess({
             data: {
@@ -1059,11 +1047,11 @@ self.getProjectTypeFinancialInformation = async(req, res) => {
                 omission: omission_total
             }
         })
-    
+    ;
     } catch (error) {
-        res.apiError(error)
+        res.apiError(error);
     }
-}
+};
 
 self.getProjectTypeFinancialInformationDepartments = async(req, res) => {
     
@@ -1090,10 +1078,10 @@ self.getProjectTypeFinancialInformationDepartments = async(req, res) => {
 
 
 
-        let series = []
+        let series = [];
         series = await Promise.all(departments.map((dept) => {
             const departmentprojects = models.filter((model) => model.department_id === dept.id);
-            let proIDs = departmentprojects.map((item)=> item.id).filter(n=>n)
+            let proIDs = departmentprojects.map((item)=> item.id).filter(n=>n);
 
             let maincontractpriceamount = ProjectFinance.findAll({
                 where: {
@@ -1101,10 +1089,10 @@ self.getProjectTypeFinancialInformationDepartments = async(req, res) => {
                         [Op.in]: proIDs
                     }
                 }
-            })
+            });
 
         
-            const maincontractpricetotal  = 0 
+            const maincontractpricetotal  = 0 ;
             if(maincontractpriceamount.length > 0){
                 maincontractpriceamount.reduce((total, test) => total + test.main_contract_price_amount, 0);
 
@@ -1117,11 +1105,11 @@ self.getProjectTypeFinancialInformationDepartments = async(req, res) => {
                         [Op.in]: proIDs
                     }
                 }
-            })
+            });
 
-            const variations = variationsupplements.length > 0 ? variationsupplements.filter((item) => item.type === "VARIATION") : []
-            const supplements = variationsupplements.length > 0 ? variationsupplements.filter((item) => item.type === "SUPPLEMENT") : []
-            const omissions = variationsupplements.length > 0? variationsupplements.filter((item) => item.type === "OMISSION") : []
+            const variations = variationsupplements.length > 0 ? variationsupplements.filter((item) => item.type === "VARIATION") : [];
+            const supplements = variationsupplements.length > 0 ? variationsupplements.filter((item) => item.type === "SUPPLEMENT") : [];
+            const omissions = variationsupplements.length > 0? variationsupplements.filter((item) => item.type === "OMISSION") : [];
 
             const variation_total = variations.length >0 ? variations.reduce((total, item) => total + item.amount, 0) : 0;
             const supplement_total = supplements.length > 0 ? supplements.reduce((total, item) => total + item.amount, 0) : 0;
@@ -1134,8 +1122,8 @@ self.getProjectTypeFinancialInformationDepartments = async(req, res) => {
                 supplement: supplement_total, 
                 variation: variation_total,
                 omission: omission_total
-            }
-            }))
+            };
+            }));
 
 
             let seriesArr = [
@@ -1155,7 +1143,7 @@ self.getProjectTypeFinancialInformationDepartments = async(req, res) => {
                     name: "Omission",
                     data: series.map((item)=> item.omission)
                 }
-            ]
+            ];
 
 
 
@@ -1167,53 +1155,53 @@ self.getProjectTypeFinancialInformationDepartments = async(req, res) => {
                 ),
     
             }
-        })
+        });
     } catch (error) {
-        res.apiError(error)
+        res.apiError(error);
     }
-}
+};
 
 self.getProjectCategoryLocationInformation = async(req, res) => {
     try {
 
-        let {id} = req.params
+        let {id} = req.params;
 
         let projects = await Project.findAll({
             where: {
                 projectcategory_id: id
             }
-        })
+        });
 
-        let arr = []
+        let arr = [];
 
         for(let pro of projects){
             let proaddress =  await Address.findOne({
                 where: {
                     model_id: pro.id
                 }
-            })
+            });
             if(proaddress){
 
                 arr.push([
                     proaddress.easting,
                     proaddress.northing,
                     pro.id
-                ])
+                ]);
             }
         }
 
 
         return res.apiSuccess({
             data: arr
-        })
+        });
 
 
     } catch (error) {
         return res.status(500).json({
             message: error.message
-        })
+        });
     }
-}
+};
 
 //stakeholder
 self.getStakeholderCategoryLocationInformation = async(req, res) => {
@@ -1240,44 +1228,44 @@ self.getStakeholderCategoryLocationInformation = async(req, res) => {
 
         // let locations = stakeholdersslocations.map(obj => [obj.easting, obj.northing]);
 
-        let {id} = req.params
+        let {id} = req.params;
 
         let stakeholders = await Stakeholder.findAll({
             where: {
                 stakeholdercategory_id: id
             }
-        })
+        });
 
-        let arr = []
+        let arr = [];
 
         for(let stake of stakeholders){
             let stakeaddress =  await Address.findOne({
                 where: {
                     model_id: stake.id
                 }
-            })
+            });
             if(stakeaddress){
 
                 arr.push([
                     stakeaddress.easting,
                     stakeaddress.northing,
                     stake.id
-                ])
+                ]);
             }
         }
 
         return res.apiSuccess({
             data: arr
-        })
+        });
     } catch (error) {
-        res.apiError(error)
+        res.apiError(error);
     }
-}
+};
 
 
 self.getProjectYearlyFinancialPlan = async(req, res) => {
     try {
-        let {id, year} = req.params
+        let {id, year} = req.params;
 
         
 
@@ -1285,10 +1273,10 @@ self.getProjectYearlyFinancialPlan = async(req, res) => {
             where: {
                 projecttype_id: id
             }
-        })
+        });
 
 
-        let proIDs = projects.map((item)=> item.id)
+        let proIDs = projects.map((item)=> item.id);
 
 
 
@@ -1300,7 +1288,7 @@ self.getProjectYearlyFinancialPlan = async(req, res) => {
                 }
 
             }
-        })
+        });
 
         let plansArr = await Promise.all(
             plans.map(async(plan) => {
@@ -1309,54 +1297,54 @@ self.getProjectYearlyFinancialPlan = async(req, res) => {
                         model_id: plan.id
                     },
                     order: [["created_at", "DESC"]]
-                })
+                });
 
-                let temp = plan.toJSON()
-                temp.action = action.action
-                return temp
+                let temp = plan.toJSON();
+                temp.action = action.action;
+                return temp;
                 
             })
-        )
+        );
 
-        let planstatus = ["REGISTER", "CHECK", "APPROVE", "AUTHORIZE"]
+        let planstatus = ["REGISTER", "CHECK", "APPROVE", "AUTHORIZE"];
 
-        let quarters  = [1, 2, 3, 4]
+        let quarters  = [1, 2, 3, 4];
 
         let statusArr = planstatus.map((status) => {
-            let eachStatusArr = plansArr.filter((plan)=> plan.action===status)
+            let eachStatusArr = plansArr.filter((plan)=> plan.action===status);
         
             let quarterArr = quarters.map((qua) => {
-                let each = eachStatusArr.filter((b) => b.quarter===qua.toString())
-                return each.length
-            })
+                let each = eachStatusArr.filter((b) => b.quarter===qua.toString());
+                return each.length;
+            });
             return {
                 name: status,
                 data: quarterArr
-            }
-        })
+            };
+        });
 
         return res.apiSuccess({
             data: statusArr
-        })
+        });
 
         
     } catch (error) {
-        res.apiError(error)
+        res.apiError(error);
     }
-}
+};
 
 self.getProjectYearlyFinancialReport = async(req, res) => {
     try {
-        let {id, year} = req.params
+        let {id, year} = req.params;
 
         let projects = await Project.findAll({
             where: {
                 projecttype_id: id
             }
-        })
+        });
 
 
-        let proIDs = projects.map((item)=> item.id)
+        let proIDs = projects.map((item)=> item.id);
 
 
 
@@ -1368,7 +1356,7 @@ self.getProjectYearlyFinancialReport = async(req, res) => {
                 }
 
             }
-        })
+        });
 
         let reportsArr = await Promise.all(
             reports.map(async(report) => {
@@ -1377,86 +1365,86 @@ self.getProjectYearlyFinancialReport = async(req, res) => {
                         model_id: report.id
                     },
                     order: [["created_at", "DESC"]]
-                })
+                });
 
-                let temp = report.toJSON()
-                temp.action = action.action
-                return temp
+                let temp = report.toJSON();
+                temp.action = action.action;
+                return temp;
                 
             })
-        )
+        );
 
-        let reportstatus = ["REGISTER", "CHECK", "APPROVE", "AUTHORIZE"]
+        let reportstatus = ["REGISTER", "CHECK", "APPROVE", "AUTHORIZE"];
 
-        let quarters  = [1, 2, 3, 4]
+        let quarters  = [1, 2, 3, 4];
 
         let statusArr = reportstatus.map((status) => {
-            let eachStatusArr = reportsArr.filter((report)=> report.action===status)
+            let eachStatusArr = reportsArr.filter((report)=> report.action===status);
         
             let quarterArr = quarters.map((qua) => {
-                let each = eachStatusArr.filter((b) => b.quarter===qua.toString())
-                return each.length
-            })
+                let each = eachStatusArr.filter((b) => b.quarter===qua.toString());
+                return each.length;
+            });
             return {
                 name: status,
                 data: quarterArr
-            }
-        })
+            };
+        });
 
         return res.apiSuccess({
             data: statusArr
-        })
+        });
 
         
     } catch (error) {
-        res.apiError(error)
+        res.apiError(error);
     }
-}
+};
 
 self.getProjectYearlyPerformance = async(req, res) => {
 
     try {
 
-        let {id,year, attr} = req.params
-        let cpm = req.query.cpm
-        if(cpm==Boolean(true)){
-            const cpmplans = await apiHelper.getExternalData('plan')
-            const cpmreports = await apiHelper.getExternalData('report')
+        let {id,year, attr} = req.params;
+        let cpm = req.query.cpm;
+        if(cpm===Boolean(true)){
+            const cpmplans = await apiHelper.getExternalData("plan");
+            const cpmreports = await apiHelper.getExternalData("report");
 
 
-            plans = cpmplans.filter((item) => item.year === year.toString())
-            reports = cpmreports.filter((item) => item.year === year.toString())
+            let plans = cpmplans.filter((item) => item.year === year.toString());
+            let reports = cpmreports.filter((item) => item.year === year.toString());
 
-            let months  = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+            let months  = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
 
             let planned = months.map((month) => {
-                let eachArr = plans.filter((plan)=> plan.month===month.toString())
+                let eachArr = plans.filter((plan)=> plan.month===month.toString());
                 
-                let attrValue = eachArr.reduce((total, item)=> total+item[attr], 0)
+                let attrValue = eachArr.reduce((total, item)=> total+item[attr], 0);
                 
-                return attrValue
-            })
+                return attrValue;
+            });
 
             let actual = months.map((month) => {
-                let eachArr = reports.filter((report)=> report.month===month.toString())
+                let eachArr = reports.filter((report)=> report.month===month.toString());
                 
-                let attrValue = eachArr.reduce((total, item)=> total+item[attr], 0)
+                let attrValue = eachArr.reduce((total, item)=> total+item[attr], 0);
                 
-                return attrValue
-            })
+                return attrValue;
+            });
 
             let performanceArr = [
                 {
-                    name: 'Planned',
+                    name: "Planned",
                     data: planned
                 },
                 {
-                    name: 'Actual',
+                    name: "Actual",
                     data: actual
                 }
-            ]
+            ];
 
-            return res.apiSuccess(performanceArr)
+            return res.apiSuccess(performanceArr);
         }else{
             
        
@@ -1464,10 +1452,10 @@ self.getProjectYearlyPerformance = async(req, res) => {
                 where: {
                     projecttype_id: id
                 }
-            })
+            });
 
 
-            let proIDs = projects.map((item)=> item.id)
+            let proIDs = projects.map((item)=> item.id);
 
             let plans = await ProjectPlan.findAll({
                 where: {
@@ -1485,61 +1473,61 @@ self.getProjectYearlyPerformance = async(req, res) => {
                         [Op.in]: proIDs
                     }
                 }
-            })
+            });
 
 
-            let quarters  = [1, 2, 3, 4]
+            let quarters  = [1, 2, 3, 4];
 
             let planned = quarters.map((qua) => {
-                let eachArr = plans.filter((plan)=> plan.quarter===qua.toString())
+                let eachArr = plans.filter((plan)=> plan.quarter===qua.toString());
                 
-                let attrValue = eachArr.reduce((total, item)=> total+item[attr], 0)
+                let attrValue = eachArr.reduce((total, item)=> total+item[attr], 0);
                 
-                return attrValue
-            })
+                return attrValue;
+            });
 
             let actual = quarters.map((qua) => {
-                let eachArr = reports.filter((report)=> report.quarter===qua.toString())
+                let eachArr = reports.filter((report)=> report.quarter===qua.toString());
                 
-                let attrValue = eachArr.reduce((total, item)=> total+item[attr], 0)
+                let attrValue = eachArr.reduce((total, item)=> total+item[attr], 0);
                 
-                return attrValue
-            })
+                return attrValue;
+            });
 
             let performanceArr = [
                 {
-                    name: 'Planned',
+                    name: "Planned",
                     data: planned
                 },
                 {
-                    name: 'Actual',
+                    name: "Actual",
                     data: actual
                 }
-            ]
+            ];
 
             return res.apiSuccess({
                 data: performanceArr
-            })
+            });
         }
 
         
     } catch (error) {
-        res.apiError(error)
+        res.apiError(error);
     }
-}
+};
 
 self.getProjectAnnualCostAndScheduleVariances = async(req, res) => {
     try {
 
-        let {id, year} = req.params
+        let {id, year} = req.params;
 
         let projects = await Project.findAll({
             where: {
                 projecttype_id: id
             }
-        })
+        });
 
-        let proIDs = projects.map((item)=> item.id)
+        let proIDs = projects.map((item)=> item.id);
 
         
 
@@ -1551,61 +1539,61 @@ self.getProjectAnnualCostAndScheduleVariances = async(req, res) => {
                     [Op.in]: proIDs
                 }
             }
-        })
+        });
 
 
 
-        const cpmplans = await apiHelper.getExternalData('plan')
+        const cpmplans = await apiHelper.getExternalData("plan");
         // cpmplans = cpmsplans.filter((item) => item.year === year.toString())
 
-        plans = plans.concat(cpmplans)
+        plans = plans.concat(cpmplans);
 
-        let reports = await projectreport.findAll({
+        let reports = await ProjectReport.findAll({
             where: {
                 year: Number(year),
                 project_id: {
                     [Op.in]: proIDs
                 }
             }
-        })
+        });
 
 
-        const cpmreports = await apiHelper.getExternalData('report')
+        const cpmreports = await apiHelper.getExternalData("report");
         // cpmreports = cpmreports.filter((item) => item.year === year.toString())
 
 
-        reports = reports.concat(cpmreports)
+        reports = reports.concat(cpmreports);
 
-        let quarters  = [1, 2, 3, 4]
+        let quarters  = [1, 2, 3, 4];
 
         let allVariances = quarters.map((qua) => {
-            let eachPlannedArr = plans.filter((plan)=> plan.quarter===qua.toString())
-            let eachReportArr = reports.filter((report)=> report.quarter===qua.toString())
+            let eachPlannedArr = plans.filter((plan)=> plan.quarter===qua.toString());
+            let eachReportArr = reports.filter((report)=> report.quarter===qua.toString());
             
-            let actualFinance = eachReportArr.reduce((total, item)=> total+item.financial_performance, 0)
-            let plannedFinance = eachPlannedArr.reduce((total, item)=> total+item.financial_performance, 0)
-            let actualCost = eachReportArr.reduce((total, item)=> total+item.projectexpense, 0)
+            let actualFinance = eachReportArr.reduce((total, item)=> total+item.financial_performance, 0);
+            let plannedFinance = eachPlannedArr.reduce((total, item)=> total+item.financial_performance, 0);
+            let actualCost = eachReportArr.reduce((total, item)=> total+item.projectexpense, 0);
 
 
-            let spi = (actualFinance / (plannedFinance == 0 ? 1 : plannedFinance)) * 100;
-            let cpi = (actualFinance / (actualCost == 0 ? 1 : actualCost)) * 100;
+            let spi = (actualFinance / (plannedFinance === 0 ? 1 : plannedFinance)) * 100;
+            let cpi = (actualFinance / (actualCost === 0 ? 1 : actualCost)) * 100;
 
             let sv = actualFinance - plannedFinance;
             let cv = actualFinance - actualCost;
             
             return {
                 spi,cpi, sv, cv
-            }
-        })
+            };
+        });
 
 
 
-        let spi = allVariances.map((item)=> item.spi)
-        let cpi = allVariances.map((item)=> item.cpi)
+        let spi = allVariances.map((item)=> item.spi);
+        let cpi = allVariances.map((item)=> item.cpi);
 
 
-        let sv = allVariances.map((item)=> item.sv)
-        let cv = allVariances.map((item)=> item.cv)
+        let sv = allVariances.map((item)=> item.sv);
+        let cv = allVariances.map((item)=> item.cv);
 
         let spi_cpi = [
             {
@@ -1615,7 +1603,7 @@ self.getProjectAnnualCostAndScheduleVariances = async(req, res) => {
             {
                 name: "cpi",
                 data: cpi
-            }]
+            }];
          let sv_cv = [
             {
                 name: "sv",
@@ -1625,7 +1613,7 @@ self.getProjectAnnualCostAndScheduleVariances = async(req, res) => {
                 name: "cv",
                 data: cv
             }
-        ]
+        ];
 
     
         return res.apiSuccess({
@@ -1633,17 +1621,18 @@ self.getProjectAnnualCostAndScheduleVariances = async(req, res) => {
                 spi_cpi,
                 sv_cv
             }
-        })
+        });
 
         
     } catch (error) {
-        res.apiError(error)
+        res.apiError(error);
     }
-}
+};
 
 self.getAllProjectAnnualFinancial = async(req, res) => {
     try {
-        let {id,year, attr} = req.params
+        let {year, attr} = req.params;
+        // let {id,year, attr} = req.params;
 
 
         // let projects = await project.findAll({
@@ -1672,41 +1661,41 @@ self.getAllProjectAnnualFinancial = async(req, res) => {
         //     }
         // })
 
-        const cpmplans = await apiHelper.getExternalData('plan')
-        const cpmreports = await apiHelper.getExternalData('report')
+        const cpmplans = await apiHelper.getExternalData("plan");
+        const cpmreports = await apiHelper.getExternalData("report");
 
 
-        plans = cpmplans.filter((item) => item.year === year.toString())
-        reports = cpmreports.filter((item) => item.year === year.toString())
+        let plans = cpmplans.filter((item) => item.year === year.toString());
+        let reports = cpmreports.filter((item) => item.year === year.toString());
 
-        let months  = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+        let months  = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
 
         let planned = months.map((month) => {
-            let eachArr = plans.filter((plan)=> plan.month===month.toString())
+            let eachArr = plans.filter((plan)=> plan.month===month.toString());
             
-            let attrValue = eachArr.reduce((total, item)=> total+item[attr], 0)
+            let attrValue = eachArr.reduce((total, item)=> total+item[attr], 0);
             
-            return attrValue
-        })
+            return attrValue;
+        });
 
         let actual = months.map((month) => {
-            let eachArr = reports.filter((report)=> report.month===month.toString())
+            let eachArr = reports.filter((report)=> report.month===month.toString());
             
-            let attrValue = eachArr.reduce((total, item)=> total+item[attr], 0)
+            let attrValue = eachArr.reduce((total, item)=> total+item[attr], 0);
             
-            return attrValue
-        })
+            return attrValue;
+        });
 
         let performanceArr = [
             {
-                name: 'Planned',
+                name: "Planned",
                 data: planned
             },
             {
-                name: 'Actual',
+                name: "Actual",
                 data: actual
             }
-        ]
+        ];
 
         return res.apiSuccess({
             data: performanceArr
@@ -1714,9 +1703,9 @@ self.getAllProjectAnnualFinancial = async(req, res) => {
 
         
     } catch (error) {
-        res.apiError(error)
+        res.apiError(error);
     }
-}
+};
 
 
 

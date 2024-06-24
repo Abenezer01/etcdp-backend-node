@@ -9,6 +9,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      EmployeeAge.belongsTo(models.AgeLevel, {
+        as: "agelevel",
+        foreignKey: "agelevel_id",
+      });
     }
   }
   EmployeeAge.init(
@@ -22,10 +26,6 @@ module.exports = (sequelize, DataTypes) => {
       stakeholder_id: {
         type: DataTypes.UUID,
         allowNull: false,
-      },
-
-      stakeholder_id: {
-        type: DataTypes.UUID,
       },
       year: {
         type: DataTypes.DATE,
@@ -59,18 +59,13 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     {
-      createdAt: 'created_at',
-      updatedAt: 'updated_at' ,     
+      createdAt: "created_at",
+      updatedAt: "updated_at" ,     
       sequelize,
       modelName: "EmployeeAge",
       tableName: "employeeages"
     }
   );
-  EmployeeAge.associate = function (models) {
-    EmployeeAge.belongsTo(models.AgeLevel, {
-      as: "agelevel",
-      foreignKey: "agelevel_id",
-    });
-  };
+
   return EmployeeAge;
 };

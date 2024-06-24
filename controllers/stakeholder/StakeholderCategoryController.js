@@ -1,6 +1,5 @@
-const actionHelper = require("../utils/action-helper");
 const paginationHelper = require("../utils/pagination-helper");
-const { getRecordById, saveRecord, updateRecord, deleteRecord } = require('../utils/format-helper');
+const { getRecordById, saveRecord, updateRecord, deleteRecord } = require("../utils/format-helper");
 const {
   StakeholderCategory,
   StakeholderSubCategory,
@@ -24,7 +23,6 @@ self.getAll = async (req, res) => {
     }, paginatedResult.pagination);
 
   } catch (error) {
-    console.error("Error in getAll method:", error);
     res.apiError(error);
   }
 };
@@ -33,7 +31,7 @@ self.getAll = async (req, res) => {
 self.getAllCatByTypeId = async (req, res) => {
   const { id } = req.params;
   try {
-    const whereCondition = { stakeholdertype_id: id }
+    const whereCondition = { stakeholdertype_id: id };
 
     const includeOptions = [
       {
@@ -53,7 +51,6 @@ self.getAllCatByTypeId = async (req, res) => {
     }, paginatedResult.pagination);
 
   } catch (error) {
-    console.error("Error in getAll method:", error);
     res.apiError(error);
   }
 };

@@ -9,6 +9,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      ResourceStudyLevel.belongsTo(models.StudyLevel, {
+        as: "studylevel",
+        foreignKey: "studylevel_id",
+      });
     }
   }
   ResourceStudyLevel.init(
@@ -24,18 +28,13 @@ module.exports = (sequelize, DataTypes) => {
       description: DataTypes.STRING,
     },
     {
-      createdAt: 'created_at',
-      updatedAt: 'updated_at' ,     
+      createdAt: "created_at",
+      updatedAt: "updated_at" ,     
       sequelize,
       modelName: "ResourceStudyLevel",
       tableName: "resourcestudylevels"
     }
   );
-  ResourceStudyLevel.associate = function (models) {
-    ResourceStudyLevel.belongsTo(models.StudyLevel, {
-      as: "studylevel",
-      foreignKey: "studylevel_id",
-    });
-  };
+
   return ResourceStudyLevel;
 };

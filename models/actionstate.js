@@ -9,6 +9,9 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      ActionState.belongsTo(models.Position, {
+        foreignKey: "position_id",
+      });
     }
   }
   ActionState.init(
@@ -43,22 +46,12 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     {
-      createdAt: 'created_at',
-      updatedAt: 'updated_at' ,     
+      createdAt: "created_at",
+      updatedAt: "updated_at" ,     
       sequelize,
       modelName: "ActionState",
       tableName: "actionstates",
-
-      timestamps: true,
-      createdAt: 'created_at',
-      updatedAt: 'updated_at'
     }
   );
-
-  ActionState.associate = function (models) {
-    ActionState.belongsTo(models.Position, {
-      foreignKey: "position_id",
-    });
-  };
   return ActionState;
 };

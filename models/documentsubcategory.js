@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      DocumentSubCategory.belongsTo(models.StakeholderCategory);
     }
   }
   DocumentSubCategory.init(
@@ -37,16 +37,13 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     {
-      createdAt: 'created_at',
-      updatedAt: 'updated_at' ,     
+      createdAt: "created_at",
+      updatedAt: "updated_at" ,     
       sequelize,
       modelName: "DocumentSubCategory",
       tableName: "documentsubcategories"
     }
   );
-  // DocumentSubCategory.associate = function(models) {
-
-  //     DocumentSubCategory.belongsTo(models.StakeholderCategory)
-  // };
+  
   return DocumentSubCategory;
 };

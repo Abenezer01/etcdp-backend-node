@@ -1,9 +1,7 @@
 const {
   Project,
-  ActionState,
   ProjectStakeholder,
   Stakeholder,
-  User,
   ProjectTime,
   ProjectFinance,
   ProjectStatus,
@@ -27,6 +25,7 @@ const actionHelper = require("../utils/action-helper");
 const cipherHelper = require("../utils/cipher-helper");
 const apiHelper = require("../utils/API-helper");
 const paginationHelper = require("../utils/pagination-helper");
+const { deleteRecord } = require("../utils/format-helper");
 
 
 let self = {};
@@ -38,13 +37,13 @@ dotenv.config();
 self.getAllCPMProject = async(req, res) => {
   try {
 
-    const cpmProjects = await apiHelper.getExternalData('project')
-    let projects = await Project.findAll()
-    const mergedData = cpmProjects.concat(projects)
+    const cpmProjects = await apiHelper.getExternalData("project");
+    let projects = await Project.findAll();
+    const mergedData = cpmProjects.concat(projects);
     
     return res.apiSuccess({
       data: mergedData
-    })
+    });
 
 
     //Stakeholder
@@ -64,9 +63,9 @@ self.getAllCPMProject = async(req, res) => {
   } catch (error) {
     return res.json({
       message: error.message
-    })
+    });
   }
-}
+};
 
 self.getAll = async (req, res) => {
   try {
@@ -79,7 +78,6 @@ self.getAll = async (req, res) => {
     }, paginatedResult.pagination);
 
   } catch (error) {
-    console.error("Error in getAll method:", error);
     res.apiError(error);
   }
 };
@@ -92,7 +90,6 @@ self.getProjectByTypeId = async (req, res) => {
 
   const { projecttype_id, projectcategory_id, projectsubcategory_id } =
     req.body;
-  const { id } = req.params;
   try {
     const filter = [{ projecttype_id: projecttype_id }];
     if (projectcategory_id) {
@@ -132,7 +129,7 @@ self.getProjectByTypeId = async (req, res) => {
       },
     });
     const groupedReportData = reportData.reduce((acc, item) => {
-      const { project_id, financial_performance, project_expense, type } = item;
+      const { project_id, financial_performance, project_expense } = item;
       acc[project_id] = acc[project_id] || {
         project_id,
         financial_performance: 0,
@@ -238,10 +235,10 @@ self.getProjectByTypeId = async (req, res) => {
 
       if (matchingBElement) {
         //console.log("the matching", matchingBElement.original_contract_duration)
-        console.log(
-          "The total date",
-          moment().diff(matchingBElement.commencement_date, "days")
-        );
+        // console.log(
+        //   "The total date",
+        //   moment().diff(matchingBElement.commencement_date, "days")
+        // );
         //moment().diff(commencement, 'days') / contract_duration * 100
         return {
           ...aElement,
@@ -298,7 +295,7 @@ self.getProjectByTypeIdPast = async (req, res) => {
       filter.push({ projectsubcategory_id: projectsubcategory_id });
     }
 
-    const whereCondition = { [Op.and]: filter }
+    const whereCondition = { [Op.and]: filter };
     const paginatedResult = await paginationHelper(Project, req, whereCondition);
 
     // Use the response formatter to send the success response
@@ -308,58 +305,7 @@ self.getProjectByTypeIdPast = async (req, res) => {
     }, paginatedResult.pagination);
 
   } catch (error) {
-    console.error("Error in getAll method:", error);
     res.apiError(error);
-  }
-};
-
-
-self.getAlll = async (req, res) => {
-  try {
-    let usr = await usrData.userData(req, res);
-    //test
-    let us = {
-      id: usr.usrID,
-      department_id: usr.departmentID,
-    };
-    let department_id = us.department_id;
-
-    let exist = await getChildren(department_id);
-
-    let other = await Project.findAll({
-      order: [["created_at", "DESC"]],
-      where: {
-        department_id: {
-          [Op.in]: exist,
-        },
-      },
-    });
-
-    let mine = await Project.findAll({
-      where: {
-        department_id,
-      },
-    });
-
-    let otherArr = [];
-    for (let da of other) {
-      let action = await ActionState.findOne({
-        where: {
-          model_id: da.id,
-          action: "APPROVE",
-        },
-      });
-      if (action) {
-        otherArr.push(da);
-      }
-    }
-
-    let data = mine.concat(otherArr);
-    return res.json(data);
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
   }
 };
 
@@ -397,10 +343,10 @@ self.get = async (req, res) => {
 
     return res.apiSuccess({
       data
-    })
+    });
 
   } catch (error) {
-    res.apiError(error)
+    res.apiError(error);
   }
 };
 
@@ -459,17 +405,17 @@ self.save = async (req, res) => {
       
       return res.apiSuccess({
         data
-      })
+      });
     }
   } catch (error) {
-    res.apiError(error)
+    res.apiError(error);
   }
 };
 self.update = async (req, res) => {
   try {
     let id = req.params.id;
     let body = req.body;
-    let data = await Project.update(body, {
+    await Project.update(body, {
       where: {
         id: id,
       },
@@ -490,10 +436,10 @@ self.update = async (req, res) => {
 
     return res.apiSuccess({
       data: updatedStatus
-    })
+    });
     
   } catch (error) {
-    res.apiError(error)
+    res.apiError(error);
   }
 };
 
@@ -581,10 +527,10 @@ self.getProjectDetail = async (req, res) => {
         time: time,
         project_status: stat ? stat.title : null,
       }
-    })
+    });
 
   } catch (error) {
-    res.apiError(error)
+    res.apiError(error);
   }
 };
 self.getStakeholderName = async (id) => {
@@ -597,7 +543,7 @@ self.getStakeholderName = async (id) => {
 
     return data ? data.trade_name : null;
   } catch (error) {
-    res.apiError(error)
+    return error;
   }
 };
 
@@ -611,9 +557,9 @@ self.countAllProjectWithProjectCategory = async (req, res) => {
 
     return res.apiSuccess({
       data: projectData
-    })
+    });
   } catch (error) {
-    res.apiError(error)
+    res.apiError(error);
   }
 };
 
@@ -711,8 +657,8 @@ self.getProjectData = async (req, res) => {
       ? reports.reduce((total, item) => total + item.financial_performance, 0)
       : null;
     let spi =
-      (actualFinance / (plannedFinance == 0 ? 1 : plannedFinance)) * 100;
-    let cpi = (actualFinance / (actualCost == 0 ? 1 : actualCost)) * 100;
+      (actualFinance / (plannedFinance === 0 ? 1 : plannedFinance)) * 100;
+    let cpi = (actualFinance / (actualCost === 0 ? 1 : actualCost)) * 100;
 
     let sv = actualFinance - plannedFinance;
     let cv = actualFinance - actualCost;
@@ -758,10 +704,10 @@ self.getProjectData = async (req, res) => {
         planned_revenue: plannedFinance,
         actual_cost: actualCost,
       }
-    })
+    });
     
   } catch (error) {
-    res.apiError(error)
+    res.apiError(error);
   }
 };
 
@@ -827,9 +773,9 @@ self.countAllProjectWithProjectType = async (req, res) => {
 
     return res.apiSuccess({
       data: Result
-    })
+    });
   } catch (error) {
-    res.apiError(error)
+    res.apiError(error);
   }
 };
 
@@ -989,8 +935,8 @@ self.getProjectAnalysis = async (req, res) => {
     );
 
     let spi =
-      (actualFinance / (plannedFinance == 0 ? 1 : plannedFinance)) * 100;
-    let cpi = (actualFinance / (actualCost == 0 ? 1 : actualCost)) * 100;
+      (actualFinance / (plannedFinance === 0 ? 1 : plannedFinance)) * 100;
+    let cpi = (actualFinance / (actualCost === 0 ? 1 : actualCost)) * 100;
 
     let sv = actualFinance - plannedFinance;
     let cv = actualFinance - actualCost;
@@ -1010,15 +956,15 @@ self.getProjectAnalysis = async (req, res) => {
     });
 
     let variations = supplementvarations.filter(
-      (item) => item.type == "VARIATION"
+      (item) => item.type === "VARIATION"
     );
     let supplements = supplementvarations.filter(
-      (item) => item.type == "SUPPLEMENT"
+      (item) => item.type === "SUPPLEMENT"
     );
     let omissions = supplementvarations.filter(
-      (item) => item.type == "OMISSION"
+      (item) => item.type === "OMISSION"
     );
-    let specials = supplementvarations.filter((item) => item.type == "SPECIAL");
+    let specials = supplementvarations.filter((item) => item.type === "SPECIAL");
 
     let totalContractAmount =
       contractPrice +
@@ -1033,16 +979,16 @@ self.getProjectAnalysis = async (req, res) => {
         physical,
         financial: actualFinance,
         financial_percent:
-          (actualFinance / (totalContractAmount == 0 ? 1 : totalContractAmount)) *
+          (actualFinance / (totalContractAmount === 0 ? 1 : totalContractAmount)) *
           100,
         paid,
         paid_percent:
-          (paid / (totalContractAmount == 0 ? 1 : totalContractAmount)) * 100,
+          (paid / (totalContractAmount === 0 ? 1 : totalContractAmount)) * 100,
         time: used_time,
-        time_percent: (used_time / (all_duration == 0 ? 1 : all_duration)) * 100,
+        time_percent: (used_time / (all_duration === 0 ? 1 : all_duration)) * 100,
         repaid: repaid,
         repaid_percent:
-          (repaid / (totalContractAmount == 0 ? 1 : totalContractAmount)) * 100,
+          (repaid / (totalContractAmount === 0 ? 1 : totalContractAmount)) * 100,
         performance_bond,
         performance_status: performanceStatus,
   
@@ -1057,10 +1003,10 @@ self.getProjectAnalysis = async (req, res) => {
         sv,
         cv,
       }
-    })
+    });
 
   } catch (error) {
-    res.apiError(error)
+    res.apiError(error);
   }
 };
 
@@ -1111,37 +1057,37 @@ self.getFinancialNumbers = async (req, res) => {
         special_total,
         omission_total,
       }
-    })
+    });
    
   } catch (error) {
-    res.apiError(error)
+    res.apiError(error);
   }
 };
 
 self.getContractTimeAnalysis = async(req, res) => {
-	let id = req.params.id 
+	let id = req.params.id; 
 	try {
 		
 		let time = await ProjectTime.findOne({
 			where: {
 				project_id: id
 			}
-		})
+		});
 
 		let plans = await ProjectPlan.findAll({
 			where: {
 				project_id: id
 			}
-		})
+		});
 
 		let reports = await ProjectReport.findAll({
 			where: {
 				project_id: id
 			}
-		})
+		});
 		
-		let plannedRevenue = plans.reduce((total, item) => total+ item.financial_performance, 0)
-		let actualRevenue = reports.reduce((total, item) => total + item.financial_performance, 0)
+		let plannedRevenue = plans.reduce((total, item) => total+ item.financial_performance, 0);
+		let actualRevenue = reports.reduce((total, item) => total + item.financial_performance, 0);
 /**
  * completion_date: moment(time.commencement_date).add(total_time)
  */
@@ -1149,23 +1095,23 @@ self.getContractTimeAnalysis = async(req, res) => {
 			where: {
 				project_id: time.project_id
 			}
-		})
+		});
 
-		let extension = extensions.reduce((total, item)=> total + item.number_of_days, 0)
+		let extension = extensions.reduce((total, item)=> total + item.number_of_days, 0);
 
-		let totalTime = extension + time.original_contract_duration
-		let completion_time = moment(time.commencement_date).add(totalTime, 'days')
-		let remaining_day = completion_time.diff(moment(), 'days')
+		let totalTime = extension + time.original_contract_duration;
+		let completion_time = moment(time.commencement_date).add(totalTime, "days");
+		let remaining_day = completion_time.diff(moment(), "days");
 
 		let status;
 		if(remaining_day < 0){
-			status = "OVERDUE"
+			status = "OVERDUE";
 		}else{
 			if(remaining_day <=40 ){
-				status = "ALERT"
+				status = "ALERT";
 			}else{
-				status = "ACTIVE"
-			}extension
+				status = "ACTIVE";
+			}extension;
 		}
 
     return res.apiSuccess({
@@ -1181,12 +1127,12 @@ self.getContractTimeAnalysis = async(req, res) => {
         completion_time,
         remaining_day,
         status,
-        spi: (actualRevenue/(plannedRevenue == 0 ? 1:plannedRevenue)*100)
+        spi: (actualRevenue/(plannedRevenue === 0 ? 1:plannedRevenue)*100)
       }
-    })
+    });
 		
 	} catch (error) {
-		res.apiError(error)
+		res.apiError(error);
 	}
-}
+};
 module.exports = self;

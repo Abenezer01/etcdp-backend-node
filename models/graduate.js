@@ -9,6 +9,26 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Graduate.belongsTo(models.StudyField, {
+        as: "studyfield",
+        foreignKey: "studyfield_id",
+      });
+      Graduate.belongsTo(models.StudyProgram, {
+        as: "studyprogram",
+        foreignKey: "study_program_id",
+      });
+      Graduate.belongsTo(models.StudyLevel, {
+        as: "studylevel",
+        foreignKey: "studylevel_id",
+      });
+      Graduate.belongsTo(models.StudyPeriodCost, {
+        as: "studyperiod",
+        foreignKey: "study_period_id",
+      });
+      Graduate.belongsTo(models.AgeLevel, {
+        as: "agelevel",
+        foreignKey: "agelevel_id",
+      });
     }
   }
   Graduate.init(
@@ -67,34 +87,12 @@ module.exports = (sequelize, DataTypes) => {
       revision_no: DataTypes.INTEGER,
     },
     {
-      createdAt: 'created_at',
-      updatedAt: 'updated_at' ,     
+      createdAt: "created_at",
+      updatedAt: "updated_at" ,     
       sequelize,
       modelName: "Graduate",
       tableName: "graduates"
     }
   );
-  Graduate.associate = function (models) {
-    Graduate.belongsTo(models.StudyField, {
-      as: "studyfield",
-      foreignKey: "studyfield_id",
-    });
-    Graduate.belongsTo(models.StudyProgram, {
-      as: "studyprogram",
-      foreignKey: "study_program_id",
-    });
-    Graduate.belongsTo(models.StudyLevel, {
-      as: "studylevel",
-      foreignKey: "studylevel_id",
-    });
-    Graduate.belongsTo(models.StudyPeriodCost, {
-      as: "studyperiod",
-      foreignKey: "study_period_id",
-    });
-    Graduate.belongsTo(models.AgeLevel, {
-      as: "agelevel",
-      foreignKey: "agelevel_id",
-    });
-  };
   return Graduate;
 };

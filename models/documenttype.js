@@ -8,7 +8,15 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      DocumentType.hasMany(models.DocumentCategory, {
+        foreignKey: "documenttype_id",
+        as: "documentcategories",
+    });
+        
+    DocumentType.hasMany(models.DocumentSubCategory, {
+            foreignKey: "category_id",
+            as: "documentsubcategories",
+    });
     }
   }
   DocumentType.init(
@@ -27,26 +35,13 @@ module.exports = (sequelize, DataTypes) => {
       revision_no: DataTypes.INTEGER,
     },
     {
-      createdAt: 'created_at',
-      updatedAt: 'updated_at' ,     
+      createdAt: "created_at",
+      updatedAt: "updated_at" ,     
       sequelize,
       modelName: "DocumentType",
       tableName: "documenttypes"
     }
   );
-  DocumentType.associate = function (models) {
-    // associations can be defined here
-    // DocumentType.hasMany(models.ProjectCategory, {
-    //     foreignKey: 'documenttype_id',
-    //     as: 'Projectcategories',
-    // }, );
-    // models.projectcategory.associate = function(models) {
-    //     // associations can be defined here
-    //     projectcategory.hasMany(models.ProjectSubCategory, {
-    //         foreignKey: 'category_id',
-    //         as: 'Projectsubcategories',
-    //     });
-    // }
-  };
+  
   return DocumentType;
 };

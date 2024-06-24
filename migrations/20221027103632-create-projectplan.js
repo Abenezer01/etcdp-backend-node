@@ -26,12 +26,6 @@ module.exports = {
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
       },
-      start: {
-        type: Sequelize.DATE,
-      },
-      end: {
-        type: Sequelize.DATE,
-      },
       type: {
         type: Sequelize.STRING,
         allowNull: null,
@@ -86,7 +80,7 @@ module.exports = {
       },
     });
   },
-  async down(queryInterface, Sequelize) {
+  async down(queryInterface, /* Sequelize */) {
     await queryInterface.dropTable("projectplans");
   },
 };

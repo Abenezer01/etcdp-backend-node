@@ -3,8 +3,8 @@ const usrData = require("../../utils/userDataFromToken");
 const actionHelper = require("../utils/action-helper");
 const Op = Sequelize.Op;
 const paginate = require("../../utils/pagination");
-const { getRecordById, saveRecord, updateRecord, deleteRecord } = require('../utils/format-helper');
-const paginationHelper = require("../utils/pagination-helper")
+const { getRecordById, deleteRecord } = require("../utils/format-helper");
+const paginationHelper = require("../utils/pagination-helper");
 const dotenv = require("dotenv");
 dotenv.config();
 let self = {};
@@ -23,7 +23,6 @@ self.getAll = async (req, res) => {
     }, paginatedResult.pagination);
 
   } catch (error) {
-    console.error("Error in getAll method:", error);
     res.apiError(error);
   }
 };
@@ -41,7 +40,7 @@ self.getByResourceId = async (req, res) => {
   } = req.query;
   const { limit, offset } = paginate.getPagination(page, size);
 
-  if (order == null) {
+  if (order === null) {
     order = process.env.order;
   }
 
@@ -70,7 +69,6 @@ self.getByResourceId = async (req, res) => {
     );
     res.send(response);
   } catch (error) {
-    console.error(error);
     res.status(500).send({ message: error.message });
   }
 };
@@ -114,19 +112,19 @@ self.save = async (req, res) => {
     const { files } = req;
     const usr = await usrData.userData(req, res);
     const promises = [];
-    let pat;
+    // let pat;
 
     if (files) {
       const generatedFilePath = await saveFile(files.image);
 
       body.image = generatedFilePath;
 
-      pat = path.join(
-        __dirname,
-        "../../public",
-        "images/resourcespecification",
-        generatedFilePath
-      );
+      // pat = path.join(
+      //   __dirname,
+      //   "../../public",
+      //   "images/resourcespecification",
+      //   generatedFilePath
+      // );
     }
     if (!files) {
       body.image = "";
@@ -155,55 +153,7 @@ self.save = async (req, res) => {
     });
   }
 };
-// self.save = async(req, res) => {
-//     try {
-//         let usr = await usrData.userData(req, res)
-//         let body = req.body;
-//         const file = req.files
-//         console.log("the file", file)
-//         let pat
-//         if (file) {
 
-//             const ext = req.files.image.mimetype.split("/")[1];
-//             let rand = Math.floor(100000 + Math.random() * 900000)
-//             var name = req.files.image.name;
-//             let parsedName = path.parse(name).name;
-//             checkedNew = parsedName.concat(rand);
-//             const filePath = path.join(__dirname, '../../public', 'images/resourcespecification', checkedNew + '.' +
-//                 `${ext}`)
-//             console.log("The file path is ", filePath)
-//             var filePathh = filePath.split("public").pop();
-//             console.log("The file path is ", filePathh)
-//                 //return res.send(filePathh)
-
-//             body.image = filePathh
-//             pat = filePath
-//         }
-//         if (!file) {
-//             body.image = ''
-//         }
-
-//         if (usr) {
-//             let data = await ResourceSpecification.create(body);
-//             if (data) {
-//                 if (pat) {
-//                     const filee = req.files.image
-//                     filee.mv(pat, err => {
-//                         if (err) return res.status(500).send(err)
-//                             // res.redirect('/')
-//                     })
-//                 }
-//                 let us = usr.usrID
-//                 await actionHelper.saveActionState(data.id, "ResourceSpecification", "REGISTER", us, req, res)
-//             }
-//             return res.json(data)
-//         }
-//     } catch (error) {
-//         res.status(500).json({
-//             message: error.message
-//         })
-//     }
-// }
 const prePath = path.join(__dirname, "..", "..", "public");
 self.getImage = async (req, res) => {
   try {
@@ -254,14 +204,14 @@ self.update = async (req, res) => {
           const fc = path.join(__dirname, "../../public", image);
           if (fs.existsSync(fc)) {
             fs.unlink(fc, (err) => {
-              if (err) throw err;
-              console.log("Deleted File successfully.");
+              if (err) {throw err;}
+              res.apiError(err);
             });
           }
         }
 
         files.image.mv(pat, (err) => {
-          if (err) return res.status(500).send("Hello", err);
+          if (err) {return res.status(500).send("Hello", err);}
         });
       }
     }
@@ -275,78 +225,6 @@ self.update = async (req, res) => {
   }
 };
 
-// self.updatee = async(req, res) => {
-//     try {
-//         let id = req.params.id
-//         let usr = await usrData.userData(req, res)
-//         let body = req.body;
-//         const file = req.files
-//         console.log("the file", file)
-//         let pat
-//         if (file) {
-
-//             const ext = req.files.image.mimetype.split("/")[1];
-//             let rand = Math.floor(100000 + Math.random() * 900000)
-//             var name = req.files.image.name;
-//             let parsedName = path.parse(name).name;
-//             checkedNew = parsedName.concat(rand);
-//             const filePath = path.join(__dirname, '../../public', 'images/resourcespecification', checkedNew + '.' +
-//                 `${ext}`)
-//             console.log("The file path is ", filePath)
-//             var filePathh = filePath.split("public").pop();
-//             console.log("The file path is ", filePathh)
-//                 //return res.send(filePathh)
-
-//             body.image = filePathh
-//             pat = filePath
-//         }
-//         // if (!file) {
-//         //     body.image = ''
-//         // }
-
-//         if (usr) {
-//             if (pat) {
-//                 const filee = req.files.image
-//                 let data = await ResourceSpecification.findOne({
-//                     where: {
-//                         id: id
-//                     },
-//                 });
-//                 if (data.image) {
-//                     let f = "/home/kaleb/Desktop/etcdp-backend-node/public"
-//                     let fc = f + data.image
-//                     console.log("The fc", fc)
-//                     if (fs.existsSync(fc)) {
-//                         fs.unlink(fc, (err) => {
-//                             if (err) {
-//                                 throw err;
-//                             }
-
-//                             console.log("Deleted File successfully.");
-//                         });
-//                     }
-
-//                 }
-//                 console.log("The pat", pat)
-//                 filee.mv(pat, err => {
-//                     if (err) return res.status(500).send("Hello", err)
-//                         // res.redirect('/')
-//                 })
-//             }
-
-//             let data = await ResourceSpecification.update(body, {
-//                 where: {
-//                     id: id
-//                 },
-//             });
-//             return res.json({ message: "Success" })
-//         }
-//     } catch (error) {
-//         res.status(500).json({
-//             message: error.message
-//         })
-//     }
-// }
 
 
 self.delete = async (req, res) => {

@@ -26,7 +26,7 @@ module.exports = {
     ]);
 
     const departments = await queryInterface.sequelize.query(
-      `SELECT id from departments;`
+      "SELECT id from departments;"
     );
     const departmentRows = departments[0];
     //Role seed
@@ -67,7 +67,7 @@ module.exports = {
     //     createdAt: "12-12-12",
     //     updatedAt: new Date()
     // }]);
-    const roles = await queryInterface.sequelize.query(`SELECT id from roles;`);
+    const roles = await queryInterface.sequelize.query("SELECT id from roles;");
 
     const roleRows = roles[0];
     // const roleRowss = roles[0];
@@ -91,7 +91,7 @@ module.exports = {
     ]);
 
     const positions = await queryInterface.sequelize.query(
-      `SELECT id from positions;`
+      "SELECT id from positions;"
     );
 
     const positionRows = positions[0];
@@ -106,7 +106,7 @@ module.exports = {
     ]);
 
     const photos = await queryInterface.sequelize.query(
-      `SELECT id from photos;`
+      "SELECT id from photos;"
     );
     const photoRows = photos[0];
     await queryInterface.bulkInsert("users", [
@@ -126,7 +126,7 @@ module.exports = {
         updatedAt: new Date(),
       },
     ]);
-    const users = await queryInterface.sequelize.query(`SELECT id from users;`);
+    const users = await queryInterface.sequelize.query("SELECT id from users;");
 
     const userRows = users[0];
     await queryInterface.bulkInsert("useremails", [

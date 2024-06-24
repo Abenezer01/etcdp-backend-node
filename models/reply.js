@@ -13,8 +13,8 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
 
       Reply.belongsTo(models.User, {
-        foreignKey: 'creator_id',
-        as: 'user'
+        foreignKey: "creator_id",
+        as: "user"
       });
     }
   }
@@ -49,15 +49,11 @@ module.exports = (sequelize, DataTypes) => {
       
     },
     {
-      createdAt: 'created_at',
-      updatedAt: 'updated_at' ,     
+      createdAt: "created_at",
+      updatedAt: "updated_at" ,     
       sequelize,
       modelName: "Reply",
-      tableName: "replies",
-
-      timestamps: true,
-      createdAt: 'created_at',
-      updatedAt: 'updated_at'
+      tableName: "replies"
       
     }
   );

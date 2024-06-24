@@ -26,7 +26,6 @@ const StakeholderServiceController = require("../../../controllers/stakeholder/S
 const OperationlocationController = require("../../../controllers/stakeholder/OperationlocationController");
 const StakeholderEmailController = require("../../../controllers/stakeholder/StakeholderEmailController");
 const StakeholderPhoneController = require("../../../controllers/stakeholder/StakeholderPhoneController");
-const middleware = require("../../../middleware/middleware");
 const validateData = require("../../../middleware/validate/module/stakeholder/validate");
 
 module.exports = function (express) {

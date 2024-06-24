@@ -1,8 +1,8 @@
 const { Address, Sequelize } = require("../../models");
 const usrData = require("../../utils/userDataFromToken");
 const actionHelper = require("../utils/action-helper");
-const paginationHelper = require("../utils/pagination-helper")
-const { getRecordById, updateRecord, deleteRecord } = require('../utils/format-helper');
+const paginationHelper = require("../utils/pagination-helper");
+const { getRecordById, updateRecord, deleteRecord } = require("../utils/format-helper");
 
 const Op = Sequelize.Op;
 
@@ -20,7 +20,6 @@ self.getAll = async (req, res) => {
     }, paginatedResult.pagination);
 
   } catch (error) {
-    console.error("Error in getAll method:", error);
     res.apiError(error);
   }
 };
@@ -37,19 +36,18 @@ self.getAddressByModelId = async (req, res) => {
       },
       order: [["hq", "DESC"]],
     });
-    let arr = [];
-    for (i = 0; i < data.length; i++) {
-      if (data[i].hq == true) {
+    for (let i = 0; i < data.length; i++) {
+      if (data[i].hq === true) {
         data[0] = data[i];
       }
     }
     
     res.apiSuccess({
       data
-    })
+    });
     
   } catch (error) {
-    res.apiError(error)
+    res.apiError(error);
   }
 };
 self.search = async (req, res) => {
@@ -83,7 +81,6 @@ self.save = async (req, res) => {
           hq: true,
         },
       });
-      console.log("The hq data", hqData);
       if (!hqData.length) {
         body.hq = true;
         let hqBod = await Address.create(body);
@@ -116,11 +113,11 @@ self.save = async (req, res) => {
 
         res.apiSuccess({
           data: data
-        })
+        });
       }
     }
   } catch (error) {
-    res.apiError(error)
+    res.apiError(error);
   }
 };
 

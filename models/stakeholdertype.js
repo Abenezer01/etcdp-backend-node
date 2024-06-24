@@ -9,6 +9,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      StakeholderType.hasMany(models.StakeholderCategory, {
+        foreignKey: "stakeholdertype_id",
+        as: "stakecategories",
+      });
     }
   }
   StakeholderType.init(
@@ -29,19 +33,13 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     {
-      createdAt: 'created_at',
-      updatedAt: 'updated_at' ,     
+      createdAt: "created_at",
+      updatedAt: "updated_at" ,     
       sequelize,
       modelName: "StakeholderType",
       tableName: "stakeholdertypes"
     }
   );
-  StakeholderType.associate = function (models) {
-    // associations can be defined here
-    StakeholderType.hasMany(models.StakeholderCategory, {
-      foreignKey: "stakeholdertype_id",
-      as: "stakecategories",
-    });
-  };
+
   return StakeholderType;
 };

@@ -1,6 +1,6 @@
-const { Position, Permission, PositionPermission, Sequelize } = require("../../models");
-const paginationHelper = require("../utils/pagination-helper")
-const { getRecordById, saveRecord, updateRecord, deleteRecord } = require('../utils/format-helper');
+const { Position, Department, Permission, PositionPermission, Sequelize } = require("../../models");
+const paginationHelper = require("../utils/pagination-helper");
+const { getRecordById, saveRecord, updateRecord, deleteRecord } = require("../utils/format-helper");
 
 const Op = Sequelize.Op;
 
@@ -18,7 +18,6 @@ self.getAll = async (req, res) => {
     }, paginatedResult.pagination);
 
   } catch (error) {
-    console.error("Error in getAll method:", error);
     res.apiError(error);
   }
 };
@@ -60,8 +59,8 @@ self.search = async (req, res) => {
 
 self.getParentDepartment = async (req, res) => {
   try {
-    const whereCondition = {  parent_department_id: null }
-    const paginatedResult = await paginationHelper(department, req, whereCondition);
+    const whereCondition = {  parent_department_id: null };
+    const paginatedResult = await paginationHelper(Department, req, whereCondition);
 
     // Use the response formatter to send the success response
     res.apiSuccess({
@@ -70,7 +69,6 @@ self.getParentDepartment = async (req, res) => {
     }, paginatedResult.pagination);
 
   } catch (error) {
-    console.error("Error in getAll method:", error);
     res.apiError(error);
   }
 };
@@ -78,7 +76,7 @@ self.getParentDepartment = async (req, res) => {
 self.getDepartmentPositions = async (req, res) => {
   const { id } = req.params;
   try {
-    const whereCondition = { department_id: id}
+    const whereCondition = { department_id: id};
     const paginatedResult = await paginationHelper(Position, req, whereCondition);
 
     // Use the response formatter to send the success response
@@ -88,7 +86,6 @@ self.getDepartmentPositions = async (req, res) => {
     }, paginatedResult.pagination);
 
   } catch (error) {
-    console.error("Error in getAll method:", error);
     res.apiError(error);
   }
 };
@@ -99,17 +96,17 @@ self.givePositionPermissions = async(req, res) => {
      let permissions = await Permission.findAll();
      
       for(let per of permissions) {
-        let data = await PositionPermission.create({
+        await PositionPermission.create({
           permission_id: per.id,
           position_id: "8a0a21ce-45a8-462b-a07d-3d55ed3ab089"
-        })
+        });
       }
       return res.json("All permissions are granted to Admin");
 
   } catch (error) {
     return res.status(500).json({
       message: error.message
-    })
+    });
   }
-}
+};
 module.exports = self;

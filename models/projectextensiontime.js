@@ -9,6 +9,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      ProjectExtensionTime.hasOne(models.ProjectVariation, {
+        foreignKey: "extension_time_id",
+        as: "variation"
+      });
     }
   }
   ProjectExtensionTime.init(
@@ -38,20 +42,14 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     {
-      createdAt: 'created_at',
-      updatedAt: 'updated_at' ,     
+      createdAt: "created_at",
+      updatedAt: "updated_at" ,     
       sequelize,
       modelName: "ProjectExtensionTime",
       tableName: "projectextensiontimes"
     }
   );
 
-  ProjectExtensionTime.associate = function (models) {
-    // associations can be defined here
-    ProjectExtensionTime.hasOne(models.ProjectVariation, {
-      foreignKey: "extension_time_id",
-      as: "variation"
-    });
-  };
+
   return ProjectExtensionTime;
 };

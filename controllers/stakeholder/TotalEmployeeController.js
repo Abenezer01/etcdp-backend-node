@@ -1,13 +1,11 @@
 const { TotalEmployee, Sequelize } = require("./../../models");
-const paginate = require("../../utils/pagination");
 const dotenv = require("dotenv");
 dotenv.config();
 const Op = Sequelize.Op;
 const usrData = require("../../utils/userDataFromToken");
-const { saveActionState, getChildren } = require("../../utils/helper");
 const actionHelper = require("../utils/action-helper");
 const paginationHelper = require("../utils/pagination-helper");
-const { getRecordById, saveRecord, updateRecord, deleteRecord } = require('../utils/format-helper');
+const { getRecordById, updateRecord, deleteRecord } = require("../utils/format-helper");
 let self = {};
 
 self.getAll = async (req, res) => {
@@ -21,7 +19,6 @@ self.getAll = async (req, res) => {
     }, paginatedResult.pagination);
 
   } catch (error) {
-    console.error("Error in getAll method:", error);
     res.apiError(error);
   }
 };
@@ -44,7 +41,7 @@ self.get = async (req, res) => {
 self.getTotalEmployeeWithStakeholderId = async (req, res) => {
   const { id } = req.params;
   try {
-    const whereCondition = { stakeholder_id: id }
+    const whereCondition = { stakeholder_id: id };
     const paginatedResult = await paginationHelper(TotalEmployee, req, whereCondition);
 
     // Use the response formatter to send the success response
@@ -54,7 +51,6 @@ self.getTotalEmployeeWithStakeholderId = async (req, res) => {
     }, paginatedResult.pagination);
 
   } catch (error) {
-    console.error("Error in getAll method:", error);
     res.apiError(error);
   }
 };
@@ -88,9 +84,8 @@ self.save = async (req, res) => {
       },
     });
     let totalEmployeeData = totalEmployee;
-    console.log("Employee Data", totalEmployee);
     let tED = [];
-    for (i = 0; i < totalEmployeeData.length; i++) {
+    for (let i = 0; i < totalEmployeeData.length; i++) {
       var date = new Date(totalEmployeeData[i].year);
       let yy = date.getFullYear();
       let male = totalEmployeeData[i].male;
@@ -105,19 +100,18 @@ self.save = async (req, res) => {
         stakeholder_id: stakeholder_id,
       });
     }
-    console.log("The TED", tED);
+
     var bodDate = new Date(req.body.year);
     let newArr = [];
-    for (i = 0; i < tED.length; i++) {
+    for (let i = 0; i < tED.length; i++) {
       if (
-        body.nationality == tED[i].nationality &&
-        bodDate.getFullYear() == tED[i].year &&
-        stakeHolderId == tED[i].stakeholder_id
+        body.nationality === tED[i].nationality &&
+        bodDate.getFullYear() === tED[i].year &&
+        stakeHolderId === tED[i].stakeholder_id
       ) {
         newArr.push(tED[i]);
       }
     }
-    console.log("Hey", newArr);
     if (newArr.length) {
       return res
         .status(400)

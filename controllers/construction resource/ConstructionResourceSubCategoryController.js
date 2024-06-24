@@ -1,7 +1,7 @@
 const { ResourceSubCategory, Sequelize } = require("../../models");
 const Op = Sequelize.Op;
-const { getRecordById, saveRecord, updateRecord, deleteRecord } = require('../utils/format-helper');
-const paginationHelper = require("../utils/pagination-helper")
+const { getRecordById, saveRecord, updateRecord, deleteRecord } = require("../utils/format-helper");
+const paginationHelper = require("../utils/pagination-helper");
 const dotenv = require("dotenv");
 dotenv.config();
 let self = {};
@@ -18,7 +18,6 @@ self.getAll = async (req, res) => {
     }, paginatedResult.pagination);
 
   } catch (error) {
-    console.error("Error in getAll method:", error);
     res.apiError(error);
   }
 };

@@ -1,5 +1,5 @@
 "use strict";
-const { UserEmail, Model } = require("sequelize");
+const {Model } = require("sequelize");
 const cipherHelper = require("../controllers/utils/cipher-helper");
 
 module.exports = (sequelize, DataTypes) => {
@@ -11,12 +11,12 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       User.hasOne(models.UserEmail, {
-        foreignKey: 'user_id',
-        as: 'useremails'
+        foreignKey: "user_id",
+        as: "useremails"
       });
       User.hasOne(models.UserPhone, {
-        foreignKey: 'user_id',
-        as: 'userphones'
+        foreignKey: "user_id",
+        as: "userphones"
       });
       User.hasMany(models.ActionState, {
         foreignKey: "model_id",
@@ -101,8 +101,8 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     {
-      createdAt: 'created_at',
-      updatedAt: 'updated_at' ,     
+      createdAt: "created_at",
+      updatedAt: "updated_at" ,     
       sequelize,
       modelName: "User",
       tableName: "users"

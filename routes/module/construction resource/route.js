@@ -113,13 +113,6 @@ module.exports = function (express) {
     ConstructionResourceRegistrationController.delete
   );
   //construction resource quantity and controller
-  // route.get("/construction-resource-quantity-price", ConstructionResourceQuantityAndPriceController.getAll);
-  // route.get("/construction-resource-quantity-price/:id", ConstructionResourceQuantityAndPriceController.get);
-  // route.get("/construction-resource-quantity-price_search", ConstructionResourceQuantityAndPriceController.search);
-  // route.post("/construction-resource-quantity-price", validateData.constructionResourceQuantityandPriceValidate, ConstructionResourceQuantityAndPriceController.save);
-  // route.put("/construction-resource-quantity-price/:id", validateData.constructionResourceQuantityandPriceValidate, ConstructionResourceQuantityAndPriceController.update);
-  // route.delete("/construction-resource-quantity-price/:id", ConstructionResourceQuantityAndPriceController.delete);
-  //construction resource quantity and controller
   route.get(
     "/detail-construction-resource-types",
     DetailResourceTypeController.getAll
@@ -183,14 +176,6 @@ module.exports = function (express) {
     ResourceBrandController.delete
   );
   //construction resource quantity and controller
-  // route.get("/construction-resource-price", ResourcePriceController.getAll);
-  // route.get("/construction-resource-price/:id", ResourcePriceController.get);
-  // route.get("/resource/construction-resource-price/:id", ResourcePriceController.getByResourceId);
-  // route.get("/construction-resource-price_search", ResourcePriceController.search);
-  // route.post("/construction-resource-price", validateData.resourcePriceValidate, ResourcePriceController.save);
-  // route.put("/construction-resource-price/:id", validateData.resourcePriceValidate, ResourcePriceController.update);
-  // route.delete("/construction-resource-price/:id", ResourcePriceController.delete);
-  //construction resource quantity and price controller
   route.get(
     "/construction-resource-quantity-prices",
     ResourceQuantityandPriceController.getAll

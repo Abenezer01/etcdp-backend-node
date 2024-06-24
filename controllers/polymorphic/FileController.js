@@ -10,10 +10,9 @@ const fs = require("fs");
 const Op = Sequelize.Op;
 const usrData = require("../../utils/userDataFromToken");
 const actionHelper = require("../utils/action-helper");
-const paginationHelper = require("../utils/pagination-helper")
-const { getRecordById, saveRecord, updateRecord, deleteRecord } = require('../utils/format-helper');
+const paginationHelper = require("../utils/pagination-helper");
+const { getRecordById } = require("../utils/format-helper");
 
-const { url } = require("inspector");
 let self = {};
 
 
@@ -28,7 +27,6 @@ self.getAll = async (req, res) => {
     }, paginatedResult.pagination);
 
   } catch (error) {
-    console.error("Error in getAll method:", error);
     res.apiError(error);
   }
 };
@@ -40,7 +38,7 @@ self.get = async (req, res) => {
 self.getMyFiles = async (req, res) => {
   const { id } = req.params;
   try {
-    const whereCondition = { reference_id: id }
+    const whereCondition = { reference_id: id };
     const paginatedResult = await paginationHelper(File, req, whereCondition);
 
     // Use the response formatter to send the success response
@@ -50,7 +48,6 @@ self.getMyFiles = async (req, res) => {
     }, paginatedResult.pagination);
 
   } catch (error) {
-    console.error("Error in getAll method:", error);
     res.apiError(error);
   }
 };
@@ -63,7 +60,7 @@ self.getMyFilteredFiles = async (req, res) => {
     const whereCondition = { 
       reference_id: id,
       project_type: project_type,
-     }
+     };
     const paginatedResult = await paginationHelper(File, req, whereCondition);
 
     // Use the response formatter to send the success response
@@ -73,26 +70,6 @@ self.getMyFilteredFiles = async (req, res) => {
     }, paginatedResult.pagination);
 
   } catch (error) {
-    console.error("Error in getAll method:", error);
-    res.apiError(error);
-  }
-};
-
-self.getFilesByModelAndType = async (req, res) => {
-  const { id, type } = req.query;
-  try {
-    const whereCondition = { [Op.and]: [{ reference_id: id }, { type: type }] }
-
-    const paginatedResult = await paginationHelper(File, req, whereCondition);
-
-    // Use the response formatter to send the success response
-    res.apiSuccess({
-      data: paginatedResult.data,
-      total: paginatedResult.total,
-    }, paginatedResult.pagination);
-
-  } catch (error) {
-    console.error("Error in getAll method:", error);
     res.apiError(error);
   }
 };
@@ -114,7 +91,6 @@ self.search = async (req, res) => {
   }
 };
 self.save = async (req, res) => {
-  const id = req.params.id;
   const filer = req.files.upload;
   const type = req.body.type;
   const description = req.body.description;
@@ -123,7 +99,6 @@ self.save = async (req, res) => {
   const projectType = req.body.project_type;
 
   const ext = filer.mimetype.split("/")[1];
-  console.log("The File type is", ext);
 
   const rand = Math.floor(100000 + Math.random() * 900000);
   const parsedName = path.parse(filer.name).name;
@@ -163,7 +138,7 @@ self.save = async (req, res) => {
 
       if (doc) {
         const usrID = usr.usrID;
-        let ac = await actionHelper.saveActionState(
+        await actionHelper.saveActionState(
           doc.id,
           "File",
           "REGISTER",
@@ -178,7 +153,6 @@ self.save = async (req, res) => {
 
     }
   } catch (error) {
-    console.error("Error:", error);
     res.apiError(error);
   }
 };
@@ -203,8 +177,6 @@ self.update = async (req, res) => {
           if (err) {
             throw err;
           }
-
-          console.log("File deleted successfully.");
         });
       }
     }
@@ -212,7 +184,7 @@ self.update = async (req, res) => {
     let rand = Math.floor(100000 + Math.random() * 900000);
     var name = req.files.upload.name;
     let parsedName = path.parse(name).name;
-    checkedNew = parsedName.concat(rand);
+    let checkedNew = parsedName.concat(rand);
     const filePath = path.join(
       __dirname,
       "../../public",
@@ -222,10 +194,10 @@ self.update = async (req, res) => {
     //console.log("The File path is ", filePath)
 
     filer.mv(filePath, (err) => {
-      if (err) return res.status(500).send(err);
+      if (err) {return res.status(500).send(err);}
       // res.redirect('/')
     });
-    updatedFile = {
+    let updatedFile = {
       type: req.body.type,
       title: req.body.title,
       description: req.body.description,
@@ -258,12 +230,10 @@ self.delete = async (req, res) => {
           if (err) {
             throw err;
           }
-
-          console.log("File deleted successfully.");
         });
       }
     }
-    let data = await File.destroy({
+    await File.destroy({
       where: {
         id: id,
       },
@@ -307,7 +277,6 @@ self.linkfiles = async (req, res) => {
 
       default:
         return res.status(404).json("Unknown model");
-        break;
     }
 
     if (!data) {

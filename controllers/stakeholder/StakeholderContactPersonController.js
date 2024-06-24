@@ -1,6 +1,6 @@
 const { StakeholderContactPerson, Sequelize } = require("../../models");
 const paginationHelper = require("../utils/pagination-helper");
-const { getRecordById, saveRecord, updateRecord, deleteRecord } = require('../utils/format-helper');
+const { getRecordById, saveRecord, updateRecord, deleteRecord } = require("../utils/format-helper");
 
 const Op = Sequelize.Op;
 
@@ -18,7 +18,6 @@ self.getAll = async (req, res) => {
     }, paginatedResult.pagination);
 
   } catch (error) {
-    console.error("Error in getAll method:", error);
     res.apiError(error);
   }
 };
@@ -61,7 +60,7 @@ self.delete = async (req, res) => {
 self.getByStakeholderId = async (req, res) => {
   const { id } = req.params;
   try {
-    const whereCondition = { stakeholder_id: id }
+    const whereCondition = { stakeholder_id: id };
     const paginatedResult = await paginationHelper(StakeholderContactPerson, req, whereCondition);
     
     res.apiSuccess({
@@ -70,7 +69,6 @@ self.getByStakeholderId = async (req, res) => {
     }, paginatedResult.pagination);
 
   } catch (error) {
-    console.error("Error in getAll method:", error);
     res.apiError(error);
   }
 };

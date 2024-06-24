@@ -1,4 +1,4 @@
-const { notification, Sequelize } = require("../models");
+const { notification } = require("../models");
 
 const { Socket } = require("../utils/WebSocket");
 const notify = async (

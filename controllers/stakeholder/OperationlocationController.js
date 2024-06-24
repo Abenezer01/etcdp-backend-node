@@ -6,7 +6,7 @@ let self = {};
 const usrData = require("../../utils/userDataFromToken");
 const actionHelper = require("../utils/action-helper");
 const paginationHelper = require("../utils/pagination-helper");
-const { getRecordById, saveRecord, updateRecord, deleteRecord } = require('../utils/format-helper');
+const { getRecordById, deleteRecord } = require("../utils/format-helper");
 
 self.getAll = async (req, res) => {
   try {
@@ -19,7 +19,6 @@ self.getAll = async (req, res) => {
     }, paginatedResult.pagination);
 
   } catch (error) {
-    console.error("Error in getAll method:", error);
     res.apiError(error);
   }
 };
@@ -31,7 +30,7 @@ self.get = async (req, res) => {
 self.getByStakeholderId = async (req, res) => {
   const { id } = req.params;
   try {
-    const whereCondition = { stakeholder_id: id }
+    const whereCondition = { stakeholder_id: id };
     const paginatedResult = await paginationHelper(OperationLocation, req, whereCondition);
 
     // Use the response formatter to send the success response
@@ -41,7 +40,6 @@ self.getByStakeholderId = async (req, res) => {
     }, paginatedResult.pagination);
 
   } catch (error) {
-    console.error("Error in getAll method:", error);
     res.apiError(error);
   }
 };
@@ -106,9 +104,9 @@ self.update = async (req, res) => {
       return;
     }
     for (const location of body) {
-      if (!location.id && location.status == true) {
+      if (!location.id && location.status === true) {
         await OperationLocation.create(location);
-      } else if (location.id && location.status == false) {
+      } else if (location.id && location.status === false) {
         await OperationLocation.update(location, {
           where: {
             id: location.id,

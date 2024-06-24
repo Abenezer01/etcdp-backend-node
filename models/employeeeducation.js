@@ -9,6 +9,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      EmployeeEducation.belongsTo(models.StudyLevel, {
+        as: "studylevel",
+        foreignKey: "studylevel_id",
+      });
     }
   }
   EmployeeEducation.init(
@@ -56,18 +60,12 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     {
-      createdAt: 'created_at',
-      updatedAt: 'updated_at' ,     
+      createdAt: "created_at",
+      updatedAt: "updated_at" ,     
       sequelize,
       modelName: "EmployeeEducation",
       tableName: "employeeeducations"
     }
   );
-  EmployeeEducation.associate = function (models) {
-    EmployeeEducation.belongsTo(models.StudyLevel, {
-      as: "studylevel",
-      foreignKey: "studylevel_id",
-    });
-  };
   return EmployeeEducation;
 };

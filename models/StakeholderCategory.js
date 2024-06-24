@@ -32,16 +32,13 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     {
-      createdAt: 'created_at',
-      updatedAt: 'updated_at' ,     
+      createdAt: "created_at",
+      updatedAt: "updated_at" ,     
       sequelize,
       modelName: "StakeholderCategory",
       tableName: "stakecategories"
     }
   );
-  // StakeholderCategory.associate = function(models) {
-  //     // associations can be defined here
 
-  // }
   return StakeholderCategory;
 };

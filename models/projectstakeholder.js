@@ -9,10 +9,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      ProjectStakeholder.hasMany(models.stakeholder, {
+      ProjectStakeholder.hasMany(models.Stakeholder, {
         foreignKey: "stakeholder_id",
       });
-      ProjectStakeholder.hasMany(models.project, {
+      ProjectStakeholder.hasMany(models.Project, {
         foreignKey: "project_id",
       });
     }
@@ -42,22 +42,13 @@ module.exports = (sequelize, DataTypes) => {
       revision_no: DataTypes.INTEGER,
     },
     {
-      createdAt: 'created_at',
-      updatedAt: 'updated_at' ,     
+      createdAt: "created_at",
+      updatedAt: "updated_at" ,     
       sequelize,
       modelName: "ProjectStakeholder",
       tableName: "projectstakeholders"
     }
   );
-  ProjectStakeholder.associate = function (models) {
-    // ProjectStakeholder.belongsTo(models.address, {
-    //     as: "address",
-    //     foreignKey: "address_id"
-    // })
-    ProjectStakeholder.belongsTo(models.Stakeholder, {
-      as: "stakeholder",
-      foreignKey: "stakeholder_id",
-    });
-  };
+  
   return ProjectStakeholder;
 };

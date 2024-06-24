@@ -1,35 +1,34 @@
-const https = require('https')
-const fetch = require('node-fetch')
-const __EXTERNAL_URL = 'https://backend.api.onespace.et/api/projects/pro'
+const https = require("https");
+const fetch = require("node-fetch");
+const __EXTERNAL_URL = "https://backend.api.onespace.et/api/projects/pro";
 
-const __PROJECT_URL = 'https://backend.api.onespace.et/api/integrations/projects'
-const __STAKEHOLDER_URL = 'https://backend.api.onespace.et/api/integrations/stakeholders'
-const __USER_URL = 'https://backend.api.onespace.et/api/integrations/users'
-const __PLAN_URL = 'https://backend.api.onespace.et/api/integrations/plans'
-const __REPORT_URL = 'https://backend.api.onespace.et/api/integrations/reports'
+// const __PROJECT_URL = "https://backend.api.onespace.et/api/integrations/projects";
+// const __STAKEHOLDER_URL = "https://backend.api.onespace.et/api/integrations/stakeholders";
+// const __USER_URL = "https://backend.api.onespace.et/api/integrations/users";
+// const __PLAN_URL = "https://backend.api.onespace.et/api/integrations/plans";
+// const __REPORT_URL = "https://backend.api.onespace.et/api/integrations/reports";
 
 
 // const __FINANCIAL_PLAN_URL = 'https://backend.api.onespace.et/api/integrations/reports'
 
 
-const self = {}
+const self = {};
 
 self.cpmAPI = (callback) => {
   https.get(__EXTERNAL_URL, (response) => {
-    let data = ''
+    let data = "";
     
-    response.on('data', (chunk) => {
+    response.on("data", (chunk) => {
       data += chunk;
     });
 
-    response.on('end', () => {
-      callback(data)
-    })
+    response.on("end", () => {
+      callback(data);
+    });
   }).on("error", (error) => {
-    console.error(error)
-    callback(null, error)
-  })
-}
+    callback(null, error);
+  });
+};
 
 self.get = (callback) => {
 
@@ -37,49 +36,48 @@ self.get = (callback) => {
   fetch(__EXTERNAL_URL).then((res) => {
     res.json().then((res1) => {
       return res1;
-    })
-  })
+    });
+  });
   const options = {
-  method: 'GET',
+  method: "GET",
   headers: {
-      'Content-Type': 'application/json'
+      "Content-Type": "application/json"
   }
   };
 
   https.get(__EXTERNAL_URL, options, (response) => {
-  let data = '';
+  let data = "";
 
-  response.on('data', (chunk) => {
+  response.on("data", (chunk) => {
       data += chunk;
   });
 
-  response.on('end', () => {
-      callback(data)
-      console.log(JSON.parse(data));
+  response.on("end", () => {
+      callback(data);
   });
   }).on("error", (error) => {
-  console.log("Error: " + error.message);
+    return error;
   });
 
-}
+};
 
 self.getExternalData = async (apiname) => {
 
-    let __EXTERNAL_URL = null
+    let __EXTERNAL_URL = null;
 
-    __EXTERNAL_URL = eval(`__${apiname.toUpperCase()}_URL`)
-    const response = await fetch(__EXTERNAL_URL, {method: 'GET'});
+    __EXTERNAL_URL = eval(`__${apiname.toUpperCase()}_URL`);
+    const response = await fetch(__EXTERNAL_URL, {method: "GET"});
     let data = await response.json();
-    if(apiname =="project"){
-      data = self.transformProjects(data)
+    if(apiname ==="project"){
+      data = self.transformProjects(data);
     }
 
-    if(apiname =="plan" || apiname=="report"){
-      data = self.transformPerformances(data)
+    if(apiname ==="plan" || apiname==="report"){
+      data = self.transformPerformances(data);
     }
-    return data
+    return data;
 
-}
+};
 
 self.transformProjects = (projects) => {
 
@@ -95,13 +93,13 @@ self.transformProjects = (projects) => {
     contract_no: pro.invoice_no,
     plot_area: pro.plot_area,
     budget_code: pro.charge_account_number,
-    contract_no: null,
+    // contract_no: null,
     procurement_no: null,
     revision_no: null,
     createdAt: pro.createdAt,
     updatedAt: pro.updatedAt
   }));
-}
+};
 
 self.transformPerformances = (performance)=> {
 
@@ -118,7 +116,7 @@ self.transformPerformances = (performance)=> {
       9:2,
       10:2,
       11:2,
-  }
+  };
   return performance.map((per) => ({
     
   
@@ -149,8 +147,8 @@ self.transformPerformances = (performance)=> {
     profit: per.profit,
     created_at: per.created_at,
     updated_at: per.updated_at
-  }))
-}
+  }));
+};
 
 
 module.exports = self;

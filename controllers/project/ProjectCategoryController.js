@@ -1,10 +1,9 @@
 const {
   ProjectCategory,
-  ProjectSubCategory,
   Sequelize,
 } = require("../../models");
-const paginationHelper = require("../utils/pagination-helper")
-const { getRecordById, saveRecord, updateRecord, deleteRecord } = require('../utils/format-helper');
+const paginationHelper = require("../utils/pagination-helper");
+const { getRecordById, saveRecord, updateRecord, deleteRecord } = require("../utils/format-helper");
 const Op = Sequelize.Op;
 
 let self = {};
@@ -28,37 +27,9 @@ self.getAll = async (req, res) => {
     }, paginatedResult.pagination);
 
   } catch (error) {
-    console.error("Error in getAll method:", error);
     res.apiError(error);
   }
 };
-
-
-
-// self.getAllProCatByTypeId = async (req, res) => {
-//   const { id } = req.params;
-//   try {
-//     const whereCondition = { projecttype_id: id }
-
-//     const includeOptions = [
-//       { model: ProjectSubCategory, as: 'projectsubcategories' } // Example association
-//     ];
-   
-
-//     const paginatedResult = await paginationHelper(ProjectCategory, req, whereCondition, includeOptions);
-
-//     // Use the response formatter to send the success response
-//     res.apiSuccess({
-//       data: paginatedResult.data,
-//       total: paginatedResult.total,
-//     }, paginatedResult.pagination);
-
-//   } catch (error) {
-//     console.error("Error in getAll method:", error);
-//     res.apiError(error);
-//   }
-// };
-
 
 self.get = async (req, res) => {
   getRecordById(ProjectCategory, req, res);

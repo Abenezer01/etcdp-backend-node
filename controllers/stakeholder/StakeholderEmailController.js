@@ -10,7 +10,7 @@ let self = {};
 const usrData = require("../../utils/userDataFromToken");
 const actionHelper = require("../utils/action-helper");
 const paginationHelper = require("../utils/pagination-helper");
-const { getRecordById, saveRecord, updateRecord, deleteRecord } = require('../utils/format-helper');
+const { updateRecord, deleteRecord } = require("../utils/format-helper");
 
 self.getAll = async (req, res) => {
   try {
@@ -23,7 +23,6 @@ self.getAll = async (req, res) => {
     }, paginatedResult.pagination);
 
   } catch (error) {
-    console.error("Error in getAll method:", error);
     res.apiError(error);
   }
 };
@@ -31,7 +30,7 @@ self.getAll = async (req, res) => {
 self.getPrimaryEmail = async (req, res) => {
   const { id } = req.params;
   try {
-    const whereCondition = { [Op.and]: [{ stakeholder_id: id }, { is_primary: true }] }
+    const whereCondition = { [Op.and]: [{ stakeholder_id: id }, { is_primary: true }] };
     const paginatedResult = await paginationHelper(StakeholderEmail, req, whereCondition);
 
     // Use the response formatter to send the success response
@@ -41,7 +40,6 @@ self.getPrimaryEmail = async (req, res) => {
     }, paginatedResult.pagination);
 
   } catch (error) {
-    console.error("Error in getAll method:", error);
     res.apiError(error);
   }
 };
@@ -69,7 +67,6 @@ self.getEmailAndPhone = async (req, res) => {
       data: result
     });
   } catch (error) {
-    console.error("Error:", error);
     res.apiError(error);
   }
 };
@@ -120,7 +117,7 @@ self.save = async (req, res) => {
           filt.push(allData);
         }
       }
-      let fr = [];
+
       const resu = await Promise.all(
         body.map(async (bodItem) => {
           const filteredDat = filt.find(
@@ -134,7 +131,7 @@ self.save = async (req, res) => {
           }
         })
       );
-      let removedNullResu = resu.find((item) => item != null);
+      let removedNullResu = resu.find((item) => item !== null);
       //return res.send(removedNullResu)
       if (removedNullResu) {
         return res.status(412).json({
