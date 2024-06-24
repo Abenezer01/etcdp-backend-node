@@ -3,8 +3,6 @@ const Op = Sequelize.Op;
 const dotenv = require("dotenv");
 dotenv.config();
 
-const usrData = require("../../utils/userDataFromToken");
-const { saveActionState } = require("../../utils/helper");
 const paginationHelper = require("../utils/pagination-helper");
 const { getRecordById, saveRecord, updateRecord, deleteRecord } = require('../utils/format-helper');
 let self = {};

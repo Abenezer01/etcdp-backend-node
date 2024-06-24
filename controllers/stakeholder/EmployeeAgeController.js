@@ -1,11 +1,9 @@
 const { TotalEmployee, EmployeeAge, Sequelize } = require("../../models");
 
 const Op = Sequelize.Op;
-const paginate = require("../../utils/pagination");
 const dotenv = require("dotenv");
 dotenv.config();
 const usrData = require("../../utils/userDataFromToken");
-const { saveActionState, getChildren } = require("../../utils/helper");
 const actionHelper = require("../utils/action-helper");
 const paginationHelper = require("../utils/pagination-helper");
 const { getRecordById, saveRecord, updateRecord, deleteRecord } = require('../utils/format-helper');

@@ -4,11 +4,8 @@ const { getRecordById, saveRecord, updateRecord, deleteRecord } = require('../ut
 const {
   StakeholderCategory,
   StakeholderSubCategory,
-  StakeholderType,
   Sequelize,
 } = require("./../../models");
-const usrData = require("../../utils/userDataFromToken");
-const paginate = require("../../utils/pagination");
 const dotenv = require("dotenv");
 dotenv.config();
 const Op = Sequelize.Op;

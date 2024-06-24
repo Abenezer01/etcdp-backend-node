@@ -1,6 +1,5 @@
 const { OperationLocation, Sequelize } = require("../../models");
 const Op = Sequelize.Op;
-const paginate = require("../../utils/pagination");
 const dotenv = require("dotenv");
 dotenv.config();
 let self = {};

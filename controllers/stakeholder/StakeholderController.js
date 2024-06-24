@@ -8,8 +8,6 @@ const {
     Ownership,
     BusinessField,
     OperationLocation,
-    ActionState,
-    Department,
     sequelize,
     Sequelize,
 } = require("./../../models");
@@ -63,11 +61,11 @@ self.getStakeHolderByTypeId = async (req, res) => {
     const filter = subcategoryId
     ? [
         { stakeholdertype_id: typeId },
-        { stakecategory_id: categoryId },
+        { stakeholdercategory_id: categoryId },
         { stakesubcategory_id: subcategoryId },
       ]
     : categoryId
-    ? [{ stakeholdertype_id: typeId }, { stakecategory_id: categoryId }]
+    ? [{ stakeholdertype_id: typeId }, { stakeholdercategory_id: categoryId }]
     : [{ stakeholdertype_id: typeId }];
 
 
@@ -124,12 +122,12 @@ self.countAllStakeholderWithStakeTypee = async (req, res) => {
       type: sequelize.QueryTypes.SELECT,
     });
     let queryCategoryString =
-      "SELECT stakecategories.title AS category,stakecategories.stakeholdertype_Id AS typeID,stakecategories.id AS category_id, COALESCE(COUNT(stakeholders.id), 0) AS total FROM stakecategories LEFT JOIN stakeholders ON stakecategories.id = stakeholders.stakecategory_id GROUP BY stakecategories.title,typeID,category_id;";
+      "SELECT stakecategories.title AS category,stakecategories.stakeholdertype_Id AS typeID,stakecategories.id AS category_id, COALESCE(COUNT(stakeholders.id), 0) AS total FROM stakecategories LEFT JOIN stakeholders ON stakecategories.id = stakeholders.stakeholdercategory_id GROUP BY stakecategories.title,typeID,category_id;";
     let stakeholderCategoryData = await sequelize.query(queryCategoryString, {
       type: sequelize.QueryTypes.SELECT,
     });
     let querySubCategoryString =
-      "SELECT stakesubcategories.title AS subcategory,stakesubcategories.stakecategory_id AS category_id, COALESCE(COUNT(stakeholders.id), 0) AS total FROM stakesubcategories LEFT JOIN stakeholders ON stakesubcategories.id = stakeholders.stakesubcategory_id GROUP BY stakesubcategories.title,category_id;";
+      "SELECT stakesubcategories.title AS subcategory,stakesubcategories.stakeholdercategory_id AS category_id, COALESCE(COUNT(stakeholders.id), 0) AS total FROM stakesubcategories LEFT JOIN stakeholders ON stakesubcategories.id = stakeholders.stakesubcategory_id GROUP BY stakesubcategories.title,category_id;";
     let stakeholderSubCategoryData = await sequelize.query(
       querySubCategoryString,
       {
@@ -194,12 +192,12 @@ self.countAllStakeholderWithStakeType = async (req, res) => {
       type: sequelize.QueryTypes.SELECT,
     });
     let queryCategoryString =
-      "SELECT stakecategories.title AS name,stakecategories.stakeholdertype_Id AS typeID,stakecategories.id AS id, COALESCE(COUNT(stakeholders.id), 0) AS total FROM stakecategories LEFT JOIN stakeholders ON stakecategories.id = stakeholders.stakecategory_id GROUP BY stakecategories.title,typeID,id;";
+      "SELECT stakecategories.title AS name,stakecategories.stakeholdertype_Id AS typeID,stakecategories.id AS id, COALESCE(COUNT(stakeholders.id), 0) AS total FROM stakecategories LEFT JOIN stakeholders ON stakecategories.id = stakeholders.stakeholdercategory_id GROUP BY stakecategories.title,typeID,id;";
     let stakeholderCategoryData = await sequelize.query(queryCategoryString, {
       type: sequelize.QueryTypes.SELECT,
     });
     let querySubCategoryString =
-      "SELECT stakesubcategories.id AS id,stakesubcategories.title AS name,stakesubcategories.stakecategory_id AS category_id, COALESCE(COUNT(stakeholders.id), 0) AS total FROM stakesubcategories LEFT JOIN stakeholders ON stakesubcategories.id = stakeholders.stakesubcategory_id GROUP BY stakesubcategories.title,category_id,id;";
+      "SELECT stakesubcategories.id AS id,stakesubcategories.title AS name,stakesubcategories.stakeholdercategory_id AS category_id, COALESCE(COUNT(stakeholders.id), 0) AS total FROM stakesubcategories LEFT JOIN stakeholders ON stakesubcategories.id = stakeholders.stakesubcategory_id GROUP BY stakesubcategories.title,category_id,id;";
     let stakeholderSubCategoryData = await sequelize.query(
       querySubCategoryString,
       {

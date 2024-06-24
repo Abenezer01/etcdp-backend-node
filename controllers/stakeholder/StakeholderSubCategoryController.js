@@ -17,6 +17,7 @@ let self = {};
 
 self.getAll = async (req, res) => {
   try {
+    
     const paginatedResult = await paginationHelper(StakeholderSubCategory, req);
 
     // Use the response formatter to send the success response

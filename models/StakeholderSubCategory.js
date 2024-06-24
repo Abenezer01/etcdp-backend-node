@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: DataTypes.UUIDV4,
       },
       parent_id: DataTypes.UUID,
-      stakecategory_id: {
+      stakeholdercategory_id: {
         type: DataTypes.UUID,
         allowNull: false,
       },
@@ -45,9 +45,6 @@ module.exports = (sequelize, DataTypes) => {
       tableName: "stakesubcategories"
     }
   );
-  // StakeholderSubCategory.associate = function(models) {
-
-  //     StakeholderSubCategory.belongsTo(models.StakeholderCategory)
-  // };
+  
   return StakeholderSubCategory;
 };

@@ -1,9 +1,6 @@
 const validator = require("../../../../utils/validator");
 const Validatorr = require("validatorjs");
 const validateReply = require("../../../../utils/validateerror");
-// const {
-//     user
-// } = require("../models");
 
 const stakeholderCategoryValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
@@ -28,7 +25,7 @@ const stakeholderSubCategoryValidate = async (req, res, next) => {
   }
   const validationRule = {
     title: "required|string",
-    stakecategory_id: "required|string",
+    stakeholdercategory_id: "required|string",
     stakeholdertype_id: "required|string",
   };
 
@@ -94,7 +91,7 @@ const stakeHolderValidate = async (req, res, next) => {
     });
   }
   const validationRule = {
-    stakecategory_id: "required|string",
+    stakeholdercategory_id: "required|string",
     stakesubcategory_id: "required|string",
     trade_name: "required|string",
     tin: "required|string",

@@ -1223,7 +1223,7 @@ self.getStakeholderCategoryLocationInformation = async(req, res) => {
 
         // let stakeholders = await stakeholder.findAll({
         //     where: {
-        //         stakecategory_id: id
+        //         stakeholdercategory_id: id
         //     }
         // })
 
