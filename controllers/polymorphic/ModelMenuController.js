@@ -206,10 +206,8 @@ self.getModuleExtraModels = async (req, res) => {
     let models = master.modulemodels[module];
 
     res.apiSuccess({
-      data: model
+      data: models
     });
-
-    return res.json(models);
   } catch (error) {
     res.apiError(error);
   }

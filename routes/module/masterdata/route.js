@@ -1,6 +1,6 @@
 const OwnershipTypeController = require("../../../controllers/stakeholder/OwnershiptypeController.js");
 const StudyLevelController = require("../../../controllers/stakeholder/StudyLevelController");
-const BusinessFieldController = require("../../../controllers/stakeholder/BusinessfieldController.js");
+const BusinessFieldController = require("../../../controllers/stakeholder/BusinessFieldController.js");
 const StudyProgramController = require("../../../controllers/stakeholder/StudyProgramController");
 const StudyFieldController = require("../../../controllers/stakeholder/StudyFieldController");
 const AgeLevelController = require("../../../controllers/stakeholder/AgeLevelController");
