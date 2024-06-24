@@ -1,12 +1,10 @@
-const actionHelper = require("../utils/action-helper");
-const paginationHelper = require("../utils/pagination-helper")
-const { getRecordById, saveRecord, updateRecord, deleteRecord } = require('../utils/format-helper');
+const paginationHelper = require("../utils/pagination-helper");
+const { getRecordById, saveRecord, updateRecord, deleteRecord } = require("../utils/format-helper");
 const {
   ProjectTime,
   ProjectExtensionTime,
   Sequelize,
 } = require("./../../models");
-const usrData = require("../../utils/userDataFromToken");
 const Op = Sequelize.Op;
 const dotenv = require("dotenv");
 const moment = require("moment");
@@ -24,7 +22,6 @@ self.getAll = async (req, res) => {
     }, paginatedResult.pagination);
 
   } catch (error) {
-    console.error("Error in getAll method:", error);
     res.apiError(error);
   }
 };
@@ -60,9 +57,8 @@ self.getByProjectId = async (req, res) => {
 
     res.apiSuccess({
       data
-    })
+    });
   } catch (error) {
-    console.error("Error:", error);
     res.apiError(error);
   }
 };

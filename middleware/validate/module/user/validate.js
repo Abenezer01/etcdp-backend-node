@@ -1,4 +1,3 @@
-const validator = require("../../../../utils/validator");
 const validateReply = require("../../../../utils/validateerror");
 // const {
 //     user
@@ -21,7 +20,7 @@ const validateReply = require("../../../../utils/validateerror");
 // }
 const createUser = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if (param == "failed") {
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid id",
     });
@@ -41,7 +40,7 @@ const createUser = async (req, res, next) => {
 };
 const positionValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if (param == "failed") {
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid id",
     });
@@ -57,7 +56,7 @@ const positionValidate = async (req, res, next) => {
 
 const educationStatusValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if (param == "failed") {
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid id",
     });
@@ -78,7 +77,7 @@ const educationStatusValidate = async (req, res, next) => {
 
 const familyStatusValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if (param == "failed") {
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid id",
     });
@@ -94,7 +93,7 @@ const familyStatusValidate = async (req, res, next) => {
 };
 const contactPersonValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if (param == "failed") {
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid id",
     });
@@ -117,7 +116,7 @@ const contactPersonValidate = async (req, res, next) => {
 
 const jobExperienceValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if (param == "failed") {
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid id",
     });
@@ -138,7 +137,7 @@ const jobExperienceValidate = async (req, res, next) => {
 };
 const childValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if (param == "failed") {
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid id",
     });
@@ -156,7 +155,7 @@ const departmentValidate = async (req, res, next) => {
 
   let param = await validateReply.checkParam(req, res, next);
   
-  if (param == "failed") {
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid id",
     });
@@ -172,7 +171,7 @@ const departmentValidate = async (req, res, next) => {
 };
 const roleValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if (param == "failed") {
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid id",
     });
@@ -186,7 +185,7 @@ const roleValidate = async (req, res, next) => {
 
 const permissionValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if (param == "failed") {
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid id",
     });

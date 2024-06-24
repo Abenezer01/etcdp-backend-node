@@ -9,6 +9,13 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      ProjectSubCategory.belongsTo(models.ProjectCategory, {
+        as: "projectsubcategories",
+        foreignKey: {
+          name: "projectcategory_id",
+          allowNull: false,
+        },
+      });
     }
   }
   ProjectSubCategory.init(
@@ -30,21 +37,12 @@ module.exports = (sequelize, DataTypes) => {
       revision_no: DataTypes.INTEGER,
     },
     {
-      createdAt: 'created_at',
-      updatedAt: 'updated_at' ,     
+      createdAt: "created_at",
+      updatedAt: "updated_at" ,     
       sequelize,
       modelName: "ProjectSubCategory",
       tableName: "projectsubcategories"
     }
   );
-  ProjectSubCategory.associate = (models) => {
-    ProjectSubCategory.belongsTo(models.ProjectCategory, {
-      as: "projectsubcategories",
-      foreignKey: {
-        name: "projectcategory_id",
-        allowNull: false,
-      },
-    });
-  };
   return ProjectSubCategory;
 };

@@ -8,7 +8,7 @@ let self = {};
 const usrData = require("../../utils/userDataFromToken");
 const actionHelper = require("../utils/action-helper");
 const paginationHelper = require("../utils/pagination-helper");
-const { getRecordById, saveRecord, updateRecord, deleteRecord } = require('../utils/format-helper');
+const { getRecordById, updateRecord, deleteRecord } = require("../utils/format-helper");
 
 self.getAll = async (req, res) => {
   try {
@@ -21,7 +21,6 @@ self.getAll = async (req, res) => {
     }, paginatedResult.pagination);
 
   } catch (error) {
-    console.error("Error in getAll method:", error);
     res.apiError(error);
   }
 };
@@ -107,7 +106,6 @@ self.save = async (req, res) => {
       },
       include: ["studyfield"],
     });
-    console.log("Study data", studyData.studyfield_id);
     let ii = studyData.studyfield_id;
     //body.study_field_id = studyData.studyfield_id
     let da = {

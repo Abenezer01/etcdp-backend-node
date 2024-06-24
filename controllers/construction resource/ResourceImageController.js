@@ -1,9 +1,9 @@
-const { User, Resource, Image, Sequelize } = require("../../models");
+const {Resource, Image, Sequelize } = require("../../models");
 const path = require("path");
 const usrData = require("../../utils/userDataFromToken");
 const actionHelper = require("../utils/action-helper");
-const { getRecordById, saveRecord, updateRecord, deleteRecord } = require('../utils/format-helper');
-const paginationHelper = require("../utils/pagination-helper")
+const { getRecordById, deleteRecord } = require("../utils/format-helper");
+const paginationHelper = require("../utils/pagination-helper");
 const fs = require("fs");
 
 const Op = Sequelize.Op;
@@ -21,7 +21,6 @@ self.getAll = async (req, res) => {
     }, paginatedResult.pagination);
 
   } catch (error) {
-    console.error("Error in getAll method:", error);
     res.apiError(error);
   }
 };
@@ -107,7 +106,6 @@ self.save = async (req, res) => {
 
     return res.status(200).json({ data: ll });
   } catch (error) {
-    console.log("The error is", error);
     res.status(500).json({ message: error.message });
   }
 };
@@ -145,8 +143,8 @@ self.update = async (req, res) => {
     return res.status(412).json({ message: "Can't get user id" });
   }
 
-  const contentLength = parseInt(req.headers["content-length"]);
-  const fileSizeInKB = Math.round((contentLength / 1024) * 100) / 100;
+  // const contentLength = parseInt(req.headers["content-length"]);
+  // const fileSizeInKB = Math.round((contentLength / 1024) * 100) / 100;
 
   try {
     const resourceData = await Resource.findOne({ where: { id } });
@@ -179,8 +177,7 @@ self.update = async (req, res) => {
 
     return res.status(200).json({ message: "Success" });
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({ message: "Internal Server Error" });
+    res.apiError(error);
   }
 };
 

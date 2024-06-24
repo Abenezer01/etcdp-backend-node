@@ -9,6 +9,12 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      StakeholderService.belongsTo(models.ConstructionRelatedService, {
+        as: "constructionrelatedservice",
+        foreignKey: "construction_related_service_id",
+        constraints: false,
+        attribute: ["description", "title"],
+      });
     }
   }
   StakeholderService.init(
@@ -24,20 +30,13 @@ module.exports = (sequelize, DataTypes) => {
       unit_price: DataTypes.DOUBLE,
     },
     {
-      createdAt: 'created_at',
-      updatedAt: 'updated_at' ,     
+      createdAt: "created_at",
+      updatedAt: "updated_at" ,     
       sequelize,
       modelName: "StakeholderService",
       tableName: "stakeholderservices"
     }
   );
-  StakeholderService.associate = function (models) {
-    StakeholderService.belongsTo(models.ConstructionRelatedService, {
-      as: "constructionrelatedservice",
-      foreignKey: "construction_related_service_id",
-      constraints: false,
-      attribute: ["description", "title"],
-    });
-  };
+
   return StakeholderService;
 };

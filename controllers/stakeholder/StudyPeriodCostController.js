@@ -8,11 +8,9 @@ const paginate = require("../../utils/pagination");
 const dotenv = require("dotenv");
 dotenv.config();
 const Op = Sequelize.Op;
-const usrData = require("../../utils/userDataFromToken");
-const { saveActionState, getChildren } = require("../../utils/helper");
 const actionHelper = require("../utils/action-helper");
 const paginationHelper = require("../utils/pagination-helper");
-const { getRecordById, saveRecord, updateRecord, deleteRecord } = require('../utils/format-helper');
+const { getRecordById, saveRecord, updateRecord, deleteRecord } = require("../utils/format-helper");
 let self = {};
 
 self.getAll = async (req, res) => {
@@ -26,7 +24,6 @@ self.getAll = async (req, res) => {
     }, paginatedResult.pagination);
 
   } catch (error) {
-    console.error("Error in getAll method:", error);
     res.apiError(error);
   }
 };
@@ -45,7 +42,7 @@ self.getByHigherInstituteId = async (req, res) => {
   const { id } = req.params;
   const { limit, offset } = paginate.getPagination(page, size);
   let limiter = { limit, offset };
-  page == -1 ? (limiter = {}) : limiter;
+  page === -1 ? (limiter = {}) : limiter;
   StudyPeriodCost
     .findAndCountAll({
       limit: limiter.limit,
@@ -57,10 +54,8 @@ self.getByHigherInstituteId = async (req, res) => {
       include: ["stakestudyfield", "studyprogram", "studylevel"],
     })
     .then(async (data) => {
-      console.log("The data", data);
       let arr = [];
       for (let dat of data.rows) {
-        //console.log("The id is: ", dat.stakestudyfield.studyfield_id)
         const studyData = await StudyField.findOne({
           where: {
             id: dat.stakestudyfield.studyfield_id,
@@ -68,14 +63,11 @@ self.getByHigherInstituteId = async (req, res) => {
         });
 
         if (studyData) {
-          //console.log("Study data", {...studyData.dataValues, ...dat.dataValues })
           arr.push({ StudyField: studyData.dataValues, ...dat.dataValues });
         }
       }
-      //console.log("The array", arr)
       let newData = await Promise.all(
         arr.map(async (item) => {
-          //console.log("The item id", item.dataValues);
           return {
             ...item,
             status: await actionHelper.getAction(item.id),
@@ -99,7 +91,7 @@ self.getByHigherInstituteId = async (req, res) => {
 self.getByStudyFieldId = async (req, res) => {
   const { id } = req.params;
   try {
-    const whereCondition = { study_program_id: fieldId }
+    const whereCondition = { study_program_id: id };
     const paginatedResult = await paginationHelper(StudyPeriodCost, req, whereCondition);
 
     // Use the response formatter to send the success response
@@ -109,7 +101,6 @@ self.getByStudyFieldId = async (req, res) => {
     }, paginatedResult.pagination);
 
   } catch (error) {
-    console.error("Error in getAll method:", error);
     res.apiError(error);
   }
 };
@@ -143,7 +134,7 @@ self.save = async (req, res) => {
       include: ["StudyField"],
     });
 
-    req.body.studyfield_id = studyData.studyFieldId
+    req.body.studyfield_id = studyData.studyFieldId;
 
     saveRecord(StudyPeriodCost, req, res);
 };

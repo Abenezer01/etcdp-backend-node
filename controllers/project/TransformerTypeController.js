@@ -1,8 +1,6 @@
-const actionHelper = require("../utils/action-helper");
 const paginationHelper = require("../utils/pagination-helper");
-const { getRecordById, saveRecord, updateRecord, deleteRecord } = require('../utils/format-helper');
+const { getRecordById, saveRecord, updateRecord, deleteRecord } = require("../utils/format-helper");
 const { TransformerType, Sequelize } = require("./../../models");
-const usrData = require("../../utils/userDataFromToken");
 const Op = Sequelize.Op;
 const dotenv = require("dotenv");
 dotenv.config();
@@ -20,14 +18,13 @@ self.getAll = async (req, res) => {
     }, paginatedResult.pagination);
 
   } catch (error) {
-    console.error("Error in getAll method:", error);
     res.apiError(error);
   }
 };
 self.getByProjectId = async (req, res) => {
   const { id } = req.params;
   try {
-    const whereCondition = { project_id: id }
+    const whereCondition = { project_id: id };
     const paginatedResult = await paginationHelper(TransformerType, req, whereCondition);
 
     // Use the response formatter to send the success response
@@ -37,7 +34,6 @@ self.getByProjectId = async (req, res) => {
     }, paginatedResult.pagination);
 
   } catch (error) {
-    console.error("Error in getAll method:", error);
     res.apiError(error);
   }
 };

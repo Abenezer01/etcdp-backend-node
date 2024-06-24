@@ -19,7 +19,7 @@ const formatErrorResponse = (errors) => {
   };
 };
 
-const checkParam = async (req, res, next) => {
+const checkParam = async (req) => {
   let id = req.params.id;
   if (id) {
     const regexExp =

@@ -1,13 +1,9 @@
 const {
-  StakeholderCategory,
   StakeholderSubCategory,
   Sequelize,
 } = require("./../../models");
-const actionHelper = require("../utils/action-helper");
 const paginationHelper = require("../utils/pagination-helper");
-const { getRecordById, saveRecord, updateRecord, deleteRecord } = require('../utils/format-helper');
-const usrData = require("../../utils/userDataFromToken");
-const paginate = require("../../utils/pagination");
+const { getRecordById, saveRecord, updateRecord, deleteRecord } = require("../utils/format-helper");
 const dotenv = require("dotenv");
 dotenv.config();
 const Op = Sequelize.Op;
@@ -27,7 +23,6 @@ self.getAll = async (req, res) => {
     }, paginatedResult.pagination);
 
   } catch (error) {
-    console.error("Error in getAll method:", error);
     res.apiError(error);
   }
 };

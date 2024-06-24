@@ -107,7 +107,7 @@ const loginUser = async (req, res) => {
     await usr.save();
 
     Socket.emit("loggedIn", { message: true });
-    let data = {user_data: replyUser, access_token: accessToken}
+    let data = {user_data: replyUser, access_token: accessToken};
 
     res.apiSuccess({
       data: data,
@@ -117,7 +117,6 @@ const loginUser = async (req, res) => {
       page: 1
     });
   } catch (error) {
-    console.error("Error:", error);
     res.apiError(error);
   }
 };

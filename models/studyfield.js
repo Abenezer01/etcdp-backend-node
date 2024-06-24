@@ -9,6 +9,14 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      StudyField.belongsTo(models.StudyProgram, {
+        as: "studyprogram",
+        foreignKey: "study_program_id",
+      });
+      StudyField.belongsTo(models.StudyProgram, {
+        as: "studylevel",
+        foreignKey: "studylevel_id",
+      });
     }
   }
   StudyField.init(
@@ -35,27 +43,13 @@ module.exports = (sequelize, DataTypes) => {
       revision_no: DataTypes.INTEGER,
     },
     {
-      createdAt: 'created_at',
-      updatedAt: 'updated_at' ,     
+      createdAt: "created_at",
+      updatedAt: "updated_at" ,     
       sequelize,
       modelName: "StudyField",
       tableName: "studyfields"
     }
   );
-  StudyField.associate = function (models) {
-    // StudyField.belongsTo(models.address, {
-    //     as: "address",
-    //     foreignKey: "address_id"
-    // })
-    StudyField.belongsTo(models.StudyProgram, {
-      as: "studyprogram",
-      foreignKey: "study_program_id",
-    });
-    StudyField.belongsTo(models.StudyProgram, {
-      as: "studylevel",
-      foreignKey: "studylevel_id",
-    });
-  };
 
   return StudyField;
 };

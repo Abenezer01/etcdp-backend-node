@@ -14,7 +14,9 @@
 
         "start": "node server",
 
-        "build": "nexe server"
+        "build": "nexe server",
+        "lint": "eslint .",
+        "lint:fix": "eslint . --fix"
 
     },
 
@@ -79,6 +81,12 @@
     },
 
     "devDependencies": {
+
+        "@eslint/js": "^9.5.0",
+
+        "eslint": "^9.5.0",
+
+        "globals": "^15.6.0",
 
         "nodemon": "^2.0.20"
 

@@ -18,7 +18,7 @@ const parseParams = (req) => {
           direction: req.query.sorting.direction,
         }
         : null,
-      includes: req.query.includes ? req.query.includes.split(',') : null,
+      includes: req.query.includes ? req.query.includes.split(",") : null,
       type: req.query.type || null,
       position: req.query.position || null,
     };

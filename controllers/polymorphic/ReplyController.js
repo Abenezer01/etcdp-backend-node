@@ -1,10 +1,7 @@
-const {Reply, User, Sequelize } = require("../../models");
+const {Reply, User } = require("../../models");
 const usrData = require("../../utils/userDataFromToken");
-const actionHelper = require("../utils/action-helper");
-const paginationHelper = require("../utils/pagination-helper")
-const { getRecordById, saveRecord, updateRecord, deleteRecord } = require('../utils/format-helper');
-
-const Op = Sequelize.Op;
+const paginationHelper = require("../utils/pagination-helper");
+const { getRecordById, saveRecord, updateRecord, deleteRecord } = require("../utils/format-helper");
 
 let self = {};
 
@@ -22,7 +19,6 @@ self.getAll = async (req, res) => {
     }, paginatedResult.pagination);
 
   } catch (error) {
-    console.error("Error in getAll method:", error);
     res.apiError(error);
   }
 };
@@ -33,7 +29,7 @@ self.get = async (req, res) => {
 
 self.save = async (req, res) => {
   let usr = await usrData.userData(req, res);
-  req.body.creator_id = usr.usrID
+  req.body.creator_id = usr.usrID;
 
   saveRecord(Reply, req, res);
 };
@@ -49,9 +45,9 @@ self.delete = async (req, res) => {
 self.getActionReplies = async (req, res) => {
   const { id } = req.params;
   try {
-    const whereCondition = { actionstate_id: id, }
+    const whereCondition = { actionstate_id: id, };
     const includeOptions = [
-      { model: User, as: 'user' } // Example association
+      { model: User, as: "user" } // Example association
     ];
     const paginatedResult = await paginationHelper(Reply, req, whereCondition, includeOptions);
 
@@ -62,7 +58,6 @@ self.getActionReplies = async (req, res) => {
     }, paginatedResult.pagination);
 
   } catch (error) {
-    console.error("Error in getAll method:", error);
     res.apiError(error);
   }
 };

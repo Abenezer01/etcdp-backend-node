@@ -9,6 +9,24 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      StudyPeriodCost.belongsTo(models.StakeholderStudyField, {
+        as: "stakestudyfield",
+        foreignKey: "stake_study_field_id",
+        constraints: false,
+        attribute: ["description", "title"],
+      });
+      StudyPeriodCost.belongsTo(models.StudyProgram, {
+        as: "studyprogram",
+        foreignKey: "study_program_id",
+      });
+      StudyPeriodCost.belongsTo(models.StudyLevel, {
+        as: "studylevel",
+        foreignKey: "studylevel_id",
+      });
+      StudyPeriodCost.belongsTo(models.StudyField, {
+        as: "studyfield",
+        foreignKey: "studyfield_id",
+      });
     }
   }
   StudyPeriodCost.init(
@@ -52,32 +70,12 @@ module.exports = (sequelize, DataTypes) => {
       revision_no: DataTypes.INTEGER,
     },
     {
-      createdAt: 'created_at',
-      updatedAt: 'updated_at' ,     
+      createdAt: "created_at",
+      updatedAt: "updated_at" ,     
       sequelize,
       modelName: "StudyPeriodCost",
       tableName: "studyperiodcosts"
     }
   );
-  StudyPeriodCost.associate = function (models) {
-    StudyPeriodCost.belongsTo(models.StakeholderStudyField, {
-      as: "stakestudyfield",
-      foreignKey: "stake_study_field_id",
-      constraints: false,
-      attribute: ["description", "title"],
-    });
-    StudyPeriodCost.belongsTo(models.StudyProgram, {
-      as: "studyprogram",
-      foreignKey: "study_program_id",
-    });
-    StudyPeriodCost.belongsTo(models.StudyLevel, {
-      as: "studylevel",
-      foreignKey: "studylevel_id",
-    });
-    StudyPeriodCost.belongsTo(models.StudyField, {
-      as: "studyfield",
-      foreignKey: "studyfield_id",
-    });
-  };
   return StudyPeriodCost;
 };

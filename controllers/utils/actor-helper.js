@@ -101,14 +101,13 @@ const {
   WorkExperience,
   Sequelize,
 } = require("../../models");
-const usrData = require("../../utils/userDataFromToken");
 const notificationHelper = require("./notification-helper");
 const Op = Sequelize.Op;
 
 const self = {};
 self.actionUserFinder = async (model, action, user_id, department_id) => {
   try {
-    let pos = await position.findAll({
+    let pos = await Position.findAll({
       where: {
         department_id: department_id,
       },
@@ -116,13 +115,13 @@ self.actionUserFinder = async (model, action, user_id, department_id) => {
 
     let posIds = await Promise.all(
       pos.map(async (item) => {
-        let per = permission.findOne({
+        let per = Permission.findOne({
           where: {
             name: `${action}_${model}`,
           },
         });
         if (per) {
-          let posper = positionpermission.findOne({
+          let posper = PositionPermission.findOne({
             where: {
               position_id: item.id,
               permission_id: per.id,
@@ -136,7 +135,7 @@ self.actionUserFinder = async (model, action, user_id, department_id) => {
       })
     );
 
-    let userpos = await userposition.findAll({
+    let userpos = await UserPosition.findAll({
       where: {
         position_id: {
           [Op.in]: posIds,

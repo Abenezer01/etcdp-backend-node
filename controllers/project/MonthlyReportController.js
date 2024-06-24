@@ -1,6 +1,9 @@
-const { ProjectPlan, MonthlyReport, Sequelize } = require("./../../models");
-const paginationHelper = require("../utils/pagination-helper")
-const { getRecordById, saveRecord, updateRecord, deleteRecord } = require('../utils/format-helper');
+const { ProjectPlan, MonthlyReport } = require("./../../models");
+const paginationHelper = require("../utils/pagination-helper");
+const { getRecordById, updateRecord, deleteRecord } = require("../utils/format-helper");
+const usrData = require("../../utils/userDataFromToken");
+const actionHelper = require("../utils/action-helper");
+
 
 let self = {};
 
@@ -15,7 +18,6 @@ self.getAll = async (req, res) => {
     }, paginatedResult.pagination);
 
   } catch (error) {
-    console.error("Error in getAll method:", error);
     res.apiError(error);
   }
 };
@@ -121,7 +123,9 @@ self.getMonthlyProjectReport = async(req, res) => {
                 );
             }
 
-            return res.json(data);
+            return res.apiSuccess({
+                data: data
+            });
         }
     } catch (error) {
         return res.status(500).json({

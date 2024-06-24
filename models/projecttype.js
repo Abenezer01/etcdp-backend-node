@@ -9,6 +9,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      ProjectType.hasMany(models.ProjectCategory, {
+        foreignKey: "projecttype_id",
+        as: "Projectcategories",
+      });
     }
   }
   ProjectType.init(
@@ -27,26 +31,13 @@ module.exports = (sequelize, DataTypes) => {
       revision_no: DataTypes.INTEGER,
     },
     {
-      createdAt: 'created_at',
-      updatedAt: 'updated_at' ,     
+      createdAt: "created_at",
+      updatedAt: "updated_at" ,     
       sequelize,
       modelName: "ProjectType",
       tableName: "projecttypes"
     }
   );
-  ProjectType.associate = function (models) {
-    // associations can be defined here
-    ProjectType.hasMany(models.ProjectCategory, {
-      foreignKey: "projecttype_id",
-      as: "Projectcategories",
-    });
-    models.ProjectCategory.associate = function (models) {
-      // associations can be defined here
-      ProjectCategory.hasMany(models.ProjectSubCategory, {
-        foreignKey: "projectcategory_id",
-        as: "Projectsubcategories",
-      });
-    };
-  };
+  
   return ProjectType;
 };

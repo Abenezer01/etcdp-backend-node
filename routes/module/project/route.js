@@ -513,7 +513,7 @@ module.exports = function (express) {
   );
   route.delete("/project-times/:id", ProjectTimeController.delete);
 
-  route.get("/project-time-analysis/:id", ProjectController.getContractTimeAnalysis)
+  route.get("/project-time-analysis/:id", ProjectController.getContractTimeAnalysis);
 
   //project bond
   route.get("/project-bonds/", ProjectBondController.getAll);

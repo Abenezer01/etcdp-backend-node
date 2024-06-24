@@ -9,14 +9,14 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      // ProjectReport.belongsTo(models.projectplan, {
-      //     as: "projectplan",
-      //     foreignKey: "projectplan_id"
-      // }),
-      // ProjectReport.hasOne(models.file, {
-      //     as: "file",
-      // foreignKey: "file_id"
-      // })
+      ProjectReport.belongsTo(models.File, {
+        as: "file",
+        foreignKey: "file_id",
+      });
+      ProjectReport.belongsTo(models.ProjectPlan, {
+        as: "projectplan",
+        foreignKey: "projectplan_id",
+      });
     }
   }
   ProjectReport.init(
@@ -75,7 +75,7 @@ module.exports = (sequelize, DataTypes) => {
         get() {
           return (
             this.financial_performance -
-            (this.project_expense == null
+            (this.project_expense === null
               ? this.projectexpense
               : this.project_expense)
           );
@@ -105,25 +105,12 @@ module.exports = (sequelize, DataTypes) => {
       file_id: DataTypes.UUID,
     },
     {
-      createdAt: 'created_at',
-      updatedAt: 'updated_at' ,     
+      createdAt: "created_at",
+      updatedAt: "updated_at" ,     
       sequelize,
       modelName: "ProjectReport",
       tableName: "projectreports"
     }
   );
-
-  ProjectReport.associate = function (models) {
-    // associations can be defined here
-    ProjectReport.belongsTo(models.File, {
-      as: "file",
-      foreignKey: "file_id",
-    });
-    ProjectReport.belongsTo(models.ProjectPlan, {
-      as: "projectplan",
-      foreignKey: "projectplan_id",
-    });
-  };
-
   return ProjectReport;
 };

@@ -9,7 +9,6 @@ const PhotoController = require("../../../controllers/polymorphic/PhotoControlle
 const ModelMenuController = require("../../../controllers/polymorphic/ModelMenuController.js");
 const NotificationController = require("../../../controllers/polymorphic/NotificationController.js");
 const FileController = require("../../../controllers/polymorphic/FileController");
-const middleware = require("../../../middleware/middleware");
 
 module.exports = function (express) {
   const route = express.Router();
@@ -53,11 +52,7 @@ module.exports = function (express) {
     validateData.filterValidate,
     FileController.getMyFilteredFiles
   );
-  route.get(
-    "/file/filter/type_model",
-    validateData.filterValidate,
-    FileController.getFilesByModelAndType
-  );
+  
   route.get("/file_search", FileController.search);
   route.post("/files", validateData.fileValidate, FileController.save);
   route.put("/files/:id", validateData.fileValidate, FileController.update);

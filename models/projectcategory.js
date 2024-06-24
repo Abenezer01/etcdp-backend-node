@@ -8,7 +8,10 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      ProjectCategory.hasMany(models.ProjectSubCategory, {
+        foreignKey: "projectcategory_id",
+        as: "projectsubcategories",
+      });
     }
   }
   ProjectCategory.init(
@@ -28,19 +31,13 @@ module.exports = (sequelize, DataTypes) => {
       revision_no: DataTypes.INTEGER,
     },
     {
-      createdAt: 'created_at',
-      updatedAt: 'updated_at' ,     
+      createdAt: "created_at",
+      updatedAt: "updated_at" ,     
       sequelize,
       modelName: "ProjectCategory",
       tableName: "projectcategories"
     }
   );
-  ProjectCategory.associate = function (models) {
-    // associations can be defined here
-    ProjectCategory.hasMany(models.ProjectSubCategory, {
-      foreignKey: "projectcategory_id",
-      as: "projectsubcategories",
-    });
-  };
+
   return ProjectCategory;
 };

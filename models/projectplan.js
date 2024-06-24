@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
             ProjectPlan.hasMany(models.ActionState, {
                 as: "action",
                 foreignKey: "model_id"
-            })
+            });
         }
     }
     ProjectPlan.init({
@@ -70,7 +70,7 @@ module.exports = (sequelize, DataTypes) => {
             get() {
                 return (
                     this.financial_performance -
-                    (this.project_expense == null ?
+                    (this.project_expense === null ?
                         this.projectexpense :
                         this.project_expense)
                 );
@@ -89,7 +89,7 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.VIRTUAL,
             get() {
                 return (
-                    (this.manpower == null ?
+                    (this.manpower === null ?
                         this.direct_labour + this.indirect_labour :
                         this.manpower) +
                     this.machinery +
@@ -100,8 +100,8 @@ module.exports = (sequelize, DataTypes) => {
             },
         },
     }, {
-        createdAt: 'created_at',
-        updatedAt: 'updated_at' , 
+        createdAt: "created_at",
+        updatedAt: "updated_at" , 
         sequelize,
         modelName: "ProjectPlan",
         tableName: "projectplans"

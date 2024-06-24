@@ -1,4 +1,3 @@
-const validator = require("../../../../utils/validator");
 const validateReply = require("../../../../utils/validateerror");
 
 // const {
@@ -6,7 +5,7 @@ const validateReply = require("../../../../utils/validateerror");
 // } = require("../models");
 const projectTypeValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if (param == "failed") {
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid id",
     });
@@ -19,7 +18,7 @@ const projectTypeValidate = async (req, res, next) => {
 };
 const projectCategoryValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if (param == "failed") {
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid id",
     });
@@ -33,7 +32,7 @@ const projectCategoryValidate = async (req, res, next) => {
 };
 const projectSubCategoryValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if (param == "failed") {
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid id",
     });
@@ -47,7 +46,7 @@ const projectSubCategoryValidate = async (req, res, next) => {
 };
 const projectValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if (param == "failed") {
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid id",
     });
@@ -62,7 +61,7 @@ const projectValidate = async (req, res, next) => {
 };
 const statusValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if (param == "failed") {
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid id",
     });
@@ -75,7 +74,7 @@ const statusValidate = async (req, res, next) => {
 };
 const projectStatusValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if (param == "failed") {
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid id",
     });
@@ -89,7 +88,7 @@ const projectStatusValidate = async (req, res, next) => {
 };
 const projectStakeholderValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if (param == "failed") {
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid id",
     });
@@ -104,7 +103,7 @@ const projectStakeholderValidate = async (req, res, next) => {
 };
 const projectFinanceValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if (param == "failed") {
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid id",
     });
@@ -117,7 +116,7 @@ const projectFinanceValidate = async (req, res, next) => {
 };
 const projectVariationValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if (param == "failed") {
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid id",
     });
@@ -131,7 +130,7 @@ const projectVariationValidate = async (req, res, next) => {
 };
 const projectExtensionTimeValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if (param == "failed") {
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid id",
     });
@@ -146,7 +145,7 @@ const projectExtensionTimeValidate = async (req, res, next) => {
 };
 const projectTimeValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if (param == "failed") {
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid id",
     });
@@ -159,7 +158,7 @@ const projectTimeValidate = async (req, res, next) => {
 };
 const projectBondValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if (param == "failed") {
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid id",
     });
@@ -173,7 +172,7 @@ const projectBondValidate = async (req, res, next) => {
 };
 const projectPlanValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if (param == "failed") {
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid id",
     });
@@ -186,7 +185,7 @@ const projectPlanValidate = async (req, res, next) => {
 };
 const projectReportValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if (param == "failed") {
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid id",
     });
@@ -199,7 +198,7 @@ const projectReportValidate = async (req, res, next) => {
 };
 const projectDocumentValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if (param == "failed") {
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid id",
     });
@@ -212,7 +211,7 @@ const projectDocumentValidate = async (req, res, next) => {
 };
 const constructionResourceValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if (param == "failed") {
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid id",
     });
@@ -226,7 +225,7 @@ const constructionResourceValidate = async (req, res, next) => {
 };
 const buildingEnvelopMaterialValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if (param == "failed") {
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid id",
     });
@@ -239,7 +238,7 @@ const buildingEnvelopMaterialValidate = async (req, res, next) => {
 };
 const buildingDimensionDetailValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if (param == "failed") {
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid id",
     });
@@ -252,7 +251,7 @@ const buildingDimensionDetailValidate = async (req, res, next) => {
 };
 const roadDetailValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if (param == "failed") {
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid id",
     });
@@ -265,7 +264,7 @@ const roadDetailValidate = async (req, res, next) => {
 };
 const roadSegmentValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if (param == "failed") {
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid id",
     });
@@ -279,7 +278,7 @@ const roadSegmentValidate = async (req, res, next) => {
 };
 const roadLayerValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if (param == "failed") {
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid id",
     });
@@ -295,7 +294,7 @@ const roadLayerValidate = async (req, res, next) => {
 };
 const telecomValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if (param == "failed") {
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid id",
     });
@@ -309,7 +308,7 @@ const telecomValidate = async (req, res, next) => {
 };
 const generatingCapacityValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if (param == "failed") {
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid id",
     });
@@ -322,7 +321,7 @@ const generatingCapacityValidate = async (req, res, next) => {
 };
 const turbineInfoValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if (param == "failed") {
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid id",
     });
@@ -336,7 +335,7 @@ const turbineInfoValidate = async (req, res, next) => {
 };
 const hydroElectricDamValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if (param == "failed") {
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid id",
     });
@@ -350,7 +349,7 @@ const hydroElectricDamValidate = async (req, res, next) => {
 };
 const spillWayInfoValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if (param == "failed") {
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid id",
     });
@@ -364,7 +363,7 @@ const spillWayInfoValidate = async (req, res, next) => {
 };
 const solarEnergyValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if (param == "failed") {
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid id",
     });
@@ -378,7 +377,7 @@ const solarEnergyValidate = async (req, res, next) => {
 };
 const windEnergyValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if (param == "failed") {
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid id",
     });
@@ -392,7 +391,7 @@ const windEnergyValidate = async (req, res, next) => {
 };
 const transformerTypeValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if (param == "failed") {
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid id",
     });
@@ -406,7 +405,7 @@ const transformerTypeValidate = async (req, res, next) => {
 };
 const transformerValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if (param == "failed") {
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid id",
     });
@@ -420,7 +419,7 @@ const transformerValidate = async (req, res, next) => {
 };
 const transmissionLineValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if (param == "failed") {
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid id",
     });
@@ -434,7 +433,7 @@ const transmissionLineValidate = async (req, res, next) => {
 };
 const electricTowerValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if (param == "failed") {
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid id",
     });
@@ -448,7 +447,7 @@ const electricTowerValidate = async (req, res, next) => {
 };
 const railWayValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if (param == "failed") {
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid id",
     });
@@ -461,7 +460,7 @@ const railWayValidate = async (req, res, next) => {
 };
 const railWayStationValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if (param == "failed") {
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid id",
     });
@@ -475,7 +474,7 @@ const railWayStationValidate = async (req, res, next) => {
 };
 const reserviorDetailValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if (param == "failed") {
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid id",
     });
@@ -488,7 +487,7 @@ const reserviorDetailValidate = async (req, res, next) => {
 };
 const irrigationCapacityValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if (param == "failed") {
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid id",
     });
@@ -501,7 +500,7 @@ const irrigationCapacityValidate = async (req, res, next) => {
 };
 const waterIrrigationValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if (param == "failed") {
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid id",
     });
@@ -514,7 +513,7 @@ const waterIrrigationValidate = async (req, res, next) => {
 };
 const portValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if (param == "failed") {
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid id",
     });
@@ -527,7 +526,7 @@ const portValidate = async (req, res, next) => {
 };
 const paymentValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if (param == "failed") {
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid id",
     });
@@ -560,7 +559,6 @@ module.exports = {
   roadDetailValidate,
   roadSegmentValidate,
   roadLayerValidate,
-  telecomValidate,
   telecomValidate,
   generatingCapacityValidate,
   turbineInfoValidate,

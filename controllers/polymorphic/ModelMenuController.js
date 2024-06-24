@@ -1,12 +1,11 @@
 const { ModelMenu, Sequelize } = require("../../models");
 const usrData = require("../../utils/userDataFromToken");
 const actionHelper = require("../utils/action-helper");
-const paginationHelper = require("../utils/pagination-helper")
+const paginationHelper = require("../utils/pagination-helper");
 const master = require("../../config/master");
 const Op = Sequelize.Op;
 const dotenv = require("dotenv");
-const { getRecordById, saveRecord, updateRecord, deleteRecord } = require('../utils/format-helper');
-const { Model } = require("sequelize");
+const { getRecordById, updateRecord, deleteRecord } = require("../utils/format-helper");
 
 dotenv.config();
 
@@ -24,13 +23,12 @@ self.getAll = async (req, res) => {
     }, paginatedResult.pagination);
 
   } catch (error) {
-    console.error("Error in getAll method:", error);
     res.apiError(error);
   }
 };
 
 self.get = async (req, res) => {
-  getRecordById(BuildingDimensionDetail, req, res);
+  getRecordById(ModelMenu, req, res);
 };
 
 
@@ -45,7 +43,7 @@ self.delete = async (req, res) => {
 self.getByProjectId = async (req, res) => {
   const { id } = req.params;
   try {
-    const whereCondition = { project_id: id }
+    const whereCondition = { project_id: id };
 
     const paginatedResult = await paginationHelper(ModelMenu, req, whereCondition);
 
@@ -56,7 +54,6 @@ self.getByProjectId = async (req, res) => {
     }, paginatedResult.pagination);
 
   } catch (error) {
-    console.error("Error in getAll method:", error);
     res.apiError(error);
   }
 };
@@ -72,7 +69,7 @@ self.search = async (req, res) => {
     });
     return res.json(data);
   } catch (error) {
-    res.apiError(error)
+    res.apiError(error);
   }
 };
 
@@ -125,7 +122,7 @@ self.save = async (req, res) => {
       });
     }
   } catch (error) {
-    res.apiError(error)
+    res.apiError(error);
   }
 };
 
@@ -179,8 +176,7 @@ self.editModuleTypeModels = async (req, res) => {
       message: "Successfully updated",
     });
   } catch (error) {
-    console.error(error);
-    res.apiError(error)
+    res.apiError(error);
   }
 };
 
@@ -188,7 +184,7 @@ self.editModuleTypeModels = async (req, res) => {
 self.getModelMenuByModule = async (req, res) => {
   const { id } = req.params;
   try {
-    const whereCondition = { module_type_id: id }
+    const whereCondition = { module_type_id: id };
 
     const paginatedResult = await paginationHelper(ModelMenu, req, whereCondition);
 
@@ -199,7 +195,6 @@ self.getModelMenuByModule = async (req, res) => {
     }, paginatedResult.pagination);
 
   } catch (error) {
-    console.error("Error in getAll method:", error);
     res.apiError(error);
   }
 };
@@ -212,11 +207,11 @@ self.getModuleExtraModels = async (req, res) => {
 
     res.apiSuccess({
       data: model
-    })
+    });
 
     return res.json(models);
   } catch (error) {
-    res.apiError(error)
+    res.apiError(error);
   }
 };
 

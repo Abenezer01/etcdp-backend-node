@@ -1,7 +1,7 @@
 const validateReply = require("../../../../utils/validateerror");
 const addressValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if (param == "failed") {
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid id",
     });
@@ -17,7 +17,7 @@ const addressValidate = async (req, res, next) => {
 };
 const modelMenuValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if (param == "failed") {
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid id",
     });
@@ -32,7 +32,7 @@ const modelMenuValidate = async (req, res, next) => {
 };
 const actionStateValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if (param == "failed") {
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid id",
     });
@@ -46,7 +46,7 @@ const actionStateValidate = async (req, res, next) => {
 };
 const noteValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if (param == "failed") {
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid id",
     });
@@ -62,7 +62,7 @@ const noteValidate = async (req, res, next) => {
 };
 const replyValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if (param == "failed") {
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid id",
     });
@@ -80,7 +80,7 @@ const replyValidate = async (req, res, next) => {
 };
 const photoValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if (param == "failed") {
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid id",
     });
@@ -104,7 +104,7 @@ const photoValidate = async (req, res, next) => {
 
 const fileValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if (param == "failed") {
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid id",
     });
@@ -114,8 +114,8 @@ const fileValidate = async (req, res, next) => {
       message: "File is empty",
     });
   }
-  const array_of_allowed_files = ["pdf"];
-  const ext = req.files.upload.mimetype.split("/")[1];
+  // const array_of_allowed_files = ["pdf"];
+  // const ext = req.files.upload.mimetype.split("/")[1];
 
   // Check if the uploaded file is allowed
   // if (!array_of_allowed_files.includes(ext)) {

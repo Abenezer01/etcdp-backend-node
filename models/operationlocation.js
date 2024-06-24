@@ -9,6 +9,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      OperationLocation.belongsTo(models.Stakeholder, {
+        as: "stakeholder",
+        foreignKey: "stakeholder_id",
+      });
     }
   }
   OperationLocation.init(
@@ -28,14 +32,14 @@ module.exports = (sequelize, DataTypes) => {
       revision_no: DataTypes.INTEGER,
     },
     {
-      createdAt: 'created_at',
-      updatedAt: 'updated_at' ,     
+      createdAt: "created_at",
+      updatedAt: "updated_at" ,     
       sequelize,
       modelName: "OperationLocation",
       tableName: "operationlocations"
     }
   );
-    OperationLocation.associate = function (models) {
+  
       // OperationLocation.belongsTo(models.studyfield, {
       //   as: "studyfield",
       //   foreignKey: "studyfield_id",
@@ -57,10 +61,5 @@ module.exports = (sequelize, DataTypes) => {
       //   foreignKey: "agelevel_id",
       // });
 
-      OperationLocation.belongsTo(models.Stakeholder, {
-        as: "stakeholder",
-        foreignKey: "stakeholder_id",
-      });
-    };
   return OperationLocation;
 };

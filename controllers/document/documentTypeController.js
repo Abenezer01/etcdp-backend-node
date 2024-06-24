@@ -1,9 +1,7 @@
 const { DocumentType, Sequelize } = require("../../models");
-const usrData = require("../../utils/userDataFromToken");
-const actionHelper = require("../utils/action-helper");
-const paginationHelper = require("../utils/pagination-helper")
+const paginationHelper = require("../utils/pagination-helper");
 const Op = Sequelize.Op;
-const { getRecordById, saveRecord, updateRecord, deleteRecord } = require('../utils/format-helper');
+const { getRecordById, saveRecord, updateRecord, deleteRecord } = require("../utils/format-helper");
 const dotenv = require("dotenv");
 dotenv.config();
 let self = {};
@@ -20,7 +18,6 @@ self.getAll = async (req, res) => {
     }, paginatedResult.pagination);
 
   } catch (error) {
-    console.error("Error in getAll method:", error);
     res.apiError(error);
   }
 };

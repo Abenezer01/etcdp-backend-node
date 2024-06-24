@@ -11,8 +11,7 @@ const {
     sequelize,
     Sequelize,
 } = require("./../../models");
-const paginate = require("../../utils/pagination");
-const { getRecordById, saveRecord, updateRecord, deleteRecord } = require('../utils/format-helper');
+const { getRecordById, saveRecord, updateRecord, deleteRecord } = require("../utils/format-helper");
 const dotenv = require("dotenv");
 dotenv.config();
 const paginationHelper = require("../utils/pagination-helper");
@@ -33,7 +32,6 @@ self.getAll = async (req, res) => {
     }, paginatedResult.pagination);
 
   } catch (error) {
-    console.error("Error in getAll method:", error);
     res.apiError(error);
   }
 };
@@ -42,11 +40,11 @@ self.getAll = async (req, res) => {
 self.get = async (req, res) => {
 
   const includeOptions = [
-    { model: StakeholderType, as: 'stakeholdertype' }, // Example association
-    { model: StakeholderCategory, as: 'stakeholdercategory' },
-    { model: StakeholderSubCategory, as: 'stakeholdersubcategory' },
-    { model: Ownership, as: 'ownership' },
-    { model: BusinessField, as: 'businessfield' }
+    { model: StakeholderType, as: "stakeholdertype" }, // Example association
+    { model: StakeholderCategory, as: "stakeholdercategory" },
+    { model: StakeholderSubCategory, as: "stakeholdersubcategory" },
+    { model: Ownership, as: "ownership" },
+    { model: BusinessField, as: "businessfield" }
 
   ];
   getRecordById(Stakeholder, req, res, includeOptions);
@@ -69,7 +67,7 @@ self.getStakeHolderByTypeId = async (req, res) => {
     : [{ stakeholdertype_id: typeId }];
 
 
-    const whereCondition = {[Op.and]: filter, }
+    const whereCondition = {[Op.and]: filter, };
     const paginatedResult = await paginationHelper(Stakeholder, req, whereCondition);
 
     // Use the response formatter to send the success response
@@ -79,7 +77,6 @@ self.getStakeHolderByTypeId = async (req, res) => {
     }, paginatedResult.pagination);
 
   } catch (error) {
-    console.error("Error in getAll method:", error);
     res.apiError(error);
   }
 };
@@ -244,7 +241,6 @@ self.countAllStakeholderWithStakeType = async (req, res) => {
             }
           }
 
-          //categories.push(category);
         }
       }
 
@@ -268,7 +264,7 @@ self.countAllStakeholderWithStakeType = async (req, res) => {
 
 self.getStakeholderData = async(req, res) => {
 
-    let {id} = req.params
+    let {id} = req.params;
 
     try {
         
@@ -295,7 +291,7 @@ self.getStakeholderData = async(req, res) => {
                 as: "ownership"
               }
             ]
-        })
+        });
 
         if(data){
 
@@ -316,7 +312,6 @@ self.getStakeholderData = async(req, res) => {
         }
 
   } catch (error) {
-    console.error("Error:", error);
     res.apiError(error);
   }
 };

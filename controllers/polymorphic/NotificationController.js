@@ -1,9 +1,8 @@
-const { Notification, Sequelize } = require("./../../models");
+const { Notification } = require("./../../models");
 const moment = require("moment");
+const paginationHelper = require("../utils/pagination-helper");
+const { updateRecord, deleteRecord } = require("../utils/format-helper");
 const usrData = require("../../utils/userDataFromToken");
-const paginationHelper = require("../utils/pagination-helper")
-const { updateRecord, deleteRecord } = require('../utils/format-helper');
-const Op = Sequelize.Op;
 
 let self = {};
 
@@ -19,19 +18,18 @@ self.getAll = async (req, res) => {
     }, paginatedResult.pagination);
 
   } catch (error) {
-    console.error("Error in getAll method:", error);
     res.apiError(error);
   }
 };
 
 
 self.unreadNotification = async (req, res) => {
-  const { id } = req.params;
   try {
+    const usr = await usrData.userData(req, res);
     const whereCondition = { 
-      notifiable_id: us.usrID,
+      notifiable_id: usr.usrID,
       read_at: null
-    }
+    };
 
     const paginatedResult = await paginationHelper(Notification, req, whereCondition);
 
@@ -42,7 +40,6 @@ self.unreadNotification = async (req, res) => {
     }, paginatedResult.pagination);
 
   } catch (error) {
-    console.error("Error in getAll method:", error);
     res.apiError(error);
   }
 };
@@ -70,9 +67,9 @@ self.get = async (req, res) => {
 
     res.apiSuccess({
       data
-    })
+    });
   } catch (error) {
-    res.apiError(error)
+    res.apiError(error);
   }
 };
 
@@ -82,6 +79,6 @@ self.update = async (req, res) => {
 
 self.delete = async (req, res) => {
   deleteRecord(Notification, req, res);
-}
+};
 
 module.exports = self;

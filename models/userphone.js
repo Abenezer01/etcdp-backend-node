@@ -1,6 +1,5 @@
 "use strict";
 const { Model } = require("sequelize");
-const { decrypt, encrypt } = require("../utils/helper");
 const cipherHelper = require("../controllers/utils/cipher-helper");
 
 module.exports = (sequelize, DataTypes) => {
@@ -50,8 +49,8 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     {
-      createdAt: 'created_at',
-      updatedAt: 'updated_at' ,     
+      createdAt: "created_at",
+      updatedAt: "updated_at" ,     
       sequelize,
       modelName: "UserPhone",
       tableName: "userphones"

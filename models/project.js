@@ -10,6 +10,47 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Project.hasOne(models.ProjectTime, {
+        foreignKey: "project_id",
+      });
+      Project.hasOne(models.ProjectFinance, {
+        foreignKey: "project_id",
+      });
+      Project.hasMany(models.ProjectStakeholder, {
+        foreignKey: "project_id",
+        as: "projectstakeholders"
+      });
+      Project.hasMany(models.ProjectVariation, {
+        foreignKey: "project_id",
+      });
+  
+      Project.hasMany(models.ProjectPlan, {
+        foreignKey: "project_id",
+      });
+      Project.hasMany(models.ProjectReport, {
+        foreignKey: "project_id",
+      });
+  
+      Project.hasMany(models.ProjectStatus, {
+      as: "projectstatus",
+      foreignKey: "project_id",
+      });
+      Project.hasMany(models.Payment, {
+        foreignKey: "project_id",
+      });
+      Project.belongsTo(models.ProjectCategory, {
+        foreignKey: "projectcategory_id",
+      });
+      Project.belongsTo(models.ProjectSubCategory, {
+        foreignKey: "projectsubcategory_id",
+      });
+      Project.belongsTo(models.ProjectType, {
+        foreignKey: "projecttype_id",
+      });
+      Project.belongsTo(models.Department, {
+        as: "department",
+        foreignKey: "department_id",
+      });
     }
   }
   Project.init(
@@ -40,7 +81,7 @@ module.exports = (sequelize, DataTypes) => {
           },
         set(value) {
             const encryptedValue = cipherHelper.encrypt(value);
-            this.setDataValue('name', encryptedValue);
+            this.setDataValue("name", encryptedValue);
           }
       },
       remark: DataTypes.TEXT,
@@ -50,58 +91,13 @@ module.exports = (sequelize, DataTypes) => {
       revision_no: DataTypes.INTEGER,
     },
     {
-      createdAt: 'created_at',
-      updatedAt: 'updated_at' ,     
+      createdAt: "created_at",
+      updatedAt: "updated_at" ,     
       sequelize,
       modelName: "Project",
       tableName: "projects"
     }
   );
-
-  Project.associate = function (models) {
-    // associations can be defined here
-    Project.hasOne(models.ProjectTime, {
-      foreignKey: "project_id",
-    });
-    Project.hasOne(models.ProjectFinance, {
-      foreignKey: "project_id",
-    });
-    Project.hasMany(models.ProjectStakeholder, {
-      foreignKey: "project_id",
-      as: "projectstakeholders"
-    });
-    Project.hasMany(models.ProjectVariation, {
-      foreignKey: "project_id",
-    });
-
-    Project.hasMany(models.ProjectPlan, {
-      foreignKey: "project_id",
-    });
-    Project.hasMany(models.ProjectReport, {
-      foreignKey: "project_id",
-    });
-
-    Project.hasMany(models.ProjectStatus, {
-    as: "projectstatus",
-    foreignKey: "project_id",
-    });
-    Project.hasMany(models.Payment, {
-      foreignKey: "project_id",
-    });
-    Project.belongsTo(models.ProjectCategory, {
-      foreignKey: "projectcategory_id",
-    });
-    Project.belongsTo(models.ProjectSubCategory, {
-      foreignKey: "projectsubcategory_id",
-    });
-    Project.belongsTo(models.ProjectType, {
-      foreignKey: "projecttype_id",
-    });
-    Project.belongsTo(models.Department, {
-      as: "department",
-      foreignKey: "department_id",
-    });
-  };
 
   return Project;
 };

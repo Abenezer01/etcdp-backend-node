@@ -1,12 +1,12 @@
-const { StakeholderPhone, Sequelize } = require('../../models');
+const { StakeholderPhone, Sequelize } = require("../../models");
 const Op = Sequelize.Op;
-const dotenv = require('dotenv');
+const dotenv = require("dotenv");
 dotenv.config();
 let self = {};
 const usrData = require("../../utils/userDataFromToken");
 const actionHelper = require("../utils/action-helper");
 const paginationHelper = require("../utils/pagination-helper");
-const { getRecordById, saveRecord, updateRecord, deleteRecord } = require('../utils/format-helper');
+const { getRecordById, updateRecord, deleteRecord } = require("../utils/format-helper");
 
 self.getAll = async (req, res) => {
   try {
@@ -19,7 +19,6 @@ self.getAll = async (req, res) => {
     }, paginatedResult.pagination);
 
   } catch (error) {
-    console.error("Error in getAll method:", error);
     res.apiError(error);
   }
 };
@@ -27,7 +26,7 @@ self.getAll = async (req, res) => {
 self.getPrimaryphone = async (req, res) => {
   const { id } = req.params;
   try {
-    const whereCondition = { [Op.and]: [{ stakeholder_id: id }, { is_primary: true }] }
+    const whereCondition = { [Op.and]: [{ stakeholder_id: id }, { is_primary: true }] };
     const paginatedResult = await paginationHelper(StakeholderPhone, req, whereCondition);
 
     // Use the response formatter to send the success response
@@ -37,7 +36,6 @@ self.getPrimaryphone = async (req, res) => {
     }, paginatedResult.pagination);
 
   } catch (error) {
-    console.error("Error in getAll method:", error);
     res.apiError(error);
   }
 };
@@ -52,7 +50,7 @@ self.search = async (req, res) => {
     let data = await StakeholderPhone.findAll({
       where: {
         name: {
-          [Op.like]: '%' + text + '%'
+          [Op.like]: "%" + text + "%"
         }
       }
     });
@@ -73,7 +71,7 @@ self.save = async (req, res) => {
 
       if (filteredArray.length > 1) {
         return res.status(412).json({
-          message: 'There is more than one element with is_primary true.'
+          message: "There is more than one element with is_primary true."
         });
       }
       let filt = [];
@@ -93,7 +91,7 @@ self.save = async (req, res) => {
           filt.push(allData);
         }
       }
-      let fr = [];
+
       const resu = await Promise.all(
         body.map(async (bodItem) => {
           const filteredDat = filt.find(
@@ -107,12 +105,12 @@ self.save = async (req, res) => {
           }
         })
       );
-      let removedNullResu = resu.find((item) => item != null);
+      let removedNullResu = resu.find((item) => item !== null);
       //return res.send(removedNullResu)
       if (removedNullResu) {
         return res.status(412).json({
           message:
-            'There is already registered element with is_primary true data.'
+            "There is already registered element with is_primary true data."
         });
       }
 
@@ -122,8 +120,8 @@ self.save = async (req, res) => {
           if (data) {
             await actionHelper.saveActionState(
               data.id,
-              'StakeholderPhone',
-              'REGISTER',
+              "StakeholderPhone",
+              "REGISTER",
               usr.usrID,
               req,
               res

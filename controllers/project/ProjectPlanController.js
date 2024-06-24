@@ -1,8 +1,8 @@
 const { ProjectPlan, File, Sequelize } = require("../../models");
 const usrData = require("../../utils/userDataFromToken");
 const actionHelper = require("../utils/action-helper");
-const paginationHelper = require("../utils/pagination-helper")
-const { getRecordById, saveRecord, updateRecord, deleteRecord } = require('../utils/format-helper');
+const paginationHelper = require("../utils/pagination-helper");
+const { getRecordById, updateRecord, deleteRecord } = require("../utils/format-helper");
 const Op = Sequelize.Op;
 const dotenv = require("dotenv");
 dotenv.config();
@@ -19,7 +19,6 @@ self.getAll = async (req, res) => {
     }, paginatedResult.pagination);
 
   } catch (error) {
-    console.error("Error in getAll method:", error);
     res.apiError(error);
   }
 };
@@ -27,7 +26,7 @@ self.getAll = async (req, res) => {
 self.getByProjectId = async (req, res) => {
   const { id } = req.params;
   try {
-    const whereCondition = { project_id: id }
+    const whereCondition = { project_id: id };
     const paginatedResult = await paginationHelper(ProjectPlan, req, whereCondition);
 
     // Use the response formatter to send the success response
@@ -37,7 +36,6 @@ self.getByProjectId = async (req, res) => {
     }, paginatedResult.pagination);
 
   } catch (error) {
-    console.error("Error in getAll method:", error);
     res.apiError(error);
   }
 };
@@ -74,13 +72,15 @@ self.save = async (req, res) => {
         year: body.year,
         quarter: body.quarter
       }
-    })
+    });
+
+    let usrID = usr.usrID;
 
 
     if(found) {
       return res.status(422).json({
         message: "Plan aready exist!"
-      })
+      });
     }
 
     var date = new Date(body.start);
@@ -93,7 +93,6 @@ self.save = async (req, res) => {
       let data = await ProjectPlan.create(body);
 
       if (data) {
-        let usrID = usr.usrID;
         await actionHelper.saveActionState(
           data.id,
           "ProjectPlan",
@@ -111,7 +110,7 @@ self.save = async (req, res) => {
         },
         raw: true,
       });
-      console.log("The fle", body.file_type);
+      // console.log("The fle", body.file_type);
       const fileData = fle.map((f) => ({
         reference_id: data.id,
         title: f.title,
@@ -136,7 +135,7 @@ self.save = async (req, res) => {
 
       return res.apiSuccess({
         data
-      })
+      });
     }
   } catch (error) {
     res.status(500).json({
@@ -159,9 +158,9 @@ self.getProjectYearlyPlans = async (req, res) => {
     const whereCondition = { 
       project_id: id,
       year: year
-    }
+    };
     const includeOptions = [
-      { model: File, as: 'file' } // Example association
+      { model: File, as: "file" } // Example association
     ];
 
     const paginatedResult = await paginationHelper(ProjectPlan, req, whereCondition, includeOptions);
@@ -173,7 +172,6 @@ self.getProjectYearlyPlans = async (req, res) => {
     }, paginatedResult.pagination);
 
   } catch (error) {
-    console.error("Error in getAll method:", error);
     res.apiError(error);
   }
 };

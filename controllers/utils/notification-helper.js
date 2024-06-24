@@ -1,5 +1,5 @@
 const { notification } = require("../../models");
-const { Socket } = require("../../utils/WebSocket")
+const { Socket } = require("../../utils/WebSocket");
 const self = {};
 self.notify = async(type, subject, notifiable_type, notifiable_id, content, description = null) => {
     try {
@@ -12,13 +12,13 @@ self.notify = async(type, subject, notifiable_type, notifiable_id, content, desc
             description: description ? description : "description",
           });
           Socket.emit("newNotification", notifier);
-          return notifier
+          return notifier;
     } catch (error) {
         return {
             message: error.message
-        }
+        };
     }
     
-}
+};
 
 module.exports = self;

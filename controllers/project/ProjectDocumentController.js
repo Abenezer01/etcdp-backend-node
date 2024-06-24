@@ -4,7 +4,7 @@ const Op = Sequelize.Op;
 const dotenv = require("dotenv");
 dotenv.config();
 const paginationHelper = require("../utils/pagination-helper");
-const { getRecordById, saveRecord, updateRecord, deleteRecord } = require('../utils/format-helper');
+const { getRecordById, saveRecord, updateRecord, deleteRecord } = require("../utils/format-helper");
 let self = {};
 
 self.getAll = async (req, res) => {
@@ -18,14 +18,13 @@ self.getAll = async (req, res) => {
     }, paginatedResult.pagination);
 
   } catch (error) {
-    console.error("Error in getAll method:", error);
     res.apiError(error);
   }
 };
 self.getByProjectId = async (req, res) => {
   const { id } = req.params;
   try {
-    const whereCondition = { project_id: id }
+    const whereCondition = { project_id: id };
     const paginatedResult = await paginationHelper(ProjectDocument, req, whereCondition);
 
     // Use the response formatter to send the success response
@@ -35,7 +34,6 @@ self.getByProjectId = async (req, res) => {
     }, paginatedResult.pagination);
 
   } catch (error) {
-    console.error("Error in getAll method:", error);
     res.apiError(error);
   }
 };

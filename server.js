@@ -1,8 +1,6 @@
 const express = require("express");
 const polymorphicRoute = require("./routes/module/polymorphic/route");
 
-const project = require("./routes/module/project/route");
-
 const projectRoute = require("./routes/module/project/route");
 const departmentRoute = require("./routes/module/user/route");
 const loginRoute = require("./routes/module/auth/route");
@@ -16,7 +14,6 @@ const route_view = require("./routes/route_view");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const fileUpload = require("express-fileupload");
-const cipherHelper = require("./controllers/utils/cipher-helper");
 const formatResponse = require("./middleware/formatters/response-formatter");
 
 let app = express();

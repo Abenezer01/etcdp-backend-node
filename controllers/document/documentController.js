@@ -8,10 +8,10 @@ const {
 } = require("../../models");
 const usrData = require("../../utils/userDataFromToken");
 const actionHelper = require("../utils/action-helper");
-const paginationHelper = require("../utils/pagination-helper")
+const paginationHelper = require("../utils/pagination-helper");
 const Op = Sequelize.Op;
 const paginate = require("../../utils/pagination");
-const { deleteRecord } = require('../utils/format-helper');
+const { deleteRecord } = require("../utils/format-helper");
 const dotenv = require("dotenv");
 dotenv.config();
 let self = {};
@@ -31,7 +31,6 @@ self.getAll = async (req, res) => {
     }, paginatedResult.pagination);
 
   } catch (error) {
-    console.error("Error in getAll method:", error);
     res.apiError(error);
   }
 };
@@ -67,22 +66,21 @@ self.get = async (req, res) => {
 
     return res.apiSuccess({
       data
-    })
+    });
 
   } catch (error) {
-    res.apiError(error)
+    res.apiError(error);
   }
 };
 
 self.filter = async (req, res) => {
   let { page, size, order } = req.query;
   const { typeId, categoryId, subcategoryId } = req.query;
-  console.log("The body", req.body);
   //console.log("The page", page, size)
-  if (page == null && size == null) {
+  if (page === null && size === null) {
     (page = process.env.page), (size = process.env.size);
   }
-  if (order == null) {
+  if (order === null) {
     order = process.env.order;
   }
   const filter = () => {
@@ -99,7 +97,6 @@ self.filter = async (req, res) => {
     }
     return [{ documenttype_id: typeId }];
   };
-  console.log("The filter", filter());
   const { limit, offset } = paginate.getPagination(page, size);
   Document
     .findAndCountAll({
@@ -158,23 +155,20 @@ self.save = async (req, res) => {
     let usr = await usrData.userData(req, res);
     let body = req.body;
     const file = req.files;
-    console.log("the file", file);
     let pat;
     if (file) {
       const ext = req.files.attachement.mimetype.split("/")[1];
       let rand = Math.floor(100000 + Math.random() * 900000);
       var name = req.files.attachement.name;
       let parsedName = path.parse(name).name;
-      checkedNew = parsedName.concat(rand);
+      let checkedNew = parsedName.concat(rand);
       const filePath = path.join(
         __dirname,
         "../../public",
         "documents",
         checkedNew + "." + `${ext}`
       );
-      console.log("The file path is ", filePath);
       var filePathh = filePath.split("public").pop();
-      console.log("The file path is ", filePathh);
       //return res.send(filePathh)
 
       body.attachement = filePathh;
@@ -190,7 +184,7 @@ self.save = async (req, res) => {
         if (pat) {
           const filee = req.files.attachement;
           filee.mv(pat, (err) => {
-            if (err) return res.status(500).send(err);
+            if (err) {return res.status(500).send(err);}
             // res.redirect('/')
           });
         }
@@ -218,7 +212,6 @@ self.save = async (req, res) => {
 self.getdocument = async (req, res) => {
   try {
     let id = req.params.id;
-    let body = req.body;
     let data = await Document.findOne({
       where: {
         id: id,
@@ -320,23 +313,20 @@ self.update = async (req, res) => {
     let usr = await usrData.userData(req, res);
     let body = req.body;
     const file = req.files;
-    console.log("the file", file);
     let pat;
     if (file) {
       const ext = req.files.attachement.mimetype.split("/")[1];
       let rand = Math.floor(100000 + Math.random() * 900000);
       var name = req.files.attachement.name;
       let parsedName = path.parse(name).name;
-      checkedNew = parsedName.concat(rand);
+      let checkedNew = parsedName.concat(rand);
       const filePath = path.join(
         __dirname,
         "../../public",
         "documents",
         checkedNew + "." + `${ext}`
       );
-      console.log("The file path is ", filePath);
       var filePathh = filePath.split("public").pop();
-      console.log("The file path is ", filePathh);
       //return res.send(filePathh)
 
       body.attachement = filePathh;
@@ -363,18 +353,15 @@ self.update = async (req, res) => {
               if (err) {
                 throw err;
               }
-
-              console.log("Deleted File successfully.");
             });
           }
         }
-        console.log("the pattttttt", pat);
         filee.mv(pat, (err) => {
-          if (err) return res.status(500).send(err);
+          if (err) {return res.status(500).send(err);}
           // res.redirect('/')
         });
       }
-      let data = await Document.update(body, {
+      await Document.update(body, {
         where: {
           id: id,
         },

@@ -1,12 +1,12 @@
-const { Photo, User, Sequelize } = require("../../models");
+const { Photo,  User, Sequelize } = require("../../models");
 const path = require("path");
 
 const fs = require("fs");
 
 const actionHelper = require("../utils/action-helper");
-const paginationHelper = require("../utils/pagination-helper")
+const paginationHelper = require("../utils/pagination-helper");
 const usrData = require("../../utils/userDataFromToken");
-const { getRecordById, saveRecord, updateRecord, deleteRecord } = require('../utils/format-helper');
+const { getRecordById, deleteRecord } = require("../utils/format-helper");
 
 const Op = Sequelize.Op;
 
@@ -15,7 +15,7 @@ let self = {};
 
 self.getAll = async (req, res) => {
   try {
-    const paginatedResult = await paginationHelper(Permission, req);
+    const paginatedResult = await paginationHelper(Photo, req);
 
     // Use the response formatter to send the success response
     res.apiSuccess({
@@ -24,7 +24,6 @@ self.getAll = async (req, res) => {
     }, paginatedResult.pagination);
 
   } catch (error) {
-    console.error("Error in getAll method:", error);
     res.apiError(error);
   }
 };
@@ -72,7 +71,7 @@ self.save = async (req, res) => {
     let rand = Math.floor(100000 + Math.random() * 900000);
     var name = req.files.upload.name;
     var newName = name.concat(rand);
-    checkedNew = newName.split(".").join("");
+    let checkedNew = newName.split(".").join("");
     const filePath = path.join(
       __dirname,
       "../../public",
@@ -84,7 +83,7 @@ self.save = async (req, res) => {
 
     //console.log("The rand is: ", rand)
     let photoData;
-    photoo = { url: filePathh, type: "USER", model_id: id };
+    let photoo = { url: filePathh, type: "USER", model_id: id };
     photoData = await Photo.create(photoo);
     if (photoData) {
       let usrID = usr.usrID;
@@ -98,11 +97,9 @@ self.save = async (req, res) => {
       );
     }
     file.mv(filePath, (err) => {
-      if (err) return res.status(500).send(err);
+      if (err) {return res.status(500).send(err);}
       // res.redirect('/')
     });
-
-    console.log("The Photo id is: ", photoData.id);
     await User.update(
       {
         photo_id: photoData.id,
@@ -126,7 +123,7 @@ self.save = async (req, res) => {
 self.getUserPhoto = async (req, res) => {
   try {
     let id = req.params.id;
-    let data = await User.findOne({
+    await User.findOne({
       where: {
         id: id,
       },
@@ -174,8 +171,6 @@ self.update = async (req, res) => {
           if (err) {
             throw err;
           }
-
-          console.log("Delete File successfully.");
         });
       }
     }
@@ -190,7 +185,7 @@ self.update = async (req, res) => {
     //console.log("The file path is ", filePath)
 
     file.mv(filePath, (err) => {
-      if (err) return res.status(500).send(err);
+      if (err) {return res.status(500).send(err);}
       // res.redirect('/')
     });
     await Photo.update(

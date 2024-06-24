@@ -1,6 +1,6 @@
-const { Salary, Sequelize } = require("../../models");
-const { getRecordById, saveRecord, updateRecord, deleteRecord } = require('../utils/format-helper');
-const paginationHelper = require("../utils/pagination-helper")
+const { Salary } = require("../../models");
+const { getRecordById, saveRecord, updateRecord, deleteRecord } = require("../utils/format-helper");
+const paginationHelper = require("../utils/pagination-helper");
 const dotenv = require("dotenv");
 dotenv.config();
 let self = {};
@@ -16,7 +16,6 @@ self.getAll = async (req, res) => {
     }, paginatedResult.pagination);
 
   } catch (error) {
-    console.error("Error in getAll method:", error);
     res.apiError(error);
   }
 };
@@ -42,7 +41,7 @@ self.delete = async (req, res) => {
 self.getByResourceId = async (req, res) => {
   const { id } = req.params;
   try {
-    const whereCondition = { resource_id: id }
+    const whereCondition = { resource_id: id };
     const paginatedResult = await paginationHelper(Salary, req, whereCondition);
 
     // Use the response formatter to send the success response
@@ -52,7 +51,6 @@ self.getByResourceId = async (req, res) => {
     }, paginatedResult.pagination);
 
   } catch (error) {
-    console.error("Error in getAll method:", error);
     res.apiError(error);
   }
 

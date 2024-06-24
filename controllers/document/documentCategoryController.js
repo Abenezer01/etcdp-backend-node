@@ -1,9 +1,7 @@
 const { DocumentCategory, DocumentSubCategory, Sequelize } = require("../../models");
-const usrData = require("../../utils/userDataFromToken");
-const actionHelper = require("../utils/action-helper");
-const paginationHelper = require("../utils/pagination-helper")
+const paginationHelper = require("../utils/pagination-helper");
 const Op = Sequelize.Op;
-const { getRecordById, saveRecord, updateRecord, deleteRecord } = require('../utils/format-helper');
+const { getRecordById, saveRecord, updateRecord, deleteRecord } = require("../utils/format-helper");
 
 const dotenv = require("dotenv");
 dotenv.config();
@@ -21,7 +19,6 @@ self.getAll = async (req, res) => {
     }, paginatedResult.pagination);
 
   } catch (error) {
-    console.error("Error in getAll method:", error);
     res.apiError(error);
   }
 };
@@ -64,10 +61,10 @@ self.search = async (req, res) => {
 self.getCRCBydocumentTypeId = async (req, res) => {
   const { id } = req.params;
   try {
-    const whereCondition = { documenttype_id: id }
+    const whereCondition = { documenttype_id: id };
 
     const includeOptions = [
-      { model: DocumentSubCategory, as: 'documentsubcategories' } // Example association
+      { model: DocumentSubCategory, as: "documentsubcategories" } // Example association
     ];
 
     const paginatedResult = await paginationHelper(DocumentCategory, req, whereCondition, includeOptions);
@@ -79,7 +76,6 @@ self.getCRCBydocumentTypeId = async (req, res) => {
     }, paginatedResult.pagination);
 
   } catch (error) {
-    console.error("Error in getAll method:", error);
     res.apiError(error);
   }
 };

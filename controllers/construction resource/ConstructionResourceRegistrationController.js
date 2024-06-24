@@ -1,10 +1,10 @@
-const { Resource, Image, sequelize, Sequelize } = require("../../models");
+const { Resource, sequelize, Sequelize } = require("../../models");
 const usrData = require("../../utils/userDataFromToken");
 const actionHelper = require("../utils/action-helper");
 const Op = Sequelize.Op;
 const paginate = require("../../utils/pagination");
-const paginationHelper = require("../utils/pagination-helper")
-const { getRecordById, updateRecord, deleteRecord } = require('../utils/format-helper');
+const paginationHelper = require("../utils/pagination-helper");
+const { getRecordById, saveRecord, updateRecord, deleteRecord } = require("../utils/format-helper");
 const dotenv = require("dotenv");
 dotenv.config();
 let self = {};
@@ -21,7 +21,6 @@ self.getAll = async (req, res) => {
     }, paginatedResult.pagination);
 
   } catch (error) {
-    console.error("Error in getAll method:", error);
     res.apiError(error);
   }
 };
@@ -48,7 +47,7 @@ self.filter = async (req, res) => {
   }
   const { limit, offset } = paginate.getPagination(page, size);
   let limiter = { limit, offset };
-  page == -1 ? (limiter = {}) : limiter;
+  page === -1 ? (limiter = {}) : limiter;
   try {
     const { rows, count } = await Resource.findAndCountAll({
       limit: limiter.limit,
@@ -102,7 +101,7 @@ self.search = async (req, res) => {
 self.save = async (req, res) => {
   try {
     let usr = await usrData.userData(req, res);
-    req.body.department_id = usr.department_id
+    req.body.department_id = usr.department_id;
 
     saveRecord(Resource, req, res);
 

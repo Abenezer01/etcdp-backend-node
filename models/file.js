@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` File will call this method automatically.
      */
-    static associate(models) {
+    static associate(/* models*/) {
       // File.hasOne(models.projectplan, {
       //     foreignKey: "file_id"
       // })
@@ -37,8 +37,8 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     {
-      createdAt: 'created_at',
-      updatedAt: 'updated_at' ,     
+      createdAt: "created_at",
+      updatedAt: "updated_at" ,     
       sequelize,
       modelName: "File",
       tableName: "files"

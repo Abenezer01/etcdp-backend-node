@@ -1,5 +1,5 @@
 const usrData = require("../../utils/userDataFromToken");
-const actionHelper = require("../utils/action-helper")
+const actionHelper = require("../utils/action-helper");
 
 const getRecordById = async (model, req, res, include = []) => {
     try {
@@ -18,7 +18,6 @@ const getRecordById = async (model, req, res, include = []) => {
         data: data
       });
     } catch (error) {
-      console.error("Error:", error);
       res.apiError(error);
     }
   };
@@ -45,7 +44,6 @@ const getRecordById = async (model, req, res, include = []) => {
         data: data
       });
     } catch (error) {
-      console.error("Error:", error);
       res.apiError(error);
     }
   };
@@ -67,7 +65,6 @@ const getRecordById = async (model, req, res, include = []) => {
   
       throw new Error("Record not found");
     } catch (error) {
-      console.error("Error in getAll method:", error);
       res.apiError(error);
     }
   };
@@ -86,7 +83,6 @@ const getRecordById = async (model, req, res, include = []) => {
   
       throw new Error("Record not found");
     } catch (error) {
-      console.error("Error in getAll method:", error);
       res.apiError(error);
     }
   };

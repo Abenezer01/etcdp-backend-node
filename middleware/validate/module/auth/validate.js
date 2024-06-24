@@ -1,5 +1,5 @@
 const validateReply = require("../../../../utils/validateerror");
-const { UserEmail } = require('../../../../models'); // Import the User model
+const { UserEmail } = require("../../../../models"); // Import the User model
 const cipherHelper = require("../../../../controllers/utils/cipher-helper");
 
 const loginValidate = async (req, res, next) => {

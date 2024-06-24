@@ -9,6 +9,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      ResourceCategory.hasMany(models.ResourceSubCategory, {
+        foreignKey: "resourcecategory_Id",
+        as: "resourcesubcategories",
+      });
     }
   }
   ResourceCategory.init(
@@ -31,19 +35,13 @@ module.exports = (sequelize, DataTypes) => {
       revision_no: DataTypes.INTEGER,
     },
     {
-      createdAt: 'created_at',
-      updatedAt: 'updated_at' ,     
+      createdAt: "created_at",
+      updatedAt: "updated_at" ,     
       sequelize,
       modelName: "ResourceCategory",
       tableName: "resourcecategories"
     }
   );
-  ResourceCategory.associate = function (models) {
-    // associations can be defined here
-    ResourceCategory.hasMany(models.ResourceSubCategory, {
-      foreignKey: "resourcecategory_Id",
-      as: "resourcesubcategories",
-    });
-  };
+ 
   return ResourceCategory;
 };

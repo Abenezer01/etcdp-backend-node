@@ -1,9 +1,6 @@
-const actionHelper = require("../utils/action-helper");
 const paginationHelper = require("../utils/pagination-helper");
-const { getRecordById, saveRecord, updateRecord, deleteRecord } = require('../utils/format-helper');
+const { getRecordById, saveRecord, updateRecord, deleteRecord } = require("../utils/format-helper");
 const { StakeholderService, ConstructionRelatedService, Sequelize } = require("./../../models");
-const usrData = require("../../utils/userDataFromToken");
-const paginate = require("../../utils/pagination");
 const dotenv = require("dotenv");
 dotenv.config();
 const Op = Sequelize.Op;
@@ -22,7 +19,6 @@ self.getAll = async (req, res) => {
     }, paginatedResult.pagination);
 
   } catch (error) {
-    console.error("Error in getAll method:", error);
     res.apiError(error);
   }
 };
@@ -34,10 +30,10 @@ self.get = async (req, res) => {
 self.getStakeholderServiceByStakeholderId = async (req, res) => {
   const { id } = req.params;
   try {
-    const whereCondition = { stakeholder_id: id }
+    const whereCondition = { stakeholder_id: id };
 
     const includeOptions = [
-      { model: ConstructionRelatedService, as: 'constructionrelatedservice' } // Example association
+      { model: ConstructionRelatedService, as: "constructionrelatedservice" } // Example association
     ];
    
     const paginatedResult = await paginationHelper(StakeholderService, req, whereCondition, includeOptions);
@@ -49,7 +45,6 @@ self.getStakeholderServiceByStakeholderId = async (req, res) => {
     }, paginatedResult.pagination);
 
   } catch (error) {
-    console.error("Error in getAll method:", error);
     res.apiError(error);
   }
 };
