@@ -147,10 +147,8 @@ self.transformPerformances = (performance)=> {
     start: per.start,
     end: per.end,
     profit: per.profit,
-    createdAt: per.createdAt,
-    updatedAt: per.updatedAt
-
-
+    created_at: per.created_at,
+    updated_at: per.updated_at
   }))
 }
 

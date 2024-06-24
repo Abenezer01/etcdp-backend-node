@@ -216,8 +216,8 @@ const mainanalysismodules = {
   stakeholder: [
     "Stakeholder", 
     "StakeholderType", 
-    "StakeCategory", 
-    "StakeSubCategory"
+    "StakeholderCategory", 
+    "StakeholderSubCategory"
   ],
   document: [
     "Document", 

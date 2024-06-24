@@ -23,15 +23,6 @@ module.exports = {
       description: {
         type: Sequelize.TEXT,
       },
-      file_id: {
-        type: Sequelize.UUID,
-        references: {
-          model: "files",
-          key: "id",
-        },
-        onUpdate: "CASCADE",
-        onDelete: "CASCADE",
-      },
       revision_no: {
         type: Sequelize.INTEGER,
       },

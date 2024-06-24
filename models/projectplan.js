@@ -10,6 +10,15 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             // define association here
+            ProjectPlan.belongsTo(models.File, {
+                as: "file",
+                foreignKey: "file_id",
+            });
+    
+            ProjectPlan.hasMany(models.ActionState, {
+                as: "action",
+                foreignKey: "model_id"
+            })
         }
     }
     ProjectPlan.init({
@@ -91,22 +100,13 @@ module.exports = (sequelize, DataTypes) => {
             },
         },
     }, {
+        createdAt: 'created_at',
+        updatedAt: 'updated_at' , 
         sequelize,
         modelName: "ProjectPlan",
         tableName: "projectplans"
     });
-    ProjectPlan.associate = function(models) {
-        // associations can be defined here
-        ProjectPlan.belongsTo(models.File, {
-            as: "file",
-            foreignKey: "file_id",
-        });
 
-        ProjectPlan.hasMany(models.ActionState, {
-            as: "action",
-            foreignKey: "model_id"
-        })
-    };
 
     return ProjectPlan;
 };

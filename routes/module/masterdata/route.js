@@ -37,7 +37,7 @@ const validateDocumentData = require("../../../middleware/validate/module/docume
 
 module.exports = function (express) {
   const route = express.Router();
-  
+
   //ownership route
   route.get("/ownerships/", OwnershipTypeController.getAll);
   route.get("/ownerships/:id", OwnershipTypeController.get);
@@ -286,10 +286,10 @@ module.exports = function (express) {
   route.delete("/project-types/:id", ProjectTypeController.delete);
   //project category
   route.get("/project-categories", ProjectCategoryController.getAll);
-  route.get(
-    "/project-categories/projecttype/:id",
-    ProjectCategoryController.getAllProCatByTypeId
-  );
+  // route.get(
+  //   "/project-categories/projecttype/:id",
+  //   ProjectCategoryController.getAllProCatByTypeId
+  // );
   route.get("/project-categories/:id", ProjectCategoryController.get);
   route.get("/project-categories-searches", ProjectCategoryController.search);
   
@@ -307,10 +307,7 @@ module.exports = function (express) {
   //project subcategory
   route.get("/project-sub-categories", ProjectSubCategoryController.getAll);
   route.get("/project-sub-categories/:id", ProjectSubCategoryController.get);
-  route.get(
-    "/project-category/project-sub-categories/:id",
-    ProjectSubCategoryController.getByProjectCategoryId
-  );
+
   route.get(
     "/project-sub-category-searches",
     ProjectSubCategoryController.search

@@ -133,7 +133,7 @@ self.servePhoto = async (req, res) => {
     }
     return res.sendFile(imagePath);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.apiError(error)
   }
 };
 self.serveMultiplePhoto = async (req, res) => {
@@ -159,7 +159,7 @@ self.serveMultiplePhoto = async (req, res) => {
     //     res.sendFile(imagePath);
     // }
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.apiError(error)
   }
 };
 self.update = async (req, res) => {
@@ -220,9 +220,7 @@ self.update = async (req, res) => {
       message: "Success",
     });
   } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
+    res.apiError(error)
   }
 };
 

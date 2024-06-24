@@ -24,23 +24,6 @@ self.getAll = async (req, res) => {
   }
 };
 
-self.getByProjectCategoryId = async (req, res) => {
-  const { id } = req.params;
-  try {
-    const whereCondition = { projectcategory_id: id }
-    const paginatedResult = await paginationHelper(ProjectSubCategory, req, whereCondition);
-
-    // Use the response formatter to send the success response
-    res.apiSuccess({
-      data: paginatedResult.data,
-      total: paginatedResult.total,
-    }, paginatedResult.pagination);
-
-  } catch (error) {
-    console.error("Error in getAll method:", error);
-    res.apiError(error);
-  }
-};
 
 self.get = async (req, res) => {
   getRecordById(ProjectSubCategory, req, res);

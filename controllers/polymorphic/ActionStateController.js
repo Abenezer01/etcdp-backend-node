@@ -498,9 +498,7 @@ self.getModelAction = async (req, res) => {
 
     }
   } catch (error) {
-    return res.status(500).json({
-      message: error.message,
-    });
+    res.apiError(error);
   }
 };
 
@@ -561,7 +559,9 @@ self.getLast = async (req, res) => {
     });
 
     return res.json(data.length);
-  } catch (error) {}
+  } catch (error) {
+    res.apiError(error)
+  }
 };
 
 
