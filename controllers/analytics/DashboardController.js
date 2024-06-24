@@ -1627,10 +1627,6 @@ self.getProjectAnnualCostAndScheduleVariances = async(req, res) => {
             }
         ]
 
-        return res.json({
-            spi_cpi,
-            sv_cv
-        })
     
         return res.apiSuccess({
             data: {
@@ -1712,13 +1708,13 @@ self.getAllProjectAnnualFinancial = async(req, res) => {
             }
         ]
 
-        return res.json(performanceArr)
+        return res.apiSuccess({
+            data: performanceArr
+        });
 
         
     } catch (error) {
-        return res.status(500).json({
-            message: error.mesage
-        })
+        res.apiError(error)
     }
 }
 

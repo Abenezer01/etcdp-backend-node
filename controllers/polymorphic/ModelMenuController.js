@@ -72,9 +72,7 @@ self.search = async (req, res) => {
     });
     return res.json(data);
   } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
+    res.apiError(error)
   }
 };
 
@@ -127,9 +125,7 @@ self.save = async (req, res) => {
       });
     }
   } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
+    res.apiError(error)
   }
 };
 
@@ -184,9 +180,7 @@ self.editModuleTypeModels = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    res.status(500).json({
-      message: error.message,
-    });
+    res.apiError(error)
   }
 };
 
@@ -222,9 +216,7 @@ self.getModuleExtraModels = async (req, res) => {
 
     return res.json(models);
   } catch (error) {
-    return res.status(500).json({
-      message: error.message,
-    });
+    res.apiError(error)
   }
 };
 

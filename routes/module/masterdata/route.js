@@ -307,10 +307,7 @@ module.exports = function (express) {
   //project subcategory
   route.get("/project-sub-categories", ProjectSubCategoryController.getAll);
   route.get("/project-sub-categories/:id", ProjectSubCategoryController.get);
-  route.get(
-    "/project-category/project-sub-categories/:id",
-    ProjectSubCategoryController.getByProjectCategoryId
-  );
+
   route.get(
     "/project-sub-category-searches",
     ProjectSubCategoryController.search
