@@ -9,11 +9,17 @@ const PhotoController = require("../../../controllers/polymorphic/PhotoControlle
 const ModelMenuController = require("../../../controllers/polymorphic/ModelMenuController.js");
 const NotificationController = require("../../../controllers/polymorphic/NotificationController.js");
 const FileController = require("../../../controllers/polymorphic/FileController");
-
+const ReportController = require("../../../controllers/polymorphic/ReportController.js");
 module.exports = function (express) {
   const route = express.Router();
 
   //address route
+  
+  
+  // route.get("/generate-report", ReportController.generateReport);
+  route.get("/generate", ReportController.generate);
+  route.get("/generate-csv", ReportController.generateCSV);
+  route.get("/generate-pdf", ReportController.generatePDF);
   route.get("/addresses", AddressController.getAll);
   route.get("/addresses/:id", AddressController.get);
   route.get("/addresses/model/:id", AddressController.getAddressByModelId);
@@ -76,11 +82,6 @@ module.exports = function (express) {
   route.delete("/notes/:id", NoteController.delete);
   route.get("/model-notes/:id", NoteController.getNoteByModelId);
 
-  // route.get("/address/:id", AddressController.get);
-  // route.get("/address-searches", AddressController.search);
-  // route.post("/address", AddressController.save);
-  // route.put("/address/:id", AddressController.update);
-  // route.delete("/address/:id", AddressController.delete);
   //Model Menu
 
   route.get("/model-menus", ModelMenuController.getAll);
@@ -100,7 +101,7 @@ module.exports = function (express) {
   route.get("/module-models/:module", ModelMenuController.getModuleExtraModels);
 
   route.put(
-    "/module-type-models-update/:id",
+    "/module-model-menus/:id",
     ModelMenuController.editModuleTypeModels
   );
 

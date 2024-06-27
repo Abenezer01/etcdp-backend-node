@@ -5,23 +5,17 @@ const stakeholderInfoController = require("../../../controllers/stakeholder/Stak
 const StakeholderController = require("../../../controllers/stakeholder/StakeholderController.js");
 const StakeholderContactPersonController = require("../../../controllers/stakeholder/StakeholderContactPersonController.js");
 const ownershiptypeController = require("../../../controllers/stakeholder/OwnershiptypeController");
-const BusinessFieldController = require("../../../controllers/stakeholder/BusinessFieldController");
 const CertificateController = require("../../../controllers/stakeholder/CertificateController");
 const TotalEmployeeController = require("../../../controllers/stakeholder/TotalEmployeeController");
-const AgeLevelController = require("../../../controllers/stakeholder/AgeLevelController");
-const StudyLevelController = require("../../../controllers/stakeholder/StudyLevelController");
 const EmployeeAgeController = require("../../../controllers/stakeholder/EmployeeAgeController");
 const EmployeeEducationController = require("../../../controllers/stakeholder/EmployeeEducationController");
 const WorkExperienceLevelController = require("../../../controllers/stakeholder/WorkExperienceLevelController");
-const WorkExperienceController = require("../../../controllers/stakeholder/WorkExperienceController");
 const StakeholderTrainingController = require("../../../controllers/stakeholder/StakeholderTrainingController.js");
 const RegulationController = require("../../../controllers/stakeholder/RegulationController");
-const StudyFieldController = require("../../../controllers/stakeholder/StudyFieldController");
 const StakeholderStudyFieldController = require("../../../controllers/stakeholder/StakeholderStudyFieldController");
 const StudyPeriodCostController = require("../../../controllers/stakeholder/StudyPeriodCostController");
 const GraduateController = require("../../../controllers/stakeholder/GraduateController");
 const ConstructionRelatedServiceController = require("../../../controllers/stakeholder/ConstructionRelatedServiceController");
-const StudyProgramController = require("../../../controllers/stakeholder/StudyProgramController");
 const StakeholderServiceController = require("../../../controllers/stakeholder/StakeholderServiceController");
 const OperationlocationController = require("../../../controllers/stakeholder/OperationlocationController");
 const StakeholderEmailController = require("../../../controllers/stakeholder/StakeholderEmailController");
@@ -30,36 +24,7 @@ const validateData = require("../../../middleware/validate/module/stakeholder/va
 
 module.exports = function (express) {
   const route = express.Router();
-  //ownership route
-  route.get("/ownerships/", ownershiptypeController.getAll);
-  route.get("/ownerships/:id", ownershiptypeController.get);
-  route.get("/ownership-searches", ownershiptypeController.search);
-  route.post(
-    "/ownerships",
-    validateData.ownerShipValidate,
-    ownershiptypeController.save
-  );
-  route.put(
-    "/ownerships/:id",
-    validateData.ownerShipValidate,
-    ownershiptypeController.update
-  );
-  route.delete("/ownership/:id", ownershiptypeController.delete);
-  //business field route
-  route.get("/business-fields/", BusinessFieldController.getAll);
-  route.get("/business-fields/:id", BusinessFieldController.get);
-  route.get("/business-field-searches", BusinessFieldController.search);
-  route.post(
-    "/business-fields",
-    validateData.buisnessFieldValidate,
-    BusinessFieldController.save
-  );
-  route.put(
-    "/business-fields/:id",
-    validateData.buisnessFieldValidate,
-    BusinessFieldController.update
-  );
-  route.delete("/business-fields/:id", BusinessFieldController.delete);
+  
   //stakeholder category route
   route.get("/stakeholder-categories/", stakeholderCategoryController.getAll);
   route.get("/stakeholder-categories/:id", stakeholderCategoryController.get);
@@ -243,21 +208,7 @@ module.exports = function (express) {
     TotalEmployeeController.update
   );
   route.delete("/total-employees/:id", TotalEmployeeController.delete);
-  //age level route
-  route.get("/age-levels/", AgeLevelController.getAll);
-  route.get("/age-levels/:id", AgeLevelController.get);
-  route.get("/age-level-searches", AgeLevelController.search);
-  route.post(
-    "/age-levels",
-    validateData.ageLevelValidate,
-    AgeLevelController.save
-  );
-  route.put(
-    "/age-levels/:id",
-    validateData.ageLevelValidate,
-    AgeLevelController.update
-  );
-  route.delete("/age-levels/:id", AgeLevelController.delete);
+
   //employee age route
   route.get("/employee-ages/", EmployeeAgeController.getAll);
   route.get("/employee-ages/:id", EmployeeAgeController.get);
@@ -277,21 +228,7 @@ module.exports = function (express) {
     EmployeeAgeController.update
   );
   route.delete("/employee-ages/:id", EmployeeAgeController.delete);
-  //study level route
-  route.get("/study-levels/", StudyLevelController.getAll);
-  route.get("/study-levels/:id", StudyLevelController.get);
-  route.get("/study-level-searches", StudyLevelController.search);
-  route.post(
-    "/study-levels",
-    validateData.studyLevelValidate,
-    StudyLevelController.save
-  );
-  route.put(
-    "/study-levels/:id",
-    validateData.studyLevelValidate,
-    StudyLevelController.update
-  );
-  route.delete("/study-levels/:id", StudyLevelController.delete);
+  
   //employee education route
   route.get("/employee-educations/", EmployeeEducationController.getAll);
   route.get("/collection/", EmployeeEducationController.getCollectionOfData);
@@ -330,25 +267,6 @@ module.exports = function (express) {
     "/work-experience-levels/:id",
     WorkExperienceLevelController.delete
   );
-  //work experience
-  route.get("/work-experiences/", WorkExperienceController.getAll);
-  route.get("/work-experiences/:id", WorkExperienceController.get);
-  route.get(
-    "/work-experiences/stakeholder/:id",
-    WorkExperienceController.getWorkExperienceByStakeholderId
-  );
-  route.get("/work-experience-searches", WorkExperienceController.search);
-  route.post(
-    "/work-experiences",
-    validateData.workExperienceValidate,
-    WorkExperienceController.save
-  );
-  route.put(
-    "/work-experiences",
-    validateData.workExperienceValidate,
-    WorkExperienceController.update
-  );
-  route.delete("/work-experiences/:id", WorkExperienceController.delete);
   //stakeholder training/ support
   route.get("/trainings/", StakeholderTrainingController.getAll);
   route.get("/trainings/:id", StakeholderTrainingController.get);
@@ -387,21 +305,7 @@ module.exports = function (express) {
     RegulationController.update
   );
   route.delete("/regulations/:id", RegulationController.delete);
-  //study field
-  route.get("/study-fields/", StudyFieldController.getAll);
-  route.get("/study-fields/:id", StudyFieldController.getStudyFieldById);
-  route.get("/study-field-searches", StudyFieldController.search);
-  route.post(
-    "/study-fields",
-    validateData.studyFieldValidate,
-    StudyFieldController.save
-  );
-  route.put(
-    "/study-fields/:id",
-    validateData.studyFieldValidate,
-    StudyFieldController.update
-  );
-  route.delete("/study-fields/:id", StudyFieldController.delete);
+
   //stakeholder study field
   route.get(
     "/stakeholder-study-fields",
@@ -433,21 +337,7 @@ module.exports = function (express) {
     "/stakeholder-study-fields/:id",
     StakeholderStudyFieldController.delete
   );
-  //study program
-  route.get("/study-programs/", StudyProgramController.getAll);
-  route.get("/study-programs/:id", StudyProgramController.get);
-  route.get("/study-program-searches", StudyProgramController.search);
-  route.post(
-    "/study-programs",
-    validateData.studyProgramValidate,
-    StudyProgramController.save
-  );
-  route.put(
-    "/study-programs/:id",
-    validateData.studyProgramValidate,
-    StudyProgramController.update
-  );
-  route.delete("/study-programs/:id", StudyProgramController.delete);
+
   //study period cost
   route.get("/study-period-costs/", StudyPeriodCostController.getAll);
   route.get("/study-period-costs/:id", StudyPeriodCostController.get);
