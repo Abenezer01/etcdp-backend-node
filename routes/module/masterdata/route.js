@@ -52,7 +52,7 @@ module.exports = function (express) {
     validateStakeholderData.ownerShipValidate,
     OwnershipTypeController.update
   );
-  route.delete("/ownership/:id", OwnershipTypeController.delete);
+  route.delete("/ownerships/:id", OwnershipTypeController.delete);
   //business field route
   route.get("/business-fields/", BusinessFieldController.getAll);
   route.get("/business-fields/:id", BusinessFieldController.get);
@@ -256,16 +256,16 @@ module.exports = function (express) {
   );
   
   //status
-  route.get("/statuses", StatusController.getAll);
-  route.get("/statuses/:id", StatusController.get);
-  route.get("/status-searches", StatusController.search);
-  route.post("/statuses", validateProjectData.statusValidate, StatusController.save);
+  route.get("/project-progress-statuses", StatusController.getAll);
+  route.get("/project-progress-statuses/:id", StatusController.get);
+  route.get("/project-progress-status-searches", StatusController.search);
+  route.post("/project-progress-statuses", validateProjectData.statusValidate, StatusController.save);
   route.put(
-    "/statuses/:id",
+    "/project-progress-statuses/:id",
     validateProjectData.statusValidate,
     StatusController.update
   );
-  route.delete("/statuses/:id", StatusController.delete);
+  route.delete("/project-progress-statuses/:id", StatusController.delete);
 
   
   //project route
@@ -329,89 +329,89 @@ module.exports = function (express) {
   
    //construction resource type controller
    route.get(
-    "/construction-resource-types",
+    "/resource-types",
     ConstructionResourceTypeController.getAll
   );
   route.get(
-    "/construction-resource-types/:id",
+    "/resource-types/:id",
     ConstructionResourceTypeController.get
   );
   route.get(
-    "/construction-resource-type-search",
+    "/resource-type-search",
     ConstructionResourceTypeController.search
   );
   route.post(
-    "/construction-resource-types",
+    "/resource-types",
     validateResourceData.constructionResourceTypeValidate,
     ConstructionResourceTypeController.save
   );
   route.put(
-    "/construction-resource-types/:id",
+    "/resource-types/:id",
     validateResourceData.constructionResourceTypeValidate,
     ConstructionResourceTypeController.update
   );
   route.delete(
-    "/construction-resource-types/:id",
+    "/resource-types/:id",
     ConstructionResourceTypeController.delete
   );
   
 
   //construction resource category controller
   route.get(
-    "/construction-resource-categories",
+    "/resource-categories",
     ConstructionResourceCategoryController.getAll
   );
   route.get(
-    "/construction-resource-categories/:id",
+    "/resource-categories/:id",
     ConstructionResourceCategoryController.get
   );
   route.get(
-    "/type/construction-resource-categories/:id",
+    "/type/resource-categories/:id",
     ConstructionResourceCategoryController.getCRCByResourceTypeId
   );
   route.get(
-    "/construction-resource-category_search",
+    "/resource-category_search",
     ConstructionResourceCategoryController.search
   );
   route.post(
-    "/construction-resource-categories",
+    "/resource-categories",
     validateResourceData.constructionResourceCategoryValidate,
     ConstructionResourceCategoryController.save
   );
   route.put(
-    "/construction-resource-categories/:id",
+    "/resource-categories/:id",
     validateResourceData.constructionResourceCategoryValidate,
     ConstructionResourceCategoryController.update
   );
   route.delete(
-    "/construction-resource-categories/:id",
+    "/resource-categories/:id",
     ConstructionResourceCategoryController.delete
   );
   //construction resource subcategory controller
   route.get(
-    "/construction-resource-subcategories",
+    "/resource-sub-categories",
     ConstructionResourceSubCategoryController.getAll
   );
   route.get(
-    "/construction-resource-subcategories/:id",
+    "/resource-sub-categories/:id",
     ConstructionResourceSubCategoryController.get
   );
   route.get(
-    "/construction-resource-subcategory-searches",
+    "/resource-subcategory-searches",
     ConstructionResourceSubCategoryController.search
   );
   route.post(
-    "/construction-resource-subcategories",
+    "/resource-sub-categories",
     validateResourceData.constructionResourceSubCategoryValidate,
     ConstructionResourceSubCategoryController.save
   );
   route.put(
-    "/construction-resource-subcategories/:id",
+    "/resource-sub-categories/:id",
     validateResourceData.constructionResourceSubCategoryValidate,
     ConstructionResourceSubCategoryController.update
   );
   route.delete(
-    "/construction-resource-subcategories/:id",
+    "/resource-sub-categories/:id",
     ConstructionResourceSubCategoryController.delete
   );
 
@@ -451,24 +451,24 @@ module.exports = function (express) {
   );
   route.delete("/document-categories/:id", DocumentCategoryController.delete);
   //construction document subcategory controller
-  route.get("/document-subcategories", DocumentSubCategoryController.getAll);
-  route.get("/document-subcategories/:id", DocumentSubCategoryController.get);
+  route.get("/document-sub-categories", DocumentSubCategoryController.getAll);
+  route.get("/document-sub-categories/:id", DocumentSubCategoryController.get);
   route.get(
     "/document-subcategory_search",
     DocumentSubCategoryController.search
   );
   route.post(
-    "/document-subcategories",
+    "/document-sub-categories",
     validateDocumentData.documentSubCategoryValidate,
     DocumentSubCategoryController.save
   );
   route.put(
-    "/document-subcategories/:id",
+    "/document-sub-categories/:id",
     validateDocumentData.documentSubCategoryValidate,
     DocumentSubCategoryController.update
   );
   route.delete(
-    "/document-subcategories/:id",
+    "/document-sub-categories/:id",
     DocumentSubCategoryController.delete
   );
 
