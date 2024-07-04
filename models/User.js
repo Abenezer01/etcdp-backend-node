@@ -10,11 +10,11 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      User.hasOne(models.UserEmail, {
+      User.hasMany(models.UserEmail, {
         foreignKey: "user_id",
         as: "useremails"
       });
-      User.hasOne(models.UserPhone, {
+      User.hasMany(models.UserPhone, {
         foreignKey: "user_id",
         as: "userphones"
       });
@@ -82,6 +82,7 @@ module.exports = (sequelize, DataTypes) => {
       birth_date: DataTypes.DATE,
       refresh_token: DataTypes.TEXT,
       revision_no: DataTypes.INTEGER,
+      stakeholder_id: DataTypes.UUID,
       lang: DataTypes.STRING,
       is_activated: {
         type: DataTypes.BOOLEAN,

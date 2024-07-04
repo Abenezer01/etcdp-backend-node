@@ -13,6 +13,11 @@ module.exports = (sequelize, DataTypes) => {
         as: "status",
         foreignKey: "status_id",
       });
+
+      ProjectStatus.belongsTo(models.Project, {
+        foreignKey: "project_id",
+        as: "project"
+      });
     }
   }
   ProjectStatus.init(

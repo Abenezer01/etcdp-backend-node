@@ -9,11 +9,13 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      ProjectStakeholder.hasMany(models.Stakeholder, {
+      ProjectStakeholder.belongsTo(models.Stakeholder, {
         foreignKey: "stakeholder_id",
+        as: "stakeholder"
       });
-      ProjectStakeholder.hasMany(models.Project, {
+      ProjectStakeholder.belongsTo(models.Project, {
         foreignKey: "project_id",
+        as: "project"
       });
     }
   }

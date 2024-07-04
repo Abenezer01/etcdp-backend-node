@@ -12,6 +12,7 @@ const fs = require("fs");
 //table
 
 const PDFDocumentTable = require("pdfkit-table");
+const { now } = require("moment");
 let self = {};
 
 
@@ -499,6 +500,7 @@ self.generateCcSV = async(req, res, model) => {
 self.generate = async(req, res) => {
   try {
 
+
     let { model, format, attributes } = req.body;
   
     if (format !== "pdf") {
@@ -507,13 +509,14 @@ self.generate = async(req, res) => {
   
     // Generate the file name with .pdf extension
     const fileName = getRandomFileName(model, "pdf");
-    // Construct the path to the default download directory
     const downloadPath = path.join(os.homedir(), "Downloads", fileName);
+
   
     // Fetch records from the specified model
     let records;
     if (attributes && attributes.length > 0) {
       records = await eval(model).findAll({ attributes });
+
     } else {
       // if attributes are not given, fetch all attributes
 
@@ -521,7 +524,6 @@ self.generate = async(req, res) => {
 
       // Filter out attributes ending with "id"
       attributes = allAttributes.filter(attr => !attr.endsWith("id"));
-      
       attributes.splice(-2, 2);
       records = await eval(model).findAll({
         attributes: attributes
@@ -529,74 +531,76 @@ self.generate = async(req, res) => {
     
     }
 
+
     let results = [];
 
      for(let item of records) {
-      results.push(item);
+      let arr = [];
+      for(let attr of attributes){
+
+        arr.push(item[attr]);
+      }
+      results.push(arr);
      }
 
 
-    for (let index = 0; index < results.length; index++) {
-      const element = results[index];
 
-      return res.json(Object.values(element));
-      
-    }
+     const headers = attributes.map(attr => ({
+      label: toReadableFormat(attr),
+      property: attr,
+    }));
+
+    const doc = new PDFDocumentTable({ margin: 30, size: "A4" });
+    doc.pipe(fs.createWriteStream(downloadPath));
     
-    return res.json(me);
+    // Add the logo at the top of the document
+    const logoPath = path.join(__dirname, "../../public/image.png"); // Update with the actual path to your logo
+    const logoWidth = 150; // Adjust the width as needed
+    const logoHeight = 50; // Adjust the height as needed
+    doc.image(logoPath, doc.page.width / 2 - logoWidth / 2, 15, { width: logoWidth, height: logoHeight });
+    // Add the company name below the logo
+    doc.moveDown(3); // Adjust the spacing as needed
+    doc.fontSize(10).text("Ministry of Urban and Infrastructure", { align: "center" });
 
-  const arrayOfArrays = records.map(obj => Object.values(obj));
-  return res.json(arrayOfArrays);
-  const example = records[0];
-  
-  // Get only the values of the object as an array
-  const arr1 = Object.values(exampleObject);
-  const arr2 = Object.values(example);
+    // Move down to make space for the table after the company name
+    doc.moveDown(2);
 
-  return res.json({example, arr2});
+    const currentDate = new Date();
+    const formattedDate = currentDate.toDateString();
+
+
+    const table = {
+      title: `${model} Report`,
+      subtitle: `${formattedDate}`,
+      headers: headers,
+      rows: results,
+    };
+
     
-  return res.json(valuesArray);
-
-    let x = records.mao((item) => {
-        return item;
+    doc.table(table, {
+      prepareHeader: () => doc.font("Helvetica-Bold").fontSize(8),
+      // prepareRow: (row, indexColumn, indexRow, rectRow, rectCell) => {
+      //   doc.font("Helvetica").fontSize(8);
+      //   if (indexColumn === 0) {
+      //     doc.addBackground(rectRow, "blue", 0.15);
+      //   }
+      // },
     });
 
-    return res.json(x);
+    doc.end();
 
-
-  
-  return res.json(result);
-
-    let doc = new PDFDocumentTable({ margin: 30, size: "A4" });
-    // save document
-    doc.pipe(fs.createWriteStream(getRandomFileName("model", "pdf")));
-    
-    ;(async function createTable(){
-      // table
-      const table = {
-        title: `${model} Report`,
-        subtitle: "Subtitle",
-        headers: attributes,
-        rows: arrayOfArrays,
-      };
-
-      // the magic (async/await)
-      await doc.table(table, { /* options */ });
-      // -- or --
-      // doc.table(table).then(() => { doc.end() }).catch((err) => { })
-
-      // if your run express.js server
-      // to show PDF on navigator
-      // doc.pipe(res);
-
-      // done!
-      doc.end();
-  })();
-
+    res.status(200).send(`File saved to ${downloadPath}`);
+ 
     
   } catch (error) {
     return res.json(error);
   }
+};
+
+const toReadableFormat = (str) => {
+  return str.split("_") // Split by underscores
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1)) // Capitalize the first letter of each word
+            .join(" "); // Join the words with spaces
 };
 
 module.exports = self;

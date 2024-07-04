@@ -6,7 +6,7 @@ const {
   ProjectFinance,
   ProjectStatus,
   ProjectCategory,
-  ProjectSubcategory,
+  ProjectSubCategory,
   ProjectType,
   Status,
   ProjectReport,
@@ -26,7 +26,7 @@ const cipherHelper = require("../utils/cipher-helper");
 const apiHelper = require("../utils/API-helper");
 const paginationHelper = require("../utils/pagination-helper");
 const { deleteRecord } = require("../utils/format-helper");
-
+const { Socket } = require("../../utils/WebSocket");
 
 let self = {};
 const paginate = require("../../utils/pagination");
@@ -47,14 +47,14 @@ self.getAllCPMProject = async(req, res) => {
 
 
     //Stakeholder
-    // const cpmStakeholders = await apiHelper.getExternalData('stakeholder')
+    // const cpmStakeholders = await apiHelper.getExternalData("stakeholder")
     // let stakeholders = await Stakeholder.findAll()
     // const mergedData = cpmStakeholders.concat(stakeholders)
 
     // return res.json(mergedData)
 
     //users
-    // const cpmUsers = await apiHelper.getExternalData('user')
+    // const cpmUsers = await apiHelper.getExternalData("user")
     // let users = await User.findAll()
     // const mergedData = cpmUsers.concat(users)
 
@@ -68,7 +68,15 @@ self.getAllCPMProject = async(req, res) => {
 };
 
 self.getAll = async (req, res) => {
+
   try {
+
+
+    // let x = Socket.emitToUser("userId123", "event_name", { message: "Hello, user!" });
+
+    // return res.json(x);
+
+
     const paginatedResult = await paginationHelper(Project, req);
 
     // Use the response formatter to send the success response
@@ -239,7 +247,7 @@ self.getProjectByTypeId = async (req, res) => {
         //   "The total date",
         //   moment().diff(matchingBElement.commencement_date, "days")
         // );
-        //moment().diff(commencement, 'days') / contract_duration * 100
+        //moment().diff(commencement, "days") / contract_duration * 100
         return {
           ...aElement,
           used_time:
@@ -321,9 +329,12 @@ self.get = async (req, res) => {
           as: "ProjectCategory",
           attributes: ["title"],
         },
-        { model: ProjectType, as: "ProjectType", attributes: ["title"] },
+        { 
+          model: ProjectType, 
+          as: "ProjectType", 
+          attributes: ["title"] },
         {
-          model: ProjectSubcategory,
+          model: ProjectSubCategory,
           as: "ProjectSubcategory",
           attributes: ["title"],
         },

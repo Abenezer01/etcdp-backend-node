@@ -1,6 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
 const cipherHelper = require("../controllers/utils/cipher-helper");
+
 module.exports = (sequelize, DataTypes) => {
   class Project extends Model {
     /**
@@ -12,31 +13,35 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       Project.hasOne(models.ProjectTime, {
         foreignKey: "project_id",
+        as: "projecttime",
       });
       Project.hasOne(models.ProjectFinance, {
         foreignKey: "project_id",
+        as: "projectfinance",
       });
       Project.hasMany(models.ProjectStakeholder, {
         foreignKey: "project_id",
-        as: "projectstakeholders"
+        as: "projectstakeholders",
       });
       Project.hasMany(models.ProjectVariation, {
         foreignKey: "project_id",
+        as: "projectvariations",
       });
-  
       Project.hasMany(models.ProjectPlan, {
         foreignKey: "project_id",
+        as: "projectplans",
       });
       Project.hasMany(models.ProjectReport, {
         foreignKey: "project_id",
+        as: "projectreports",
       });
-  
       Project.hasMany(models.ProjectStatus, {
         as: "projectstatus",
         foreignKey: "project_id",
       });
       Project.hasMany(models.Payment, {
         foreignKey: "project_id",
+        as: "payments",
       });
       Project.belongsTo(models.ProjectCategory, {
         foreignKey: "projectcategory_id",
@@ -53,6 +58,7 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
   }
+
   Project.init(
     {
       id: {
@@ -75,14 +81,14 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
         get() {
-            const encryptedValue = this.getDataValue("name");
-            const decryptedValue = cipherHelper.decrypt(encryptedValue);
-            return decryptedValue;
-          },
+          const encryptedValue = this.getDataValue("name");
+          const decryptedValue = cipherHelper.decrypt(encryptedValue);
+          return decryptedValue;
+        },
         set(value) {
-            const encryptedValue = cipherHelper.encrypt(value);
-            this.setDataValue("name", encryptedValue);
-          }
+          const encryptedValue = cipherHelper.encrypt(value);
+          this.setDataValue("name", encryptedValue);
+        },
       },
       remark: DataTypes.TEXT,
       contract_no: DataTypes.STRING,
@@ -92,10 +98,10 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       createdAt: "created_at",
-      updatedAt: "updated_at" ,     
+      updatedAt: "updated_at",
       sequelize,
       modelName: "Project",
-      tableName: "projects"
+      tableName: "projects",
     }
   );
 

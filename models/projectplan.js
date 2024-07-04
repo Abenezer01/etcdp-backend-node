@@ -19,6 +19,11 @@ module.exports = (sequelize, DataTypes) => {
                 as: "action",
                 foreignKey: "model_id"
             });
+
+            ProjectPlan.belongsTo(models.Project, {
+                foreignKey: "project_id",
+                as: "project"
+              });
         }
     }
     ProjectPlan.init({

@@ -224,10 +224,6 @@ module.exports = function (express) {
     ResourceSpecificationController.getImage
   );
   route.get(
-    "/resource/construction-resource-specifications/:id",
-    ResourceSpecificationController.getByResourceId
-  );
-  route.get(
     "/construction-resource-specification-searches",
     ResourceSpecificationController.search
   );

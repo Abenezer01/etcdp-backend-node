@@ -19,7 +19,9 @@ const notify = async (
       data: JSON.stringify(content),
       description: description ? description : "description",
     });
-    Socket.emit("newNotification", notifier.dataValues);
+    // Socket.emit("newNotification", notifier.dataValues);
+    Socket.emitToUser("newNotification", notifier.dataValues, notifiable_id);
+
   } catch (error) {
     return {
       message: error.message,

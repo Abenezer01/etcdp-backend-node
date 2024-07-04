@@ -2,6 +2,7 @@ const dotenv = require("dotenv");
 dotenv.config();
 const jwt = require("jsonwebtoken");
 let ACCESS_TOKEN_KEY = process.env.ACCESS_TOKEN_KEY;
+
 const userData = async (req) => {
   try {
 
@@ -22,7 +23,8 @@ const userData = async (req) => {
   let departmentID = decodetoken.department_id;
   let position_id = decodetoken.position_id;
   let lang = decodetoken.lang;
-  return { usrID, departmentID, position_id, lang };
+  let stakeholder_id = decodetoken.stakeholder_id;
+  return { usrID, departmentID, position_id, lang, stakeholder_id };
 } catch (error) {
   return error;
 }

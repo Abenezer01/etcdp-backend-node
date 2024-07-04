@@ -19,9 +19,9 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: DataTypes.UUIDV4,
       },
       parent_id: DataTypes.UUID,
-      type_of_service: DataTypes.STRING,
+      service_type: DataTypes.STRING,
       specification_detail: DataTypes.STRING,
-      unit_of_measurement: DataTypes.STRING,
+      measurement_unit: DataTypes.STRING,
     },
     {
       createdAt: "created_at",

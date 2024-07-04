@@ -12,6 +12,11 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "projectcategory_id",
         as: "projectsubcategories",
       });
+
+      ProjectCategory.hasMany(models.Project, {
+        foreignKey: "projectcategory_id",
+        as: "projects",
+      });
     }
   }
   ProjectCategory.init(

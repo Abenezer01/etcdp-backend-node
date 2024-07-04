@@ -25,74 +25,7 @@ const validateData = require("../../../middleware/validate/module/stakeholder/va
 module.exports = function (express) {
   const route = express.Router();
   
-  //stakeholder category route
-  route.get("/stakeholder-categories/", stakeholderCategoryController.getAll);
-  route.get("/stakeholder-categories/:id", stakeholderCategoryController.get);
-  route.get(
-    "/stakeholder-categories/stakeholder-type/:id",
-    stakeholderCategoryController.getAllCatByTypeId
-  );
-  // route.get("/stakeholder-category/staketype/:id", stakeholderCategoryController.getCatByTypeId);
-  route.get(
-    "/stakeholder-category-searches",
-    stakeholderCategoryController.search
-  );
-  route.post(
-    "/stakeholder-categories",
-    validateData.stakeholderCategoryValidate,
-    stakeholderCategoryController.save
-  );
-  route.put(
-    "/stakeholder-categories/:id",
-    validateData.stakeholderCategoryValidate,
-    stakeholderCategoryController.update
-  );
-  route.delete(
-    "/stakeholder-categories/:id",
-    stakeholderCategoryController.delete
-  );
-  //stakeholder subcategory route
-  route.get(
-    "/stakeholder-sub-categories/",
-    stakeholderSubCategoryController.getAll
-  );
-  route.get(
-    "/stakeholder-sub-categories/:id",
-    stakeholderSubCategoryController.get
-  );
-  route.get(
-    "/stakeholder-sub-category-searches",
-    stakeholderSubCategoryController.search
-  );
-  route.post(
-    "/stakeholder-sub-categories",
-    validateData.stakeholderSubCategoryValidate,
-    stakeholderSubCategoryController.save
-  );
-  route.put(
-    "/stakeholder-sub-categories/:id",
-    validateData.stakeholderSubCategoryValidate,
-    stakeholderSubCategoryController.update
-  );
-  route.delete(
-    "/stakeholder-sub-categories/:id",
-    stakeholderSubCategoryController.delete
-  );
-  //stakeholder type route
-  route.get("/stakeholder-types", stakeholderTypeController.getAll);
-  route.get("/stakeholder-types/:id", stakeholderTypeController.get);
-  route.get("/stakeholder-type-searches", stakeholderTypeController.search);
-  route.post(
-    "/stakeholder-typse",
-    validateData.stakeholderTypeValidate,
-    stakeholderTypeController.save
-  );
-  route.put(
-    "/stakeholder-types/:id",
-    validateData.stakeholderTypeValidate,
-    stakeholderTypeController.update
-  );
-  route.delete("/stakeholder-types/:id", stakeholderTypeController.delete);
+
   //stakeholder info route
   route.get("/stakeholder-infos/", stakeholderInfoController.getAll);
   route.get("/stakeholder-infos/:id", stakeholderInfoController.get);
@@ -112,6 +45,7 @@ module.exports = function (express) {
     stakeholderInfoController.update
   );
   route.delete("/stakeholder-infos/:id", stakeholderInfoController.delete);
+  
   //stakeholder route
   route.get("/stakeholders", StakeholderController.getAll);
   route.get("/stakeholders/:id", StakeholderController.get);

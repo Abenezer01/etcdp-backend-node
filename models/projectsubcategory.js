@@ -11,10 +11,12 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       ProjectSubCategory.belongsTo(models.ProjectCategory, {
         as: "projectsubcategories",
-        foreignKey: {
-          name: "projectcategory_id",
-          allowNull: false,
-        },
+        foreignKey: "projectcategory_id",
+      });
+
+      ProjectSubCategory.hasMany(models.Project, {
+        foreignKey: "projectsubcategory_id",
+        as: "projects",
       });
     }
   }

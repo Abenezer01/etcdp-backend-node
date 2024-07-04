@@ -51,6 +51,9 @@ module.exports = {
       // },
       refresh_token: Sequelize.TEXT,
       revision_no: Sequelize.INTEGER,
+      stakeholder_id: {
+        type: Sequelize.UUID,
+      },
       lang: Sequelize.STRING,
       is_activated : {
         type: Sequelize.BOOLEAN,
