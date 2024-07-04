@@ -44,7 +44,7 @@ module.exports = function (express) {
   route.get("/model-action-data/:id", ActionStateController.getModelAction);
   //Photo
   route.get("/photos", PhotoController.getAll);
-  route.post("/photos/:id", validateData.photoValidate, PhotoController.save);
+  route.post("/photos", validateData.photoValidate, PhotoController.save);
   route.get("/photos/:type/:id", PhotoController.servePhoto);
   route.get("/multiple/photos/:id", PhotoController.serveMultiplePhoto);
   route.put("/photos/:id", validateData.photoValidate, PhotoController.update);

@@ -51,17 +51,15 @@ self.search = async (req, res) => {
 
 self.save = async (req, res) => {
   try {
+
     const userData = await usrData.userData(req, res);
     if (!userData) {
       return;
     }
 
-    const id = req.params.id || "";
+    const {type, model_id} = req.body;
     const { upload } = req.files;
 
-    if (!id) {
-      return res.status(400).send({ message: "User id is empty" });
-    }
 
     if (!upload) {
       return res.status(400).send({ message: "File is empty" });
@@ -80,8 +78,13 @@ self.save = async (req, res) => {
     );
     const filePathh = filePath.split("public").pop();
 
-    const photoObject = { url: filePathh, type: req.body.type, model_id: id };
-    const photoData = await Photo.create(photoObject);
+    const photoData = await Photo.create(
+      { 
+      url: filePathh, 
+      type: type, 
+      model_id: model_id 
+      }
+    );
 
     if (photoData) {
       const userID = userData.usrID;
