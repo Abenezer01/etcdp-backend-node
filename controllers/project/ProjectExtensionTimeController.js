@@ -103,9 +103,14 @@ self.update = async (req, res) => {
       }
     }
 
-    return res.apiSuccess({
-      data
-    });
+
+    if (data) {
+      const updatedData = await ProjectExtensionTime.findOne({ where: { id } });
+      return res.apiSuccess({
+        data: updatedData
+      });
+    }
+
   } catch (error) {
     res.apiError(error);
   }

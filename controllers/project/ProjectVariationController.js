@@ -175,9 +175,13 @@ self.update = async (req, res) => {
       }
     }
 
-    return res.apiSuccess({
-      data: data
-    });
+    if (data) {
+      const updatedData = await ProjectVariation.findOne({ where: { id } });
+      return res.apiSuccess({
+        data: updatedData
+      });
+    }
+    
   } catch (error) {
     res.apiError(error);
   }

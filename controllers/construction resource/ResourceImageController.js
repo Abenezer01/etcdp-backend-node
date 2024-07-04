@@ -173,11 +173,19 @@ self.update = async (req, res) => {
     await file.mv(filePath);
     const filePathh = filePath.split("public").pop();
 
-    await Image.update({ url: filePathh }, { where: { id: imageId } });
+    const [updated] = await Image.update({ url: filePathh }, {
+      where: { id: imageId },
+    });
 
-    return res.status(200).json({ message: "Success" });
+    if (updated) {
+      const updatedData = await Image.findOne({ where: { id: imageId } });
+      return res.apiSuccess({
+        data: updatedData
+      });
+    }
+
   } catch (error) {
-    res.apiError(error);
+    return res.apiError(error);
   }
 };
 

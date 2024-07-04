@@ -175,11 +175,20 @@ self.update = async (req, res) => {
     }
 
     if (usr) {
-      await ResourceSpecification.update(body, { where: { id } });
-      return res.json({ message: "Success" });
+      // await ResourceSpecification.update(body, { where: { id } });
+      const [updated] = await ResourceSpecification.update(body, {
+        where: { id },
+      });
+  
+      if (updated) {
+        const updatedData = await ResourceSpecification.findOne({ where: { id } });
+        return res.apiSuccess({
+          data: updatedData
+        });
+      }
     }
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    return res.apiError(error);
   }
 };
 

@@ -361,17 +361,20 @@ self.update = async (req, res) => {
           // res.redirect('/')
         });
       }
-      await Document.update(body, {
-        where: {
-          id: id,
-        },
+
+      const [updated] = await Document.update(body, {
+        where: { id },
       });
-      return res.json({ message: "Success" });
+  
+      if (updated) {
+        const updatedData = await Document.findOne({ where: { id } });
+        return res.apiSuccess({
+          data: updatedData
+        });
+      }
     }
   } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
+    return res.apiError(error);
   }
 };
 

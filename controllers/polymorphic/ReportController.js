@@ -71,21 +71,6 @@ let self = {};
   // };
   
 
-  
-  const formatString = (input) => {
-    // Replace underscores with spaces
-    let formattedString = input.replace(/_/g, " ");
-  
-    // Capitalize the first letter of each word
-    formattedString = formattedString.replace(/\b\w/g, char => char.toUpperCase());
-  
-    return formattedString;
-  };
-
-  const  getRandomFileName = (modelName, extension = "pdf" ) => {
-    const randomString = Math.random().toString(36).substring(2, 15);
-    return `${modelName}_${randomString}.${extension}`;
-  };
 
 //final API func
   self.generateCSV = async (req, res) => {
@@ -497,6 +482,8 @@ self.generateCcSV = async(req, res, model) => {
 //   }
 // };
 
+
+//working
 self.generate = async(req, res) => {
   try {
 
@@ -595,6 +582,21 @@ self.generate = async(req, res) => {
   } catch (error) {
     return res.json(error);
   }
+};
+
+const formatString = (input) => {
+  // Replace underscores with spaces
+  let formattedString = input.replace(/_/g, " ");
+
+  // Capitalize the first letter of each word
+  formattedString = formattedString.replace(/\b\w/g, char => char.toUpperCase());
+
+  return formattedString;
+};
+
+const  getRandomFileName = (modelName, extension = "pdf" ) => {
+  const randomString = Math.random().toString(36).substring(2, 15);
+  return `${modelName}_${randomString}.${extension}`;
 };
 
 const toReadableFormat = (str) => {

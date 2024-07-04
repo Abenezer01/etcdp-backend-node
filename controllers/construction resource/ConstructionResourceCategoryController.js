@@ -75,7 +75,7 @@ self.getCRCByResourceTypeId = async (req, res) => {
     }, paginatedResult.pagination);
 
   } catch (error) {
-    res.apiError(error);
+    return res.apiError(error);
   }
 };
 

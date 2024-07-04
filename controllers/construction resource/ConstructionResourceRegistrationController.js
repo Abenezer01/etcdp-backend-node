@@ -195,9 +195,7 @@ self.countAllConstructionResourceWithResourceType = async (req, res) => {
 
     res.send(Result);
   } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
+    return res.apiError(error);
   }
 };
 module.exports = self;

@@ -209,11 +209,20 @@ self.update = async (req, res) => {
         }
       }
 
-      await ResourceBrand.update(body, { where: { id } });
-      return res.json({ message: "Success" });
+
+      const [updated] = await ResourceBrand.update(body, {
+        where: { id },
+      });
+  
+      if (updated) {
+        const updatedData = await ResourceBrand.findOne({ where: { id } });
+        return res.apiSuccess({
+          data: updatedData
+        });
+      }
     }
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    return res.apiError(error);
   }
 };
 

@@ -203,16 +203,21 @@ self.update = async (req, res) => {
       description: req.body.description,
       url: filePath,
     };
-    await File.update(updatedFile, {
-      where: { id: id },
+
+
+    const [updated] = await File.update(updatedFile, {
+        where: { id },
     });
-    return res.status(200).json({
-      message: "Success",
-    });
+
+    if (updated) {
+      const updatedData = await File.findOne({ where: { id } });
+      return res.apiSuccess({
+        data: updatedData
+      });
+    }
+
   } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
+    return res.apiError(error);
   }
 };
 
