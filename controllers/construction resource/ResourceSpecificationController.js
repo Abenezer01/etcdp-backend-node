@@ -2,7 +2,6 @@ const { ResourceSpecification, Sequelize } = require("../../models");
 const usrData = require("../../utils/userDataFromToken");
 const actionHelper = require("../utils/action-helper");
 const Op = Sequelize.Op;
-const paginate = require("../../utils/pagination");
 const { getRecordById, deleteRecord } = require("../utils/format-helper");
 const paginationHelper = require("../utils/pagination-helper");
 const dotenv = require("dotenv");
@@ -31,47 +30,6 @@ self.get = async (req, res) => {
   getRecordById(ResourceSpecification, req, res);
 };
 
-self.getByResourceId = async (req, res) => {
-  const { id } = req.params;
-  let {
-    page = process.env.page,
-    size = process.env.size,
-    order = process.env.order,
-  } = req.query;
-  const { limit, offset } = paginate.getPagination(page, size);
-
-  if (order === null) {
-    order = process.env.order;
-  }
-
-  try {
-    const { count, rows } = await ResourceSpecification.findAndCountAll({
-      limit,
-      offset,
-      where: { resource_id: id },
-      order: [["created_at", "ASC"]],
-      raw: true,
-    });
-
-    let newData = rows.map((item) => {
-      return {
-        ...item,
-        image: item.image
-          ? item.image.substr(item.image.lastIndexOf("/") + 1)
-          : null,
-      };
-    });
-    // const newData = rows.map(item => ( {...item, image: item.image.substr(item.image.lastIndexOf('/') + 1) }));
-    const response = paginate.getPagingData(
-      { rows: newData, count },
-      page,
-      limit
-    );
-    res.send(response);
-  } catch (error) {
-    res.status(500).send({ message: error.message });
-  }
-};
 self.search = async (req, res) => {
   try {
     let text = req.query.text;

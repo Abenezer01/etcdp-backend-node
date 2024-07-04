@@ -401,11 +401,11 @@ module.exports = function (express) {
   route.delete("/irrigation-capacities/:id", IrrigationCapacityController.delete);
 
   
-  route.get("/projects/cpm", ProjectController.getAllCPMProject);
+  // route.get("/projects/cpm", ProjectController.getAllCPMProject);
   route.get("/projects/", ProjectController.getAll);
   route.get("/projects/:id", ProjectController.get);
   route.get("/project-searches", ProjectController.search);
-  route.post("/projects/filter/", ProjectController.getProjectByTypeId);
+  // route.post("/projects/filter/", ProjectController.getProjectByTypeId);
   route.post("/projects", validateData.projectValidate, ProjectController.save);
   route.get("/project-analysis/:id", ProjectController.getProjectAnalysis);
 

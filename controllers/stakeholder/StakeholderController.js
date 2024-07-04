@@ -23,6 +23,7 @@ let self = {};
 self.getAll = async (req, res) => {
 
   try {
+  
     const paginatedResult = await paginationHelper(Stakeholder, req);
 
     // Use the response formatter to send the success response
@@ -173,8 +174,10 @@ self.countAllStakeholderWithStakeTypee = async (req, res) => {
 
       Result.push(newObj);
     }
-
-    res.send(Result);
+    return res.apiSuccess({
+      data: Result
+    });
+    
   } catch (error) {
     res.status(500).json({
       message: error.message,
@@ -254,7 +257,10 @@ self.countAllStakeholderWithStakeType = async (req, res) => {
       //Result.push(allResult);
     }
 
-    res.send(Result);
+    return res.apiSuccess({
+      data: Result
+    });
+    
   } catch (error) {
     res.status(500).json({
       message: error.message,

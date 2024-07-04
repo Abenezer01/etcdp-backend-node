@@ -16,13 +16,13 @@ module.exports = {
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
       },
-      type_of_service: {
+      service_type: {
         type: Sequelize.STRING,
       },
       specification_detail: {
         type: Sequelize.STRING,
       },
-      unit_of_measurement: {
+      measurement_unit: {
         type: Sequelize.STRING,
       },
       createdAt: {

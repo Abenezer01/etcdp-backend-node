@@ -68,6 +68,7 @@ const loginUser = async (req, res) => {
       position_id: pos.id,
       position_name: pos.name,
       department_id: usPos.department_id,
+      stakeholder_id: usr.stakeholder_id,
       user_position_id: usPos.id,
       is_checked: !!action,
       profile_completed: !!profile_pic,
@@ -97,7 +98,8 @@ const loginUser = async (req, res) => {
       id: usr.id,
       department_id: pos.department_id,
       position_id: pos.id,
-      lang: usr.lang
+      lang: usr.lang,
+      stakeholder_id: usr.stakeholder_id
     };
 
     const accessToken = jwt.sign(userPayload, TOKEN_KEY, { expiresIn: "1000h" });
@@ -106,15 +108,13 @@ const loginUser = async (req, res) => {
     usr.refresh_token = refreshToken;
     await usr.save();
 
-    Socket.emit("loggedIn", { message: true });
+    Socket.emitToUser("loggedIn", { message: true },usr.id );
+    // let x = Socket.emitToUser("loggedIn", "event_name", { message: "Hello, user!" });
+
     let data = {user_data: replyUser, access_token: accessToken};
 
     res.apiSuccess({
-      data: data,
-      total: 1 // Assuming a single user is being returned
-    }, {
-      pageSize: 1,
-      page: 1
+      data: data
     });
   } catch (error) {
     res.apiError(error);

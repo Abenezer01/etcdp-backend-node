@@ -11,7 +11,10 @@ self.notify = async(type, subject, notifiable_type, notifiable_id, content, desc
             data: JSON.stringify(content),
             description: description ? description : "description",
           });
-          Socket.emit("newNotification", notifier);
+        //   Socket.emit("newNotification", notifier);
+
+        Socket.emitToUser("newNotification", notifier, notifiable_id);
+
           return notifier;
     } catch (error) {
         return {

@@ -107,11 +107,7 @@ self.get = async(req, res) => {
             temp.phone = usPhone ? usPhone.phone : null;
 
             res.apiSuccess({
-                data: temp,
-                total: 1 // Assuming a single user is being returned
-              }, {
-                pageSize: 1,
-                page: 1
+                data: temp
               });
             // return res.json(temp);
         }
@@ -386,6 +382,7 @@ self.update = async (req, res) => {
     deleteRecord(User, req, res);
   };
 
+  // use this instead of filter as users table doesnt hold department_id attributes
   self.getDepartmentUsers = async (req, res) => {
 
     const { id } = req.params;

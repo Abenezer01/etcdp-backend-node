@@ -94,6 +94,7 @@ self.refreshToken = async (request, response, next) => {
       position_id: positionId,
       position_name: pos.name,
       department_id: pos.department_id,
+      stakeholder_id: usr.stakeholder_id,
       user_position_id: pos.id,
       avatar: usPhoto.url,
       is_checked: action ? true : false,

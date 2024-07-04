@@ -136,6 +136,7 @@ self.servePhoto = async (req, res) => {
   }
 };
 self.serveMultiplePhoto = async (req, res) => {
+
   try {
     const { id } = req.params;
 
