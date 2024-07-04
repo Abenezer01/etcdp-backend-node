@@ -372,7 +372,7 @@ self.update = async (req, res) => {
       
           throw new Error("Record not found");
         } catch (error) {
-          return res.status(500).json({ message: error.message });
+          return res.apiError(error);
         }
 };
       

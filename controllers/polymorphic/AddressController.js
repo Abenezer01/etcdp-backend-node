@@ -1,10 +1,8 @@
-const { Address, Permission, Project, Sequelize } = require("../../models");
+const { Address, Sequelize } = require("../../models");
 const usrData = require("../../utils/userDataFromToken");
 const actionHelper = require("../utils/action-helper");
 const paginationHelper = require("../utils/pagination-helper");
 const { getRecordById, updateRecord, deleteRecord } = require("../utils/format-helper");
-
-const createCsvWriter = require("csv-writer").createObjectCsvWriter;
 const Op = Sequelize.Op;
 
 let self = {};

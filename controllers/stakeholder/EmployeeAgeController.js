@@ -394,6 +394,7 @@ self.update = async (req, res) => {
         }
       });
 
+      let container = [];
       if (arr2.length > 0) {
         for (let i = 0; i < arr.length; i++) {
           let body = {
@@ -408,20 +409,25 @@ self.update = async (req, res) => {
             nationality: arr[i].nationality,
           };
           if (body) {
-            await EmployeeAge.update(body, {
-              where: {
-                id: body.id,
-              },
+          
+
+            const [updated] = await EmployeeAge.update(body, {
+              where: { id: body.id },
             });
+        
+            if (updated) {
+              const updatedData = await EmployeeAge.findOne({ where: { id: body.id } });
+              container.push(updatedData);
+            }
           }
         }
-        return res.status(200).json({ message: "success" });
+        return res.apiSuccess({
+          data: container
+        });
       }
     }
   } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
+    return res.apiError(error);
   }
 };
 

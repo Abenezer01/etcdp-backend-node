@@ -26,7 +26,6 @@ const cipherHelper = require("../utils/cipher-helper");
 const apiHelper = require("../utils/API-helper");
 const paginationHelper = require("../utils/pagination-helper");
 const { deleteRecord } = require("../utils/format-helper");
-const { Socket } = require("../../utils/WebSocket");
 
 let self = {};
 const paginate = require("../../utils/pagination");
@@ -61,9 +60,7 @@ self.getAllCPMProject = async(req, res) => {
     // return res.json(mergedData)
 
   } catch (error) {
-    return res.json({
-      message: error.message
-    });
+    return res.apiError(error);
   }
 };
 
@@ -273,9 +270,7 @@ self.getProjectByTypeId = async (req, res) => {
 
     res.send(response);
   } catch (error) {
-    res.status(500).send({
-      message: error.message || "Some error occurred while retrieving data.",
-    });
+    return res.apiError(error);
   }
 };
 
@@ -436,18 +431,17 @@ self.update = async (req, res) => {
       order: [["created_at", "DESC"]],
       where: { project_id: id },
     });
-    let updatedStatus = await ProjectStatus.update(
-      { status_id: body.status_id },
-      {
-        where: {
-          id: proStatus.id,
-        },
-      }
-    );
 
-    return res.apiSuccess({
-      data: updatedStatus
+    const [updated] = await ProjectStatus.update({status_id: body.status_id}, {
+      where: { id: proStatus.id },
     });
+
+    if (updated) {
+      const updatedData = await ProjectStatus.findOne({ where: { id: proStatus.id } });
+      return res.apiSuccess({
+        data: updatedData
+      });
+    }
     
   } catch (error) {
     res.apiError(error);

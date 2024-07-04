@@ -2,7 +2,7 @@ const authController = require("../../../controllers/Auth/LoginController");
 const refreshController = require("../../../controllers/Auth/RefreshTokenController");
 const logoutController = require("../../../controllers/Auth/LogoutController");
 
-const UserController = require("../../../controllers/department/UserController");
+const UserController = require("../../../controllers/department/userController");
 const validateData = require("../../../middleware/validate/module/auth/validate");
 module.exports = function (express) {
   const route = express.Router();

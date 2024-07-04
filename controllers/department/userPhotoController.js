@@ -188,21 +188,21 @@ self.update = async (req, res) => {
       if (err) {return res.status(500).send(err);}
       // res.redirect('/')
     });
-    await Photo.update(
-      {
-        avatar: filePath,
-      },
-      {
-        where: { id: userData.photo_id },
-      }
-    );
-    return res.status(200).json({
-      message: "Success",
+
+
+    const [updated] = await Photo.update({avatar: filePath,}, {
+      where: { id: userData.photo_id },
     });
+
+    if (updated) {
+      const updatedData = await Photo.findOne({ where: { id: userData.photo_id } });
+      return res.apiSuccess({
+        data: updatedData
+      });
+    }
+
   } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
+    return res.apiError(error);
   }
 };
 

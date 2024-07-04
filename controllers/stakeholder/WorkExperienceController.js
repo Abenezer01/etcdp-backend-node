@@ -445,6 +445,7 @@ self.update = async(req, res) => {
                             return res.status(400).json({ "message": bod });
                         } else {
 
+                            let container = [];
                             for (i = 0; i < arr.length; i++) {
                                 let body = {
                                     id: arr[i].id,
@@ -458,14 +459,20 @@ self.update = async(req, res) => {
                                     nationality: arr[i].nationality
                                 };
                                 if (body) {
-                                    await WorkExperience.update(body, {
-                                        where: {
-                                            id: body.id
-                                        }
-                                    });
+
+                                    const [updated] = await WorkExperience.update(body, {
+                                        where: { id: body.id },
+                                      });
+                                  
+                                      if (updated) {
+                                        const updatedData = await WorkExperience.findOne({ where: { id: body.id } });
+                                        container.push(updatedData);
+                                      }
                                 }
                             }
-                            return res.status(200).json({ message: "success" });
+                            return res.apiSuccess({
+                                data: container
+                            });
                         }
                     }
 

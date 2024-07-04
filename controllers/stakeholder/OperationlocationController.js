@@ -103,25 +103,28 @@ self.update = async (req, res) => {
     if (!usr) {
       return;
     }
+    let container = [];
     for (const location of body) {
       if (!location.id && location.status === true) {
         await OperationLocation.create(location);
       } else if (location.id && location.status === false) {
-        await OperationLocation.update(location, {
-          where: {
-            id: location.id,
-          },
+        
+        const [updated] = await OperationLocation.update(location, {
+          where: { id: location.id },
         });
+    
+        if (updated) {
+          const updatedData = await OperationLocation.findOne({ where: { id: location.id } });
+          container.push(updatedData);
+        }
       }
     }
 
-    res.json({
-      message: "Success",
+    return res.apiSuccess({
+      data: container
     });
   } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
+   return res.apiError(error);
   }
 };
 
