@@ -11,10 +11,7 @@ let self = {};
 const dotenv = require("dotenv");
 dotenv.config();
 
-
-
 self.getAll = async (req, res) => {
-
  
   try {
 

@@ -123,8 +123,9 @@ let self = {};
       });
   };
 
-  self.generatePDFx = async (req, res) => {
-    let  { model, format, attributes } = req.body;
+self.generatePDFx = async (req, res) => {
+  
+  let  { model, format, attributes } = req.body;
 
   if (format !== "pdf") {
     return res.status(400).send("Invalid format");
@@ -384,16 +385,8 @@ self.generateCcSV = async(req, res, model) => {
 
     // const { models, format, attributes } = req.body;
 
-    // models.forEach(model => {
-        
-    // });
+
     let attributes = Object.keys(Project.rawAttributes);
-
-    // return 
-
-    // array.forEach(element => {
-        
-    // });
 
     let headers = [];
 
@@ -482,11 +475,33 @@ self.generateCcSV = async(req, res, model) => {
 //   }
 // };
 
+self.generateReport = async(req, res) => {
+  try {
+    let {models, format, attributes} = req.body;
 
+    if (format !== "pdf") {
+      return res.status(400).send("Invalid format");
+    }
+  
+    // Generate the file name with .pdf extension
+    const fileName = getRandomFileName(model, "pdf");
+    const downloadPath = path.join(os.homedir(), "Downloads", fileName);
+
+    let records = []
+
+    for(let model of models) {
+  
+      let data = await eval(model).findAll({attributes});
+
+    }
+  } catch (error) {
+      return res.apiError(error);
+  };
+};
 //working
 self.generate = async(req, res) => {
+  
   try {
-
 
     let { model, format, attributes } = req.body;
   
@@ -497,7 +512,6 @@ self.generate = async(req, res) => {
     // Generate the file name with .pdf extension
     const fileName = getRandomFileName(model, "pdf");
     const downloadPath = path.join(os.homedir(), "Downloads", fileName);
-
   
     // Fetch records from the specified model
     let records;
@@ -518,7 +532,6 @@ self.generate = async(req, res) => {
     
     }
 
-
     let results = [];
 
      for(let item of records) {
@@ -529,8 +542,6 @@ self.generate = async(req, res) => {
       }
       results.push(arr);
      }
-
-
 
      const headers = attributes.map(attr => ({
       label: toReadableFormat(attr),
@@ -587,14 +598,12 @@ self.generate = async(req, res) => {
 const formatString = (input) => {
   // Replace underscores with spaces
   let formattedString = input.replace(/_/g, " ");
-
   // Capitalize the first letter of each word
   formattedString = formattedString.replace(/\b\w/g, char => char.toUpperCase());
-
   return formattedString;
 };
 
-const  getRandomFileName = (modelName, extension = "pdf" ) => {
+const  getRandomFileName = (modelName, extension = "pdf") => {
   const randomString = Math.random().toString(36).substring(2, 15);
   return `${modelName}_${randomString}.${extension}`;
 };

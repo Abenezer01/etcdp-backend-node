@@ -34,7 +34,6 @@ self.getByProjectId = async (req, res) => {
       { model: ProjectVariation, as: "variation" } // Example association
     ];
    
-
     const paginatedResult = await paginationHelper(ProjectExtensionTime, req, whereCondition, includeOptions);
 
     // Use the response formatter to send the success response

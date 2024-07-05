@@ -486,9 +486,6 @@ self.getModelAction = async (req, res) => {
           "authorization_data": element
         }}
       );
-
-
-
     }
   } catch (error) {
     res.apiError(error);

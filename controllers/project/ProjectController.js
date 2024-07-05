@@ -313,27 +313,30 @@ self.getProjectByTypeIdPast = async (req, res) => {
 };
 
 self.get = async (req, res) => {
+  
   try {
     const { id } = req.params;
 
+    const includeOptions = [
+      {
+        model: ProjectCategory,
+        as: "ProjectCategory",
+        attributes: ["title"],
+      },
+      { 
+        model: ProjectType, 
+        as: "ProjectType", 
+        attributes: ["title"] },
+      {
+        model: ProjectSubCategory,
+        as: "ProjectSubcategory",
+        attributes: ["title"],
+      },
+    ];
+
     let data = await Project.findOne({
       where: { id },
-      include: [
-        {
-          model: ProjectCategory,
-          as: "ProjectCategory",
-          attributes: ["title"],
-        },
-        { 
-          model: ProjectType, 
-          as: "ProjectType", 
-          attributes: ["title"] },
-        {
-          model: ProjectSubCategory,
-          as: "ProjectSubcategory",
-          attributes: ["title"],
-        },
-      ],
+      include: includeOptions
     });
 
     let stat = await ProjectStatus.findOne({

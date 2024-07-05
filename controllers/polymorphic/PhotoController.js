@@ -80,6 +80,7 @@ self.save = async (req, res) => {
 
     const photoData = await Photo.create(
       { 
+      title: checkedNew,
       url: filePathh, 
       type: type, 
       model_id: model_id 
