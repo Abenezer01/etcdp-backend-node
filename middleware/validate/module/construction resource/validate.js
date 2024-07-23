@@ -202,7 +202,7 @@ const resourceWorkExperienceValidate = async (req, res, next) => {
     });
   }
   const validationRule = {
-    workexperience_id: "required|string",
+    experiencelevel_id: "required|string",
     resource_id: "required|string",
   };
 

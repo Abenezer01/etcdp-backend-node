@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
     });
         
     DocumentType.hasMany(models.DocumentSubCategory, {
-            foreignKey: "category_id",
+            foreignKey: "documenttype_id",
             as: "documentsubcategories",
     });
     }

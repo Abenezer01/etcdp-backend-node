@@ -10,8 +10,8 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       ResourceWorkExperience.belongsTo(models.ExperienceLevel, {
-        as: "workexperience",
-        foreignKey: "workexperience_id",
+        as: "experiencelevel",
+        foreignKey: "experiencelevel_id",
       });
     }
   }
@@ -23,7 +23,7 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: DataTypes.UUIDV4,
       },
       parent_id: DataTypes.UUID,
-      workexperience_id: DataTypes.UUID,
+      experiencelevel_id: DataTypes.UUID,
       resource_id: DataTypes.UUID,
       description: DataTypes.STRING,
     },

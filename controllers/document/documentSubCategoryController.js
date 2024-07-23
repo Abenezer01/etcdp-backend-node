@@ -1,4 +1,4 @@
-const { DocumentSubCategory, Sequelize } = require("../../models");
+const { DocumentSubCategory, User, Sequelize } = require("../../models");
 const paginationHelper = require("../utils/pagination-helper");
 const Op = Sequelize.Op;
 const { getRecordById, saveRecord, updateRecord, deleteRecord } = require("../utils/format-helper");
@@ -9,8 +9,8 @@ let self = {};
 
 self.getAll = async (req, res) => {
   try {
-    const paginatedResult = await paginationHelper(DocumentSubCategory, req);
 
+    const paginatedResult = await paginationHelper(DocumentSubCategory, req);
     // Use the response formatter to send the success response
     res.apiSuccess({
       data: paginatedResult.data,

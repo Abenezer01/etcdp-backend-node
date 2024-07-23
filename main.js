@@ -52,9 +52,9 @@ app.use("/api/v1/generics", polymorphicRoute(express));
 app.use("/api/v1/analytics", analyticRoute(express));
 
 app.use("/", route_view(express));
-app.listen(7500, () => {
+app.listen(7400, () => {
   // console.log('email', cipherHelper.encrypt('abebe@gmail.com'))
-  console.log("Success running on  7500");
+  console.log("Success running on  7400");
 });
 
 module.exports = app;

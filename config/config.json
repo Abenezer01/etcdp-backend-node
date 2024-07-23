@@ -2,7 +2,7 @@
     "development": {
         "username": "root",
         "password": "onespace@database",
-        "database": "1space-etcdp",
+        "database": "1space-ecdms",
         "host": "127.0.0.1",
         "port": "3306",
         "dialect": "mariadb"
@@ -10,7 +10,7 @@
     "test": {
         "username": "root",
         "password": "onespace@database",
-        "database": "1space-etcdp",
+        "database": "1space-ecdms",
         "host": "127.0.0.1",
         "port": "3306",
         "dialect": "mariadb"
@@ -18,7 +18,7 @@
     "production": {
         "username": "root",
         "password": "onespace@database",
-        "database": "1space-etcdp",
+        "database": "1space-ecdms",
         "host": "127.0.0.1",
         "port": "3306",
         "dialect": "mariadb"

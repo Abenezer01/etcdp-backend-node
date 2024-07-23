@@ -12,7 +12,7 @@ const formatResponse = (req, res, next) => {
           nextPage: hasNextPage ? `${req.originalUrl}?page=${page + 1}&pageSize=${pageSize}` : null,
         },
         _warning: [],
-        payload: payload.data || payload,
+        payload: payload.data || Object.keys(payload.data),
         _attributes: {
           pagination: {
             pageSize: pageSize,

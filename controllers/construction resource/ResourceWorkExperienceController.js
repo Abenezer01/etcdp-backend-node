@@ -1,4 +1,4 @@
-const { ResourceWorkExperience, WorkExperience, Sequelize } = require("../../models");
+const { ResourceWorkExperience, ExperienceLevel, Sequelize } = require("../../models");
 const Op = Sequelize.Op;
 const { getRecordById, saveRecord, updateRecord, deleteRecord } = require("../utils/format-helper");
 const paginationHelper = require("../utils/pagination-helper");
@@ -31,7 +31,7 @@ self.getByResourceId = async (req, res) => {
     const whereCondition = { resource_id: id };
 
     const includeOptions = [
-      { model: WorkExperience, as: "workexperience" } // Example association
+      { model: ExperienceLevel, as: "experiencelevel" } // Example association
     ];
    
 

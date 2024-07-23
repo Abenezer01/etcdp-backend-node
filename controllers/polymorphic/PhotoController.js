@@ -73,7 +73,7 @@ self.save = async (req, res) => {
     const filePath = path.join(
       __dirname,
       "../../public",
-      "images/Photo",
+      "images/photo",
       `${checkedNew}.${ext}`
     );
     const filePathh = filePath.split("public").pop();

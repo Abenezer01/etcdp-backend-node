@@ -34,6 +34,7 @@ const paginationHelper = async (Model, req, where = {}, include = []) => {
       });
   
       return {
+        // data:data ? data : [],
         data,
         total: count,
         pagination: {

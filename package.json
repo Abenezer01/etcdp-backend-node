@@ -6,15 +6,15 @@
 
     "description": "Basic simple example sequelize orm with expressjs",
 
-    "main": "server.js",
+    "main": "main.js",
 
     "scripts": {
 
         "dev": "nodemon host 0.0.0.0 server",
 
-        "start": "node server",
+        "start": "node main",
 
-        "build": "nexe server",
+        "build": "nexe main",
 
         "lint": "eslint .",
 

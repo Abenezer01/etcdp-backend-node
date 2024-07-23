@@ -95,6 +95,14 @@ const photoValidate = async (req, res, next) => {
       message: "Can't get upload name",
     });
   }
+
+  // Check file size (max 2MB)
+  const maxFileSize = 2 * 1024 * 1024; // 2MB in bytes
+  if (req.files.upload.size > maxFileSize) {
+    return res.status(413).json({
+      message: "File size exceeds the maximum limit of 2MB",
+    });
+  }
   const validationRule = {
     type: "required|string",
   };

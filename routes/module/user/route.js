@@ -1,7 +1,7 @@
-const UserController = require("../../../controllers/department/UserController.js");
-const roleController = require("../../../controllers/department/RoleController.js");
-const PermissionController = require("../../../controllers/department/PermissionController.js");
-const positionController = require("../../../controllers/department/PositionController.js");
+const UserController = require("../../../controllers/department/userController.js");
+const roleController = require("../../../controllers/department/roleController.js");
+const PermissionController = require("../../../controllers/department/permissionController.js");
+const positionController = require("../../../controllers/department/positionController.js");
 const departmentController = require("../../../controllers/department/departmentController.js");
 // const TestController = require("../../../controllers/TestController.js")
 //Hr

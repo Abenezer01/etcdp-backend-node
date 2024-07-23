@@ -189,7 +189,7 @@ self.update = async (req, res) => {
         const checkedNew = parsedName.concat(rand);
         const filePath = path.join(
           __dirname,
-          "../../public/images/ResourceBrand",
+          "../../public/images/resourcebrand",
           checkedNew + "." + ext
         );
         const filePathh = filePath.split("public").pop();

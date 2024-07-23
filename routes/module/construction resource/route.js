@@ -114,36 +114,36 @@ module.exports = function (express) {
   );
   //construction resource quantity and controller
   route.get(
-    "/detail-construction-resource-types",
+    "/detail-resource-types",
     DetailResourceTypeController.getAll
   );
   route.get(
-    "/detail-construction-resource-types/:id",
+    "/detail-resource-types/:id",
     DetailResourceTypeController.get
   );
   route.get(
-    "/image/detail-construction-resource-types/:id",
+    "/image/detail-resource-types/:id",
     DetailResourceTypeController.getImage
   );
   route.get(
-    "/resource/detail-construction-resource-types/:id",
+    "/resource/detail-resource-types/:id",
     DetailResourceTypeController.getByResourceId
   );
   route.get(
-    "/detail-construction-resource-type-searches",
+    "/detail-resource-type-searches",
     DetailResourceTypeController.search
   );
   route.post(
-    "/detail-construction-resource-types",
+    "/detail-resource-types",
     validateData.detailResourceTypeValidate,
     DetailResourceTypeController.save
   );
   route.put(
-    "/detail-construction-resource-types/:id",
+    "/detail-resource-types/:id",
     DetailResourceTypeController.update
   );
   route.delete(
-    "/detail-construction-resource-types/:id",
+    "/detail-resource-types/:id",
     DetailResourceTypeController.delete
   );
   //construction resource quantity and controller

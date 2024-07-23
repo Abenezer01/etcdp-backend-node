@@ -25,7 +25,7 @@
 
 const express = require("express");
 const app = express();
-const port = 5200; // setting the port
+const port = 1200; // setting the port
 const server = app.listen(port);
 // const usrData = require("../../utils/userDataFromToken");
 

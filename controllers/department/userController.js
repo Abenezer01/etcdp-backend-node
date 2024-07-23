@@ -1031,8 +1031,8 @@ self.getMe = async (req, res) => {
     // return res.json(user)
     switch (user) {
         case "TOKEN_MISSING":
-            return res.status(404).json({
-                status: 404,
+            return res.status(401).json({
+                status: 401,
                 _links: {
                   previousPage: null,
                   nextPage: null
@@ -1059,7 +1059,7 @@ self.getMe = async (req, res) => {
             });
         case "TOKEN_NOT_FOUND":
 
-            return res.status(404).json({
+            return res.status(401).json({
                 _links: {
                 previousPage: null,
                 nextPage: null

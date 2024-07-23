@@ -46,9 +46,5 @@ module.exports = (sequelize, DataTypes) => {
       tableName: "documentcategories"
     }
   );
-  // DocumentCategory.associate = function(models) {
-  //     // associations can be defined here
-
-  // }
   return DocumentCategory;
 };
