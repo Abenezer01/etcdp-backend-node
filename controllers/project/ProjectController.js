@@ -72,13 +72,33 @@ self.getAll = async (req, res) => {
     // let x = Socket.emitToUser("userId123", "event_name", { message: "Hello, user!" });
 
     // return res.json(x);
+    const whereCondition = { };
 
 
-    const paginatedResult = await paginationHelper(Project, req);
+    const includeOptions = [
+      {
+          model: ProjectStatus,
+          as: "projectstatus"
+      },
+    ];
+    const paginatedResult = await paginationHelper(Project, req, whereCondition, includeOptions);
 
-    // Use the response formatter to send the success response
+    let arr = paginatedResult.data;
+    let projectWithStatus = [];
+
+    for(let ar of arr){
+      const latestStatus = ar.projectstatus.reduce((latest, current) => {
+        return new Date(current.created_at) > new Date(latest.created_at) ? current : latest;
+      }, ar.projectstatus[0]);
+
+      let temp = ar.toJSON();
+      temp.status_id = latestStatus.status_id;
+      delete temp.projectstatus;
+      projectWithStatus.push(temp);
+    }
+   
     res.apiSuccess({
-      data: paginatedResult.data,
+      data: projectWithStatus,
       total: paginatedResult.total,
     }, paginatedResult.pagination);
 
@@ -417,33 +437,36 @@ self.save = async (req, res) => {
       });
     }
   } catch (error) {
-    res.apiError(error);
+    return res.apiError(error);
   }
 };
 self.update = async (req, res) => {
   try {
+
     let id = req.params.id;
     let body = req.body;
-    await Project.update(body, {
+    let updated = await Project.update(body, {
       where: {
         id: id,
       },
     });
 
-    const proStatus = await ProjectStatus.findOne({
-      order: [["created_at", "DESC"]],
-      where: { project_id: id },
-    });
+    if(updated) {
+      const proStatus = await ProjectStatus.findOne({
+        order: [["created_at", "DESC"]],
+        where: { project_id: id },
+      });
 
-    const [updated] = await ProjectStatus.update({status_id: body.status_id}, {
-      where: { id: proStatus.id },
-    });
+      await ProjectStatus.update({status_id: body.status_id}, {
+        where: { id: proStatus.id },
+      });
 
-    if (updated) {
-      const updatedData = await ProjectStatus.findOne({ where: { id: proStatus.id } });
+      const updatedData = await Project.findOne({ where: { id: id } });
       return res.apiSuccess({
         data: updatedData
       });
+
+      
     }
     
   } catch (error) {

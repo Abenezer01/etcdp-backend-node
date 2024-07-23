@@ -487,7 +487,7 @@ self.generateReport = async(req, res) => {
     const fileName = getRandomFileName(model, "pdf");
     const downloadPath = path.join(os.homedir(), "Downloads", fileName);
 
-    let records = []
+    let records = [];
 
     for(let model of models) {
   

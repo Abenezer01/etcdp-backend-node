@@ -410,7 +410,7 @@ module.exports = function (express) {
   route.get("/project-analysis/:id", ProjectController.getProjectAnalysis);
 
   route.put(
-    "/project/:id",
+    "/projects/:id",
     validateData.projectValidate,
     ProjectController.update
   );
