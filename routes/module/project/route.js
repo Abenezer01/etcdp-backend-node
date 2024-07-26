@@ -419,7 +419,7 @@ module.exports = function (express) {
     "/project-general-information/:id",
     ProjectController.getProjectDetail
   );
-  route.get("/general-info/:id", ProjectController.getProjectData);
+  route.get("/project-detail/:id", ProjectController.getProjectData);
   route.get(
     "/general-project-finance/:id",
     ProjectController.getFinancialNumbers

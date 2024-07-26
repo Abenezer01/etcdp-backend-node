@@ -8,7 +8,18 @@ let self = {};
 
 self.getAll = async (req, res) => {
   try {
-    const paginatedResult = await paginationHelper(ProjectStatus, req);
+
+    const whereCondition = { };
+
+
+    const includeOptions = [
+      {
+          model: Status,
+          as: "status"
+      },
+    ];
+
+    const paginatedResult = await paginationHelper(ProjectStatus, req, whereCondition, includeOptions);
 
     // Use the response formatter to send the success response
     res.apiSuccess({

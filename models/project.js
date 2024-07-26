@@ -36,7 +36,7 @@ module.exports = (sequelize, DataTypes) => {
         as: "projectreports",
       });
       Project.hasMany(models.ProjectStatus, {
-        as: "projectstatus",
+        as: "projectstatuses",
         foreignKey: "project_id",
       });
       Project.hasMany(models.Payment, {
