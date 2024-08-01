@@ -78,7 +78,7 @@ self.getAll = async (req, res) => {
     const includeOptions = [
       {
           model: ProjectStatus,
-          as: "projectstatus"
+          as: "projectstatuses"
       },
     ];
     const paginatedResult = await paginationHelper(Project, req, whereCondition, includeOptions);
@@ -87,13 +87,13 @@ self.getAll = async (req, res) => {
     let projectWithStatus = [];
 
     for(let ar of arr){
-      const latestStatus = ar.projectstatus.reduce((latest, current) => {
+      const latestStatus = ar.projectstatuses.reduce((latest, current) => {
         return new Date(current.created_at) > new Date(latest.created_at) ? current : latest;
-      }, ar.projectstatus[0]);
+      }, ar.projectstatuses[0]);
 
       let temp = ar.toJSON();
       temp.status_id = latestStatus.status_id;
-      delete temp.projectstatus;
+      // delete temp.projectstatus;
       projectWithStatus.push(temp);
     }
    

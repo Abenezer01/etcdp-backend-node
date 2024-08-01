@@ -21,7 +21,6 @@ const validateData = require("../../../middleware/validate/module/stakeholder/va
 module.exports = function (express) {
   const route = express.Router();
   
-
   //stakeholder info route
   route.get("/stakeholder-infos/", stakeholderInfoController.getAll);
   route.get("/stakeholder-infos/:id", stakeholderInfoController.get);
@@ -61,7 +60,6 @@ module.exports = function (express) {
     StakeholderController.update
   );
   route.delete("/stakeholders/:id", StakeholderController.delete);
-
   route.get("/general-infos/:id", StakeholderController.getStakeholderData);
 
   //stakeholder contact person
