@@ -435,7 +435,7 @@ module.exports = function (express) {
   );
   route.get("/project-finance-searches", ProjectFinanceController.search);
   route.post(
-    "/project-finance",
+    "/project-finances",
     validateData.projectFinanceValidate,
     ProjectFinanceController.save
   );
