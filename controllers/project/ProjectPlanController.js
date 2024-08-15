@@ -101,37 +101,44 @@ self.save = async (req, res) => {
           req,
           res
         );
-      }
-      let fle = await File.findAll({
-        where: {
-          id: {
-            [Sequelize.Op.in]: body.file_ids,
+
+      if(body.file_ids){
+      
+        let fle = await File.findAll({
+          where: {
+            id: {
+              [Op.in]: body.file_ids,
+            },
           },
-        },
-        raw: true,
-      });
-      // console.log("The fle", body.file_type);
-      const fileData = fle.map((f) => ({
-        reference_id: data.id,
-        title: f.title,
-        url: f.url,
-        type: body.file_type,
-        description: f.description,
-        extension: f.extension,
-        size: f.size,
-      }));
-      //return res.send(fileData);
-      for (const dataa of fileData) {
-        let f = await File.create(dataa);
-        await actionHelper.saveActionState(
-          f.id,
-          "File",
-          "REGISTER",
-          usrID,
-          req,
-          res
-        );
+          raw: true,
+        });
+
+        if(fle){
+          const fileData = fle.map((f) => ({
+            reference_id: data.id,
+            title: f.title,
+            url: f.url,
+            type: body.file_type,
+            description: f.description,
+            extension: f.extension,
+            size: f.size,
+          }));
+          //return res.send(fileData);
+          for (const dataa of fileData) {
+            let f = await File.create(dataa);
+            await actionHelper.saveActionState(
+              f.id,
+              "File",
+              "REGISTER",
+              usrID,
+              req,
+              res
+            );
+          }
+        }
       }
+    }
+      
 
       return res.apiSuccess({
         data

@@ -138,7 +138,7 @@ module.exports = function (express) {
   route.delete("/project-reports/:id", ProjectReportController.delete);
 
   route.get(
-    "/monthly-project-report/:id/:year/:quarter",
+    "/monthly-project-report/:id",
     ProjectReportController.getMonthlyProjectReport
   );
   route.get(
@@ -170,14 +170,14 @@ module.exports = function (express) {
   );
   route.delete("/project-documents/:id", ProjectDocumentController.delete);
   //Construction resource
-  route.get("/construction-resources", ConstructionResourceController.getAll);
-  route.get("/construction-resources/:id", ConstructionResourceController.get);
+  route.get("/project-resources", ConstructionResourceController.getAll);
+  route.get("/project-resources/:id", ConstructionResourceController.get);
   route.get(
-    "/project/construction-resources/:id",
+    "/project/project-resources/:id",
     ConstructionResourceController.getByProjectId
   );
   route.get(
-    "/constructionproject/construction-resources/:id",
+    "/constructionproject/project-resources/:id",
     ConstructionResourceController.getByProjectId
   );
   route.get(
@@ -185,7 +185,7 @@ module.exports = function (express) {
     ConstructionResourceController.search
   );
   route.post(
-    "/construction-resources",
+    "/project-resources",
     validateData.constructionResourceValidate,
     ConstructionResourceController.save
   );
@@ -195,7 +195,7 @@ module.exports = function (express) {
     ConstructionResourceController.update
   );
   route.delete(
-    "/construction-resources/:id",
+    "/project-resources/:id",
     ConstructionResourceController.delete
   );
   //Building envelop material

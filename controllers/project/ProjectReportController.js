@@ -73,7 +73,7 @@ self.getByProjectIdAndPopulate = async (req, res) => {
       where: { project_id: id },
       order: [["created_at", order]],
 
-      include: ["ProjectPlan"],
+      include: ["projectplan"],
     });
     let totalReportProfitOrLoss = 0;
     let totalReportProjectExpense = 0;
@@ -224,20 +224,24 @@ self.save = async (req, res) => {
     let usr = await usrData.userData(req, res);
     let usrID = usr.usrID;
     let body = req.body;
-    var date = new Date(body.start);
-    var lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
-    body.end = lastDay;
     if (usr) {
       let plan = await ProjectPlan.findOne({
         where: {
           id: body.projectplan_id,
         },
       });
+      
       if (!plan) {
         return res.status(409).json({
           message: "Plan doesn't exist!",
         });
       }
+      body.type = plan.type;
+      body.year = plan.year;
+      body.quarter = plan.quarter
+      body.start = plan.start;
+      body.end = plan.end
+    
       let data = await ProjectReport.create(body);
 
       if (data) {
@@ -250,35 +254,41 @@ self.save = async (req, res) => {
           req,
           res
         );
-      }
-      let fle = await File.findAll({
-        where: {
-          id: {
-            [Sequelize.Op.in]: body.file_ids,
-          },
-        },
-        raw: true,
-      });
-      const fileData = fle.map((f) => ({
-        reference_id: data.id,
-        title: f.title,
-        url: f.url,
-        type: body.file_type,
-        description: f.description,
-        extension: f.extension,
-        size: f.size,
-      }));
 
-      for (const data of fileData) {
-        let f = await File.create(data);
-        await actionHelper.saveActionState(
-          f.id,
-          "file",
-          "REGISTER",
-          usrID,
-          req,
-          res
-        );
+        if(body.file_ids){
+          let fle = await File.findAll({
+            where: {
+              id: {
+                [Sequelize.Op.in]: body.file_ids,
+              },
+            },
+            raw: true,
+          });
+          
+          if(fle){
+
+            const fileData = fle.map((f) => ({
+              reference_id: data.id,
+              title: f.title,
+              url: f.url,
+              type: body.file_type,
+              description: f.description,
+              extension: f.extension,
+              size: f.size,
+            }));
+            for (const data of fileData) {
+              let f = await File.create(data);
+              await actionHelper.saveActionState(
+                f.id,
+                "file",
+                "REGISTER",
+                usrID,
+                req,
+                res
+              );
+            }
+          }
+        }
       }
 
       return res.apiSuccess({data});
@@ -298,8 +308,7 @@ self.delete = async (req, res) => {
 
 self.getMonthlyProjectReport = async (req, res) => {
   let id = req.params.id;
-  let year = req.params.year;
-  let quarter = req.params.quarter;
+  let {year, quarter} = req.query.filter;
 
   try {
     let data = null;
@@ -309,19 +318,32 @@ self.getMonthlyProjectReport = async (req, res) => {
     let plan = await ProjectPlan.findOne({
       where: {
         project_id: id,
-        year: year,
-        quarter: quarter,
+        year, year,
+        quarter: quarter
       },
       include: {
         model: File,
         as: "file",
-      },
+      }
     });
 
     if (!plan) {
-      return res.status(404).json({
-        message: "There is no plan data",
-      });
+
+        const errorResponse = {
+          _links: {
+            previousPage: null,
+            nextPage: null
+          },
+          _warning: [],
+          payload: [],
+          _attributes: {},
+          _errors: {
+            message: ["There is no Plan data"]
+          },
+          _generated: new Date().toISOString()
+        };
+        return res.status(404).json(errorResponse);
+    
     } else {
       data = await MonthlyReport.findOne({
         where: {
@@ -364,11 +386,7 @@ self.getMonthlyProjectReport = async (req, res) => {
         },
       });
 
-      return res.json({
-        data,
-        plan,
-        report,
-      });
+      return res.apiSuccess({data: {data, plan, report}})
     }
   } catch (error) {
     return res.apiError(error);
