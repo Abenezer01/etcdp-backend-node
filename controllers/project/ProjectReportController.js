@@ -106,7 +106,7 @@ self.getByProjectIdAndPopulate = async (req, res) => {
     let totalPlanCostDueToRework = 0;
     let totalPlanoverHeadCost = 0;
     // let arr = [];
-
+    
     data.rows.forEach((item) => {
       // console.log("Parse", Number(item.ProjectPlan.sub_total_expense));
       //Report
@@ -124,80 +124,65 @@ self.getByProjectIdAndPopulate = async (req, res) => {
       totalReportPhysicalPerformance += item.physical_performance;
       totalReportCostDueToRework += item.cost_due_to_rework;
       totalReportoverHeadCost += item.over_head_cost;
+
       //Plan
-      totalPlanProfitOrLoss += item.ProjectPlan.profit_or_loss;
-      totalPlanProjectExpense += item.ProjectPlan.projectexpense;
-      totalPlanSubtotalExpense += Number(item.ProjectPlan.sub_total_expense);
-      totalPlanManPower += item.ProjectPlan.manpower;
-      totalPlanDirectLabour += item.ProjectPlan.direct_labour;
-      totalPlanIndirectLabour += item.ProjectPlan.indirect_labour;
-      totalPlanMaterial += item.ProjectPlan.material;
-      totalPlanMachinery += item.ProjectPlan.machinery;
-      totalPlanOtherExpense += item.ProjectPlan.other_expense;
-      totalPlanSubContractorCost += item.ProjectPlan.sub_contractor_cost;
-      totalPlanFinancialPerformance += item.ProjectPlan.financial_performance;
-      totalPlanPhysicalPerformance += item.ProjectPlan.physical_performance;
-      totalPlanCostDueToRework += item.ProjectPlan.cost_due_to_rework;
-      totalPlanoverHeadCost += item.ProjectPlan.over_head_cost;
+      totalPlanProfitOrLoss += item.projectplan.profit_or_loss;
+      totalPlanProjectExpense += item.projectplan.projectexpense;
+      totalPlanSubtotalExpense += Number(item.projectplan.sub_total_expense);
+      totalPlanManPower += item.projectplan.manpower;
+      totalPlanDirectLabour += item.projectplan.direct_labour;
+      totalPlanIndirectLabour += item.projectplan.indirect_labour;
+      totalPlanMaterial += item.projectplan.material;
+      totalPlanMachinery += item.projectplan.machinery;
+      totalPlanOtherExpense += item.projectplan.other_expense;
+      totalPlanSubContractorCost += item.projectplan.sub_contractor_cost;
+      totalPlanFinancialPerformance += item.projectplan.financial_performance;
+      totalPlanPhysicalPerformance += item.projectplan.physical_performance;
+      totalPlanCostDueToRework += item.projectplan.cost_due_to_rework;
+      totalPlanoverHeadCost += item.projectplan.over_head_cost;
     });
 
     const response = {
-      Report: {
-        totalProfitOrLoss: totalReportProfitOrLoss,
-        totalProjectExpense: totalReportProjectExpense,
-        totalSubtotalExpense: totalReportSubtotalExpense,
-        totalManPower: totalReportManPower,
-        totalDirectLabour: totalReportDirectLabour,
-        totalIndirectLabour: totalReportIndirectLabour,
-        totalMaterial: totalReportMaterial,
-        totalMachinery: totalReportMachinery,
-        totalOtherExpense: totalReportOtherExpense,
-        totalSubContractorCost: totalReportSubContractorCost,
-        totalFinancialPerformance: totalReportFinancialPerformance,
-        totalPhysicalPerformance: totalReportPhysicalPerformance,
-        totalCostDueToWork: totalReportCostDueToRework,
-        totalOverHeadCost: totalReportoverHeadCost,
+      report: {
+        total_profit_or_loss: totalReportProfitOrLoss,
+        total_project_expense: totalReportProjectExpense,
+        total_subtotal_expense: totalReportSubtotalExpense,
+        total_man_power: totalReportManPower,
+        total_direct_labour: totalReportDirectLabour,
+        total_indirect_labour: totalReportIndirectLabour,
+        total_material: totalReportMaterial,
+        total_machinery: totalReportMachinery,
+        total_other_expense: totalReportOtherExpense,
+        total_sub_contractor_cost: totalReportSubContractorCost,
+        total_financial_performance: totalReportFinancialPerformance,
+        total_physical_performance: totalReportPhysicalPerformance,
+        total_cost_due_to_rework: totalReportCostDueToRework,
+        total_over_head_cost: totalReportoverHeadCost,
       },
-      Plan: {
-        totalProfitOrLoss: totalPlanProfitOrLoss,
-        totalProjectExpense: totalPlanProjectExpense,
-        totalPlanSubtotalExpense: totalPlanSubtotalExpense,
-        totalManPower: totalPlanManPower,
-        totalDirectLabour: totalPlanDirectLabour,
-        totalIndirectLabour: totalPlanIndirectLabour,
-        totalMaterial: totalPlanMaterial,
-        totalMachinery: totalPlanMachinery,
-        totalOtherExpense: totalPlanOtherExpense,
-        totalSubContractorCost: totalPlanSubContractorCost,
-        totalFinancialPerformance: totalPlanFinancialPerformance,
-        totalPhysicalPerformance: totalPlanPhysicalPerformance,
-        totalCostDueToWork: totalPlanCostDueToRework,
-        totalOverHeadCost: totalPlanoverHeadCost,
+      plan: {
+        total_profit_or_loss: totalPlanProfitOrLoss,
+        total_project_expense: totalPlanProjectExpense,
+        total_subtotal_expense: totalPlanSubtotalExpense,
+        total_man_power: totalPlanManPower,
+        total_direct_labour: totalPlanDirectLabour,
+        total_indirect_labour: totalPlanIndirectLabour,
+        total_material: totalPlanMaterial,
+        total_machinery: totalPlanMachinery,
+        total_other_expense: totalPlanOtherExpense,
+        total_sub_contractor_cost: totalPlanSubContractorCost,
+        total_financial_performance: totalPlanFinancialPerformance,
+        total_physical_performance: totalPlanPhysicalPerformance,
+        total_cost_due_to_rework: totalPlanCostDueToRework,
+        total_over_head_cost: totalPlanoverHeadCost,
       },
     };
+    
 
-    res.send(response);
+    return res.apiSuccess({data: response});
   } catch (error) {
-    res.status(500).send({
-      message: error.message || "Some error occurred while retrieving data.",
-    });
-  }
-};
-
-self.getByMonthlyId = async (req, res) => {
-  const { id } = req.params;
-  try {
-    const whereCondition = { monthlyreport_id: id };
-    const paginatedResult = await paginationHelper(ProjectReport, req, whereCondition);
-
-    // Use the response formatter to send the success response
-    res.apiSuccess({
-      data: paginatedResult.data,
-      total: paginatedResult.total,
-    }, paginatedResult.pagination);
-
-  } catch (error) {
-    res.apiError(error);
+    return res.apiError({
+      error: error.message
+    })
   }
 };
 

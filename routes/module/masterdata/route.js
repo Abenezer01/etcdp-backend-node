@@ -279,17 +279,14 @@ module.exports = function (express) {
     ProjectTypeController.save
   );
   route.put(
-    "/project-typse/:id",
+    "/project-types/:id",
     validateProjectData.projectTypeValidate,
     ProjectTypeController.update
   );
   route.delete("/project-types/:id", ProjectTypeController.delete);
+  
   //project category
   route.get("/project-categories", ProjectCategoryController.getAll);
-  // route.get(
-  //   "/project-categories/projecttype/:id",
-  //   ProjectCategoryController.getAllProCatByTypeId
-  // );
   route.get("/project-categories/:id", ProjectCategoryController.get);
   route.get("/project-categories-searches", ProjectCategoryController.search);
   

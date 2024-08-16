@@ -141,10 +141,7 @@ module.exports = function (express) {
     "/monthly-project-report/:id",
     ProjectReportController.getMonthlyProjectReport
   );
-  route.get(
-    "/report/monthly-project-reports/:id",
-    ProjectReportController.getByMonthlyId
-  );
+
   route.get(
     "/project-yearly-reports/:id/:year",
     ProjectReportController.getProjectYearlyReports
@@ -200,15 +197,15 @@ module.exports = function (express) {
   );
   //Building envelop material
   route.get(
-    "/building-envelop-materials",
+    "/buildingenvelopmaterials",
     BuildingEnvelopMaterialController.getAll
   );
   route.get(
-    "/building-envelop-materials/:id",
+    "/buildingenvelopmaterials/:id",
     BuildingEnvelopMaterialController.get
   );
   route.get(
-    "/project/building-envelop-materials/:id",
+    "/project/buildingenvelopmaterials/:id",
     BuildingEnvelopMaterialController.getByProjectId
   );
   route.get(
@@ -216,30 +213,30 @@ module.exports = function (express) {
     BuildingEnvelopMaterialController.search
   );
   route.post(
-    "/building-envelop-materials",
+    "/buildingenvelopmaterials",
     validateData.buildingEnvelopMaterialValidate,
     BuildingEnvelopMaterialController.save
   );
   route.put(
-    "/building-envelop-materials/:id",
+    "/buildingenvelopmaterials/:id",
     validateData.buildingEnvelopMaterialValidate,
     BuildingEnvelopMaterialController.update
   );
   route.delete(
-    "/building-envelop-materials/:id",
+    "/buildingenvelopmaterials/:id",
     BuildingEnvelopMaterialController.delete
   );
   //Building dimension details
   route.get(
-    "/building-dimension-details",
+    "/buildingdimensiondetails",
     BuildingDimensionDetailsController.getAll
   );
   route.get(
-    "/building-dimension-details/:id",
+    "/buildingdimensiondetails/:id",
     BuildingDimensionDetailsController.get
   );
   route.get(
-    "/project/building-dimension-details/:id",
+    "/project/buildingdimensiondetails/:id",
     BuildingDimensionDetailsController.getByProjectId
   );
   route.get(
@@ -247,12 +244,12 @@ module.exports = function (express) {
     BuildingDimensionDetailsController.search
   );
   route.post(
-    "/building-dimension-details",
+    "/buildingdimensiondetails",
     validateData.buildingDimensionDetailValidate,
     BuildingDimensionDetailsController.save
   );
   route.put(
-    "/building-dimension-details/:id",
+    "/buildingdimensiondetails/:id",
     validateData.buildingDimensionDetailValidate,
     BuildingDimensionDetailsController.update
   );
@@ -286,119 +283,119 @@ module.exports = function (express) {
     TelecomInfrastructureController.delete
   );
   //Generating capacity
-  route.get("/generating-capacities", GeneratingCapacityController.getAll);
-  route.get("/generating-capacities/:id", GeneratingCapacityController.get);
+  route.get("/generatingcapacities", GeneratingCapacityController.getAll);
+  route.get("/generatingcapacities/:id", GeneratingCapacityController.get);
   route.get(
-    "/project/generating-capacities/:id",
+    "/project/generatingcapacities/:id",
     GeneratingCapacityController.getByProjectId
   );
   route.get("/generating-capacity-searches", GeneratingCapacityController.search);
   route.post(
-    "/generating-capacities",
+    "/generatingcapacities",
     validateData.generatingCapacityValidate,
     GeneratingCapacityController.save
   );
   route.put(
-    "/generating-capacities/:id",
+    "/generatingcapacities/:id",
     validateData.generatingCapacityValidate,
     GeneratingCapacityController.update
   );
-  route.delete("/generating-capacities/:id", GeneratingCapacityController.delete);
+  route.delete("/generatingcapacities/:id", GeneratingCapacityController.delete);
   //Turbine detail
-  route.get("/turbine-details", TurbineDetailController.getAll);
-  route.get("/turbine-details/:id", TurbineDetailController.get);
+  route.get("/turbineinfos", TurbineDetailController.getAll);
+  route.get("/turbineinfos/:id", TurbineDetailController.get);
   route.get(
-    "/project/turbine-details/:id",
+    "/project/turbineinfos/:id",
     TurbineDetailController.getByProjectId
   );
   route.get("/turbine-detail-searches", TurbineDetailController.search);
   route.post(
-    "/turbine-details",
+    "/turbineinfos",
     validateData.turbineInfoValidate,
     TurbineDetailController.save
   );
   route.put(
-    "/turbine-details/:id",
+    "/turbineinfos/:id",
     validateData.turbineInfoValidate,
     TurbineDetailController.update
   );
-  route.delete("/turbine-details/:id", TurbineDetailController.delete);
+  route.delete("/turbineinfos/:id", TurbineDetailController.delete);
   //Hydrolectric dam
-  route.get("/hydro-electric-dams", HydroElectricDamController.getAll);
-  route.get("/hydro-electric-dams/:id", HydroElectricDamController.get);
+  route.get("/hydroelectricdams", HydroElectricDamController.getAll);
+  route.get("/hydroelectricdams/:id", HydroElectricDamController.get);
   route.get(
-    "/project/hydro-electric-dams/:id",
+    "/project/hydroelectricdams/:id",
     HydroElectricDamController.getByProjectId
   );
   route.get("/hydro-electric-dam-searches", HydroElectricDamController.search);
   route.post(
-    "/hydro-electric-dams",
+    "/hydroelectricdams",
     validateData.hydroElectricDamValidate,
     HydroElectricDamController.save
   );
   route.put(
-    "/hydro-electric-dams/:id",
+    "/hydroelectricdams/:id",
     validateData.hydroElectricDamValidate,
     HydroElectricDamController.update
   );
-  route.delete("/hydro-electric-dams/:id", HydroElectricDamController.delete);
+  route.delete("/hydroelectricdams/:id", HydroElectricDamController.delete);
   //Spillways detailf
-  route.get("/spill-way-details", SpillWaysDetailController.getAll);
-  route.get("/spill-way-details/:id", SpillWaysDetailController.get);
+  route.get("/spillwayinfos", SpillWaysDetailController.getAll);
+  route.get("/spillwayinfos/:id", SpillWaysDetailController.get);
   route.get(
-    "/project/spill-way-details/:id",
+    "/project/spillwayinfos/:id",
     SpillWaysDetailController.getByProjectId
   );
   route.get("/spill-way-detail-searches", SpillWaysDetailController.search);
   route.post(
-    "/spill-way-details",
+    "/spillwayinfos",
     validateData.spillWayInfoValidate,
     SpillWaysDetailController.save
   );
   route.put(
-    "/spill-way-details/:id",
+    "/spillwayinfos/:id",
     validateData.spillWayInfoValidate,
     SpillWaysDetailController.update
   );
-  route.delete("/spill-way-details/:id", SpillWaysDetailController.delete);
+  route.delete("/spillwayinfos/:id", SpillWaysDetailController.delete);
   //Reservoir detail
-  route.get("/reservoir-details", ReservoirDetailsController.getAll);
-  route.get("/reservoir-details/:id", ReservoirDetailsController.get);
+  route.get("/reservoirinfos", ReservoirDetailsController.getAll);
+  route.get("/reservoirinfos/:id", ReservoirDetailsController.get);
   route.get(
-    "/project/reservoir-details/:id",
+    "/project/reservoirinfos/:id",
     ReservoirDetailsController.getByProjectId
   );
   route.get("/reservoir-detail-searches", ReservoirDetailsController.search);
   route.post(
-    "/reservoir-details",
+    "/reservoirinfos",
     validateData.reserviorDetailValidate,
     ReservoirDetailsController.save
   );
   route.put(
-    "/reservoir-details/:id",
+    "/reservoirinfos/:id",
     validateData.reserviorDetailValidate,
     ReservoirDetailsController.update
   );
-  route.delete("/reservoir-details/:id", ReservoirDetailsController.delete);
+  route.delete("/reservoirinfos/:id", ReservoirDetailsController.delete);
   //Irrigation capacity
-  route.get("/irrigation-capacities", IrrigationCapacityController.getAll);
-  route.get("/irrigation-capacities/:id", IrrigationCapacityController.get);
+  route.get("/irrigationcapacities", IrrigationCapacityController.getAll);
+  route.get("/irrigationcapacities/:id", IrrigationCapacityController.get);
   route.get(
-    "/project/irrigation-capacities/:id",
+    "/project/irrigationcapacities/:id",
     IrrigationCapacityController.getByProjectId
   );
   route.get("/irrigation-capacity-searches", IrrigationCapacityController.search);
   route.post(
-    "/irrigation-capacities",
+    "/irrigationcapacities",
     validateData.irrigationCapacityValidate,
     IrrigationCapacityController.save
   );
   route.put(
-    "/irrigation-capacities/:id",
+    "/irrigationcapacities/:id",
     validateData.irrigationCapacityValidate,
     IrrigationCapacityController.update
   );
-  route.delete("/irrigation-capacities/:id", IrrigationCapacityController.delete);
+  route.delete("/irrigationcapacities/:id", IrrigationCapacityController.delete);
 
   
   // route.get("/projects/cpm", ProjectController.getAllCPMProject);
@@ -534,89 +531,89 @@ module.exports = function (express) {
   route.delete("/project-bonds/:id", ProjectBondController.delete);
 
   //road info
-  route.get("/road-infos/", RoadInfoController.getAll);
-  route.get("/road-infos/:id", RoadInfoController.get);
-  route.get("/project/road-infos/:id", RoadInfoController.getByProjectId);
+  route.get("/roadinfos/", RoadInfoController.getAll);
+  route.get("/roadinfos/:id", RoadInfoController.get);
+  route.get("/project/roadinfos/:id", RoadInfoController.getByProjectId);
   route.get("/road-info-searches", RoadInfoController.search);
   route.post(
-    "/road-infos",
+    "/roadinfos",
     validateData.roadDetailValidate,
     RoadInfoController.save
   );
   route.put(
-    "/road-infos/:id",
+    "/roadinfos/:id",
     validateData.roadDetailValidate,
     RoadInfoController.update
   );
-  route.delete("/road-infos/:id", RoadInfoController.delete);
+  route.delete("/roadinfos/:id", RoadInfoController.delete);
 
   //road segment
-  route.get("/road-segments/", RoadSegmentController.getAll);
-  route.get("/road-segments/:id", RoadSegmentController.get);
-  route.get("/project/road-segments/:id", RoadSegmentController.getByProjectId);
+  route.get("/roadsegments/", RoadSegmentController.getAll);
+  route.get("/roadsegments/:id", RoadSegmentController.get);
+  route.get("/project/roadsegments/:id", RoadSegmentController.getByProjectId);
   route.get("/road-segment-searchs", RoadSegmentController.search);
   route.post(
-    "/road-segments",
+    "/roadsegments",
     validateData.roadSegmentValidate,
     RoadSegmentController.save
   );
   route.put(
-    "/road-segments/:id",
+    "/roadsegments/:id",
     validateData.roadSegmentValidate,
     RoadSegmentController.update
   );
-  route.delete("/road-segments/:id", RoadSegmentController.delete);
+  route.delete("/roadsegments/:id", RoadSegmentController.delete);
 
   //road layer
-  route.get("/road-layers/", RoadLayerController.getAll);
-  route.get("/road-layers/:id", RoadLayerController.get);
-  route.get("/project/road-layers/:id", RoadLayerController.getByProjectId);
+  route.get("/roadlayers/", RoadLayerController.getAll);
+  route.get("/roadlayers/:id", RoadLayerController.get);
+  route.get("/project/roadlayers/:id", RoadLayerController.getByProjectId);
   route.get("/road-layer-searches", RoadLayerController.search);
   route.post(
-    "/road-layers",
+    "/roadlayers",
     validateData.roadLayerValidate,
     RoadLayerController.save
   );
   route.put(
-    "/road-layers/:id",
+    "/roadlayers/:id",
     validateData.roadLayerValidate,
     RoadLayerController.update
   );
-  route.delete("/road-layers/:id", RoadLayerController.delete);
+  route.delete("/roadlayers/:id", RoadLayerController.delete);
 
   //solar energy
-  route.get("/solar-energies", SolarEnergyController.getAll);
-  route.get("/solar-energies/:id", SolarEnergyController.get);
-  route.get("/project/solar-energies/:id", SolarEnergyController.getByProjectId);
+  route.get("/solarenergies", SolarEnergyController.getAll);
+  route.get("/solarenergies/:id", SolarEnergyController.get);
+  route.get("/project/solarenergies/:id", SolarEnergyController.getByProjectId);
   route.get("/solar-enegy-searches", SolarEnergyController.search);
   route.post(
-    "/solar-energies",
+    "/solarenergies",
     validateData.solarEnergyValidate,
     SolarEnergyController.save
   );
   route.put(
-    "/solar-energies/:id",
+    "/solarenergies/:id",
     validateData.solarEnergyValidate,
     SolarEnergyController.update
   );
-  route.delete("/solar-energies/:id", SolarEnergyController.delete);
+  route.delete("/solarenergies/:id", SolarEnergyController.delete);
 
   //wind energy
-  route.get("/wind-energies", WindEnergyController.getAll);
-  route.get("/wind-energies/:id", WindEnergyController.get);
-  route.get("/project/wind-energies/:id", WindEnergyController.getByProjectId);
+  route.get("/windenergies", WindEnergyController.getAll);
+  route.get("/windenergies/:id", WindEnergyController.get);
+  route.get("/project/windenergies/:id", WindEnergyController.getByProjectId);
   route.get("/wind-enegy-searches", WindEnergyController.search);
   route.post(
-    "/wind-energies",
+    "/windenergies",
     validateData.windEnergyValidate,
     WindEnergyController.save
   );
   route.put(
-    "/wind-energies/:id",
+    "/windenergies/:id",
     validateData.windEnergyValidate,
     WindEnergyController.update
   );
-  route.delete("/wind-energies/:id", WindEnergyController.delete);
+  route.delete("/windenergies/:id", WindEnergyController.delete);
 
   //transformer
   route.get("/transformers", TransformerController.getAll);
@@ -636,64 +633,64 @@ module.exports = function (express) {
   route.delete("/transformers/:id", TransformerController.delete);
 
   //transformer type
-  route.get("/transformer-types", TransformerTypeController.getAll);
-  route.get("/transformer-types/:id", TransformerTypeController.get);
+  route.get("/transformertypes", TransformerTypeController.getAll);
+  route.get("/transformertypes/:id", TransformerTypeController.get);
   route.get(
-    "/project/transformer-types/:id",
+    "/project/transformertypes/:id",
     TransformerTypeController.getByProjectId
   );
   route.get("/transformer-type-searches", TransformerTypeController.search);
   route.post(
-    "/transformer-types",
+    "/transformertypes",
     validateData.transformerTypeValidate,
     TransformerTypeController.save
   );
   route.put(
-    "/transformer-types/:id",
+    "/transformertypes/:id",
     validateData.transformerTypeValidate,
     TransformerTypeController.update
   );
-  route.delete("/transformer-types/:id", TransformerTypeController.delete);
+  route.delete("/transformertypes/:id", TransformerTypeController.delete);
 
   //transmission lines
-  route.get("/transmission-lines", TransmissionLineController.getAll);
-  route.get("/transmission-lines/:id", TransmissionLineController.get);
+  route.get("/transmissionlines", TransmissionLineController.getAll);
+  route.get("/transmissionlines/:id", TransmissionLineController.get);
   route.get(
-    "/project/transmission-lines/:id",
+    "/project/transmissionlines/:id",
     TransmissionLineController.getByProjectId
   );
   route.get("/transmission-line-searches", TransmissionLineController.search);
   route.post(
-    "/transmission-lines",
+    "/transmissionlines",
     validateData.transmissionLineValidate,
     TransmissionLineController.save
   );
   route.put(
-    "/transmission-lines/:id",
+    "/transmissionlines/:id",
     validateData.transmissionLineValidate,
     TransmissionLineController.update
   );
-  route.delete("/transmission-lines/:id", TransmissionLineController.delete);
+  route.delete("/transmissionlines/:id", TransmissionLineController.delete);
 
   //electric tower
-  route.get("/electric-towers", ElectricTowerController.getAll);
-  route.get("/electric-towers/:id", ElectricTowerController.get);
+  route.get("/electrictowers", ElectricTowerController.getAll);
+  route.get("/electrictowers/:id", ElectricTowerController.get);
   route.get(
-    "/project/electric-towers/:id",
+    "/project/electrictowers/:id",
     ElectricTowerController.getByProjectId
   );
   route.get("/electric-tower-searches", ElectricTowerController.search);
   route.post(
-    "/electric-towers",
+    "/electrictowers",
     validateData.electricTowerValidate,
     ElectricTowerController.save
   );
   route.put(
-    "/electric-towers/:id",
+    "/electrictowers/:id",
     validateData.electricTowerValidate,
     ElectricTowerController.update
   );
-  route.delete("/electric-towers/:id", ElectricTowerController.delete);
+  route.delete("/electrictowers/:id", ElectricTowerController.delete);
 
   //railway
   route.get("/railways", RailwayController.getAll);
@@ -709,30 +706,30 @@ module.exports = function (express) {
   route.delete("/railways/:id", RailwayController.delete);
 
   //railway station
-  route.get("/railway-stations", RailwayStationController.getAll);
-  route.get("/railway-stations/:id", RailwayStationController.get);
+  route.get("/railwaystations", RailwayStationController.getAll);
+  route.get("/railwaystations/:id", RailwayStationController.get);
   route.get(
-    "/project/railway-stations/:id",
+    "/project/railwaystations/:id",
     RailwayStationController.getByProjectId
   );
   route.get("/railway-station-searches", RailwayStationController.search);
   route.post(
-    "/railway-stations",
+    "/railwaystations",
     validateData.railWayStationValidate,
     RailwayStationController.save
   );
   route.put(
-    "/railway-stations/:id",
+    "/railwaystations/:id",
     validateData.railWayStationValidate,
     RailwayStationController.update
   );
-  route.delete("/railway-stations/:id", RailwayStationController.delete);
+  route.delete("/railwaystations/:id", RailwayStationController.delete);
 
   //water irrigation dam
-  route.get("/water-irrigation-dams", WaterIrrigationDamController.getAll);
-  route.get("/water-irrigation-dams/:id", WaterIrrigationDamController.get);
+  route.get("/waterirrigationdams", WaterIrrigationDamController.getAll);
+  route.get("/waterirrigationdams/:id", WaterIrrigationDamController.get);
   route.get(
-    "/project/water-irrigation-dams/:id",
+    "/project/waterirrigationdams/:id",
     WaterIrrigationDamController.getByProjectId
   );
   route.get(
@@ -740,17 +737,17 @@ module.exports = function (express) {
     WaterIrrigationDamController.search
   );
   route.post(
-    "/water-irrigation-dams",
+    "/waterirrigationdams",
     validateData.waterIrrigationValidate,
     WaterIrrigationDamController.save
   );
   route.put(
-    "/water-irrigation-dams/:id",
+    "/waterirrigationdams/:id",
     validateData.waterIrrigationValidate,
     WaterIrrigationDamController.update
   );
   route.delete(
-    "/water-irrigation-dams/:id",
+    "/waterirrigationdams/:id",
     WaterIrrigationDamController.delete
   );
 
