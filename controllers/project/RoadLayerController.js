@@ -9,7 +9,15 @@ let self = {};
 
 self.getAll = async (req, res) => {
   try {
-    const paginatedResult = await paginationHelper(RoadLayer, req);
+    const whereCondition = { };
+  
+    const includeOptions = [
+      {
+          model: RoadSegment,
+          as: "roadsegment"
+      }
+    ];
+    const paginatedResult = await paginationHelper(RoadLayer, req, whereCondition, includeOptions);
 
     // Use the response formatter to send the success response
     res.apiSuccess({

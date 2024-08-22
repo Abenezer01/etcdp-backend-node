@@ -33,7 +33,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       name: DataTypes.STRING,
       number: DataTypes.INTEGER,
-      thickeness: DataTypes.DOUBLE,
+      thickness: DataTypes.DOUBLE,
       material: DataTypes.STRING,
       specifications: DataTypes.STRING,
       description: DataTypes.TEXT,

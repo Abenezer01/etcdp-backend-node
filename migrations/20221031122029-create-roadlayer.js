@@ -43,7 +43,7 @@ module.exports = {
       number: {
         type: Sequelize.INTEGER,
       },
-      thickeness: {
+      thickness: {
         type: Sequelize.DOUBLE,
       },
       material: {

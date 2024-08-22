@@ -258,10 +258,10 @@ module.exports = function (express) {
     BuildingDimensionDetailsController.delete
   );
   //Telecom infrastructure
-  route.get("/telecom-infrastructures", TelecomInfrastructureController.getAll);
-  route.get("/telecom-infrastructures/:id", TelecomInfrastructureController.get);
+  route.get("/telecoms", TelecomInfrastructureController.getAll);
+  route.get("/telecoms/:id", TelecomInfrastructureController.get);
   route.get(
-    "/project/telecom-infrastructures/:id",
+    "/project/telecoms/:id",
     TelecomInfrastructureController.getByProjectId
   );
   route.get(
@@ -269,17 +269,17 @@ module.exports = function (express) {
     TelecomInfrastructureController.search
   );
   route.post(
-    "/telecom-infrastructures",
+    "/telecoms",
     validateData.telecomValidate,
     TelecomInfrastructureController.save
   );
   route.put(
-    "/telecom-infrastructures/:id",
+    "/telecoms/:id",
     validateData.telecomValidate,
     TelecomInfrastructureController.update
   );
   route.delete(
-    "/telecom-infrastructures/:id",
+    "/telecoms/:id",
     TelecomInfrastructureController.delete
   );
   //Generating capacity
