@@ -6,7 +6,7 @@ let self = {};
 const usrData = require("../../utils/userDataFromToken");
 const actionHelper = require("../utils/action-helper");
 const paginationHelper = require("../utils/pagination-helper");
-const { getRecordById, deleteRecord } = require("../utils/format-helper");
+const { getRecordById, saveRecord, updateRecord, deleteRecord } = require("../utils/format-helper");
 
 self.getAll = async (req, res) => {
   try {
@@ -62,70 +62,74 @@ self.search = async (req, res) => {
   }
 };
 self.save = async (req, res) => {
-  try {
-    const usr = await usrData.userData(req, res);
-    const body = req.body.opLocation;
+  saveRecord(OperationLocation, req, res);
 
-    if (!usr) {
-      return;
-    }
+  // try {
+  //   const usr = await usrData.userData(req, res);
+  //   const body = req.body.operationlocations;
 
-    const us = usr.usrID;
-    const arr = [];
+  //   if (!usr) {
+  //     return;
+  //   }
 
-    for (const location of body) {
-      location.status = true;
-      const data = await OperationLocation.create(location);
-      await actionHelper.saveActionState(
-        data.id,
-        "OperationLocation",
-        "REGISTER",
-        us,
-        req,
-        res
-      );
-      arr.push(data);
-    }
+  //   const us = usr.usrID;
+  //   const arr = [];
 
-    res.json(arr);
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+  //   for (const location of body) {
+  //     location.status = true;
+  //     const data = await OperationLocation.create(location);
+      
+  //     await actionHelper.saveActionState(
+  //       data.id,
+  //       "OperationLocation",
+  //       "REGISTER",
+  //       us,
+  //       req,
+  //       res
+  //     );
+  //     arr.push(data);
+  //   }
+
+  //   res.json(arr);
+  // } catch (error) {
+  //   res.status(500).json({
+  //     message: error.message,
+  //   });
+  // }
 };
 
 self.update = async (req, res) => {
-  try {
-    const usr = await usrData.userData(req, res);
-    const body = req.body.opLocation;
+  updateRecord(OperationLocation, req, res);
+  // try {
+  //   const usr = await usrData.userData(req, res);
+  //   const body = req.body.opLocation;
 
-    if (!usr) {
-      return;
-    }
-    let container = [];
-    for (const location of body) {
-      if (!location.id && location.status === true) {
-        await OperationLocation.create(location);
-      } else if (location.id && location.status === false) {
+  //   if (!usr) {
+  //     return;
+  //   }
+  //   let container = [];
+  //   for (const location of body) {
+  //     if (!location.id && location.status === true) {
+  //       await OperationLocation.create(location);
+  //     } else if (location.id && location.status === false) {
         
-        const [updated] = await OperationLocation.update(location, {
-          where: { id: location.id },
-        });
+  //       const [updated] = await OperationLocation.update(location, {
+  //         where: { id: location.id },
+  //       });
     
-        if (updated) {
-          const updatedData = await OperationLocation.findOne({ where: { id: location.id } });
-          container.push(updatedData);
-        }
-      }
-    }
+  //       if (updated) {
+  //         const updatedData = await OperationLocation.findOne({ where: { id: location.id } });
+  //         container.push(updatedData);
+  //       }
+  //     }
+  //   }
 
-    return res.apiSuccess({
-      data: container
-    });
-  } catch (error) {
-   return res.apiError(error);
-  }
+  //   return res.apiSuccess({
+  //     data: container
+  //   });
+  // } catch (error) {
+  //  return res.apiError(error);
+  // }
 };
 
 

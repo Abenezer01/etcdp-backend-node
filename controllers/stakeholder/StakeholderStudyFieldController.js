@@ -15,7 +15,12 @@ let self = {};
 
 self.getAll = async (req, res) => {
   try {
-    const paginatedResult = await paginationHelper(StakeholderStudyField, req);
+    const whereCondition = { };
+
+    const includeOptions = [
+      { model: StudyField, as: "studyfield" },
+    ];
+    const paginatedResult = await paginationHelper(StakeholderStudyField, req, whereCondition, includeOptions);
 
     // Use the response formatter to send the success response
     res.apiSuccess({

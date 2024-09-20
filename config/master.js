@@ -180,7 +180,7 @@ const modulemodels = {
   ],
 
   stakeholder: [
-    "studyfield",
+    "stakeholderstudyfield",
     "studyperiodcost",
     "graduate",
     "stakeholderservice",

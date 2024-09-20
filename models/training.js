@@ -27,7 +27,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      Training: {
+      type: {
         type: DataTypes.STRING,
         allowNull: false,
       },

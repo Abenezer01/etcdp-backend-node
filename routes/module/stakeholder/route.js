@@ -198,10 +198,6 @@ module.exports = function (express) {
   //stakeholder training/ support
   route.get("/trainings/", StakeholderTrainingController.getAll);
   route.get("/trainings/:id", StakeholderTrainingController.get);
-  route.get(
-    "/trainings/stakeholder/:id",
-    StakeholderTrainingController.getTrainingByStakeholderId
-  );
   route.get("/training-searches", StakeholderTrainingController.search);
   route.post(
     "/trainings",
@@ -217,10 +213,6 @@ module.exports = function (express) {
   //stakeholder regulation
   route.get("/regulations/", RegulationController.getAll);
   route.get("/regulations/:id", RegulationController.get);
-  route.get(
-    "/regulations/stakeholder/:id",
-    RegulationController.getRegulationByStakeholderId
-  );
   route.get("/regulation-searches", RegulationController.search);
   route.post(
     "/regulations",
@@ -236,15 +228,15 @@ module.exports = function (express) {
 
   //stakeholder study field
   route.get(
-    "/stakeholder-study-fields",
+    "/stakeholderstudyfields",
     StakeholderStudyFieldController.getAll
   );
   route.get(
-    "/stakeholder-study-fields/:id",
+    "/stakeholderstudyfields/:id",
     StakeholderStudyFieldController.get
   );
   route.get(
-    "/stakeholder-study-fields/stakeholder/:id",
+    "/stakeholderstudyfields/stakeholder/:id",
     StakeholderStudyFieldController.getStakeholderStudyFieldByStakeholderId
   );
   route.get(
@@ -252,17 +244,17 @@ module.exports = function (express) {
     StakeholderStudyFieldController.search
   );
   route.post(
-    "/stakeholder-study-fields",
+    "/stakeholderstudyfields",
     validateData.stakeholderStudyFieldValidate,
     StakeholderStudyFieldController.save
   );
   route.put(
-    "/stakeholder-study-fields/:id",
+    "/stakeholderstudyfields/:id",
     validateData.stakeholderStudyFieldValidate,
     StakeholderStudyFieldController.update
   );
   route.delete(
-    "/stakeholder-study-fields/:id",
+    "/stakeholderstudyfields/:id",
     StakeholderStudyFieldController.delete
   );
 
@@ -376,7 +368,7 @@ module.exports = function (express) {
     OperationlocationController.save
   );
   route.put(
-    "/stakeholder-operation-locations",
+    "/stakeholder-operation-locations/:id",
     OperationlocationController.update
   );
   route.delete(

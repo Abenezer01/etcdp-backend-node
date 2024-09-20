@@ -26,24 +26,6 @@ self.get = async (req, res) => {
   getRecordById(Regulation, req, res);
 };
 
-self.getRegulationByStakeholderId = async (req, res) => {
-  
-  const { id } = req.params;
-  try {
-    const whereCondition = { stakeholder_id: id };
-    const paginatedResult = await paginationHelper(Regulation, req, whereCondition);
-
-    // Use the response formatter to send the success response
-    res.apiSuccess({
-      data: paginatedResult.data,
-      total: paginatedResult.total,
-    }, paginatedResult.pagination);
-
-  } catch (error) {
-    res.apiError(error);
-  }
-};
-
 
 self.search = async (req, res) => {
   try {

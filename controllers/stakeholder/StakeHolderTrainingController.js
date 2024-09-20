@@ -26,22 +26,6 @@ self.get = async (req, res) => {
   getRecordById(Training, req, res);
 };
 
-self.getTrainingByStakeholderId = async (req, res) => {
-  const { id } = req.params;
-  try {
-    const whereCondition = { stakeholder_id: id };
-    const paginatedResult = await paginationHelper(Training, req, whereCondition);
-
-    // Use the response formatter to send the success response
-    res.apiSuccess({
-      data: paginatedResult.data,
-      total: paginatedResult.total,
-    }, paginatedResult.pagination);
-
-  } catch (error) {
-    res.apiError(error);
-  }
-};
 
 self.search = async (req, res) => {
   try {

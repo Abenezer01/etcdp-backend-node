@@ -55,8 +55,15 @@ module.exports = (sequelize, DataTypes) => {
       file_id: {
         type: DataTypes.UUID,
       },
+      
       revision_no: {
         type: DataTypes.INTEGER,
+      },
+      total_employees: {
+        type: DataTypes.VIRTUAL,
+        get() {
+          return this.male + this.female;
+        },
       },
     },
     {

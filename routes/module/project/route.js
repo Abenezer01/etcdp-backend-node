@@ -81,7 +81,7 @@ module.exports = function (express) {
   );
   route.get("/project-stakeholder-searches", ProjectStakeholderController.search);
   route.post(
-    "/project-stakeholder",
+    "/project-stakeholders",
     validateData.projectStakeholderValidate,
     ProjectStakeholderController.save
   );
@@ -283,24 +283,24 @@ module.exports = function (express) {
     TelecomInfrastructureController.delete
   );
   //Generating capacity
-  route.get("/generatingcapacities", GeneratingCapacityController.getAll);
-  route.get("/generatingcapacities/:id", GeneratingCapacityController.get);
+  route.get("/generatingcapacitys", GeneratingCapacityController.getAll);
+  route.get("/generatingcapacitys/:id", GeneratingCapacityController.get);
   route.get(
-    "/project/generatingcapacities/:id",
+    "/project/generatingcapacitys/:id",
     GeneratingCapacityController.getByProjectId
   );
   route.get("/generating-capacity-searches", GeneratingCapacityController.search);
   route.post(
-    "/generatingcapacities",
+    "/generatingcapacitys",
     validateData.generatingCapacityValidate,
     GeneratingCapacityController.save
   );
   route.put(
-    "/generatingcapacities/:id",
+    "/generatingcapacitys/:id",
     validateData.generatingCapacityValidate,
     GeneratingCapacityController.update
   );
-  route.delete("/generatingcapacities/:id", GeneratingCapacityController.delete);
+  route.delete("/generatingcapacitys/:id", GeneratingCapacityController.delete);
   //Turbine detail
   route.get("/turbineinfos", TurbineDetailController.getAll);
   route.get("/turbineinfos/:id", TurbineDetailController.get);
@@ -582,38 +582,38 @@ module.exports = function (express) {
   route.delete("/roadlayers/:id", RoadLayerController.delete);
 
   //solar energy
-  route.get("/solarenergies", SolarEnergyController.getAll);
-  route.get("/solarenergies/:id", SolarEnergyController.get);
-  route.get("/project/solarenergies/:id", SolarEnergyController.getByProjectId);
+  route.get("/solarenergys", SolarEnergyController.getAll);
+  route.get("/solarenergys/:id", SolarEnergyController.get);
+  route.get("/project/solarenergys/:id", SolarEnergyController.getByProjectId);
   route.get("/solar-enegy-searches", SolarEnergyController.search);
   route.post(
-    "/solarenergies",
+    "/solarenergys",
     validateData.solarEnergyValidate,
     SolarEnergyController.save
   );
   route.put(
-    "/solarenergies/:id",
+    "/solarenergys/:id",
     validateData.solarEnergyValidate,
     SolarEnergyController.update
   );
-  route.delete("/solarenergies/:id", SolarEnergyController.delete);
+  route.delete("/solarenergys/:id", SolarEnergyController.delete);
 
   //wind energy
-  route.get("/windenergies", WindEnergyController.getAll);
-  route.get("/windenergies/:id", WindEnergyController.get);
-  route.get("/project/windenergies/:id", WindEnergyController.getByProjectId);
+  route.get("/windenergys", WindEnergyController.getAll);
+  route.get("/windenergys/:id", WindEnergyController.get);
+  route.get("/project/windenergys/:id", WindEnergyController.getByProjectId);
   route.get("/wind-enegy-searches", WindEnergyController.search);
   route.post(
-    "/windenergies",
+    "/windenergys",
     validateData.windEnergyValidate,
     WindEnergyController.save
   );
   route.put(
-    "/windenergies/:id",
+    "/windenergys/:id",
     validateData.windEnergyValidate,
     WindEnergyController.update
   );
-  route.delete("/windenergies/:id", WindEnergyController.delete);
+  route.delete("/windenergys/:id", WindEnergyController.delete);
 
   //transformer
   route.get("/transformers", TransformerController.getAll);

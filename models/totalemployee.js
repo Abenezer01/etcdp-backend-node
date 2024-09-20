@@ -48,6 +48,12 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
+      total_employees: {
+        type: DataTypes.VIRTUAL,
+        get() {
+          return this.male + this.female;
+        },
+      },
 
       file_id: DataTypes.UUID,
       revision_no: {

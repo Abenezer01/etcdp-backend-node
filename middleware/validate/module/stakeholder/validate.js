@@ -90,7 +90,7 @@ const stakeHolderValidate = async (req, res, next) => {
   }
   const validationRule = {
     stakeholdercategory_id: "required|string",
-    stakesubcategory_id: "required|string",
+    stakeholdersubcategory_id: "required|string",
     trade_name: "required|string",
     tin: "required|string",
     ownership_id: "required|string",
@@ -301,7 +301,7 @@ const trainingValidate = async (req, res, next) => {
   const validationRule = {
     stakeholder_id: "required|string",
     title: "required|string",
-    training: "required|string",
+    type: "required|string",
     provider: "required|string",
     provision_date: "required|date",
   };

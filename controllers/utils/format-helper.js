@@ -10,7 +10,21 @@ const getRecordById = async (model, req, res, include = []) => {
       });
   
       if (!data) {
-        return res.status(404).json({ error: "Record not found" });
+        // return res.status(404).json({ error: "Record not found" });
+        const errorResponse = {
+          _links: {
+            previousPage: null,
+            nextPage: null
+          },
+          _warning: [],
+          payload: [],
+          _attributes: {},
+          _errors: {
+            message: "Record not found"
+          },
+          _generated: new Date().toISOString()
+        };
+        return res.status(404).json(errorResponse);
       }
 
 

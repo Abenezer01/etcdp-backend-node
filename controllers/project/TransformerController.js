@@ -8,7 +8,17 @@ let self = {};
 
 self.getAll = async (req, res) => {
   try {
-    const paginatedResult = await paginationHelper(Transformer, req);
+
+    const whereCondition = { };
+  
+    const includeOptions = [
+      {
+          model: TransformerType,
+          as: "transformertype"
+      }
+    ];
+
+    const paginatedResult = await paginationHelper(Transformer, req, whereCondition, includeOptions);
 
     // Use the response formatter to send the success response
     res.apiSuccess({

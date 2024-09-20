@@ -13,14 +13,6 @@ module.exports = (sequelize, DataTypes) => {
         as: "studyfield",
         foreignKey: "studyfield_id",
       });
-      StakeholderStudyField.belongsTo(models.StudyProgram, {
-        as: "studyprogram",
-        foreignKey: "studyprogram_id",
-      });
-      StakeholderStudyField.belongsTo(models.StudyLevel, {
-        as: "studylevel",
-        foreignKey: "studylevel_id",
-      });
     }
   }
   StakeholderStudyField.init(
@@ -31,10 +23,9 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: DataTypes.UUIDV4,
       },
       parent_id: DataTypes.UUID,
+      
       stakeholder_id: DataTypes.UUID,
       studyfield_id: DataTypes.UUID,
-      studyprogram_id: DataTypes.UUID,
-      studylevel_id: DataTypes.UUID,
       description: DataTypes.STRING,
     },
     {

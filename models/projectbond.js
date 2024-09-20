@@ -32,7 +32,7 @@ module.exports = (sequelize, DataTypes) => {
       percent: DataTypes.DOUBLE,
       institution_type:DataTypes.STRING,
       phone: DataTypes.STRING,
-      amount: DataTypes.INTEGER,
+      amount: DataTypes.INTEGER, //fix to double
       remark: DataTypes.TEXT,
       revision_no: DataTypes.INTEGER,
     },

@@ -39,26 +39,6 @@ module.exports = {
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
       },
-      studyprogram_id: {
-        type: Sequelize.UUID,
-        allowNull: false,
-        references: {
-          model: "studyprograms",
-          key: "id",
-        },
-        onUpdate: "CASCADE",
-        onDelete: "CASCADE",
-      },
-      studylevel_id: {
-        type: Sequelize.UUID,
-        allowNull: false,
-        references: {
-          model: "studylevels",
-          key: "id",
-        },
-        onUpdate: "CASCADE",
-        onDelete: "CASCADE",
-      },
       revision_no: {
         type: Sequelize.INTEGER,
       },

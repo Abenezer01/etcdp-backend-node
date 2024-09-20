@@ -1,0 +1,47 @@
+BEGIN:VCALENDAR
+PRODID:-//Google Inc//Google Calendar 70.9054//EN
+VERSION:2.0
+CALSCALE:GREGORIAN
+METHOD:REQUEST
+BEGIN:VEVENT
+DTSTART:20231009T040000Z
+DTEND:20231009T050000Z
+RRULE:FREQ=WEEKLY;UNTIL=20240728T235959Z;BYDAY=MO
+DTSTAMP:20240729T111138Z
+ORGANIZER;CN=Gluon Technologies:mailto:thegluontechnology@gmail.com
+UID:5tiq989ekodjqs0u191vkk3702_R20231009T040000@google.com
+ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;RSVP=
+ TRUE;CN=efidesalew@gmail.com;X-NUM-GUESTS=0:mailto:efidesalew@gmail.com
+ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=DECLINED;RSVP=TRUE
+ ;CN=george.beng@gmail.com;X-NUM-GUESTS=0:mailto:george.beng@gmail.com
+ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=DECLINED;RSVP=TRUE
+ ;CN=bruktihailu43@gmail.com;X-NUM-GUESTS=0:mailto:bruktihailu43@gmail.com
+ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=ACCEPTED;RSVP=TRUE
+ ;CN=Gluon Technologies;X-NUM-GUESTS=0:mailto:thegluontechnology@gmail.com
+ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=DECLINED;RSVP=TRUE
+ ;CN=libamlakbirhanu904@gmail.com;X-NUM-GUESTS=0:mailto:libamlakbirhanu904@g
+ mail.com
+ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=DECLINED;RSVP=TRUE
+ ;CN=samuelrahimeto@gmail.com;X-NUM-GUESTS=0:mailto:samuelrahimeto@gmail.com
+ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;RSVP=
+ TRUE;CN=tesfahunkebede336@gmail.com;X-NUM-GUESTS=0:mailto:tesfahunkebede336
+ @gmail.com
+ATTENDEE;CUTYPE=INDIVIDUAL;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;RSVP=
+ TRUE;CN=abenezerseyoum7@gmail.com;X-NUM-GUESTS=0:mailto:abenezerseyoum7@gma
+ il.com
+X-GOOGLE-CONFERENCE:https://meet.google.com/crw-hmrp-guy
+X-MICROSOFT-CDO-OWNERAPPTID:-31860827
+CREATED:20230827T075759Z
+DESCRIPTION:-::~:~::~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~
+ :~:~:~:~:~:~:~:~::~:~::-\nJoin with Google Meet: https://meet.google.com/cr
+ w-hmrp-guy\n\nLearn more about Meet at: https://support.google.com/a/users/
+ answer/9282720\n\nPlease do not edit this section.\n-::~:~::~:~:~:~:~:~:~:~
+ :~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~::~:~::-
+LAST-MODIFIED:20240729T111135Z
+LOCATION:
+SEQUENCE:2
+STATUS:CONFIRMED
+SUMMARY:COA Developers Meeting
+TRANSP:OPAQUE
+END:VEVENT
+END:VCALENDAR
