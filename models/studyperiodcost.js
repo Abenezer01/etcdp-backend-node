@@ -10,22 +10,10 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       StudyPeriodCost.belongsTo(models.StakeholderStudyField, {
-        as: "stakestudyfield",
-        foreignKey: "stake_study_field_id",
+        as: "stakeholderstudyfield",
+        foreignKey: "stakeholderstudyfield_id",
         constraints: false,
         attribute: ["description", "title"],
-      });
-      StudyPeriodCost.belongsTo(models.StudyProgram, {
-        as: "studyprogram",
-        foreignKey: "study_program_id",
-      });
-      StudyPeriodCost.belongsTo(models.StudyLevel, {
-        as: "studylevel",
-        foreignKey: "studylevel_id",
-      });
-      StudyPeriodCost.belongsTo(models.StudyField, {
-        as: "studyfield",
-        foreignKey: "studyfield_id",
       });
     }
   }
@@ -37,28 +25,16 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: DataTypes.UUIDV4,
       },
       parent_id: DataTypes.UUID,
-      higher_institute_id: {
+      stakeholder_id: {
         type: DataTypes.UUID,
         allowNull: false,
       },
-      stake_study_field_id: {
+      stakeholderstudyfield_id: {
         type: DataTypes.UUID,
         allowNull: false,
       },
       title: DataTypes.STRING,
       description: DataTypes.TEXT,
-      study_program_id: {
-        type: DataTypes.UUID,
-        allowNull: false,
-      },
-      studylevel_id: {
-        type: DataTypes.UUID,
-        allowNull: false,
-      },
-      studyfield_id: {
-        type: DataTypes.UUID,
-        allowNull: false,
-      },
       total_month: {
         type: DataTypes.INTEGER,
         allowNull: false,

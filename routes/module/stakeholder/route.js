@@ -259,28 +259,28 @@ module.exports = function (express) {
   );
 
   //study period cost
-  route.get("/study-period-costs/", StudyPeriodCostController.getAll);
-  route.get("/study-period-costs/:id", StudyPeriodCostController.get);
+  route.get("/studyperiodcosts/", StudyPeriodCostController.getAll);
+  route.get("/studyperiodcosts/:id", StudyPeriodCostController.get);
   route.get(
-    "/study-period-costs/higher-institute/:id",
+    "/studyperiodcosts/higher-institute/:id",
     StudyPeriodCostController.getByHigherInstituteId
   );
   route.get(
-    "/study-period-costs/study-field/:id",
+    "/studyperiodcosts/study-field/:id",
     StudyPeriodCostController.getByStudyFieldId
   );
   route.get("/study-period-cost-searches", StudyPeriodCostController.search);
   route.post(
-    "/study-period-costs",
+    "/studyperiodcosts",
     validateData.studyPeriodCostValidate,
     StudyPeriodCostController.save
   );
   route.put(
-    "/study-period-costs/:id",
+    "/studyperiodcosts/:id",
     validateData.studyPeriodCostValidate,
     StudyPeriodCostController.update
   );
-  route.delete("/study-period-costs/:id", StudyPeriodCostController.delete);
+  route.delete("/studyperiodcosts/:id", StudyPeriodCostController.delete);
   //Graduate
   route.get("/graduates/", GraduateController.getAll);
   route.get("/graduates/:id", GraduateController.get);

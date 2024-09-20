@@ -129,7 +129,7 @@ self.save = async (req, res) => {
 
     let studyData = await StakeholderStudyField.findOne({
       where: {
-        id: body.stake_study_field_id,
+        id: body.stakeholderstudyfield_id,
       },
       include: ["StudyField"],
     });

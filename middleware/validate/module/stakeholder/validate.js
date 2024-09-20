@@ -363,10 +363,8 @@ const studyPeriodCostValidate = async (req, res, next) => {
     });
   }
   const validationRule = {
-    higher_institute_id: "required|string",
-    stake_study_field_id: "required|string",
-    study_program_id: "required|string",
-    studylevel_id: "required|string",
+    stakeholder_id: "required|string",
+    stakeholderstudyfield_id: "required|string",
     total_month: "required|date",
     study_cost: "required",
   };

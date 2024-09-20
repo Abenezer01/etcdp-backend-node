@@ -16,7 +16,7 @@ module.exports = {
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
       },
-      higher_institute_id: {
+      stakeholder_id: {
         type: Sequelize.UUID,
         allowNull: false,
         references: {
@@ -26,7 +26,7 @@ module.exports = {
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
       },
-      stake_study_field_id: {
+      stakeholderstudyfield_id: {
         type: Sequelize.UUID,
         allowNull: false,
         references: {
@@ -42,7 +42,7 @@ module.exports = {
       description: {
         type: Sequelize.TEXT,
       },
-      study_program_id: {
+      studyprogram_id: {
         type: Sequelize.UUID,
         allowNull: false,
         references: {
