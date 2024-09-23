@@ -15,7 +15,13 @@ let self = {};
 
 self.getAll = async (req, res) => {
   try {
-    const paginatedResult = await paginationHelper(StudyPeriodCost, req);
+
+    const whereCondition = { };
+
+    const includeOptions = [
+      { model: StakeholderStudyField, as: "stakeholderstudyfield" },
+    ];
+    const paginatedResult = await paginationHelper(StudyPeriodCost, req, whereCondition, includeOptions);
 
     // Use the response formatter to send the success response
     res.apiSuccess({
@@ -97,7 +103,7 @@ self.getByStudyFieldId = async (req, res) => {
     // Use the response formatter to send the success response
     res.apiSuccess({
       data: paginatedResult.data,
-      total: paginatedResult.total,
+      total: paginatedResult.total,x`x`
     }, paginatedResult.pagination);
 
   } catch (error) {
@@ -124,18 +130,6 @@ self.search = async (req, res) => {
 };
 
 self.save = async (req, res) => {
-
-    let body = req.body;
-
-    let studyData = await StakeholderStudyField.findOne({
-      where: {
-        id: body.stakeholderstudyfield_id,
-      },
-      include: ["StudyField"],
-    });
-
-    req.body.studyfield_id = studyData.studyFieldId;
-
     saveRecord(StudyPeriodCost, req, res);
 };
 
