@@ -400,7 +400,7 @@ const constructionRelatedServiceValidate = async (req, res, next) => {
     });
   }
   const validationRule = {
-    type_of_service: "required|string",
+    service_type: "required|string",
   };
 
   await validateReply.validateReply(req.body, validationRule, res, next);

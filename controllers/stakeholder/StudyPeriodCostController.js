@@ -19,7 +19,16 @@ self.getAll = async (req, res) => {
     const whereCondition = { };
 
     const includeOptions = [
-      { model: StakeholderStudyField, as: "stakeholderstudyfield" },
+      { 
+        model: StakeholderStudyField, 
+        as: "stakeholderstudyfield",
+        include: [
+          {
+            model: StudyField,
+            as: "studyfield"
+          }, 
+        ]
+      },
     ];
     const paginatedResult = await paginationHelper(StudyPeriodCost, req, whereCondition, includeOptions);
 
@@ -103,7 +112,7 @@ self.getByStudyFieldId = async (req, res) => {
     // Use the response formatter to send the success response
     res.apiSuccess({
       data: paginatedResult.data,
-      total: paginatedResult.total,x`x`
+      total: paginatedResult.total,
     }, paginatedResult.pagination);
 
   } catch (error) {

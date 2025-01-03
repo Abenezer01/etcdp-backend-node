@@ -10,7 +10,13 @@ let self = {};
 
 self.getAll = async (req, res) => {
   try {
-    const paginatedResult = await paginationHelper(StakeholderService, req);
+    const whereCondition = { };
+
+    const includeOptions = [
+      { model: ConstructionRelatedService, as: "constructionrelatedservice" },
+    ];
+    
+    const paginatedResult = await paginationHelper(StakeholderService, req, whereCondition, includeOptions);
 
     // Use the response formatter to send the success response
     res.apiSuccess({

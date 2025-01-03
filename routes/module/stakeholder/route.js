@@ -302,15 +302,15 @@ module.exports = function (express) {
   route.delete("/graduates/:id", GraduateController.delete);
   //Construction related service
   route.get(
-    "/construction-related-services/",
+    "/constructionrelatedservices/",
     ConstructionRelatedServiceController.getAll
   );
   route.get(
-    "/construction-related-services/:id",
+    "/constructionrelatedservices/:id",
     ConstructionRelatedServiceController.get
   );
   route.get(
-    "/construction-related-services/stakeholder/:id",
+    "/constructionrelatedservices/stakeholder/:id",
     ConstructionRelatedServiceController.getConstructionRelatedServiceByStakeholderId
   );
   route.get(
@@ -318,38 +318,38 @@ module.exports = function (express) {
     ConstructionRelatedServiceController.search
   );
   route.post(
-    "/construction-related-services",
+    "/constructionrelatedservices",
     validateData.constructionRelatedServiceValidate,
     ConstructionRelatedServiceController.save
   );
   route.put(
-    "/construction-related-services/:id",
+    "/constructionrelatedservices/:id",
     validateData.constructionRelatedServiceValidate,
     ConstructionRelatedServiceController.update
   );
   route.delete(
-    "/construction-related-services/:id",
+    "/constructionrelatedservices/:id",
     ConstructionRelatedServiceController.delete
   );
   //Stakeholder service
-  route.get("/stakeholder-services/", StakeholderServiceController.getAll);
-  route.get("/stakeholder-services/:id", StakeholderServiceController.get);
+  route.get("/stakeholderservices/", StakeholderServiceController.getAll);
+  route.get("/stakeholderservices/:id", StakeholderServiceController.get);
   route.get(
-    "/stakeholder-services/stakeholder/:id",
+    "/stakeholderservices/stakeholder/:id",
     StakeholderServiceController.getStakeholderServiceByStakeholderId
   );
   route.get("/stakeholder-service-searches", StakeholderServiceController.search);
   route.post(
-    "/stakeholder-services",
+    "/stakeholderservices",
     validateData.StakeholderServiceValidate,
     StakeholderServiceController.save
   );
   route.put(
-    "/stakeholder-services/:id",
+    "/stakeholderservices/:id",
     validateData.StakeholderServiceValidate,
     StakeholderServiceController.update
   );
-  route.delete("/stakeholder-services/:id", StakeholderServiceController.delete);
+  route.delete("/stakeholderservices/:id", StakeholderServiceController.delete);
   //Stakeholder operation location
   route.get(
     "/stakeholder-operation-locations/",
