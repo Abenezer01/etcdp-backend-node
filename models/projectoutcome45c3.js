@@ -28,8 +28,13 @@ module.exports = (sequelize, DataTypes) => {
     function: DataTypes.STRING,
     lesson_learned: DataTypes.TEXT
   }, {
+
+    createdAt: "created_at",
+    updatedAt: "updated_at" ,     
     sequelize,
     modelName: 'ProjectOutcome45C3',
-  });
+    tableName: "ProjectOutcome45C3s"
+  }
+  );
   return ProjectOutcome45C3;
 };

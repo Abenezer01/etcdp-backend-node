@@ -11,7 +11,7 @@ module.exports = {
       parent_id: {
         type: Sequelize.UUID,
         references: {
-          model: "Project44A1s",
+          model: "ProjectAdditionalInfo48A1s",
           key: "id",
         },
         onUpdate: "CASCADE",
@@ -21,7 +21,7 @@ module.exports = {
         type: Sequelize.UUID,
         allowNull: false,
         references: {
-          model: "Project44A1s",
+          model: "projects",
           key: "id",
         },
         onUpdate: "CASCADE",

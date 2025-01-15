@@ -28,8 +28,12 @@ module.exports = (sequelize, DataTypes) => {
     reason: DataTypes.STRING,
     work_accident_number: DataTypes.INTEGER
   }, {
+
+    createdAt: "created_at",
+    updatedAt: "updated_at" ,     
     sequelize,
     modelName: 'ProjectAdditionalInfo48A1',
+    tableName: "ProjectAdditionalInfo48A1s"
   });
   return ProjectAdditionalInfo48A1;
 };
