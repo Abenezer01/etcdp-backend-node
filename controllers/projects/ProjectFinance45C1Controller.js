@@ -8,6 +8,9 @@ const { getRecordById, saveRecord, updateRecord, deleteRecord } = require("../ut
 let self = {};
 
 self.getAll = async (req, res) => {
+  
+  const modelNames = Object.keys(sequelize.models);
+  return res.json(modelNames);
   try {
     const paginatedResult = await paginationHelper(ProjectFinance45C1, req);
 

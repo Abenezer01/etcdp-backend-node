@@ -1,0 +1,42 @@
+'use strict';
+/** @type {import('sequelize-cli').Migration} */
+module.exports = {
+  async up(queryInterface, Sequelize) {
+    await queryInterface.createTable('LoanDetails113Bs', {
+      id: {
+        allowNull: false,
+        primaryKey: true,
+        type: Sequelize.UUID,
+      },
+      id: {
+        type: Sequelize.STRING
+      },
+      applicantinformation_id: {
+        type: Sequelize.STRING
+      },
+      loan_type: {
+        type: Sequelize.STRING
+      },
+      loan_amount_requested: {
+        type: Sequelize.DOUBLE
+      },
+      loan_purpose: {
+        type: Sequelize.STRING
+      },
+      repayment_term: {
+        type: Sequelize.INTEGER
+      },
+      createdAt: {
+        allowNull: false,
+        type: Sequelize.DATE
+      },
+      updatedAt: {
+        allowNull: false,
+        type: Sequelize.DATE
+      }
+    });
+  },
+  async down(queryInterface, Sequelize) {
+    await queryInterface.dropTable('LoanDetails113Bs');
+  }
+};
