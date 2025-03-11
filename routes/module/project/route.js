@@ -952,11 +952,11 @@ module.exports = function (express) {
   route.delete("/pavements/:id", PavementController.delete);
 
   // CulvertBasicData routes with validation
-  route.get("/culvert-basic-data", CulvertBasicDataController.getAll);
-  route.get("/culvert-basic-data/:id", CulvertBasicDataController.get);
-  route.post("/culvert-basic-data", validateData.culvertBasicDataValidate, CulvertBasicDataController.save);
-  route.put("/culvert-basic-data/:id", validateData.culvertBasicDataValidate, CulvertBasicDataController.update);
-  route.delete("/culvert-basic-data/:id", CulvertBasicDataController.delete);
+  route.get("/culvert-basic-datas", CulvertBasicDataController.getAll);
+  route.get("/culvert-basic-datas/:id", CulvertBasicDataController.get);
+  route.post("/culvert-basic-datas", validateData.culvertBasicDataValidate, CulvertBasicDataController.save);
+  route.put("/culvert-basic-datas/:id", validateData.culvertBasicDataValidate, CulvertBasicDataController.update);
+  route.delete("/culvert-basic-datas/:id", CulvertBasicDataController.delete);
 
   // CulvertStructuralInformation routes with validation
   route.get("/culvert-structural-informations", CulvertStructuralInformationController.getAll);
@@ -973,19 +973,19 @@ module.exports = function (express) {
   route.delete("/culvert-road-over-informations/:id", CulvertRoadOverInformationController.delete);
 
   // BridgeBasicData routes with validation
-  route.get("/bridge-basic-data", BridgeBasicDataController.getAll);
-  route.get("/bridge-basic-data/:id", BridgeBasicDataController.get);
-  route.post("/bridge-basic-data", validateData.bridgeBasicDataValidate, BridgeBasicDataController.save);
-  route.put("/bridge-basic-data/:id", validateData.bridgeBasicDataValidate, BridgeBasicDataController.update);
-  route.delete("/bridge-basic-data/:id", BridgeBasicDataController.delete);
+  route.get("/bridge-basic-datas", BridgeBasicDataController.getAll);
+  route.get("/bridge-basic-datas/:id", BridgeBasicDataController.get);
+  route.post("/bridge-basic-datas", validateData.bridgeBasicDataValidate, BridgeBasicDataController.save);
+  route.put("/bridge-basic-datas/:id", validateData.bridgeBasicDataValidate, BridgeBasicDataController.update);
+  route.delete("/bridge-basic-datas/:id", BridgeBasicDataController.delete);
 
 
   // BridgeAreaData routes with validation
-  route.get("/bridge-area-data", BridgeAreaDataController.getAll);
-  route.get("/bridge-area-data/:id", BridgeAreaDataController.get);
-  route.post("/bridge-area-data", validateData.bridgeAreaDataValidate, BridgeAreaDataController.save);
-  route.put("/bridge-area-data/:id", validateData.bridgeAreaDataValidate, BridgeAreaDataController.update);
-  route.delete("/bridge-area-data/:id", BridgeAreaDataController.delete);
+  route.get("/bridge-area-datas", BridgeAreaDataController.getAll);
+  route.get("/bridge-area-datas/:id", BridgeAreaDataController.get);
+  route.post("/bridge-area-datas", validateData.bridgeAreaDataValidate, BridgeAreaDataController.save);
+  route.put("/bridge-area-datas/:id", validateData.bridgeAreaDataValidate, BridgeAreaDataController.update);
+  route.delete("/bridge-area-datas/:id", BridgeAreaDataController.delete);
 
   
 
@@ -1060,18 +1060,18 @@ module.exports = function (express) {
   route.delete("/geotechnical-informations/:id", GeotechnicalInformationController.delete);
 
   // EnvironmentalData routes with validation
-  route.get("/environmental-data", EnvironmentalDataController.getAll);
-  route.get("/environmental-data/:id", EnvironmentalDataController.get);
-  route.post("/environmental-data", validateData.environmentalDataValidate, EnvironmentalDataController.save);
-  route.put("/environmental-data/:id", validateData.environmentalDataValidate, EnvironmentalDataController.update);
-  route.delete("/environmental-data/:id", EnvironmentalDataController.delete);
+  route.get("/environmental-datas", EnvironmentalDataController.getAll);
+  route.get("/environmental-datas/:id", EnvironmentalDataController.get);
+  route.post("/environmental-datas", validateData.environmentalDataValidate, EnvironmentalDataController.save);
+  route.put("/environmental-datas/:id", validateData.environmentalDataValidate, EnvironmentalDataController.update);
+  route.delete("/environmental-datas/:id", EnvironmentalDataController.delete);
 
   // RoadMaintenanceData routes with validation
-  route.get("/road-maintenance-data", RoadMaintenanceDataController.getAll);
-  route.get("/road-maintenance-data/:id", RoadMaintenanceDataController.get);
-  route.post("/road-maintenance-data", validateData.roadMaintenanceDataValidate, RoadMaintenanceDataController.save);
-  route.put("/road-maintenance-data/:id", validateData.roadMaintenanceDataValidate, RoadMaintenanceDataController.update);
-  route.delete("/road-maintenance-data/:id", RoadMaintenanceDataController.delete);
+  route.get("/road-maintenance-datas", RoadMaintenanceDataController.getAll);
+  route.get("/road-maintenance-datas/:id", RoadMaintenanceDataController.get);
+  route.post("/road-maintenance-datas", validateData.roadMaintenanceDataValidate, RoadMaintenanceDataController.save);
+  route.put("/road-maintenance-datas/:id", validateData.roadMaintenanceDataValidate, RoadMaintenanceDataController.update);
+  route.delete("/road-maintenance-datas/:id", RoadMaintenanceDataController.delete);
 
 
   // RoadMaintenanceActivity routes with validation

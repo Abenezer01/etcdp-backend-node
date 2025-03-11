@@ -195,8 +195,6 @@ const modulemodels = {
     "trafficvolume",
     "roadprojectqualitycontrol",
     "roaddrainage",
-    
-
   ],
 
   stakeholder: [
