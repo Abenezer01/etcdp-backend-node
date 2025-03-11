@@ -16,6 +16,26 @@ const StakeholderServiceController = require("../../../controllers/stakeholder/S
 const OperationlocationController = require("../../../controllers/stakeholder/OperationlocationController");
 const StakeholderEmailController = require("../../../controllers/stakeholder/StakeholderEmailController");
 const StakeholderPhoneController = require("../../../controllers/stakeholder/StakeholderPhoneController");
+const StakeholderOwnerOrManager26ABController = require("../../../controllers/stakeholder/StakeholderOwnerOrManager26ABController");
+const StakeholderAddress26A3Controller = require("../../../controllers/stakeholder/StakeholderAddress26A3Controller");
+
+const JointVenture34A1Controller = require("../../../controllers/stakeholder/JointVenture34A1Controller");
+const JointVentureCompanyController = require("../../../controllers/stakeholder/JointVentureCompanyController");
+
+const StakeholderAdditionalInformationController = require("../../../controllers/stakeholder/StakeholderAdditionalInformationController");
+
+const StakeholderBranchController = require("../../../controllers/stakeholder/StakeholderBranchController");
+const BranchManagerController = require("../../../controllers/stakeholder/BranchManagerController");
+const BranchContactPersonController = require("../../../controllers/stakeholder/BranchContactPersonController");
+const BranchAddressController = require("../../../controllers/stakeholder/BranchAddressController");
+const BranchAdditionalInformationController = require("../../../controllers/stakeholder/BranchAdditionalInformationController");
+const StakeholderDepartmentController = require("../../../controllers/stakeholder/StakeholderDepartmentController");
+const StakeholderPositionController = require("../../../controllers/stakeholder/StakeholderPositionController");
+const StakeholderMachineryController = require("../../../controllers/stakeholder/StakeholderMachineryController");
+const SafetyEquipmentController = require("../../../controllers/stakeholder/SafetyEquipmentController");
+const StakeholderMaterialController = require("../../../controllers/stakeholder/StakeholderMaterialController");
+const StakeholderEmployeeController = require("../../../controllers/stakeholder/StakeholderEmployeeController");
+
 const validateData = require("../../../middleware/validate/module/stakeholder/validate");
 
 module.exports = function (express) {
@@ -404,5 +424,176 @@ module.exports = function (express) {
   route.put("/stakeholder-emails", StakeholderEmailController.update);
   route.delete("/stakeholder-emails/:id", StakeholderEmailController.delete);
   route.delete("/stakeholder-phones/:id", StakeholderPhoneController.delete);
-  return route;
+
+  // stakeholder managers routes with validation
+  route.get("/stakeholder-managers", StakeholderOwnerOrManager26ABController.getAll);
+  route.get("/stakeholder-managers/:id", StakeholderOwnerOrManager26ABController.get);
+  route.post("/stakeholder-managers", validateData.stakeholderManagerValidate, StakeholderOwnerOrManager26ABController.save);
+  route.put(
+    "/stakeholder-managers/:id",
+    validateData.stakeholderManagerValidate,
+    StakeholderOwnerOrManager26ABController.update
+  );
+  route.delete("/stakeholder-managers/:id", StakeholderOwnerOrManager26ABController.delete);
+  
+
+    // stakeholder addresses routes with validation
+    route.get("/stakeholder-addresses", StakeholderAddress26A3Controller.getAll);
+    route.get("/stakeholder-addresses/:id", StakeholderAddress26A3Controller.get);
+    route.post("/stakeholder-addresses", validateData.stakeholderManagerValidate, StakeholderAddress26A3Controller.save);
+    route.put(
+      "/stakeholder-addresses/:id",
+      validateData.stakeholderManagerValidate,
+      StakeholderAddress26A3Controller.update
+    );
+    route.delete("/stakeholder-addresses/:id", StakeholderAddress26A3Controller.delete);
+    
+  
+    // joint venture routes with validation
+    route.get("/joint-ventures", JointVenture34A1Controller.getAll);
+    route.get("/joint-ventures/:id", JointVenture34A1Controller.get);
+    route.post("/joint-ventures", validateData.jointVentureValidate, JointVenture34A1Controller.save);
+    route.put(
+      "/joint-ventures/:id",
+      validateData.jointVentureValidate,
+      JointVenture34A1Controller.update
+    );
+    route.delete("/joint-ventures/:id", JointVenture34A1Controller.delete);
+  
+  
+    // joint venture companies routes with validation
+    route.get("/joint-venture-companies", JointVentureCompanyController.getAll);
+    route.get("/joint-venture-companies/:id", JointVentureCompanyController.get);
+    route.post("/joint-venture-companies", validateData.jointVentureCompanyValidate, JointVentureCompanyController.save);
+    route.put(
+      "/joint-venture-companies/:id",
+      validateData.jointVentureCompanyValidate,
+      JointVentureCompanyController.update
+    );
+    route.delete("/joint-venture-companies/:id", JointVentureCompanyController.delete);
+  
+
+    // stakeholder additional informations routes with validation
+    route.get("/stakeholder-additional-informations", StakeholderAdditionalInformationController.getAll);
+    route.get("/stakeholder-additional-informations/:id", StakeholderAdditionalInformationController.get);
+    route.post("/stakeholder-additional-informations", validateData.stakeholderAdditionalInformationValidate, StakeholderAdditionalInformationController.save);
+    route.put(
+      "/stakeholder-additional-informations/:id",
+      validateData.stakeholderAdditionalInformationValidate,
+      StakeholderAdditionalInformationController.update
+    );
+    route.delete("/stakeholder-additional-informations/:id", StakeholderAdditionalInformationController.delete);
+
+    // stakeholder branches routes with validation
+    route.get("/stakeholder-branches", StakeholderBranchController.getAll);
+    route.get("/stakeholder-branches/:id", StakeholderBranchController.get);
+    route.post("/stakeholder-branches", validateData.stakeholderBranchValidate, StakeholderBranchController.save);
+    route.put(
+      "/stakeholder-branches/:id",
+      validateData.stakeholderBranchValidate,
+      StakeholderBranchController.update
+    );
+    route.delete("/stakeholder-branches/:id", StakeholderBranchController.delete);
+
+     // branche managers routes with validation
+     route.get("/branch-managers", BranchManagerController.getAll);
+     route.get("/branch-managers/:id", BranchManagerController.get);
+     route.post("/branch-managers", validateData.branchManagerValidate, BranchManagerController.save);
+     route.put(
+       "/branch-managers/:id",
+       validateData.branchManagerValidate,
+       BranchManagerController.update
+     );
+     route.delete("/branch-managers/:id", BranchManagerController.delete);
+    
+    // branch contact people routes with validation
+    route.get("/branch-contact-people", BranchContactPersonController.getAll);
+    route.get("/branch-contact-people/:id", BranchContactPersonController.get);
+    route.post("/branch-contact-people", validateData.branchContactPersonValidate, BranchContactPersonController.save);
+    route.put(
+      "/branch-contact-people/:id",
+      validateData.branchContactPersonValidate,
+      BranchContactPersonController.update
+    );
+    route.delete("/branch-contact-people/:id", BranchContactPersonController.delete);
+
+    // branch address routes with validation
+    route.get("/branch-addresses", BranchAddressController.getAll);
+    route.get("/branch-addresses/:id", BranchAddressController.get);
+    route.post("/branch-addresses", validateData.branchAddressValidate, BranchAddressController.save);
+    route.put(
+      "/branch-addresses/:id",
+      validateData.branchAddressValidate,
+      BranchAddressController.update
+    );
+    route.delete("/branch-addresses/:id", BranchAddressController.delete);
+
+    // branch additional informations routes with validation
+    route.get("/branch-additional-informations", BranchAdditionalInformationController.getAll);
+    route.get("/branch-additional-informations/:id", BranchAdditionalInformationController.get);
+    route.post("/branch-additional-informations", validateData.branchAdditionalInformationValidate, BranchAdditionalInformationController.save);
+    route.put(
+      "/branch-additional-informations/:id",
+      validateData.branchAdditionalInformationValidate,
+      BranchAdditionalInformationController.update
+    );
+    route.delete("/branch-additional-informations/:id", BranchAdditionalInformationController.delete);
+  
+    // stakeholder departments routes with validation
+    route.get("/stakeholder-departments", StakeholderDepartmentController.getAll);
+    route.get("/stakeholder-departments/:id", StakeholderDepartmentController.get);
+    route.post("/stakeholder-departments", validateData.stakeholderDepartmentValidate, StakeholderDepartmentController.save);
+    route.put(
+      "/stakeholder-departments/:id",
+      validateData.stakeholderDepartmentValidate,
+      StakeholderDepartmentController.update
+    );
+    route.delete("/stakeholder-departments/:id", StakeholderDepartmentController.delete);
+
+    // stakeholder positions routes with validation
+    route.get("/stakeholder-positions", StakeholderPositionController.getAll);
+    route.get("/stakeholder-positions/:id", StakeholderPositionController.get);
+    route.post("/stakeholder-positions", validateData.stakeholderPositionValidate, StakeholderPositionController.save);
+    route.put(
+      "/stakeholder-positions/:id",
+      validateData.stakeholderPositionValidate,
+      StakeholderPositionController.update
+    );
+    route.delete("/stakeholder-positions/:id", StakeholderPositionController.delete);
+
+    // stakeholder machinery routes with validation 
+    route.get("/stakeholder-machineries", StakeholderMachineryController.getAll);
+    route.get("/stakeholder-machineries/:id", StakeholderMachineryController.get);
+    route.post("/stakeholder-machineries", validateData.stakeholderMachineryValidate, StakeholderMachineryController.save);
+    route.put(
+      "/stakeholder-machineries/:id",
+      validateData.stakeholderMachineryValidate,
+      StakeholderMachineryController.update
+    );
+    route.delete("/stakeholder-machineries/:id", StakeholderMachineryController.delete);
+
+    // safety equipment routes with validation
+    route.get("/safety-equipments", SafetyEquipmentController.getAll);
+    route.get("/safety-equipments/:id", SafetyEquipmentController.get);
+    route.post("/safety-equipments", validateData.safetyEquipmentValidate, SafetyEquipmentController.save);
+    route.put("/safety-equipments/:id", validateData.safetyEquipmentValidate, SafetyEquipmentController.update);
+    route.delete("/safety-equipments/:id", SafetyEquipmentController.delete);
+
+    // stakeholder material routes with validation
+    route.get("/stakeholder-materials", StakeholderMaterialController.getAll);
+    route.get("/stakeholder-materials/:id", StakeholderMaterialController.get);
+    // route.post("/stakeholder-materials", validateData.stakeholderMaterialValidate, StakeholderMaterialController.save);
+    route.post("/stakeholder-materials", StakeholderMaterialController.save);
+    route.put("/stakeholder-materials/:id", StakeholderMaterialController.update);
+    route.delete("/stakeholder-materials/:id", StakeholderMaterialController.delete);
+
+    // stakeholder employee routes with validation
+    route.get("/stakeholder-employees", StakeholderEmployeeController.getAll);
+    route.get("/stakeholder-employees/:id", StakeholderEmployeeController.get);
+    // route.post("/stakeholder-employees", validateData.stakeholderEmployeeValidate, StakeholderEmployeeController.save);
+    route.post("/stakeholder-employees", StakeholderEmployeeController.save);
+    route.put("/stakeholder-employees/:id", StakeholderEmployeeController.update);
+    route.delete("/stakeholder-employees/:id", StakeholderEmployeeController.delete);
+    return route;
+
 };

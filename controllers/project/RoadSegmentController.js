@@ -9,6 +9,7 @@ let self = {};
 
 self.getAll = async (req, res) => {
   try {
+
     const paginatedResult = await paginationHelper(RoadSegment, req);
 
     // Use the response formatter to send the success response
@@ -43,23 +44,6 @@ self.get = async (req, res) => {
   getRecordById(RoadSegment, req, res);
 };
 
-self.search = async (req, res) => {
-  try {
-    let text = req.query.text;
-    let data = await RoadSegment.findAll({
-      where: {
-        name: {
-          [Op.like]: "%" + text + "%",
-        },
-      },
-    });
-    return res.json(data);
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
-};
 
 self.save = async (req, res) => {
   saveRecord(RoadSegment, req, res);

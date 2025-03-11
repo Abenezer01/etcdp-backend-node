@@ -56,6 +56,15 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
+      grade: {
+        type: Sequelize.STRING,
+      },
+      end_user: {
+        type: Sequelize.STRING,
+      },
+      function: {
+        type: Sequelize.STRING,
+      },
       remark: {
         type: Sequelize.TEXT,
       },

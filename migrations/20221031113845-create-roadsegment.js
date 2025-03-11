@@ -30,20 +30,15 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      specifications: {
-        type: Sequelize.TEXT,
-      },
-      no_of_layers: {
-        type: Sequelize.INTEGER,
-      },
-      length: {
-        type: Sequelize.DOUBLE,
-      },
-      width: {
-        type: Sequelize.DOUBLE,
-      },
-      remark: {
-        type: Sequelize.TEXT,
+      surface_type_id: {
+        type: Sequelize.UUID,
+        allowNull: false,
+        references: {
+          model: "SurfaceTypes",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
       },
       start_northing: {
         type: Sequelize.DOUBLE,
@@ -57,8 +52,14 @@ module.exports = {
       end_easting: {
         type: Sequelize.DOUBLE,
       },
-      revision_no: {
-        type: Sequelize.INTEGER,
+      design_standard_id: {
+        type: Sequelize.UUID,
+        references: {
+          model: "DesignStandards",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
       },
       createdAt: {
         allowNull: false,

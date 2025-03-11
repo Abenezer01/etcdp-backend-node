@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class RoadOverInformation79A3 extends Model {
+  class RoadOverInformation extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  RoadOverInformation79A3.init({
+  RoadOverInformation.init({
     id: {
       type: DataTypes.UUID,
       primaryKey: true,
@@ -38,5 +38,5 @@ module.exports = (sequelize, DataTypes) => {
       modelName: 'RoadOverInformation79A3',
       tableName: 'RoadOverInformation79A3s',
   });
-  return RoadOverInformation79A3;
+  return RoadOverInformation;
 };

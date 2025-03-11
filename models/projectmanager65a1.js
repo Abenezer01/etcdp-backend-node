@@ -23,13 +23,36 @@ module.exports = (sequelize, DataTypes) => {
     project_id: {
         type: DataTypes.UUID,
         allowNull: false,
-      },
-    full_name: DataTypes.STRING,
-    position: DataTypes.STRING,
-    department: DataTypes.TEXT,
-    organization_name: DataTypes.STRING,
-    email: DataTypes.STRING,
-    phone: DataTypes.STRING
+    },
+    stakeholder_id: {
+        type: DataTypes.UUID,
+        allowNull: false,
+    },
+    position: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+    first_name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    middle_name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    last_name: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    national_id_no: {
+      type: DataTypes.STRING,
+    },
+    gender: DataTypes.STRING,
+    phone: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    email: DataTypes.STRING
   }, {
     createdAt: "created_at",
       updatedAt: "updated_at" ,     

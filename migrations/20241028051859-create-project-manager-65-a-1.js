@@ -11,7 +11,7 @@ module.exports = {
       parent_id: {
         type: Sequelize.UUID,
         references: {
-          model: "projects",
+          model: "ProjectManager65A1s",
           key: "id",
         },
         onUpdate: "CASCADE",
@@ -27,23 +27,42 @@ module.exports = {
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
       },
-      full_name: {
-        type: Sequelize.STRING
+      stakeholder_id: {
+        type: Sequelize.UUID,
+        allowNull: false,
+        references: {
+          model: "stakeholders",
+          key: "id",
+        },
       },
       position: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false,
       },
-      department: {
-        type: Sequelize.TEXT
+      first_name: {
+        type: Sequelize.STRING,
+        allowNull: false,
       },
-      organization_name: {
-        type: Sequelize.STRING
+      middle_name: {
+        type: Sequelize.STRING,
+        allowNull: false,
       },
-      email: {
-        type: Sequelize.STRING
+      last_name: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      national_id_no: {
+        type: Sequelize.STRING,
+      },
+      gender: {
+        type: Sequelize.STRING,
       },
       phone: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      email: {
+        type: Sequelize.STRING,
       },
       createdAt: {
         allowNull: false,

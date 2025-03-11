@@ -35,6 +35,9 @@ module.exports = {
       remark: {
         type: Sequelize.TEXT,
       },
+      source_of_finance: {
+        type: Sequelize.STRING,
+      },
       revision_no: {
         type: Sequelize.INTEGER,
       },

@@ -18,21 +18,55 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.UUID,
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4,
-      },
-    stakeholder_id: DataTypes.UUID,
+    },
+    parent_id: DataTypes.UUID,
+    stakeholder_id: {
+      type: DataTypes.UUID,
+      allowNull: false,
+    },
     type: DataTypes.STRING,
-    first_name: DataTypes.STRING,
-    middle_name: DataTypes.STRING,
-    last_name: DataTypes.STRING,
+    first_name: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    middle_name: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    last_name: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    department: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    position: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
     nationality: DataTypes.STRING,
-    birth_date: DataTypes.DATE,
-    gender: DataTypes.STRING,
-    phone_number: DataTypes.STRING,
-    partnership_size: DataTypes.DOUBLE,
-    identification_document: DataTypes.STRING,
-    certificate: DataTypes.STRING
+    national_id_no: {
+      type: DataTypes.STRING
+    },
+    birth_date: {
+      type: DataTypes.DATE,
+      allowNull: false
+    },
+    gender: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    phone_no: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
   }, {
-    createdAt: "created_at",
+      createdAt: "created_at",
       updatedAt: "updated_at" ,     
       sequelize,
       modelName: 'StakeholderOwnerOrManager26AB',

@@ -90,6 +90,9 @@ module.exports = (sequelize, DataTypes) => {
           this.setDataValue("name", encryptedValue);
         },
       },
+      grade: DataTypes.STRING,
+      end_user: DataTypes.STRING,
+      function: DataTypes.STRING,
       remark: DataTypes.TEXT,
       contract_no: DataTypes.STRING,
       budget_code: DataTypes.STRING,

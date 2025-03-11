@@ -8,42 +8,69 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.UUID,
       },
-      
+      parent_id: {
+        type: Sequelize.UUID,
+        references: {
+          model: "StakeholderOwnerOrManager26ABs",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
+      },
       stakeholder_id: {
-        type: Sequelize.UUID
+        type: Sequelize.UUID,
+        allowNull: false,
+        references: {
+          model: "stakeholders",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
       },
       type: {
         type: Sequelize.STRING
       },
       first_name: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
       },
       middle_name: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
       },
       last_name: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      department: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      position: {
+        type: Sequelize.STRING,
+        allowNull: false
       },
       nationality: {
         type: Sequelize.STRING
       },
+      national_id_no: {
+        type: Sequelize.STRING
+      },
       birth_date: {
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        allowNull: false
       },
       gender: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
       },
-      phone_number: {
-        type: Sequelize.STRING
+      phone_no: {
+        type: Sequelize.STRING,
+        allowNull: false
       },
-      partnership_size: {
-        type: Sequelize.DOUBLE
-      },
-      identification_document: {
-        type: Sequelize.STRING
-      },
-      certificate: {
-        type: Sequelize.STRING
+      email: {
+        type: Sequelize.STRING,
+        allowNull: false
       },
       createdAt: {
         allowNull: false,

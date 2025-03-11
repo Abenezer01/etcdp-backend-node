@@ -18,17 +18,35 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.UUID,
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4,
-      },
-    stakeholder_id: DataTypes.UUID,
-    specialization: DataTypes.STRING,
-    ownership_percentage: DataTypes.DOUBLE,
-    competence_certificate: DataTypes.STRING
+    },
+    parent_id: {
+      type: DataTypes.UUID
+    },
+    stakeholder_id: {
+      type: DataTypes.UUID,
+      allowNull: false,
+    },
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    member_companies_no: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    description: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    reference: {
+      type: DataTypes.TEXT
+    }
   }, {
     createdAt: "created_at",
-      updatedAt: "updated_at" ,     
-      sequelize,
-      modelName: 'JointVenture34A1',
-      tableName: 'JointVenture34A1s',
+    updatedAt: "updated_at",     
+    sequelize,
+    modelName: 'JointVenture34A1',
+    tableName: 'JointVenture34A1s',
   });
   return JointVenture34A1;
 };

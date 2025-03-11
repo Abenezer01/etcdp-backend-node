@@ -18,14 +18,43 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.UUID,
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4,
-      },
-    stakeholder_id: DataTypes.UUID,
-    region: DataTypes.STRING,
-    city: DataTypes.STRING,
-    sub_city: DataTypes.STRING,
-    woreda: DataTypes.STRING,
-    house_no: DataTypes.STRING,
-    phone: DataTypes.STRING
+    },
+    parent_id: DataTypes.UUID,
+    stakeholder_id: {
+      type: DataTypes.UUID,
+      allowNull: false,
+    },
+    country: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    region: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    city: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    sub_city: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    woreda: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    street: DataTypes.STRING,
+    block_no: DataTypes.STRING,
+    website: DataTypes.STRING,
+    northing: {
+      type: DataTypes.DOUBLE,
+      allowNull: false
+    },
+    easting: {
+      type: DataTypes.DOUBLE,
+      allowNull: false
+    }
   }, {
     createdAt: "created_at",
       updatedAt: "updated_at" ,     

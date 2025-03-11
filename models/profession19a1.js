@@ -18,10 +18,10 @@ module.exports = (sequelize, DataTypes) => {
     description: DataTypes.TEXT
   }, {
     createdAt: "created_at",
-      updatedAt: "updated_at" ,     
-      sequelize,
-      modelName: 'Profession19A1',
-      tableName: 'Profession19A1s',
+    updatedAt: "updated_at" ,     
+    sequelize,
+    modelName: 'Profession19A1',
+    tableName: 'Profession19A1s',
   });
   return Profession19A1;
 };

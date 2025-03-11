@@ -8,18 +8,38 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.UUID,
       },
-      
+      parent_id: {
+        type: Sequelize.UUID,
+        references: {
+          model: "JointVenture34A1s",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
+      },
       stakeholder_id: {
-        type: Sequelize.UUID
+        type: Sequelize.UUID,
+        references: {
+          model: "stakeholders",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
       },
-      specialization: {
-        type: Sequelize.STRING
+      name: {
+        type: Sequelize.STRING,
+        allowNull: false
       },
-      ownership_percentage: {
-        type: Sequelize.DOUBLE
+      member_companies_no: {
+        type: Sequelize.INTEGER,
+        allowNull: false
       },
-      competence_certificate: {
-        type: Sequelize.STRING
+      description: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      reference: {
+        type: Sequelize.TEXT
       },
       createdAt: {
         allowNull: false,

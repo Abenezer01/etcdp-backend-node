@@ -40,7 +40,7 @@ module.exports = (sequelize, DataTypes) => {
       updatedAt: "updated_at" ,     
       sequelize,
       modelName: "ProjectType",
-      tableName: "projecttypes"
+      tableName: "projecttypes",
     }
   );
   

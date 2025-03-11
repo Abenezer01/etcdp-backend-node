@@ -31,6 +31,7 @@ module.exports = (sequelize, DataTypes) => {
       main_contract_price_amount: DataTypes.DOUBLE,
       rebate: DataTypes.DOUBLE,
       remark: DataTypes.TEXT,
+      source_of_finance: DataTypes.STRING,
       revision_no: DataTypes.INTEGER,
       price_after_rebate: {
         type: DataTypes.VIRTUAL,

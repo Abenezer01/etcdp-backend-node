@@ -1,0 +1,43 @@
+'use strict';
+const {
+  Model
+} = require('sequelize');
+module.exports = (sequelize, DataTypes) => {
+  class WeatherCondition extends Model {
+    /**
+     * Helper method for defining associations.
+     * This method is not a part of Sequelize lifecycle.
+     * The `models/index` file will call this method automatically.
+     */
+    static associate(models) {
+      // define association here
+    }
+  }
+  WeatherCondition.init({
+    id: {
+      type: DataTypes.UUID,
+      allowNull: false,
+      primaryKey: true,
+      defaultValue: DataTypes.UUIDV4
+    },
+    parent_id: {
+      type: DataTypes.UUID,
+    },
+    project_id: {
+      type: DataTypes.UUID,
+      allowNull: false
+    },
+    weather_type: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    description: DataTypes.TEXT
+  }, {
+    createdAt: "created_at",
+    updatedAt: "updated_at",
+    sequelize,
+    modelName: 'WeatherCondition',
+    tableName: 'WeatherConditions'
+  });
+  return WeatherCondition;
+};

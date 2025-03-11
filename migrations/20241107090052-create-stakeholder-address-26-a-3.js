@@ -8,27 +8,61 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.UUID,
       },
-      
+      parent_id: {
+        type: Sequelize.UUID,
+        references: {
+          model: "StakeholderAddress26A3s",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
+      },
       stakeholder_id: {
-        type: Sequelize.UUID
+        type: Sequelize.UUID,
+        allowNull: false,
+        references: {
+          model: "stakeholders",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
+      },
+      country: {
+        type: Sequelize.STRING,
+        allowNull: false
       },
       region: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
       },
       city: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
       },
       sub_city: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
       },
       woreda: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      street: {
         type: Sequelize.STRING
       },
-      house_no: {
+      block_no: {
         type: Sequelize.STRING
       },
-      phone: {
+      website: {
         type: Sequelize.STRING
+      },
+      northing: {
+        type: Sequelize.DOUBLE,
+        allowNull: false
+      },
+      easting: {
+        type: Sequelize.DOUBLE,
+        allowNull: false
       },
       createdAt: {
         allowNull: false,

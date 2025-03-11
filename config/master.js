@@ -233,6 +233,57 @@ const mainanalysismodules = {
   ],
 };
 
+
+  const projectmastermodels = [
+    "FunctionalClassification",
+    "DesignClassification",
+    "DesignStandard",
+    "DesignTrafficFlow",
+    "SurfaceType",
+    "CrossSectionType",
+    "IntersectionType",
+    "DrivewayAccessPoint",
+    "PedestrianFacility",
+    "RoadLengthType",
+    "AreaTopography",
+    "PierType",
+    "AbutmentType",
+    "EndwallTypeInlet",
+    "EndwallTypeOutlet",
+    "PavedWaterWayType",
+    "SoilType",
+    "GuardRailType",
+    "BridgeStructureType",
+    "SpanSupportType",
+    "DeckSlabType",
+    "ExpansionJointType",
+    "BridgePartDefect",
+    "DamageType",
+    "DamageCondition",
+    "HydrologyDefect",
+    "RoadSafetyFeature",
+    "CountType",
+    "ProjectPhase",
+    "InspectionType",
+    "CurrentCondition",
+    "GroundWaterImpact",
+    "SlopeStability",
+    "MaintenanceFrequency",
+    "MaintenanceType",
+    "DrainageType",
+    "DrainageCondition",
+    "AssessmentCondition",
+    "SeverityLevel",
+    "SuggestedRepair",
+    "RecommendedActionUrgency",
+    "HazardType",
+    "PotentialImpact",
+    "RiskLevel",
+    "IncidentType",
+    "IncidentTime"
+  ]
+
+
 module.exports = {
   models,
   modules,
@@ -241,4 +292,5 @@ module.exports = {
   actions,
   modulemodels,
   mainanalysismodules,
+  projectmastermodels
 };

@@ -36,11 +36,9 @@ const getRecordById = async (model, req, res, include = []) => {
     }
   };
   const saveRecord = async (model, req, res) => {
-    try {
-        
+    try {        
       const body = req.body;
       const data = await model.create(body);
-      
   
       if (data) {
         const usr = await usrData.userData(req, res);

@@ -39,9 +39,42 @@ const PaymentController = require("../../../controllers/project/PaymentControlle
 const ProjectOutcome45C3Controller = require("../../../controllers/project/ProjectOutcome45C3Controller.js");
 const ProjectAdditionalInfo48A1Controller = require("../../../controllers/project/ProjectAdditionalInfo48A1Controller.js");
 
+// new 
+const ProjectManager65A1Controller = require("../../../controllers/projects/ProjectManager65A1Controller.js");
+const ProjectContactPersonController = require("../../../controllers/projects/ProjectContactPersonController.js");
+const ProjectSafetyStatusController = require("../../../controllers/projects/ProjectSafetyStatusController.js");
+const ProjectQualityController = require("../../../controllers/projects/ProjectQualityController.js");  
+const WeatherConditionController = require("../../../controllers/projects/WeatherConditionController.js");
+const ProjectConstructionTypeController = require("../../../controllers/projects/ProjectConstructionTypeController.js");
+const SegmentGeometryController = require("../../../controllers/projects/SegmentGeometryController.js");
+const IntersectionAndDrivewayController = require("../../../controllers/projects/IntersectionAndDrivewayController.js");
+
+const TrafficParameterController = require("../../../controllers/projects/TrafficParameterController.js");
+const AccessoryController = require("../../../controllers/projects/AccessoryController.js");
+const PavementController = require("../../../controllers/projects/PavementController.js");
+const CulvertBasicDataController = require("../../../controllers/projects/CulvertBasicDataController.js");
+const CulvertStructuralInformationController = require("../../../controllers/projects/CulvertStructuralInformationController.js");
+const CulvertRoadOverInformationController = require("../../../controllers/projects/CulvertRoadOverInformationController.js");
+const BridgeBasicDataController = require("../../../controllers/projects/BridgeBasicDataController.js");
+const BridgeAreaDataController = require("../../../controllers/projects/BridgeAreaDataController.js");
+
+const BridgeSuperStructureController = require("../../../controllers/projects/BridgeSuperStructureController.js");
+const BridgeSubStructureController = require("../../../controllers/projects/BridgeSubStructureController.js");
+
+const BridgeFoundationController = require("../../../controllers/projects/BridgeFoundationController.js");
+const BridgeInspectionController = require("../../../controllers/projects/BridgeInspectionController.js");
+const BridgeStructureInformationController = require("../../../controllers/projects/BridgeStructureInformationController.js");
+const TrafficVolumeController = require("../../../controllers/projects/TrafficVolumeController.js");
+const RoadProjectQualityControlController = require("../../../controllers/projects/RoadProjectQualityControlController.js");
+
+const RoadDrainageController = require("../../../controllers/projects/RoadDrainageController.js");
+
+const GeotechnicalInformationController = require("../../../controllers/projects/GeotechnicalInformationController.js");
+const EnvironmentalDataController = require("../../../controllers/projects/EnvironmentalDataController.js");
+const RoadMaintenanceDataController = require("../../../controllers/projects/RoadMaintenanceDataController.js");
+const RoadMaintenanceActivityController = require("../../../controllers/projects/RoadMaintenanceActivityController.js");
 
 const validateData = require("../../../middleware/validate/module/project/validate");
-
 
 module.exports = function (express) {
   const route = express.Router();
@@ -600,7 +633,6 @@ module.exports = function (express) {
   route.get("/roadsegments/", RoadSegmentController.getAll);
   route.get("/roadsegments/:id", RoadSegmentController.get);
   route.get("/project/roadsegments/:id", RoadSegmentController.getByProjectId);
-  route.get("/road-segment-searchs", RoadSegmentController.search);
   route.post(
     "/roadsegments",
     validateData.roadSegmentValidate,
@@ -832,5 +864,222 @@ module.exports = function (express) {
     "/count/project/projectcategories",
     ProjectController.countAllProjectWithProjectCategory
   );
+
+  // ProjectManager65A1 routes with validation
+  route.get("/project-managers", ProjectManager65A1Controller.getAll);
+  route.get("/project-managers/:id", ProjectManager65A1Controller.get);
+  route.post("/project-managers", validateData.railWayValidate, ProjectManager65A1Controller.save);
+  route.put(
+    "/project-managers/:id",
+    validateData.railWayValidate,
+    ProjectManager65A1Controller.update
+  );
+  route.delete("/project-managers/:id", ProjectManager65A1Controller.delete);
+
+  // ProjectContactPerson routes with validation
+  route.get("/project-contact-people", ProjectContactPersonController.getAll);
+  route.get("/project-contact-people/:id", ProjectContactPersonController.get);
+  route.post("/project-contact-people", validateData.projectContactPersonValidate, ProjectContactPersonController.save);
+  route.put("/project-contact-people/:id", validateData.projectContactPersonValidate, ProjectContactPersonController.update);
+  route.delete("/project-contact-people/:id", ProjectContactPersonController.delete);
+
+  // ProjectSafetyStatus routes with validation
+  route.get("/project-safety-statuses", ProjectSafetyStatusController.getAll);
+  route.get("/project-safety-statuses/:id", ProjectSafetyStatusController.get);
+  route.post("/project-safety-statuses", validateData.projectSafetyStatusValidate, ProjectSafetyStatusController.save);
+  route.put("/project-safety-statuses/:id", validateData.projectSafetyStatusValidate, ProjectSafetyStatusController.update);
+  route.delete("/project-safety-statuses/:id", ProjectSafetyStatusController.delete);
+
+  // ProjectQuality routes with validation  
+  route.get("/project-qualities", ProjectQualityController.getAll);
+  route.get("/project-qualities/:id", ProjectQualityController.get);
+  route.post("/project-qualities", validateData.projectQualityValidate, ProjectQualityController.save);
+  route.put("/project-qualities/:id", validateData.projectQualityValidate, ProjectQualityController.update);
+  route.delete("/project-qualities/:id", ProjectQualityController.delete);
+
+  // WeatherCondition routes with validation
+  route.get("/weather-conditions", WeatherConditionController.getAll);
+  route.get("/weather-conditions/:id", WeatherConditionController.get);
+  route.post("/weather-conditions", validateData.weatherConditionValidate, WeatherConditionController.save);
+  route.put("/weather-conditions/:id", validateData.weatherConditionValidate, WeatherConditionController.update);
+  route.delete("/weather-conditions/:id", WeatherConditionController.delete);
+  
+  // ProjectConstructionType routes with validation
+  route.get("/project-construction-types", ProjectConstructionTypeController.getAll);
+  route.get("/project-construction-types/:id", ProjectConstructionTypeController.get);
+  route.post("/project-construction-types", validateData.projectConstructionTypeValidate, ProjectConstructionTypeController.save);
+  route.put("/project-construction-types/:id", validateData.projectConstructionTypeValidate, ProjectConstructionTypeController.update);
+  route.delete("/project-construction-types/:id", ProjectConstructionTypeController.delete);
+
+  // SegmentGeometry routes with validation
+  route.get("/segment-geometries", SegmentGeometryController.getAll);
+  route.get("/segment-geometries/:id", SegmentGeometryController.get);
+  route.post("/segment-geometries", validateData.segmentGeometryValidate, SegmentGeometryController.save);
+  route.put("/segment-geometries/:id", validateData.segmentGeometryValidate, SegmentGeometryController.update);
+  route.delete("/segment-geometries/:id", SegmentGeometryController.delete);
+
+  // IntersectionAndDriveway routes with validation
+  route.get("/intersection-and-driveways", IntersectionAndDrivewayController.getAll);
+  route.get("/intersection-and-driveways/:id", IntersectionAndDrivewayController.get);
+  route.post("/intersection-and-driveways", validateData.intersectionAndDrivewayValidate, IntersectionAndDrivewayController.save);
+  route.put("/intersection-and-driveways/:id", validateData.intersectionAndDrivewayValidate, IntersectionAndDrivewayController.update);
+  route.delete("/intersection-and-driveways/:id", IntersectionAndDrivewayController.delete);
+
+
+  
+   // TrafficParameter routes with validation
+   route.get("/traffic-parameters", TrafficParameterController.getAll);
+   route.get("/traffic-parameters/:id", TrafficParameterController.get);
+   route.post("/traffic-parameters", validateData.trafficParameterValidate, TrafficParameterController.save);
+   route.put("/traffic-parameters/:id", validateData.trafficParameterValidate, TrafficParameterController.update);
+   route.delete("/traffic-parameters/:id", TrafficParameterController.delete);
+ 
+   // Accessory routes with validation
+   route.get("/accessories", AccessoryController.getAll);
+   route.get("/accessories/:id", AccessoryController.get);
+   route.post("/accessories", validateData.accessoryValidate, AccessoryController.save);
+   route.put("/accessories/:id", validateData.accessoryValidate, AccessoryController.update);
+   route.delete("/accessories/:id", AccessoryController.delete);
+
+  // Pavement routes with validation
+  route.get("/pavements", PavementController.getAll);
+  route.get("/pavements/:id", PavementController.get);
+  route.post("/pavements", validateData.pavementValidate, PavementController.save);
+  route.put("/pavements/:id", validateData.pavementValidate, PavementController.update);
+  route.delete("/pavements/:id", PavementController.delete);
+
+  // CulvertBasicData routes with validation
+  route.get("/culvert-basic-data", CulvertBasicDataController.getAll);
+  route.get("/culvert-basic-data/:id", CulvertBasicDataController.get);
+  route.post("/culvert-basic-data", validateData.culvertBasicDataValidate, CulvertBasicDataController.save);
+  route.put("/culvert-basic-data/:id", validateData.culvertBasicDataValidate, CulvertBasicDataController.update);
+  route.delete("/culvert-basic-data/:id", CulvertBasicDataController.delete);
+
+  // CulvertStructuralInformation routes with validation
+  route.get("/culvert-structural-informations", CulvertStructuralInformationController.getAll);
+  route.get("/culvert-structural-informations/:id", CulvertStructuralInformationController.get);
+  route.post("/culvert-structural-informations", validateData.culvertStructuralInformationValidate, CulvertStructuralInformationController.save);
+  route.put("/culvert-structural-informations/:id", validateData.culvertStructuralInformationValidate, CulvertStructuralInformationController.update);
+  route.delete("/culvert-structural-informations/:id", CulvertStructuralInformationController.delete);
+
+  // CulvertRoadOverInformation routes with validation
+  route.get("/culvert-road-over-informations", CulvertRoadOverInformationController.getAll);
+  route.get("/culvert-road-over-informations/:id", CulvertRoadOverInformationController.get);
+  route.post("/culvert-road-over-informations", validateData.culvertRoadOverInformationValidate, CulvertRoadOverInformationController.save);
+  route.put("/culvert-road-over-informations/:id", validateData.culvertRoadOverInformationValidate, CulvertRoadOverInformationController.update);
+  route.delete("/culvert-road-over-informations/:id", CulvertRoadOverInformationController.delete);
+
+  // BridgeBasicData routes with validation
+  route.get("/bridge-basic-data", BridgeBasicDataController.getAll);
+  route.get("/bridge-basic-data/:id", BridgeBasicDataController.get);
+  route.post("/bridge-basic-data", validateData.bridgeBasicDataValidate, BridgeBasicDataController.save);
+  route.put("/bridge-basic-data/:id", validateData.bridgeBasicDataValidate, BridgeBasicDataController.update);
+  route.delete("/bridge-basic-data/:id", BridgeBasicDataController.delete);
+
+
+  // BridgeAreaData routes with validation
+  route.get("/bridge-area-data", BridgeAreaDataController.getAll);
+  route.get("/bridge-area-data/:id", BridgeAreaDataController.get);
+  route.post("/bridge-area-data", validateData.bridgeAreaDataValidate, BridgeAreaDataController.save);
+  route.put("/bridge-area-data/:id", validateData.bridgeAreaDataValidate, BridgeAreaDataController.update);
+  route.delete("/bridge-area-data/:id", BridgeAreaDataController.delete);
+
+  
+
+  // BridgeSuperStructure routes with validation
+  route.get("/bridge-super-structures", BridgeSuperStructureController.getAll);
+  route.get("/bridge-super-structures/:id", BridgeSuperStructureController.get);
+  route.post("/bridge-super-structures", validateData.bridgeSuperStructureValidate, BridgeSuperStructureController.save);
+  route.put("/bridge-super-structures/:id", validateData.bridgeSuperStructureValidate, BridgeSuperStructureController.update);
+  route.delete("/bridge-super-structures/:id", BridgeSuperStructureController.delete);
+
+  
+  // BridgeSuperStructure routes with validation
+  route.get("/bridge-sub-structures", BridgeSubStructureController.getAll);
+  route.get("/bridge-sub-structures/:id", BridgeSubStructureController.get);
+  route.post("/bridge-sub-structures", validateData.bridgeSubStructureValidate, BridgeSubStructureController.save);
+  route.put("/bridge-sub-structures/:id", validateData.bridgeSubStructureValidate, BridgeSubStructureController.update);
+  route.delete("/bridge-sub-structures/:id", BridgeSubStructureController.delete);
+
+  // BridgeFoundation routes with validation
+  route.get("/bridge-foundations", BridgeFoundationController.getAll);
+  route.get("/bridge-foundations/:id", BridgeFoundationController.get);
+  route.post("/bridge-foundations", validateData.bridgeFoundationValidate, BridgeFoundationController.save);
+  route.put("/bridge-foundations/:id", validateData.bridgeFoundationValidate, BridgeFoundationController.update);
+  route.delete("/bridge-foundations/:id", BridgeFoundationController.delete);
+
+
+
+  // BridgeInspection routes with validation
+  route.get("/bridge-inspections", BridgeInspectionController.getAll);
+  route.get("/bridge-inspections/:id", BridgeInspectionController.get);
+  route.post("/bridge-inspections", validateData.bridgeInspectionValidate, BridgeInspectionController.save);
+  route.put("/bridge-inspections/:id", validateData.bridgeInspectionValidate, BridgeInspectionController.update);
+  route.delete("/bridge-inspections/:id", BridgeInspectionController.delete);
+
+
+  // BridgeStructureInformation routes with validation
+  route.get("/bridge-structure-informations", BridgeStructureInformationController.getAll);
+  route.get("/bridge-structure-informations/:id", BridgeStructureInformationController.get);
+  route.post("/bridge-structure-informations", validateData.bridgeStructureInformationValidate, BridgeStructureInformationController.save);
+  route.put("/bridge-structure-informations/:id", validateData.bridgeStructureInformationValidate, BridgeStructureInformationController.update);
+  route.delete("/bridge-structure-informations/:id", BridgeStructureInformationController.delete);
+
+  
+  // TrafficVolume routes with validation
+  route.get("/traffic-volumes", TrafficVolumeController.getAll);
+  route.get("/traffic-volumes/:id", TrafficVolumeController.get);
+  route.post("/traffic-volumes", validateData.trafficVolumeValidate, TrafficVolumeController.save);
+  route.put("/traffic-volumes/:id", validateData.trafficVolumeValidate, TrafficVolumeController.update);
+  route.delete("/traffic-volumes/:id", TrafficVolumeController.delete);
+
+  // RoadProjectQualityControl routes with validation
+  route.get("/road-project-quality-controls", RoadProjectQualityControlController.getAll);
+  route.get("/road-project-quality-controls/:id", RoadProjectQualityControlController.get);
+  route.post("/road-project-quality-controls", validateData.roadProjectQualityControlValidate, RoadProjectQualityControlController.save);
+  route.put("/road-project-quality-controls/:id", validateData.roadProjectQualityControlValidate, RoadProjectQualityControlController.update);
+  route.delete("/road-project-quality-controls/:id", RoadProjectQualityControlController.delete);
+
+
+  // RoadDrainage routes with validation
+  route.get("/road-drainages", RoadDrainageController.getAll);
+  route.get("/road-drainages/:id", RoadDrainageController.get);
+  route.post("/road-drainages", validateData.roadDrainageValidate, RoadDrainageController.save);
+  route.put("/road-drainages/:id", validateData.roadDrainageValidate, RoadDrainageController.update);
+  route.delete("/road-drainages/:id", RoadDrainageController.delete);
+
+
+  // GeotechnicalInformation routes with validation
+  route.get("/geotechnical-informations", GeotechnicalInformationController.getAll);
+  route.get("/geotechnical-informations/:id", GeotechnicalInformationController.get);
+  route.post("/geotechnical-informations", validateData.geotechnicalInformationValidate, GeotechnicalInformationController.save);
+  route.put("/geotechnical-informations/:id", validateData.geotechnicalInformationValidate, GeotechnicalInformationController.update);
+  route.delete("/geotechnical-informations/:id", GeotechnicalInformationController.delete);
+
+  // EnvironmentalData routes with validation
+  route.get("/environmental-data", EnvironmentalDataController.getAll);
+  route.get("/environmental-data/:id", EnvironmentalDataController.get);
+  route.post("/environmental-data", validateData.environmentalDataValidate, EnvironmentalDataController.save);
+  route.put("/environmental-data/:id", validateData.environmentalDataValidate, EnvironmentalDataController.update);
+  route.delete("/environmental-data/:id", EnvironmentalDataController.delete);
+
+  // RoadMaintenanceData routes with validation
+  route.get("/road-maintenance-data", RoadMaintenanceDataController.getAll);
+  route.get("/road-maintenance-data/:id", RoadMaintenanceDataController.get);
+  route.post("/road-maintenance-data", validateData.roadMaintenanceDataValidate, RoadMaintenanceDataController.save);
+  route.put("/road-maintenance-data/:id", validateData.roadMaintenanceDataValidate, RoadMaintenanceDataController.update);
+  route.delete("/road-maintenance-data/:id", RoadMaintenanceDataController.delete);
+
+
+  // RoadMaintenanceActivity routes with validation
+  route.get("/road-maintenance-activities", RoadMaintenanceActivityController.getAll);
+  route.get("/road-maintenance-activities/:id", RoadMaintenanceActivityController.get);
+  route.post("/road-maintenance-activities", validateData.roadMaintenanceActivityValidate, RoadMaintenanceActivityController.save);
+  route.put("/road-maintenance-activities/:id", validateData.roadMaintenanceActivityValidate, RoadMaintenanceActivityController.update);
+  route.delete("/road-maintenance-activities/:id", RoadMaintenanceActivityController.delete);
+
+
+
   return route;
+
 };

@@ -1,5 +1,335 @@
 const validateReply = require("../../../../utils/validateerror");
 
+const stakeholderEmployeeValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid id",
+    });
+  }
+
+  const validationRule = {
+    stakeholder_id: "required|string",
+    stakeholder_department_id: "required|string",
+    stakeholder_position_id: "required|string",
+    first_name: "required|string",
+    middle_name: "required|string",
+    last_name: "required|string",
+    national_id_no: "required|string",
+    gender: "required|string",
+    phone: "required|string",
+    email: "string",
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
+
+const stakeholderMaterialValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid id",
+    });
+  }
+  const validationRule = {
+    stakeholder_id: "required|string",
+    material_category: "required|string",
+    material_subcategory: "string",
+    name: "required|string",
+    description: "string",
+    purpose: "string",
+    quantity: "integer",
+    unit_price: "numeric",
+    current_situation: "string",
+    location: "string",
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
+
+// safety equipment validation
+
+const safetyEquipmentValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid id", 
+    });
+  }
+
+  const validationRule = {
+    stakeholder_id: "required|string",
+    name: "required|string",
+    serial_no: "string",
+    brand_name: "string", 
+    model: "required|string",
+    year: "integer",
+    capacity: "string",
+    purpose: "string",
+    quantity: "integer",
+    current_situation: "string",
+    location: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
+// stakeholder machinery validation
+const stakeholderMachineryValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid id",
+    });
+  }
+  const validationRule = {
+    stakeholder_id: "required|string",
+    name: "required|string",
+    plate_no: "required|string",
+    brand_name: "string",
+    model: "required|string",
+    year: "integer",
+    chassis_number: "string",
+    engine_number: "string", 
+    capacity: "string",
+    purpose: "string",
+    quantity: "integer",
+    current_situation: "string",
+    location: "string",
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
+// stakeholder position validation
+const stakeholderPositionValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid id",
+    });
+  }
+
+  const validationRule = {
+    stakeholder_id: "required|string",
+    stakeholder_department_id: "required|string", 
+    name: "required|string",
+    required_education: "string",
+    required_work_experience: "string",
+    salary: "numeric",
+    no_of_professionals: "integer", 
+    description: "string",
+    reference: "string",
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
+// stakeholder department validation
+const stakeholderDepartmentValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid id", 
+    });
+  }
+
+  const validationRule = {
+    stakeholder_id: "required|string",
+    parent_department_id: "string",
+    name: "required|string",
+    description: "string",
+    reference: "string",
+
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
+
+
+const branchAdditionalInformationValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid id",
+    });
+  }
+
+  const validationRule = {
+    stakeholder_id: "required|string",
+    stakeholder_branch_id: "required|string",
+    additional_information: "required|string",
+    reference: "string",
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
+const branchAddressValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid id",
+    });
+  }
+
+  const validationRule = {
+    stakeholder_id: "required|string",
+    stakeholder_branch_id: "required|string",
+    country: "required|string",
+    region: "required|string",
+    city: "required|string",
+    subcity: "required|string",
+    woreda: "required|string",
+    street: "string",
+    block_no: "string",
+    website: "string",
+    northing: "required|string",
+    easting: "required|string",
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
+const branchContactPersonValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid id",
+    });
+  }
+
+  const validationRule = {
+    stakeholder_id: "required|string",
+    stakeholder_branch_id: "required|string",
+    department: "required|string",
+    position: "required|string",
+    first_name: "required|string",
+    middle_name: "required|string",
+    last_name: "required|string",
+    gender: "required|string",
+    phone: "required|string",
+    email: "string",
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
+const branchManagerValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid id",
+    });
+  }
+
+  const validationRule = {
+    stakeholder_id: "required|string",
+    stakeholder_branch_id: "required|string",
+    department: "required|string",
+    position: "required|string",
+    first_name: "required|string",
+    middle_name: "required|string",
+    last_name: "required|string",
+    gender: "required|string",
+    phone: "required|string",
+    email: "string",
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+const stakeholderBranchValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid id",
+    });
+  }
+
+  const validationRule = {
+    stakeholder_id: "required|string",
+    name: "required|string",
+    tin_number: "string",
+    business_field_id: "required|string",
+    description: "string",
+    reference: "string",
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+const stakeholderAdditionalInformationValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid id",
+    });
+  }
+
+  const validationRule = {
+    stakeholder_id: "required|string",
+    additional_information: "required|string",
+    reference: "string",
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
+
+const jointVentureCompanyValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid id",
+    });
+  }
+
+  const validationRule = {
+    joint_venture_id: "required|string",
+    company_name: "required|string",
+    specialization: "string",
+    roles_and_responsibilities: "string",
+    ownership_percentage: "numeric",
+    description: "required|string",
+    reference: "required|string",
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
+const jointVentureValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid id",
+    });
+  }
+
+  const validationRule = {
+    name: "required|string",
+    member_companies_no: "required|integer",
+    description: "required|string",
+    reference: "string",
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+const stakeholderManagerValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid id",
+    });
+  }
+  const validationRule = {
+    stakeholder_id: "required|string",
+    type: "required|string",
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
 const stakeholderCategoryValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
   if (param === "failed") {
@@ -419,6 +749,21 @@ const StakeholderServiceValidate = async (req, res, next) => {
   await validateReply.validateReply(req.body, validationRule, res, next);
 };
 module.exports = {
+  stakeholderEmployeeValidate,
+  stakeholderMaterialValidate,
+  safetyEquipmentValidate,
+  stakeholderMachineryValidate,
+  stakeholderPositionValidate,
+  stakeholderDepartmentValidate,
+  branchAdditionalInformationValidate,
+  branchAddressValidate,
+  branchContactPersonValidate,
+  branchManagerValidate,
+  stakeholderBranchValidate,
+  stakeholderAdditionalInformationValidate,
+  jointVentureCompanyValidate,
+  jointVentureValidate,
+  stakeholderManagerValidate,
   stakeholderCategoryValidate,
   stakeholderSubCategoryValidate,
   ownerShipValidate,
