@@ -168,6 +168,7 @@ const modulemodels = {
     "roadinfo",
     "roadlayer",
     "roadsegment",
+    "segmentgeometry",
     "solarenergy",
     "spillwayinfo",
     "transformer",
@@ -177,6 +178,25 @@ const modulemodels = {
     "waterirrigationdam",
     "windenergy",
     "telecom",
+    "trafficparameter",
+    "intersectiondriveway",
+    "accessory",
+    "pavement",
+    "culvertbasicdata",
+    "culvertstructuralinformation",
+    "culvertroadoverinformation",
+    "bridgebasicdata",
+    "bridgeareadata",
+    "bridgesuperstructure",
+    "bridgesubstructure",
+    "bridgefoundation",
+    "bridgeinspection",
+    "bridgestructureinformation",
+    "trafficvolume",
+    "roadprojectqualitycontrol",
+    "roaddrainage",
+    
+
   ],
 
   stakeholder: [

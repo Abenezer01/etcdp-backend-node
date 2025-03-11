@@ -74,6 +74,9 @@ const EnvironmentalDataController = require("../../../controllers/projects/Envir
 const RoadMaintenanceDataController = require("../../../controllers/projects/RoadMaintenanceDataController.js");
 const RoadMaintenanceActivityController = require("../../../controllers/projects/RoadMaintenanceActivityController.js");
 
+
+const DrainageAssessmentController = require("../../../controllers/projects/DrainageAssessmentController.js");
+
 const validateData = require("../../../middleware/validate/module/project/validate");
 
 module.exports = function (express) {
@@ -1078,6 +1081,13 @@ module.exports = function (express) {
   route.put("/road-maintenance-activities/:id", validateData.roadMaintenanceActivityValidate, RoadMaintenanceActivityController.update);
   route.delete("/road-maintenance-activities/:id", RoadMaintenanceActivityController.delete);
 
+
+  // DrainageAssessment routes with validation
+  route.get("/drainage-assessments", DrainageAssessmentController.getAll);
+  route.get("/drainage-assessments/:id", DrainageAssessmentController.get);
+  route.post("/drainage-assessments", validateData.drainageAssessmentValidate, DrainageAssessmentController.save);
+  route.put("/drainage-assessments/:id", validateData.drainageAssessmentValidate, DrainageAssessmentController.update);
+  route.delete("/drainage-assessments/:id", DrainageAssessmentController.delete);
 
 
   return route;

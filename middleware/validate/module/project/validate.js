@@ -1,5 +1,23 @@
 const validateReply = require("../../../../utils/validateerror");
 
+const drainageAssessmentValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid id",
+    });
+  }
+  const validationRule = {
+    project_id: "required|string",
+    road_segment: "required|string",
+    drainage_type_id: "required|string",
+    drainage_condition_id: "required|string",
+    remark: "string"
+  };
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
+
 
 const roadMaintenanceActivityValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
@@ -1867,6 +1885,8 @@ const paymentValidate = async (req, res, next) => {
   await validateReply.validateReply(req.body, validationRule, res, next);
 };
 module.exports = { 
+
+  drainageAssessmentValidate,
   roadMaintenanceActivityValidate,
   roadMaintenanceDataValidate,
   environmentalDataValidate,
