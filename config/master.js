@@ -195,6 +195,26 @@ const modulemodels = {
     "trafficvolume",
     "roadprojectqualitycontrol",
     "roaddrainage",
+    "drainageassessment",
+    "roadsurfacecondition",
+    "maintenancehistory",
+    "environmentaldata",
+    "roadmaintenancedata",
+    "roadmaintenanceactivity",
+    "geotechnicalinformation",
+    "safetyandhealth",
+
+    "telecominfrastructurecomponent",
+    "telecominfrastructureage",
+    "maintenance",
+    "networkcapacity",
+    "networkcoverage",
+
+    "mobilenetwork",
+    "satellitenetwork",
+    "satelliteinfrastructureage",
+    "satellitenetworkcomponentmanufacturer",
+    "internetconnection"
   ],
 
   stakeholder: [

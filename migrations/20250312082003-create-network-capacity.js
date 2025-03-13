@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('SegmentGeometries', {
+    await queryInterface.createTable('NetworkCapacities', {
       id: {
         type: Sequelize.UUID,
         primaryKey: true,
@@ -11,7 +11,7 @@ module.exports = {
       parent_id: {
         type: Sequelize.UUID,
         references: { 
-          model: 'SegmentGeometries',
+          model: 'NetworkCapacities',
           key: 'id'
         },
         onUpdate: "CASCADE",
@@ -19,6 +19,7 @@ module.exports = {
       },
       project_id: {
         type: Sequelize.UUID,
+        allowNull: false,
         references: {
           model: 'projects',
           key: 'id'
@@ -26,20 +27,7 @@ module.exports = {
         onUpdate: "CASCADE",
         onDelete: "CASCADE"
       },
-      name: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
-      carriage_way_width: {
-        type: Sequelize.DOUBLE
-      },
-      lane_width: {
-        type: Sequelize.DOUBLE
-      },
-      shoulder_width: {
-        type: Sequelize.DOUBLE
-      },
-      cross_section_type_id: {
+      network_type_id: {
         type: Sequelize.UUID,
         allowNull: false,
         references: {
@@ -49,20 +37,14 @@ module.exports = {
         onUpdate: "CASCADE",
         onDelete: "CASCADE"
       },
-      grade_percentage: {
+      total_bandwidth: {
         type: Sequelize.DOUBLE
       },
-      elevation_change: {
-        type: Sequelize.DOUBLE
+      users_number: {
+        type: Sequelize.INTEGER
       },
-      cross_slope_percentage: {
-        type: Sequelize.DOUBLE
-      },
-      property_access_control: {
-        type: Sequelize.BOOLEAN
-      },
-      similar_for_all_lane: {
-        type: Sequelize.BOOLEAN
+      remark: {
+        type: Sequelize.TEXT
       },
       createdAt: {
         allowNull: false,
@@ -75,6 +57,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('SegmentGeometries');
+    await queryInterface.dropTable('NetworkCapacities');
   }
 };

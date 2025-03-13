@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('SegmentGeometries', {
+    await queryInterface.createTable('RoadSurfaceConditions', {
       id: {
         type: Sequelize.UUID,
         primaryKey: true,
@@ -11,7 +11,7 @@ module.exports = {
       parent_id: {
         type: Sequelize.UUID,
         references: { 
-          model: 'SegmentGeometries',
+          model: 'RoadSurfaceConditions',
           key: 'id'
         },
         onUpdate: "CASCADE",
@@ -19,6 +19,7 @@ module.exports = {
       },
       project_id: {
         type: Sequelize.UUID,
+        allowNull: false,
         references: {
           model: 'projects',
           key: 'id'
@@ -26,20 +27,32 @@ module.exports = {
         onUpdate: "CASCADE",
         onDelete: "CASCADE"
       },
-      name: {
+      road_segment: {
         type: Sequelize.STRING,
         allowNull: false
       },
-      carriage_way_width: {
+      cracks: {
+        type: Sequelize.BOOLEAN
+      },
+      rutting: {
+        type: Sequelize.BOOLEAN
+      },
+      patching: {
+        type: Sequelize.BOOLEAN
+      },
+      drainage_problems: {
+        type: Sequelize.BOOLEAN
+      },
+      action_taken_date: {
+        type: Sequelize.DATE
+      },
+      action_taken: {
+        type: Sequelize.STRING
+      },
+      action_taken_cost: {
         type: Sequelize.DOUBLE
       },
-      lane_width: {
-        type: Sequelize.DOUBLE
-      },
-      shoulder_width: {
-        type: Sequelize.DOUBLE
-      },
-      cross_section_type_id: {
+      assessment_condition_id: {
         type: Sequelize.UUID,
         allowNull: false,
         references: {
@@ -49,20 +62,18 @@ module.exports = {
         onUpdate: "CASCADE",
         onDelete: "CASCADE"
       },
-      grade_percentage: {
-        type: Sequelize.DOUBLE
+      surface_type_id: {
+        type: Sequelize.UUID,
+        allowNull: false,
+        references: {
+          model: 'ProjectMasterData',
+          key: 'id'
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE"
       },
-      elevation_change: {
-        type: Sequelize.DOUBLE
-      },
-      cross_slope_percentage: {
-        type: Sequelize.DOUBLE
-      },
-      property_access_control: {
-        type: Sequelize.BOOLEAN
-      },
-      similar_for_all_lane: {
-        type: Sequelize.BOOLEAN
+      remark: {
+        type: Sequelize.TEXT
       },
       createdAt: {
         allowNull: false,
@@ -75,6 +86,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('SegmentGeometries');
+    await queryInterface.dropTable('RoadSurfaceConditions');
   }
 };

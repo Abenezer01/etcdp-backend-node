@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('SegmentGeometries', {
+    await queryInterface.createTable('TelecomInfrastructureAges', {
       id: {
         type: Sequelize.UUID,
         primaryKey: true,
@@ -11,7 +11,7 @@ module.exports = {
       parent_id: {
         type: Sequelize.UUID,
         references: { 
-          model: 'SegmentGeometries',
+          model: 'TelecomInfrastructureAges',
           key: 'id'
         },
         onUpdate: "CASCADE",
@@ -19,6 +19,7 @@ module.exports = {
       },
       project_id: {
         type: Sequelize.UUID,
+        allowNull: false,
         references: {
           model: 'projects',
           key: 'id'
@@ -26,43 +27,32 @@ module.exports = {
         onUpdate: "CASCADE",
         onDelete: "CASCADE"
       },
-      name: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
-      carriage_way_width: {
-        type: Sequelize.DOUBLE
-      },
-      lane_width: {
-        type: Sequelize.DOUBLE
-      },
-      shoulder_width: {
-        type: Sequelize.DOUBLE
-      },
-      cross_section_type_id: {
-        type: Sequelize.UUID,
-        allowNull: false,
-        references: {
-          model: 'ProjectMasterData',
-          key: 'id'
-        },
-        onUpdate: "CASCADE",
-        onDelete: "CASCADE"
-      },
-      grade_percentage: {
-        type: Sequelize.DOUBLE
-      },
-      elevation_change: {
-        type: Sequelize.DOUBLE
-      },
-      cross_slope_percentage: {
-        type: Sequelize.DOUBLE
-      },
-      property_access_control: {
+      cables: {
         type: Sequelize.BOOLEAN
       },
-      similar_for_all_lane: {
+      wires: {
         type: Sequelize.BOOLEAN
+      },
+      routers: {
+        type: Sequelize.BOOLEAN
+      },
+      switches: {
+        type: Sequelize.BOOLEAN
+      },
+      hubs: {
+        type: Sequelize.BOOLEAN
+      },
+      repeaters: {
+        type: Sequelize.BOOLEAN
+      },
+      antennas: {
+        type: Sequelize.BOOLEAN
+      },
+      towers: {
+        type: Sequelize.BOOLEAN
+      },
+      remark: {
+        type: Sequelize.TEXT
       },
       createdAt: {
         allowNull: false,
@@ -75,6 +65,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('SegmentGeometries');
+    await queryInterface.dropTable('TelecomInfrastructureAges');
   }
 };

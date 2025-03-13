@@ -1,5 +1,326 @@
 const validateReply = require("../../../../utils/validateerror");
 
+const internetConnectionValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+
+
+  const validationRule = {
+    project_id: "required|uuid",
+    internet_connection_type_id: "required|uuid",
+    routers: "boolean",
+    switches: "boolean",
+    modems: "boolean",
+    cables: "boolean",
+    others: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
+const satelliteNetworkComponentManufacturerValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+
+  const validationRule = {
+    satellite_network_id: "required|string",
+    satellite: "string",
+    ground_stations: "string",
+    modems: "string",
+    routers: "string",
+    others: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
+const satelliteInfrastructureAgeValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+
+  const validationRule = {
+    satellite_network_id: "required|string",
+    satellite: "integer",
+    ground_stations: "integer",
+    modems: "integer",
+    routers: "integer",
+    others: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
+const satelliteNetworkValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+
+  const validationRule = {
+    project_id: "required|string",
+    satellite_network_type_id: "required|string",
+    satellite: "boolean",
+    ground_stations: "boolean",
+    modems: "boolean",
+    routers: "boolean",
+    others: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
+
+
+const networkCoverageValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+
+  const validationRule = {
+    project_id: "required|string",
+    network_infrastructure_type_id: "required|string",
+    total_coverage_area: "numeric",
+    coverage_population_number: "integer",
+    active_users_number: "integer",
+    average_download_speed: "numeric",
+    average_upload_speed: "numeric",
+    signal_strength: "numeric",
+    others: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
+const mobileNetworkComponentAgeValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+
+  const validationRule = {
+    mobile_network_id: "required|string",
+    cell: "integer",
+    towers: "integer",
+    antennas: "integer",
+    base_stations: "integer",
+    repeaters: "integer",
+    switches: "integer",
+    others: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
+const mobileNetworkValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+
+  const validationRule = {
+    project_id: "required|string",
+    mobile_network_type_id: "required|string",
+    cell_towers: "boolean",
+    antennas: "boolean",
+    base_stations: "boolean",
+    repeaters: "boolean",
+    switches: "boolean",
+    others: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
+
+const networkCapacityValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+
+  const validationRule = {
+    project_id: "required|string",
+    network_type_id: "required|string",
+    total_bandwidth: "numeric",
+    users_number: "integer",
+    remark: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
+const maintenanceValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+
+  const validationRule = {
+    project_id: "required|string",
+    maintenance_frequency: "boolean",
+    service_level_agreement: "boolean",
+    remark: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
+
+const telecomInfrastructureAgeValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+
+  const validationRule = {
+    project_id: "required|string",
+    cables: "boolean",
+    wires: "boolean",
+    routers: "boolean",
+    switches: "boolean",
+    hubs: "boolean",
+    repeaters: "boolean",
+    antennas: "boolean",
+    towers: "boolean",
+    remark: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
+const telecomInfrastructureComponentValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+  
+  const validationRule = {
+    project_id: "required|string",
+    mobile_network_type_id: "required|string",
+    cables: "integer",
+    wires: "integer",
+    routers: "integer",
+    switches: "integer",
+    hubs: "integer",
+    repeaters: "integer",
+    antennas: "integer",
+    towers: "integer",
+    remark: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
+
+const safetyAndHealthValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid id",
+    });
+  }
+  const validationRule = {
+    project_id: "required|string",
+    road_segment: "required|string",
+    hazard_type_id: "required|string",
+    potential_impact_id: "required|string",
+    risk_level_id: "required|string",
+    immediate_action_taken: "string",
+    incident_type_id: "required|string",
+    incident_time: "date",
+    medicare_required: "boolean",
+    total_injury_number: "integer",
+    incident_reported_by: "string",
+    personal_protective_equipment_type_id: "required|string",
+    personal_protective_equipment_condition_id: "required|string",
+    trained_on_equipment_usage: "boolean",
+    training_hours_number: "integer",
+    weather_condition_during_incident_id: "required|string",
+    injury_severity_id: "required|string",
+    fatality_number: "integer",
+    recommendation: "string",
+    remark: "string"
+  };
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
+const maintenanceHistoryValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid id",
+    });
+  }
+  const validationRule = {
+    project_id: "required|string",
+    road_segment: "required|string",
+    last_maintenance_date: "date",
+    maintenance_type_id: "required|string",
+    maintenance_cost: "numeric",
+    severity_level_id: "required|string",
+    suggested_repair_id: "required|string",
+    recommended_action_urgency_id: "required|string",
+    remark: "string"
+  };
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
+
+const roadSurfaceConditionValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid id",
+    });
+  }
+  const validationRule = {
+    project_id: "required|string",
+    road_segment: "required|string",
+    cracks: "boolean",
+    rutting: "boolean",
+    patching: "boolean",
+    drainage_problems: "boolean",
+    action_taken_date: "date",
+    action_taken: "string",
+    action_taken_cost: "numeric",
+    assessment_condition_id: "required|string",
+    surface_type_id: "required|string",
+    remark: "string"
+  };
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
+
+
 const drainageAssessmentValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
   if (param === "failed") {
@@ -1885,7 +2206,22 @@ const paymentValidate = async (req, res, next) => {
   await validateReply.validateReply(req.body, validationRule, res, next);
 };
 module.exports = { 
+  internetConnectionValidate,
+  satelliteNetworkComponentManufacturerValidate,
 
+  satelliteInfrastructureAgeValidate,
+  satelliteNetworkValidate,
+  networkCoverageValidate,
+  mobileNetworkComponentAgeValidate,
+  mobileNetworkValidate, 
+  networkCapacityValidate,
+  maintenanceValidate,
+  telecomInfrastructureAgeValidate,
+  telecomInfrastructureComponentValidate,
+  safetyAndHealthValidate,
+  maintenanceHistoryValidate,
+
+  roadSurfaceConditionValidate,
   drainageAssessmentValidate,
   roadMaintenanceActivityValidate,
   roadMaintenanceDataValidate,

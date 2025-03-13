@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('SegmentGeometries', {
+    await queryInterface.createTable('MaintenanceHistories', {
       id: {
         type: Sequelize.UUID,
         primaryKey: true,
@@ -11,7 +11,7 @@ module.exports = {
       parent_id: {
         type: Sequelize.UUID,
         references: { 
-          model: 'SegmentGeometries',
+          model: 'MaintenanceHistories',
           key: 'id'
         },
         onUpdate: "CASCADE",
@@ -19,6 +19,7 @@ module.exports = {
       },
       project_id: {
         type: Sequelize.UUID,
+        allowNull: false,
         references: {
           model: 'projects',
           key: 'id'
@@ -26,20 +27,14 @@ module.exports = {
         onUpdate: "CASCADE",
         onDelete: "CASCADE"
       },
-      name: {
+      road_segment: {
         type: Sequelize.STRING,
         allowNull: false
       },
-      carriage_way_width: {
-        type: Sequelize.DOUBLE
+      last_maintenance_date: {
+        type: Sequelize.DATE
       },
-      lane_width: {
-        type: Sequelize.DOUBLE
-      },
-      shoulder_width: {
-        type: Sequelize.DOUBLE
-      },
-      cross_section_type_id: {
+      maintenance_type_id: {
         type: Sequelize.UUID,
         allowNull: false,
         references: {
@@ -49,20 +44,41 @@ module.exports = {
         onUpdate: "CASCADE",
         onDelete: "CASCADE"
       },
-      grade_percentage: {
+      maintenance_cost: {
         type: Sequelize.DOUBLE
       },
-      elevation_change: {
-        type: Sequelize.DOUBLE
+      severity_level_id: {
+        type: Sequelize.UUID,
+        allowNull: false,
+        references: {
+          model: 'ProjectMasterData',
+          key: 'id'
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE"
       },
-      cross_slope_percentage: {
-        type: Sequelize.DOUBLE
+      suggested_repair_id: {
+        type: Sequelize.UUID,
+        allowNull: false,
+        references: {
+          model: 'ProjectMasterData',
+          key: 'id'
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE"
       },
-      property_access_control: {
-        type: Sequelize.BOOLEAN
+      recommended_action_urgency_id: {
+        type: Sequelize.UUID,
+        allowNull: false,
+        references: {
+          model: 'ProjectMasterData',
+          key: 'id'
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE"
       },
-      similar_for_all_lane: {
-        type: Sequelize.BOOLEAN
+      remark: {
+        type: Sequelize.TEXT
       },
       createdAt: {
         allowNull: false,
@@ -75,6 +91,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('SegmentGeometries');
+    await queryInterface.dropTable('MaintenanceHistories');
   }
 };

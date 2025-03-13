@@ -74,8 +74,27 @@ const EnvironmentalDataController = require("../../../controllers/projects/Envir
 const RoadMaintenanceDataController = require("../../../controllers/projects/RoadMaintenanceDataController.js");
 const RoadMaintenanceActivityController = require("../../../controllers/projects/RoadMaintenanceActivityController.js");
 
+const RoadSurfaceConditionController = require("../../../controllers/projects/RoadSurfaceConditionController.js");
+
 
 const DrainageAssessmentController = require("../../../controllers/projects/DrainageAssessmentController.js");
+const MaintenanceHistoryController = require("../../../controllers/projects/MaintenanceHistoryController.js");
+const SafetyAndHealthController = require("../../../controllers/projects/SafetyAndHealthController.js");
+const TelecomInfrastructureComponentController = require("../../../controllers/projects/TelecomInfrastructureComponentController.js");
+const TelecomInfrastructureAgeController = require("../../../controllers/projects/TelecomInfrastructureAgeController.js");
+const MaintenanceController = require("../../../controllers/projects/MaintenanceController.js");
+const NetworkCapacityController = require("../../../controllers/projects/NetworkCapacityController.js");
+
+const MobileNetworkController = require("../../../controllers/projects/MobileNetworkController.js");
+const MobileNetworkComponentAgeController = require("../../../controllers/projects/MobileNetworkComponentAgeController.js");
+
+const NetworkCoverageController = require("../../../controllers/projects/NetworkCoverageController.js");
+const SatelliteNetworkController = require("../../../controllers/projects/SatelliteNetworkController.js");
+const SatelliteInfrastructureAgeController = require("../../../controllers/projects/SatelliteInfrastructureAgeController.js");
+
+const SatelliteNetworkComponentManufacturerController = require("../../../controllers/projects/SatelliteNetworkComponentManufacturerController.js");
+const InternetConnectionController = require("../../../controllers/projects/InternetConnectionController.js");
+
 
 const validateData = require("../../../middleware/validate/module/project/validate");
 
@@ -1088,6 +1107,112 @@ module.exports = function (express) {
   route.post("/drainage-assessments", validateData.drainageAssessmentValidate, DrainageAssessmentController.save);
   route.put("/drainage-assessments/:id", validateData.drainageAssessmentValidate, DrainageAssessmentController.update);
   route.delete("/drainage-assessments/:id", DrainageAssessmentController.delete);
+
+
+  // RoadSurfaceCondition routes with validation
+  route.get("/road-surface-conditions", RoadSurfaceConditionController.getAll);
+  route.get("/road-surface-conditions/:id", RoadSurfaceConditionController.get);
+  route.post("/road-surface-conditions", validateData.roadSurfaceConditionValidate, RoadSurfaceConditionController.save);
+  route.put("/road-surface-conditions/:id", validateData.roadSurfaceConditionValidate, RoadSurfaceConditionController.update);
+  route.delete("/road-surface-conditions/:id", RoadSurfaceConditionController.delete);
+
+  // MaintenanceHistory routes with validation
+  route.get("/maintenance-histories", MaintenanceHistoryController.getAll);
+  route.get("/maintenance-histories/:id", MaintenanceHistoryController.get);
+  route.post("/maintenance-histories", validateData.maintenanceHistoryValidate, MaintenanceHistoryController.save);
+  route.put("/maintenance-histories/:id", validateData.maintenanceHistoryValidate, MaintenanceHistoryController.update);
+  route.delete("/maintenance-histories/:id", MaintenanceHistoryController.delete);
+
+
+  // SafetyAndHealth routes with validation
+  route.get("/safety-and-health", SafetyAndHealthController.getAll);
+  route.get("/safety-and-health/:id", SafetyAndHealthController.get);
+  route.post("/safety-and-health", validateData.safetyAndHealthValidate, SafetyAndHealthController.save);
+  route.put("/safety-and-health/:id", validateData.safetyAndHealthValidate, SafetyAndHealthController.update);
+  route.delete("/safety-and-health/:id", SafetyAndHealthController.delete);
+
+  // TelecomInfrastructureComponent routes with validation
+  route.get("/telecom-infrastructure-components", TelecomInfrastructureComponentController.getAll);
+  route.get("/telecom-infrastructure-components/:id", TelecomInfrastructureComponentController.get);
+  route.post("/telecom-infrastructure-components", validateData.telecomInfrastructureComponentValidate, TelecomInfrastructureComponentController.save);
+  route.put("/telecom-infrastructure-components/:id", validateData.telecomInfrastructureComponentValidate, TelecomInfrastructureComponentController.update);
+  route.delete("/telecom-infrastructure-components/:id", TelecomInfrastructureComponentController.delete);
+
+
+  // TelecomInfrastructureAge routes with validation
+  route.get("/telecom-infrastructure-ages", TelecomInfrastructureAgeController.getAll);
+  route.get("/telecom-infrastructure-ages/:id", TelecomInfrastructureAgeController.get);
+  route.post("/telecom-infrastructure-ages", validateData.telecomInfrastructureAgeValidate, TelecomInfrastructureAgeController.save);
+  route.put("/telecom-infrastructure-ages/:id", validateData.telecomInfrastructureAgeValidate, TelecomInfrastructureAgeController.update);
+  route.delete("/telecom-infrastructure-ages/:id", TelecomInfrastructureAgeController.delete);
+
+  // Maintenance routes with validation
+  route.get("/maintenances", MaintenanceController.getAll);
+  route.get("/maintenances/:id", MaintenanceController.get);
+  route.post("/maintenances", validateData.maintenanceValidate, MaintenanceController.save);
+  route.put("/maintenances/:id", validateData.maintenanceValidate, MaintenanceController.update);
+  route.delete("/maintenances/:id", MaintenanceController.delete);
+
+  // NetworkCapacity routes with validation
+  route.get("/network-capacities", NetworkCapacityController.getAll);
+  route.get("/network-capacities/:id", NetworkCapacityController.get);
+  route.post("/network-capacities", validateData.networkCapacityValidate, NetworkCapacityController.save);
+  route.put("/network-capacities/:id", validateData.networkCapacityValidate, NetworkCapacityController.update);
+  route.delete("/network-capacities/:id", NetworkCapacityController.delete);
+
+  // MobileNetwork routes with validation
+  route.get("/mobile-networks", MobileNetworkController.getAll);
+  route.get("/mobile-networks/:id", MobileNetworkController.get);
+  route.post("/mobile-networks", validateData.mobileNetworkValidate, MobileNetworkController.save);
+  route.put("/mobile-networks/:id", validateData.mobileNetworkValidate, MobileNetworkController.update);
+  route.delete("/mobile-networks/:id", MobileNetworkController.delete);
+
+
+  // MobileNetworkComponentAge routes with validation
+  route.get("/mobile-network-component-ages", MobileNetworkComponentAgeController.getAll);
+  route.get("/mobile-network-component-ages/:id", MobileNetworkComponentAgeController.get);
+  route.post("/mobile-network-component-ages", validateData.mobileNetworkComponentAgeValidate, MobileNetworkComponentAgeController.save);
+  route.put("/mobile-network-component-ages/:id", validateData.mobileNetworkComponentAgeValidate, MobileNetworkComponentAgeController.update);
+  route.delete("/mobile-network-component-ages/:id", MobileNetworkComponentAgeController.delete);
+
+
+  // NetworkCoverage routes with validation
+  route.get("/network-coverages", NetworkCoverageController.getAll);
+  route.get("/network-coverages/:id", NetworkCoverageController.get);
+  route.post("/network-coverages", validateData.networkCoverageValidate, NetworkCoverageController.save);
+  route.put("/network-coverages/:id", validateData.networkCoverageValidate, NetworkCoverageController.update);
+  route.delete("/network-coverages/:id", NetworkCoverageController.delete);
+
+  // SatelliteNetwork routes with validation
+  route.get("/satellite-networks", SatelliteNetworkController.getAll);
+  route.get("/satellite-networks/:id", SatelliteNetworkController.get);
+  route.post("/satellite-networks", validateData.satelliteNetworkValidate, SatelliteNetworkController.save);
+  route.put("/satellite-networks/:id", validateData.satelliteNetworkValidate, SatelliteNetworkController.update);
+  route.delete("/satellite-networks/:id", SatelliteNetworkController.delete);
+
+
+  // SatelliteInfrastructureAge routes with validation
+  route.get("/satellite-infrastructure-ages", SatelliteInfrastructureAgeController.getAll);
+  route.get("/satellite-infrastructure-ages/:id", SatelliteInfrastructureAgeController.get);
+  route.post("/satellite-infrastructure-ages", validateData.satelliteInfrastructureAgeValidate, SatelliteInfrastructureAgeController.save);
+  route.put("/satellite-infrastructure-ages/:id", validateData.satelliteInfrastructureAgeValidate, SatelliteInfrastructureAgeController.update);
+  route.delete("/satellite-infrastructure-ages/:id", SatelliteInfrastructureAgeController.delete);
+
+
+  // SatelliteNetworkComponentManufacturer routes with validation
+  route.get("/satellite-network-component-manufacturers", SatelliteNetworkComponentManufacturerController.getAll);
+  route.get("/satellite-network-component-manufacturers/:id", SatelliteNetworkComponentManufacturerController.get);
+  route.post("/satellite-network-component-manufacturers", validateData.satelliteNetworkComponentManufacturerValidate, SatelliteNetworkComponentManufacturerController.save);
+  route.put("/satellite-network-component-manufacturers/:id", validateData.satelliteNetworkComponentManufacturerValidate, SatelliteNetworkComponentManufacturerController.update);
+  route.delete("/satellite-network-component-manufacturers/:id", SatelliteNetworkComponentManufacturerController.delete);
+
+  // InternetConnection routes with validation
+  route.get("/internet-connections", InternetConnectionController.getAll);
+  route.get("/internet-connections/:id", InternetConnectionController.get);
+  route.post("/internet-connections", InternetConnectionController.save);
+  // route.post("/internet-connections", validateData.internetConnectionValidate, InternetConnectionController.save);
+  route.put("/internet-connections/:id", validateData.internetConnectionValidate, InternetConnectionController.update);
+  route.delete("/internet-connections/:id", InternetConnectionController.delete);
 
 
   return route;

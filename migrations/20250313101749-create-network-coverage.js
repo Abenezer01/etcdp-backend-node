@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('SegmentGeometries', {
+    await queryInterface.createTable('NetworkCoverages', {
       id: {
         type: Sequelize.UUID,
         primaryKey: true,
@@ -11,7 +11,7 @@ module.exports = {
       parent_id: {
         type: Sequelize.UUID,
         references: { 
-          model: 'SegmentGeometries',
+          model: 'NetworkCoverages',
           key: 'id'
         },
         onUpdate: "CASCADE",
@@ -19,6 +19,7 @@ module.exports = {
       },
       project_id: {
         type: Sequelize.UUID,
+        allowNull: false,
         references: {
           model: 'projects',
           key: 'id'
@@ -26,43 +27,30 @@ module.exports = {
         onUpdate: "CASCADE",
         onDelete: "CASCADE"
       },
-      name: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
-      carriage_way_width: {
-        type: Sequelize.DOUBLE
-      },
-      lane_width: {
-        type: Sequelize.DOUBLE
-      },
-      shoulder_width: {
-        type: Sequelize.DOUBLE
-      },
-      cross_section_type_id: {
+      network_infrastructure_type_id: {
         type: Sequelize.UUID,
         allowNull: false,
-        references: {
-          model: 'ProjectMasterData',
-          key: 'id'
-        },
-        onUpdate: "CASCADE",
-        onDelete: "CASCADE"
       },
-      grade_percentage: {
+      total_coverage_area: {
         type: Sequelize.DOUBLE
       },
-      elevation_change: {
+      coverage_population_number: {
+        type: Sequelize.INTEGER
+      },
+      active_users_number: {
+        type: Sequelize.INTEGER
+      },
+      average_download_speed: {
         type: Sequelize.DOUBLE
       },
-      cross_slope_percentage: {
+      average_upload_speed: {
         type: Sequelize.DOUBLE
       },
-      property_access_control: {
-        type: Sequelize.BOOLEAN
+      signal_strength: {
+        type: Sequelize.DOUBLE
       },
-      similar_for_all_lane: {
-        type: Sequelize.BOOLEAN
+      others: {
+        type: Sequelize.TEXT
       },
       createdAt: {
         allowNull: false,
@@ -75,6 +63,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('SegmentGeometries');
+    await queryInterface.dropTable('NetworkCoverages');
   }
 };
