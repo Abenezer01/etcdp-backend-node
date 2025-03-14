@@ -1,4 +1,4 @@
-const { MobileNetworkComponentAge  , Sequelize } = require("../../models");
+const { MobileNetworkComponentAge, MobileNetwork  , Sequelize } = require("../../models");
 const Op = Sequelize.Op;
 const dotenv = require("dotenv");
 dotenv.config();
@@ -9,7 +9,17 @@ let self = {};
 
 self.getAll = async (req, res) => {
   try {
-    const paginatedResult = await paginationHelper(MobileNetworkComponentAge , req);
+
+    const whereCondition = { };
+
+
+    const includeOptions = [
+      {
+          model: MobileNetwork,
+          as: "mobilenetwork"
+      },
+    ];
+    const paginatedResult = await paginationHelper(MobileNetworkComponentAge , req, whereCondition, includeOptions);
 
     // Use the response formatter to send the success response
     res.apiSuccess({

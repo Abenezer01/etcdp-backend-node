@@ -11,6 +11,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      MobileNetworkComponentAge.belongsTo(models.MobileNetwork, {
+        foreignKey: "mobile_network_id",
+        as: "mobilenetwork"
+      });
     }
   }
   MobileNetworkComponentAge.init({
