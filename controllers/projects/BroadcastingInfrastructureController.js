@@ -1,4 +1,4 @@
-const { BroadcastingInfrastructure  , Sequelize } = require("../../models");
+const { BroadcastingInfrastructure, Project, ProjectMasterData , Sequelize } = require("../../models");
 const Op = Sequelize.Op;
 const dotenv = require("dotenv");
 dotenv.config();
@@ -9,7 +9,22 @@ let self = {};
 
 self.getAll = async (req, res) => {
   try {
-    const paginatedResult = await paginationHelper(BroadcastingInfrastructure , req);
+
+    const whereCondition = { };
+
+    const includeOptions = [
+      {
+        model: Project,
+        as: 'project',
+        attributes: ['id', 'name']
+      },
+      {
+        model: ProjectMasterData,
+        as: 'infrastructureType',
+        attributes: ['id', 'title']
+      }
+    ];
+    const paginatedResult = await paginationHelper(BroadcastingInfrastructure , req, whereCondition, includeOptions);
 
     // Use the response formatter to send the success response
     res.apiSuccess({

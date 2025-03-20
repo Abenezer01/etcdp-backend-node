@@ -11,6 +11,16 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      BroadcastingInfrastructure.belongsTo(models.Project, {
+        foreignKey: 'project_id',
+        as: 'project'
+      });
+    
+      // Relationship with BroadcastingInfrastructureType
+      BroadcastingInfrastructure.belongsTo(models.ProjectMasterData, {
+        foreignKey: 'broadcasting_infrastructure_type_id',
+        as: 'infrastructureType'
+      });
     }
   }
   BroadcastingInfrastructure.init({

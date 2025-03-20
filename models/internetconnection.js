@@ -15,6 +15,7 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "internet_connection_type_id",
         as: "internetConnectionType"
       })
+      
     }
   }
   InternetConnection.init({

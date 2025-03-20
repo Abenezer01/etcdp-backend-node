@@ -11,6 +11,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      PowerGenerationCapacity.belongsTo(models.ProjectMasterData, {
+        foreignKey: "owner_id",
+        as: "owner"
+      })
     }
   }
   PowerGenerationCapacity.init({
