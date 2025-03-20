@@ -94,6 +94,32 @@ const SatelliteInfrastructureAgeController = require("../../../controllers/proje
 
 const SatelliteNetworkComponentManufacturerController = require("../../../controllers/projects/SatelliteNetworkComponentManufacturerController.js");
 const InternetConnectionController = require("../../../controllers/projects/InternetConnectionController.js");
+const InternetConnectionInfrastructureAgeController = require("../../../controllers/projects/InternetConnectionInfrastructureAgeController.js");
+const InternetConnectionInfrastructureManufacturerController = require("../../../controllers/projects/InternetConnectionInfrastructureManufacturerController.js");
+const BroadcastingInfrastructureController = require("../../../controllers/projects/BroadcastingInfrastructureController.js");
+const BroadcastingInfrastructureAgeController = require("../../../controllers/projects/BroadcastingInfrastructureAgeController.js");
+const BroadcastingInfrastructureManufacturerController = require("../../../controllers/projects/BroadcastingInfrastructureManufacturerController.js");
+const DataCenterController = require("../../../controllers/projects/DataCenterController.js");
+
+const DataCenterComponentAgeController = require("../../../controllers/projects/DataCenterComponentAgeController.js");
+const DataCenterComponentManufacturerController = require("../../../controllers/projects/DataCenterComponentManufacturerController.js");
+const DataCenterFacilityCapacityController = require("../../../controllers/projects/DataCenterFacilityCapacityController.js");
+const EnvironmentalControlController = require("../../../controllers/projects/EnvironmentalControlController.js");
+
+const PowerGenerationCapacityController = require("../../../controllers/projects/PowerGenerationCapacityController.js");
+const HydrologicalInformationController = require("../../../controllers/projects/HydrologicalInformationController.js");
+const DamController = require("../../../controllers/projects/DamController.js");
+const TransmissionController = require("../../../controllers/projects/TransmissionController.js");
+const ReliabilityAndMaintenanceController = require("../../../controllers/projects/ReliabilityAndMaintenanceController.js");
+const EnvironmentalAndSocialImpactController = require("../../../controllers/projects/EnvironmentalAndSocialImpactController.js");
+const RegulationAndPolicyController = require("../../../controllers/projects/RegulationAndPolicyController.js");
+const WindResourceController = require("../../../controllers/projects/WindResourceController.js");
+const WindTurbineController = require("../../../controllers/projects/WindTurbineController.js");
+const SolarResourceInformationController = require("../../../controllers/projects/SolarResourceInformationController.js");
+const SolarPanelController = require("../../../controllers/projects/SolarPanelController.js");
+const GeothermalPowerWellController = require("../../../controllers/projects/GeothermalPowerWellController.js");
+const GeothermalPowerInfrastructureController = require("../../../controllers/projects/GeothermalPowerInfrastructureController.js");
+
 
 
 const validateData = require("../../../middleware/validate/module/project/validate");
@@ -1125,11 +1151,11 @@ module.exports = function (express) {
 
 
   // SafetyAndHealth routes with validation
-  route.get("/safety-and-health", SafetyAndHealthController.getAll);
-  route.get("/safety-and-health/:id", SafetyAndHealthController.get);
-  route.post("/safety-and-health", validateData.safetyAndHealthValidate, SafetyAndHealthController.save);
-  route.put("/safety-and-health/:id", validateData.safetyAndHealthValidate, SafetyAndHealthController.update);
-  route.delete("/safety-and-health/:id", SafetyAndHealthController.delete);
+  route.get("/safety-and-healths", SafetyAndHealthController.getAll);
+  route.get("/safety-and-healths/:id", SafetyAndHealthController.get);
+  route.post("/safety-and-healths", validateData.safetyAndHealthValidate, SafetyAndHealthController.save);
+  route.put("/safety-and-healths/:id", validateData.safetyAndHealthValidate, SafetyAndHealthController.update);
+  route.delete("/safety-and-healths/:id", SafetyAndHealthController.delete);
 
   // TelecomInfrastructureComponent routes with validation
   route.get("/telecom-infrastructure-components", TelecomInfrastructureComponentController.getAll);
@@ -1213,6 +1239,173 @@ module.exports = function (express) {
   // route.post("/internet-connections", validateData.internetConnectionValidate, InternetConnectionController.save);
   route.put("/internet-connections/:id", validateData.internetConnectionValidate, InternetConnectionController.update);
   route.delete("/internet-connections/:id", InternetConnectionController.delete);
+
+
+  // InternetConnectionInfrastructureAge routes with validation
+  route.get("/internet-connection-infrastructure-ages", InternetConnectionInfrastructureAgeController.getAll);
+  route.get("/internet-connection-infrastructure-ages/:id", InternetConnectionInfrastructureAgeController.get);
+  route.post("/internet-connection-infrastructure-ages", InternetConnectionInfrastructureAgeController.save);
+  // route.post("/internet-connection-infrastructure-ages", validateData.internetConnectionInfrastructureAgeValidate, InternetConnectionInfrastructureAgeController.save);
+  route.put("/internet-connection-infrastructure-ages/:id", validateData.internetConnectionInfrastructureAgeValidate, InternetConnectionInfrastructureAgeController.update);
+  route.delete("/internet-connection-infrastructure-ages/:id", InternetConnectionInfrastructureAgeController.delete);
+
+  // InternetConnectionInfrastructureManufacturer routes with validation
+  route.get("/internet-connection-infrastructure-manufacturers", InternetConnectionInfrastructureManufacturerController.getAll);
+  route.get("/internet-connection-infrastructure-manufacturers/:id", InternetConnectionInfrastructureManufacturerController.get);
+  route.post("/internet-connection-infrastructure-manufacturers", validateData.internetConnectionInfrastructureManufacturerValidate, InternetConnectionInfrastructureManufacturerController.save);
+  route.put("/internet-connection-infrastructure-manufacturers/:id", validateData.internetConnectionInfrastructureManufacturerValidate, InternetConnectionInfrastructureManufacturerController.update);
+  route.delete("/internet-connection-infrastructure-manufacturers/:id", InternetConnectionInfrastructureManufacturerController.delete);
+
+  // BroadcastingInfrastructure routes with validation
+  route.get("/broadcasting-infrastructures", BroadcastingInfrastructureController.getAll);
+  route.get("/broadcasting-infrastructures/:id", BroadcastingInfrastructureController.get);
+  route.post("/broadcasting-infrastructures", validateData.broadcastingInfrastructureValidate, BroadcastingInfrastructureController.save);
+  route.put("/broadcasting-infrastructures/:id", validateData.broadcastingInfrastructureValidate, BroadcastingInfrastructureController.update);
+  route.delete("/broadcasting-infrastructures/:id", BroadcastingInfrastructureController.delete);
+
+  // BroadcastingInfrastructureAge routes with validation
+  route.get("/broadcasting-infrastructure-ages", BroadcastingInfrastructureAgeController.getAll);
+  route.get("/broadcasting-infrastructure-ages/:id", BroadcastingInfrastructureAgeController.get);
+  route.post("/broadcasting-infrastructure-ages", validateData.broadcastingInfrastructureAgeValidate, BroadcastingInfrastructureAgeController.save);
+  route.put("/broadcasting-infrastructure-ages/:id", validateData.broadcastingInfrastructureAgeValidate, BroadcastingInfrastructureAgeController.update);
+  route.delete("/broadcasting-infrastructure-ages/:id", BroadcastingInfrastructureAgeController.delete);
+
+  // BroadcastingInfrastructureManufacturer routes with validation
+  route.get("/broadcasting-infrastructure-manufacturers", BroadcastingInfrastructureManufacturerController.getAll);
+  route.get("/broadcasting-infrastructure-manufacturers/:id", BroadcastingInfrastructureManufacturerController.get);
+  route.post("/broadcasting-infrastructure-manufacturers", validateData.broadcastingInfrastructureManufacturerValidate, BroadcastingInfrastructureManufacturerController.save);
+  route.put("/broadcasting-infrastructure-manufacturers/:id", validateData.broadcastingInfrastructureManufacturerValidate, BroadcastingInfrastructureManufacturerController.update);
+  route.delete("/broadcasting-infrastructure-manufacturers/:id", BroadcastingInfrastructureManufacturerController.delete);
+
+  // DataCenter routes with validation
+  route.get("/data-centers", DataCenterController.getAll);
+  route.get("/data-centers/:id", DataCenterController.get);
+  route.post("/data-centers", validateData.dataCenterValidate, DataCenterController.save);
+  route.put("/data-centers/:id", validateData.dataCenterValidate, DataCenterController.update);
+  route.delete("/data-centers/:id", DataCenterController.delete);
+
+  // DataCenterComponentAge routes with validation
+  route.get("/data-center-component-ages", DataCenterComponentAgeController.getAll);
+  route.get("/data-center-component-ages/:id", DataCenterComponentAgeController.get);
+  route.post("/data-center-component-ages", validateData.dataCenterComponentAgeValidate, DataCenterComponentAgeController.save);
+  route.put("/data-center-component-ages/:id", validateData.dataCenterComponentAgeValidate, DataCenterComponentAgeController.update);
+  route.delete("/data-center-component-ages/:id", DataCenterComponentAgeController.delete);
+
+  // DataCenterComponentManufacturer routes with validation
+  route.get("/data-center-component-manufacturers", DataCenterComponentManufacturerController.getAll);
+  route.get("/data-center-component-manufacturers/:id", DataCenterComponentManufacturerController.get);
+  route.post("/data-center-component-manufacturers", validateData.dataCenterComponentManufacturerValidate, DataCenterComponentManufacturerController.save);
+  route.put("/data-center-component-manufacturers/:id", validateData.dataCenterComponentManufacturerValidate, DataCenterComponentManufacturerController.update);
+  route.delete("/data-center-component-manufacturers/:id", DataCenterComponentManufacturerController.delete);
+
+  // DataCenterFacilityCapacity routes with validation
+  route.get("/data-center-facility-capacities", DataCenterFacilityCapacityController.getAll);
+  route.get("/data-center-facility-capacities/:id", DataCenterFacilityCapacityController.get);
+  route.post("/data-center-facility-capacities", validateData.dataCenterFacilityCapacityValidate, DataCenterFacilityCapacityController.save);
+  route.put("/data-center-facility-capacities/:id", validateData.dataCenterFacilityCapacityValidate, DataCenterFacilityCapacityController.update);
+  route.delete("/data-center-facility-capacities/:id", DataCenterFacilityCapacityController.delete);
+
+  // EnvironmentalControl routes with validation
+  route.get("/environmental-controls", EnvironmentalControlController.getAll);
+  route.get("/environmental-controls/:id", EnvironmentalControlController.get);
+  route.post("/environmental-controls", validateData.environmentalControlValidate, EnvironmentalControlController.save);
+  route.put("/environmental-controls/:id", validateData.environmentalControlValidate, EnvironmentalControlController.update);
+  route.delete("/environmental-controls/:id", EnvironmentalControlController.delete);
+
+  // PowerGenerationCapacity routes with validation
+  route.get("/power-generation-capacities", PowerGenerationCapacityController.getAll);
+  route.get("/power-generation-capacities/:id", PowerGenerationCapacityController.get);
+  route.post("/power-generation-capacities", validateData.powerGenerationCapacityValidate, PowerGenerationCapacityController.save);
+  route.put("/power-generation-capacities/:id", validateData.powerGenerationCapacityValidate, PowerGenerationCapacityController.update);
+  route.delete("/power-generation-capacities/:id", PowerGenerationCapacityController.delete);
+
+
+  // HydrologicalInformation routes with validation
+  route.get("/hydrological-informations", HydrologicalInformationController.getAll);
+  route.get("/hydrological-informations/:id", HydrologicalInformationController.get);
+  route.post("/hydrological-informations", validateData.hydrologicalInformationValidate, HydrologicalInformationController.save);
+  route.put("/hydrological-informations/:id", validateData.hydrologicalInformationValidate, HydrologicalInformationController.update);
+  route.delete("/hydrological-informations/:id", HydrologicalInformationController.delete);
+
+  // Dam routes with validation
+  route.get("/dams", DamController.getAll);
+  route.get("/dams/:id", DamController.get);
+  route.post("/dams", validateData.damValidate, DamController.save);
+  route.put("/dams/:id", validateData.damValidate, DamController.update);
+  route.delete("/dams/:id", DamController.delete);
+
+  // Transmission routes with validation
+  route.get("/transmissions", TransmissionController.getAll);
+  route.get("/transmissions/:id", TransmissionController.get);
+  route.post("/transmissions", validateData.transmissionValidate, TransmissionController.save);
+  route.put("/transmissions/:id", validateData.transmissionValidate, TransmissionController.update);
+  route.delete("/transmissions/:id", TransmissionController.delete);
+
+  // ReliabilityAndMaintenance routes with validation
+  route.get("/reliability-and-maintenance", ReliabilityAndMaintenanceController.getAll);
+  route.get("/reliability-and-maintenance/:id", ReliabilityAndMaintenanceController.get);
+  route.post("/reliability-and-maintenance", validateData.reliabilityAndMaintenanceValidate, ReliabilityAndMaintenanceController.save);
+  route.put("/reliability-and-maintenance/:id", validateData.reliabilityAndMaintenanceValidate, ReliabilityAndMaintenanceController.update);
+  route.delete("/reliability-and-maintenance/:id", ReliabilityAndMaintenanceController.delete);
+
+  // EnvironmentalAndSocialImpact routes with validation
+  route.get("/environmental-and-social-impacts", EnvironmentalAndSocialImpactController.getAll);
+  route.get("/environmental-and-social-impacts/:id", EnvironmentalAndSocialImpactController.get);
+  route.post("/environmental-and-social-impacts", validateData.environmentalAndSocialImpactValidate, EnvironmentalAndSocialImpactController.save);
+  route.put("/environmental-and-social-impacts/:id", validateData.environmentalAndSocialImpactValidate, EnvironmentalAndSocialImpactController.update);
+  route.delete("/environmental-and-social-impacts/:id", EnvironmentalAndSocialImpactController.delete);
+
+
+  // RegulationAndPolicy routes with validation
+  route.get("/regulation-and-policies", RegulationAndPolicyController.getAll);
+  route.get("/regulation-and-policies/:id", RegulationAndPolicyController.get);
+  route.post("/regulation-and-policies", validateData.regulationAndPolicyValidate, RegulationAndPolicyController.save);
+  route.put("/regulation-and-policies/:id", validateData.regulationAndPolicyValidate, RegulationAndPolicyController.update);
+  route.delete("/regulation-and-policies/:id", RegulationAndPolicyController.delete);
+
+  // WindResource routes with validation
+  route.get("/wind-resources", WindResourceController.getAll);
+  route.get("/wind-resources/:id", WindResourceController.get);
+  route.post("/wind-resources", validateData.windResourceValidate, WindResourceController.save);
+  route.put("/wind-resources/:id", validateData.windResourceValidate, WindResourceController.update);
+  route.delete("/wind-resources/:id", WindResourceController.delete);
+
+
+  // WindTurbine routes with validation
+  route.get("/wind-turbines", WindTurbineController.getAll);
+  route.get("/wind-turbines/:id", WindTurbineController.get);
+  route.post("/wind-turbines", validateData.windTurbineValidate, WindTurbineController.save);
+  route.put("/wind-turbines/:id", validateData.windTurbineValidate, WindTurbineController.update);
+  route.delete("/wind-turbines/:id", WindTurbineController.delete);
+
+  // SolarResourceInformation routes with validation
+  route.get("/solar-resource-informations", SolarResourceInformationController.getAll);
+  route.get("/solar-resource-informations/:id", SolarResourceInformationController.get);
+  route.post("/solar-resource-informations", validateData.solarResourceInformationValidate, SolarResourceInformationController.save);
+  route.put("/solar-resource-informations/:id", validateData.solarResourceInformationValidate, SolarResourceInformationController.update);
+  route.delete("/solar-resource-informations/:id", SolarResourceInformationController.delete);
+
+  // SolarPanel routes with validation
+  route.get("/solar-panels", SolarPanelController.getAll);
+  route.get("/solar-panels/:id", SolarPanelController.get);
+  route.post("/solar-panels", validateData.solarPanelValidate, SolarPanelController.save);
+  route.put("/solar-panels/:id", validateData.solarPanelValidate, SolarPanelController.update);
+  route.delete("/solar-panels/:id", SolarPanelController.delete);
+
+
+  // GeothermalPowerWell routes with validation
+  route.get("/geothermal-power-wells", GeothermalPowerWellController.getAll);
+  route.get("/geothermal-power-wells/:id", GeothermalPowerWellController.get);
+  route.post("/geothermal-power-wells", validateData.geothermalPowerWellValidate, GeothermalPowerWellController.save);
+  route.put("/geothermal-power-wells/:id", validateData.geothermalPowerWellValidate, GeothermalPowerWellController.update);
+  route.delete("/geothermal-power-wells/:id", GeothermalPowerWellController.delete);
+
+  // GeothermalPowerInfrastructure routes with validation
+  route.get("/geothermal-power-infrastructures", GeothermalPowerInfrastructureController.getAll);
+  route.get("/geothermal-power-infrastructures/:id", GeothermalPowerInfrastructureController.get);
+  route.post("/geothermal-power-infrastructures", validateData.geothermalPowerInfrastructureValidate, GeothermalPowerInfrastructureController.save);
+  route.put("/geothermal-power-infrastructures/:id", validateData.geothermalPowerInfrastructureValidate, GeothermalPowerInfrastructureController.update);
+  route.delete("/geothermal-power-infrastructures/:id", GeothermalPowerInfrastructureController.delete);
 
 
   return route;

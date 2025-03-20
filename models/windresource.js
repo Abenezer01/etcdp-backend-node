@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class InternetConnection extends Model {
+  class WindResource extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -11,13 +11,9 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      InternetConnection.belongsTo(models.ProjectMasterData, {
-        foreignKey: "internet_connection_type_id",
-        as: "internetConnectionType"
-      })
     }
   }
-  InternetConnection.init({
+  WindResource.init({
     id: {
       type: DataTypes.UUID,
       primaryKey: true,
@@ -28,21 +24,15 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.UUID,
       allowNull: false,
     },
-    internet_connection_type_id: {
-      type: DataTypes.UUID,
-      allowNull: false,
-    },
-    routers: DataTypes.BOOLEAN,
-    switches: DataTypes.BOOLEAN,
-    modems: DataTypes.BOOLEAN,
-    cables: DataTypes.BOOLEAN,
-    others: DataTypes.TEXT
+    wind_speed_at_hub_height: DataTypes.DOUBLE,
+    weibull_shape_factor: DataTypes.BOOLEAN,
+    remark: DataTypes.TEXT
   }, {
     createdAt: 'created_at',
     updatedAt: 'updated_at',
     sequelize,
-    modelName: 'InternetConnection',
-    tableName: 'InternetConnections',
+    modelName: 'WindResource',
+    tableName: 'WindResources',
   });
-  return InternetConnection;
+  return WindResource;
 };

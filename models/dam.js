@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class InternetConnection extends Model {
+  class Dam extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -11,13 +11,9 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      InternetConnection.belongsTo(models.ProjectMasterData, {
-        foreignKey: "internet_connection_type_id",
-        as: "internetConnectionType"
-      })
     }
   }
-  InternetConnection.init({
+  Dam.init({
     id: {
       type: DataTypes.UUID,
       primaryKey: true,
@@ -28,21 +24,34 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.UUID,
       allowNull: false,
     },
-    internet_connection_type_id: {
+    dam_type_id: {
       type: DataTypes.UUID,
       allowNull: false,
     },
-    routers: DataTypes.BOOLEAN,
-    switches: DataTypes.BOOLEAN,
-    modems: DataTypes.BOOLEAN,
-    cables: DataTypes.BOOLEAN,
-    others: DataTypes.TEXT
+    dam_height: DataTypes.DOUBLE,
+    spillway_type_id: {
+      type: DataTypes.UUID,
+      allowNull: false,
+    },
+    penstock_length: DataTypes.DOUBLE,
+    turbine_type_id: {
+      type: DataTypes.UUID,
+      allowNull: false,
+    },
+    turbine_number: DataTypes.INTEGER,
+    generator_type_id: {
+      type: DataTypes.UUID,
+      allowNull: false,
+    },
+    generator_number: DataTypes.INTEGER,
+    national_priority_rank: DataTypes.INTEGER,
+    remark: DataTypes.TEXT
   }, {
     createdAt: 'created_at',
     updatedAt: 'updated_at',
     sequelize,
-    modelName: 'InternetConnection',
-    tableName: 'InternetConnections',
+    modelName: 'Dam',
+    tableName: 'Dams',
   });
-  return InternetConnection;
+  return Dam;
 };

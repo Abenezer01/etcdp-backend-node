@@ -1,5 +1,502 @@
 const validateReply = require("../../../../utils/validateerror");
 
+const geothermalPowerInfrastructureValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+
+  const validationRule = {
+    project_id: "required|string", // UUID should be a string
+    turbine_manufacturer: "string",
+    turbine_model: "string",
+    turbine_type_id: "required|string", // UUID should be a string
+    each_turbine_capacity: "numeric",
+    remark: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
+const geothermalPowerWellValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+
+  const validationRule = {
+    project_id: "required|string", // UUID should be a string
+    depth: "numeric",
+    well_diameter: "numeric",
+    drilling_period: "date",
+    temperature_at_bottom_hole: "numeric",
+    wells_number: "integer",
+    wells_name: "string",
+    plant_life: "integer",
+    remark: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
+const solarPanelValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+
+  const validationRule = {
+    project_id: "required|string", // UUID should be a string
+    manufacturer: "string",
+    model: "string",
+    solar_panel_type_id: "required|string", // UUID should be a string
+    solar_panels_number: "integer",
+    each_solar_panel_capacity: "numeric",
+    inverter_manufacturer: "string",
+    inverter_model: "string",
+    inverters_number: "integer",
+    other_equipment: "string",
+    remark: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
+const solarResourceInformationValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+
+  const validationRule = {
+    project_id: "required|string", // UUID should be a string
+    annual_solar_radiation: "numeric",
+    solar_panel_efficiency: "numeric",
+    annual_energy_production: "numeric",
+    plant_life: "integer",
+    remark: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
+const windTurbineValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+
+  const validationRule = {
+    project_id: "required|string", // UUID should be a string
+    turbine_manufacturer: "string",
+    turbine_model: "string",
+    rotor_diameter: "numeric",
+    hub_height: "numeric",
+    tower_type_id: "string", // UUID should be a string
+    blade_length: "numeric",
+    blades_number: "integer",
+    gearbox_type: "string",
+    generator_type_id: "string", // UUID should be a string
+    generators_number: "integer",
+    remark: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
+const windResourceValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+
+  const validationRule = {
+    project_id: "required|string", // UUID should be a string
+    wind_speed_at_hub_height: "numeric",
+    weibull_shape_factor: "boolean",
+    remark: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
+
+const regulationAndPolicyValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+
+  const validationRule = {
+    project_id: "required|string", // UUID should be a string
+    regulatory_body_overseeing_the_facility: "string",
+    regulatory_compliance_monitoring: "boolean",
+    environmental_and_social_regulation_compliance_monitoring: "boolean",
+    licensing_and_permit_requirements: "boolean",
+    remark: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
+
+const environmentalAndSocialImpactValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+
+  const validationRule = {
+    project_id: "required|string", // UUID should be a string
+    environmental_impact_assessment_conducted: "boolean",
+    mitigation_measures_implemented: "boolean",
+    social_impact_assessment_conducted: "boolean",
+    resettlement_and_compensation_measures_implemented: "boolean",
+    remark: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
+const reliabilityAndMaintenanceValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+
+  const validationRule = {
+    project_id: "required|string", // UUID should be a string
+    maintenance_frequency_id: "required|string", // UUID should be a string
+    total_outage_duration: "numeric",
+    total_interruption_number: "integer",
+    saidi: "numeric",
+    saifi: "numeric",
+    automatic_fault_detection_restoration_system_installed: "boolean",
+    remark: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
+const transmissionValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+
+  const validationRule = {
+    project_id: "required|string", // UUID should be a string
+    transmission_voltage: "numeric",
+    distance_to_substation: "numeric",
+    transmission_lines_number: "integer",
+    remark: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
+const damValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+
+  const validationRule = {
+    project_id: "required|string", // UUID should be a string
+    dam_type_id: "required|string",
+    dam_height: "numeric",
+    spillway_type_id: "required|string",
+    penstock_length: "numeric",
+    turbine_type_id: "required|string",
+    turbine_number: "integer",
+    generator_type_id: "required|string",
+    generator_number: "integer",
+    national_priority_rank: "integer",
+    remark: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
+const hydrologicalInformationValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+
+  const validationRule = {
+    project_id: "required|string", // UUID should be a string
+    water_source: "string",
+    catchment_area: "numeric",
+    elevation_change: "numeric",
+    head: "numeric",
+    total_inflow: "numeric",
+    active_storage_volume: "numeric",
+    water_stored: "numeric",
+    remark: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
+const powerGenerationCapacityValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+
+  const validationRule = {
+    project_id: "required|string", // UUID should be a string
+    capacity: "numeric",
+    annual_generation: "numeric",
+    units_number: "integer",
+    owner_id: "required|string", // UUID should be a string
+    commissioning_date: "date",
+    plant_life: "integer",
+    others: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
+const environmentalControlValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+
+  const validationRule = {
+    data_center_id: "required|string", // UUID should be a string
+    temperature: "string",
+    humidity: "string",
+    air_quality: "string",
+    others: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
+const dataCenterFacilityCapacityValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+
+  const validationRule = {
+    data_center_id: "required|string", // UUID should be a string
+    total_floor_area: "string",
+    power_capacity: "string",
+    rack_space_capacity: "string",
+    cooling_capacity: "string",
+    access_control: "boolean",
+    surveillance_cameras: "boolean",
+    fire_suppression_systems: "boolean",
+    intrusion_detection_systems: "boolean",
+    others: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
+
+const dataCenterComponentManufacturerValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+
+  const validationRule = {
+    data_center_id: "required|string", // UUID should be a string
+    servers: "string",
+    storage_devices: "string",
+    networking_equipment: "string",
+    cooling_systems: "string",
+    backup_generators: "string",
+    others: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
+const dataCenterComponentAgeValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+
+  const validationRule = {
+    data_center_id: "required|string", // UUID should be string in the request body
+    servers: "integer",
+    storage_devices: "integer",
+    networking_equipment: "integer",
+    cooling_systems: "integer",
+    backup_generators: "integer",
+    others: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
+const dataCenterValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+
+  const validationRule = {
+    project_id: "required|string", // UUID should be string in the request body
+    data_center_type_id: "required|string", // UUID should be string in the request body
+    servers: "boolean",
+    storage_devices: "boolean",
+    networking_equipment: "boolean",
+    cooling_systems: "boolean",
+    backup_generators: "boolean",
+    others: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
+const broadcastingInfrastructureManufacturerValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+
+  const validationRule = {
+    broadcasting_infrastructure_id: "required|string", // UUID should be string in the request body
+    antennas: "string",
+    transmitters: "string",
+    towers: "string",
+    cables: "string",
+    others: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
+
+const broadcastingInfrastructureAgeValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+
+  const validationRule = {
+    broadcasting_infrastructure_id: "required|string",
+    antennas: "integer",
+    transmitters: "integer",
+    towers: "integer",
+    cables: "integer",
+    others: "string",
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
+const broadcastingInfrastructureValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+
+  const validationRule = {
+    project_id: "required|string",
+    broadcasting_infrastructure_type_id: "required|string",
+    broadcasting_network: "boolean",
+    antennas: "boolean",
+    transmitters: "boolean",
+    towers: "boolean",
+    cables: "boolean",
+    others: "string",
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
+const internetConnectionInfrastructureManufacturerValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+
+  const validationRule = {
+    internet_connection_id: "required|string",
+    routers: "string",
+    switches: "string",
+    modems: "string",
+    cables: "string",
+    others: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
+const internetConnectionInfrastructureAgeValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+
+  const validationRule = {
+    internet_connection_id: "required|string",
+    routers: "integer",
+    switches: "integer",
+    modems: "integer",
+    cables: "integer",
+    others: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
+
 const internetConnectionValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
   if (param === "failed") {
@@ -10,8 +507,8 @@ const internetConnectionValidate = async (req, res, next) => {
 
 
   const validationRule = {
-    project_id: "required|uuid",
-    internet_connection_type_id: "required|uuid",
+    project_id: "required|string",
+    internet_connection_type_id: "required|string",
     routers: "boolean",
     switches: "boolean",
     modems: "boolean",
@@ -2206,6 +2703,30 @@ const paymentValidate = async (req, res, next) => {
   await validateReply.validateReply(req.body, validationRule, res, next);
 };
 module.exports = { 
+  geothermalPowerInfrastructureValidate,
+  geothermalPowerWellValidate,
+  solarPanelValidate,
+  solarResourceInformationValidate,
+  windTurbineValidate,
+  windResourceValidate,
+  regulationAndPolicyValidate,
+  environmentalAndSocialImpactValidate,
+  reliabilityAndMaintenanceValidate,
+  transmissionValidate,
+  damValidate,
+  hydrologicalInformationValidate,
+  powerGenerationCapacityValidate,
+  environmentalControlValidate,
+  dataCenterFacilityCapacityValidate,
+  dataCenterComponentManufacturerValidate,
+  dataCenterComponentAgeValidate,
+  dataCenterValidate,
+  broadcastingInfrastructureManufacturerValidate,
+  broadcastingInfrastructureAgeValidate,
+  
+  broadcastingInfrastructureValidate,
+  internetConnectionInfrastructureManufacturerValidate,
+  internetConnectionInfrastructureAgeValidate,
   internetConnectionValidate,
   satelliteNetworkComponentManufacturerValidate,
 

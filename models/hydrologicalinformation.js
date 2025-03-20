@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class InternetConnection extends Model {
+  class HydrologicalInformation extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -11,13 +11,9 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      InternetConnection.belongsTo(models.ProjectMasterData, {
-        foreignKey: "internet_connection_type_id",
-        as: "internetConnectionType"
-      })
     }
   }
-  InternetConnection.init({
+  HydrologicalInformation.init({
     id: {
       type: DataTypes.UUID,
       primaryKey: true,
@@ -28,21 +24,20 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.UUID,
       allowNull: false,
     },
-    internet_connection_type_id: {
-      type: DataTypes.UUID,
-      allowNull: false,
-    },
-    routers: DataTypes.BOOLEAN,
-    switches: DataTypes.BOOLEAN,
-    modems: DataTypes.BOOLEAN,
-    cables: DataTypes.BOOLEAN,
-    others: DataTypes.TEXT
+    water_source: DataTypes.STRING,
+    catchment_area: DataTypes.DOUBLE,
+    elevation_change: DataTypes.DOUBLE,
+    head: DataTypes.DOUBLE,
+    total_inflow: DataTypes.DOUBLE,
+    active_storage_volume: DataTypes.DOUBLE,
+    water_stored: DataTypes.DOUBLE,
+    remark: DataTypes.TEXT
   }, {
     createdAt: 'created_at',
     updatedAt: 'updated_at',
     sequelize,
-    modelName: 'InternetConnection',
-    tableName: 'InternetConnections',
+    modelName: 'HydrologicalInformation',
+    tableName: 'HydrologicalInformations',
   });
-  return InternetConnection;
+  return HydrologicalInformation;
 };

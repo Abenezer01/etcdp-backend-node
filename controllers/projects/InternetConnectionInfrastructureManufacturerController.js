@@ -1,4 +1,4 @@
-const { InternetConnection, ProjectMasterData, Sequelize } = require("../../models");
+const { InternetConnectionInfrastructureManufacturer, InternetConnection  , Sequelize } = require("../../models");
 const Op = Sequelize.Op;
 const dotenv = require("dotenv");
 dotenv.config();
@@ -12,14 +12,13 @@ self.getAll = async (req, res) => {
 
     const whereCondition = { };
 
-
     const includeOptions = [
       {
-          model: ProjectMasterData,
-          as: "internetConnectionType"
+          model: InternetConnection,
+          as: "internetconnection"
       },
     ];
-    const paginatedResult = await paginationHelper(InternetConnection , req, whereCondition, includeOptions);
+    const paginatedResult = await paginationHelper(InternetConnectionInfrastructureManufacturer , req, whereCondition, includeOptions);
 
     // Use the response formatter to send the success response
     res.apiSuccess({
@@ -33,19 +32,19 @@ self.getAll = async (req, res) => {
 };
 
 self.get = async (req, res) => {
-  getRecordById(InternetConnection , req, res);
+  getRecordById(InternetConnectionInfrastructureManufacturer , req, res);
 };
 
 self.save = async (req, res) => {
-  saveRecord(InternetConnection , req, res);
+  saveRecord(InternetConnectionInfrastructureManufacturer , req, res);
 };
 
 self.update = async (req, res) => {
-  updateRecord(InternetConnection , req, res);
+  updateRecord(InternetConnectionInfrastructureManufacturer , req, res);
 };
 
 self.delete = async (req, res) => {
-  deleteRecord(InternetConnection , req, res);
+  deleteRecord(InternetConnectionInfrastructureManufacturer , req, res);
 };
 
 module.exports = self;

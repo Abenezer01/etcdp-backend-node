@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class InternetConnection extends Model {
+  class GeothermalPowerInfrastructure extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -11,13 +11,9 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      InternetConnection.belongsTo(models.ProjectMasterData, {
-        foreignKey: "internet_connection_type_id",
-        as: "internetConnectionType"
-      })
     }
   }
-  InternetConnection.init({
+  GeothermalPowerInfrastructure.init({
     id: {
       type: DataTypes.UUID,
       primaryKey: true,
@@ -28,21 +24,17 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.UUID,
       allowNull: false,
     },
-    internet_connection_type_id: {
-      type: DataTypes.UUID,
-      allowNull: false,
-    },
-    routers: DataTypes.BOOLEAN,
-    switches: DataTypes.BOOLEAN,
-    modems: DataTypes.BOOLEAN,
-    cables: DataTypes.BOOLEAN,
-    others: DataTypes.TEXT
+    turbine_manufacturer: DataTypes.STRING,
+    turbine_model: DataTypes.STRING,
+    turbine_type_id: DataTypes.UUID,
+    each_turbine_capacity: DataTypes.DOUBLE,
+    remark: DataTypes.TEXT
   }, {
     createdAt: 'created_at',
     updatedAt: 'updated_at',
     sequelize,
-    modelName: 'InternetConnection',
-    tableName: 'InternetConnections',
+    modelName: 'GeothermalPowerInfrastructure',
+    tableName: 'GeothermalPowerInfrastructures',
   });
-  return InternetConnection;
+  return GeothermalPowerInfrastructure;
 };

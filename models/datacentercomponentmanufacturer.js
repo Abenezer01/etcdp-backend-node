@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class InternetConnection extends Model {
+  class DataCenterComponentManufacturer extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -11,38 +11,35 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      InternetConnection.belongsTo(models.ProjectMasterData, {
-        foreignKey: "internet_connection_type_id",
-        as: "internetConnectionType"
+      DataCenterComponentManufacturer.belongsTo(models.DataCenter, {
+        foreignKey: "data_center_id",
+        as: "datacenter"
       })
     }
   }
-  InternetConnection.init({
+  DataCenterComponentManufacturer.init({
     id: {
       type: DataTypes.UUID,
       primaryKey: true,
       defaultValue: DataTypes.UUIDV4
     },
     parent_id: DataTypes.UUID,
-    project_id: {
+    data_center_id: {
       type: DataTypes.UUID,
       allowNull: false,
     },
-    internet_connection_type_id: {
-      type: DataTypes.UUID,
-      allowNull: false,
-    },
-    routers: DataTypes.BOOLEAN,
-    switches: DataTypes.BOOLEAN,
-    modems: DataTypes.BOOLEAN,
-    cables: DataTypes.BOOLEAN,
+    servers: DataTypes.STRING,
+    storage_devices: DataTypes.STRING,
+    networking_equipment: DataTypes.STRING,
+    cooling_systems: DataTypes.STRING,
+    backup_generators: DataTypes.STRING,
     others: DataTypes.TEXT
   }, {
     createdAt: 'created_at',
     updatedAt: 'updated_at',
     sequelize,
-    modelName: 'InternetConnection',
-    tableName: 'InternetConnections',
+    modelName: 'DataCenterComponentManufacturer',
+    tableName: 'DataCenterComponentManufacturers',
   });
-  return InternetConnection;
+  return DataCenterComponentManufacturer;
 };
