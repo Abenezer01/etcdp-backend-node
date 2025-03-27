@@ -120,6 +120,19 @@ const SolarPanelController = require("../../../controllers/projects/SolarPanelCo
 const GeothermalPowerWellController = require("../../../controllers/projects/GeothermalPowerWellController.js");
 const GeothermalPowerInfrastructureController = require("../../../controllers/projects/GeothermalPowerInfrastructureController.js");
 
+const TransmissionLineInformationController = require("../../../controllers/projects/TransmissionLineInformationController.js");
+const TransmissionLineConductorAndTowerDataController = require("../../../controllers/projects/TransmissionLineConductorAndTowerDataController.js");
+const TransmissionLineEquipmentDataController = require("../../../controllers/projects/TransmissionLineEquipmentDataController.js");
+const SubstationTransformerAndSwitchGearDataController = require("../../../controllers/projects/SubstationTransformerAndSwitchGearDataController.js");
+
+const SubstationLayoutAndCommunicationDataController = require("../../../controllers/projects/SubstationLayoutAndCommunicationDataController.js");
+const MiniGridStationController = require("../../../controllers/projects/MiniGridStationController.js");
+
+const MiniGridStationDistributionLineController = require("../../../controllers/projects/MiniGridStationDistributionLineController.js");
+const MiniGridStationConsumerController = require("../../../controllers/projects/MiniGridStationConsumerController.js");
+const MiniGridStationBackupPowerSourceController = require("../../../controllers/projects/MiniGridStationBackupPowerSourceController.js");
+const MiniGridStationDistributionLineInfrastructureController = require("../../../controllers/projects/MiniGridStationDistributionLineInfrastructureController.js");
+const ElectricDistributionTransformerController = require("../../../controllers/projects/ElectricDistributionTransformerController.js");
 
 
 const validateData = require("../../../middleware/validate/module/project/validate");
@@ -1407,6 +1420,85 @@ module.exports = function (express) {
   route.put("/geothermal-power-infrastructures/:id", validateData.geothermalPowerInfrastructureValidate, GeothermalPowerInfrastructureController.update);
   route.delete("/geothermal-power-infrastructures/:id", GeothermalPowerInfrastructureController.delete);
 
+  // TransmissionLineInformation routes with validation
+  route.get("/transmission-line-informations", TransmissionLineInformationController.getAll);
+  route.get("/transmission-line-informations/:id", TransmissionLineInformationController.get);
+  route.post("/transmission-line-informations", validateData.transmissionLineInformationValidate, TransmissionLineInformationController.save);
+  route.put("/transmission-line-informations/:id", validateData.transmissionLineInformationValidate, TransmissionLineInformationController.update);
+  route.delete("/transmission-line-informations/:id", TransmissionLineInformationController.delete);
+
+  // TransmissionLineConductorAndTowerData routes with validation
+  route.get("/transmission-line-conductor-and-tower-datas", TransmissionLineConductorAndTowerDataController.getAll);
+  route.get("/transmission-line-conductor-and-tower-datas/:id", TransmissionLineConductorAndTowerDataController.get);
+  route.post("/transmission-line-conductor-and-tower-datas", validateData.transmissionLineConductorAndTowerDataValidate, TransmissionLineConductorAndTowerDataController.save);
+  route.put("/transmission-line-conductor-and-tower-datas/:id", validateData.transmissionLineConductorAndTowerDataValidate, TransmissionLineConductorAndTowerDataController.update);
+  route.delete("/transmission-line-conductor-and-tower-datas/:id", TransmissionLineConductorAndTowerDataController.delete);
+
+
+  // TransmissionLineEquipmentData routes with validation
+  route.get("/transmission-line-equipment-datas", TransmissionLineEquipmentDataController.getAll);
+  route.get("/transmission-line-equipment-datas/:id", TransmissionLineEquipmentDataController.get);
+  route.post("/transmission-line-equipment-datas", validateData.transmissionLineEquipmentDataValidate, TransmissionLineEquipmentDataController.save);
+  route.put("/transmission-line-equipment-datas/:id", validateData.transmissionLineEquipmentDataValidate, TransmissionLineEquipmentDataController.update);
+  route.delete("/transmission-line-equipment-datas/:id", TransmissionLineEquipmentDataController.delete);
+
+  // SubstationTransformerAndSwitchGearData routes with validation
+  route.get("/substation-transformer-and-switchgear-datas", SubstationTransformerAndSwitchGearDataController.getAll);
+  route.get("/substation-transformer-and-switchgear-datas/:id", SubstationTransformerAndSwitchGearDataController.get);
+  route.post("/substation-transformer-and-switchgear-datas", validateData.substationTransformerAndSwitchGearDataValidate, SubstationTransformerAndSwitchGearDataController.save);
+  route.put("/substation-transformer-and-switchgear-datas/:id", validateData.substationTransformerAndSwitchGearDataValidate, SubstationTransformerAndSwitchGearDataController.update);
+  route.delete("/substation-transformer-and-switchgear-datas/:id", SubstationTransformerAndSwitchGearDataController.delete);
+
+  // SubstationLayoutAndCommunicationData routes with validation
+  route.get("/substation-layout-and-communication-datas", SubstationLayoutAndCommunicationDataController.getAll);
+  route.get("/substation-layout-and-communication-datas/:id", SubstationLayoutAndCommunicationDataController.get);
+  route.post("/substation-layout-and-communication-datas", validateData.substationLayoutAndCommunicationDataValidate, SubstationLayoutAndCommunicationDataController.save);
+  route.put("/substation-layout-and-communication-datas/:id", validateData.substationLayoutAndCommunicationDataValidate, SubstationLayoutAndCommunicationDataController.update);
+  route.delete("/substation-layout-and-communication-datas/:id", SubstationLayoutAndCommunicationDataController.delete);
+
+  // MiniGridStation routes with validation
+  route.get("/mini-grid-stations", MiniGridStationController.getAll);
+  route.get("/mini-grid-stations/:id", MiniGridStationController.get);
+  route.post("/mini-grid-stations", validateData.miniGridStationValidate, MiniGridStationController.save);
+  route.put("/mini-grid-stations/:id", validateData.miniGridStationValidate, MiniGridStationController.update);
+  route.delete("/mini-grid-stations/:id", MiniGridStationController.delete);
+
+  // MiniGridStationDistributionLine routes with validation
+  route.get("/mini-grid-station-distribution-lines", MiniGridStationDistributionLineController.getAll);
+  route.get("/mini-grid-station-distribution-lines/:id", MiniGridStationDistributionLineController.get);
+  route.post("/mini-grid-station-distribution-lines", validateData.miniGridStationDistributionLineValidate, MiniGridStationDistributionLineController.save);
+  route.put("/mini-grid-station-distribution-lines/:id", validateData.miniGridStationDistributionLineValidate, MiniGridStationDistributionLineController.update);
+  route.delete("/mini-grid-station-distribution-lines/:id", MiniGridStationDistributionLineController.delete);
+
+
+  // MiniGridStationConsumer routes with validation
+  route.get("/mini-grid-station-consumers", MiniGridStationConsumerController.getAll);
+  route.get("/mini-grid-station-consumers/:id", MiniGridStationConsumerController.get);
+  route.post("/mini-grid-station-consumers", validateData.miniGridStationConsumerValidate, MiniGridStationConsumerController.save);
+  route.put("/mini-grid-station-consumers/:id", validateData.miniGridStationConsumerValidate, MiniGridStationConsumerController.update);
+  route.delete("/mini-grid-station-consumers/:id", MiniGridStationConsumerController.delete);
+
+  // MiniGridStationBackupPowerSource routes with validation
+  route.get("/mini-grid-station-backup-power-sources", MiniGridStationBackupPowerSourceController.getAll);
+  route.get("/mini-grid-station-backup-power-sources/:id", MiniGridStationBackupPowerSourceController.get);
+  route.post("/mini-grid-station-backup-power-sources", validateData.miniGridStationBackupPowerSourceValidate, MiniGridStationBackupPowerSourceController.save);
+  route.put("/mini-grid-station-backup-power-sources/:id", validateData.miniGridStationBackupPowerSourceValidate, MiniGridStationBackupPowerSourceController.update);
+  route.delete("/mini-grid-station-backup-power-sources/:id", MiniGridStationBackupPowerSourceController.delete);
+
+
+  // MiniGridStationDistributionLineInfrastructure routes with validation
+  route.get("/mini-grid-station-distribution-line-infrastructures", MiniGridStationDistributionLineInfrastructureController.getAll);
+  route.get("/mini-grid-station-distribution-line-infrastructures/:id", MiniGridStationDistributionLineInfrastructureController.get);
+  route.post("/mini-grid-station-distribution-line-infrastructures", validateData.miniGridStationDistributionLineInfrastructureValidate, MiniGridStationDistributionLineInfrastructureController.save);
+  route.put("/mini-grid-station-distribution-line-infrastructures/:id", validateData.miniGridStationDistributionLineInfrastructureValidate, MiniGridStationDistributionLineInfrastructureController.update);
+  route.delete("/mini-grid-station-distribution-line-infrastructures/:id", MiniGridStationDistributionLineInfrastructureController.delete);
+
+  // ElectricDistributionTransformer routes with validation
+  route.get("/electric-distribution-transformers", ElectricDistributionTransformerController.getAll);
+  route.get("/electric-distribution-transformers/:id", ElectricDistributionTransformerController.get);
+  route.post("/electric-distribution-transformers", validateData.electricDistributionTransformerValidate, ElectricDistributionTransformerController.save);
+  route.put("/electric-distribution-transformers/:id", validateData.electricDistributionTransformerValidate, ElectricDistributionTransformerController.update);
+  route.delete("/electric-distribution-transformers/:id", ElectricDistributionTransformerController.delete);
 
   return route;
 

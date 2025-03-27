@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('ReliabilityAndMaintenances', {
+    await queryInterface.createTable('MiniGridStationDistributionLineInfrastructures', {
       id: {
         type: Sequelize.UUID,
         primaryKey: true,
@@ -11,17 +11,17 @@ module.exports = {
       parent_id: {
         type: Sequelize.UUID,
         references: { 
-          model: 'ReliabilityAndMaintenances',
+          model: 'MiniGridStationDistributionLineInfrastructures',
           key: 'id'
         },
         onUpdate: "CASCADE",
         onDelete: "CASCADE"
       },
-      project_id: {
+      mini_grid_station_id: {
         type: Sequelize.UUID,
         allowNull: false,
         references: {
-          model: 'projects',
+          model: 'MiniGridStations',
           key: 'id'
         },
         onUpdate: "CASCADE",
@@ -29,9 +29,9 @@ module.exports = {
       },
       name: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
       },
-      maintenance_frequency_id: {
+      distribution_line_type_id: {
         type: Sequelize.UUID,
         allowNull: false,
         references: {
@@ -41,20 +41,32 @@ module.exports = {
         onUpdate: "CASCADE",
         onDelete: "CASCADE"
       },
-      total_outage_duration: {
+      distribution_line_material_id: {
+        type: Sequelize.UUID,
+        allowNull: false,
+        references: {
+          model: 'ProjectMasterData',
+          key: 'id'
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE"
+      },
+      distribution_line_conductor_size: {
         type: Sequelize.DOUBLE
       },
-      total_interruption_number: {
-        type: Sequelize.INTEGER
-      },
-      saidi: {
+      voltage_level: {
         type: Sequelize.DOUBLE
       },
-      saifi: {
-        type: Sequelize.DOUBLE
+      topology: {
+        type: Sequelize.ENUM('Radial', 'Ring'),
+        allowNull: false,
+        defaultValue: 'Radial'
       },
-      automatic_fault_detection_restoration_system_installed: {
+      switching_station_connection: {
         type: Sequelize.BOOLEAN
+      },
+      station_name: {
+        type: Sequelize.STRING
       },
       remark: {
         type: Sequelize.TEXT
@@ -70,6 +82,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('ReliabilityAndMaintenances');
+    await queryInterface.dropTable('MiniGridStationDistributionLineInfrastructures');
   }
 };

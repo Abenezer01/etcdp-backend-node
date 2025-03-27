@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('ReliabilityAndMaintenances', {
+    await queryInterface.createTable('TransmissionLineConductorAndTowerData', {
       id: {
         type: Sequelize.UUID,
         primaryKey: true,
@@ -11,17 +11,17 @@ module.exports = {
       parent_id: {
         type: Sequelize.UUID,
         references: { 
-          model: 'ReliabilityAndMaintenances',
+          model: 'TransmissionLineConductorAndTowerData',
           key: 'id'
         },
         onUpdate: "CASCADE",
         onDelete: "CASCADE"
       },
-      project_id: {
+      transmission_line_id: {
         type: Sequelize.UUID,
         allowNull: false,
         references: {
-          model: 'projects',
+          model: 'TransmissionLineInformations',
           key: 'id'
         },
         onUpdate: "CASCADE",
@@ -31,7 +31,10 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
-      maintenance_frequency_id: {
+      conductor_type: {
+        type: Sequelize.STRING
+      },
+      conductor_code_name_id: {
         type: Sequelize.UUID,
         allowNull: false,
         references: {
@@ -41,20 +44,46 @@ module.exports = {
         onUpdate: "CASCADE",
         onDelete: "CASCADE"
       },
-      total_outage_duration: {
-        type: Sequelize.DOUBLE
-      },
-      total_interruption_number: {
+      strands_number: {
         type: Sequelize.INTEGER
       },
-      saidi: {
+      conductor_size: {
         type: Sequelize.DOUBLE
       },
-      saifi: {
+      conductors_per_phase_number: {
+        type: Sequelize.INTEGER
+      },
+      tower_type_id: {
+        type: Sequelize.UUID,
+        allowNull: false,
+        references: {
+          model: 'ProjectMasterData',
+          key: 'id'
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE"
+      },
+      tower_height: {
         type: Sequelize.DOUBLE
       },
-      automatic_fault_detection_restoration_system_installed: {
-        type: Sequelize.BOOLEAN
+      conductor_diameter: {
+        type: Sequelize.DOUBLE
+      },
+      each_strand_diameter: {
+        type: Sequelize.DOUBLE
+      },
+      tower_foundation_type_id: {
+        type: Sequelize.UUID,
+        allowNull: false,
+        references: {
+          model: 'ProjectMasterData',
+          key: 'id'
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE"
+      },
+      other_equipment: {
+        type: Sequelize.STRING
       },
       remark: {
         type: Sequelize.TEXT
@@ -70,6 +99,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('ReliabilityAndMaintenances');
+    await queryInterface.dropTable('TransmissionLineConductorAndTowerData');
   }
 };

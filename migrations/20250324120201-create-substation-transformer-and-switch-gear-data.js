@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('ReliabilityAndMaintenances', {
+    await queryInterface.createTable('SubstationTransformerAndSwitchGearData', {
       id: {
         type: Sequelize.UUID,
         primaryKey: true,
@@ -11,17 +11,17 @@ module.exports = {
       parent_id: {
         type: Sequelize.UUID,
         references: { 
-          model: 'ReliabilityAndMaintenances',
+          model: 'SubstationTransformerAndSwitchGearData',
           key: 'id'
         },
         onUpdate: "CASCADE",
         onDelete: "CASCADE"
       },
-      project_id: {
+      transmission_line_id: {
         type: Sequelize.UUID,
         allowNull: false,
         references: {
-          model: 'projects',
+          model: 'TransmissionLineInformations',
           key: 'id'
         },
         onUpdate: "CASCADE",
@@ -31,7 +31,22 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
-      maintenance_frequency_id: {
+      transformers_number: {
+        type: Sequelize.INTEGER
+      },
+      transformer_type: {
+        type: Sequelize.STRING
+      },
+      transformer_capacity: {
+        type: Sequelize.DOUBLE
+      },
+      input_voltage_level: {
+        type: Sequelize.DOUBLE
+      },
+      output_voltage_level: {
+        type: Sequelize.DOUBLE
+      },
+      switchgear_type_id: {
         type: Sequelize.UUID,
         allowNull: false,
         references: {
@@ -41,20 +56,18 @@ module.exports = {
         onUpdate: "CASCADE",
         onDelete: "CASCADE"
       },
-      total_outage_duration: {
-        type: Sequelize.DOUBLE
+      circuit_breaker_type_id: {
+        type: Sequelize.UUID,
+        allowNull: false,
+        references: {
+          model: 'ProjectMasterData',
+          key: 'id'
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE"
       },
-      total_interruption_number: {
-        type: Sequelize.INTEGER
-      },
-      saidi: {
-        type: Sequelize.DOUBLE
-      },
-      saifi: {
-        type: Sequelize.DOUBLE
-      },
-      automatic_fault_detection_restoration_system_installed: {
-        type: Sequelize.BOOLEAN
+      other_equipment: {
+        type: Sequelize.STRING
       },
       remark: {
         type: Sequelize.TEXT
@@ -70,6 +83,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('ReliabilityAndMaintenances');
+    await queryInterface.dropTable('SubstationTransformerAndSwitchGearData');
   }
 };

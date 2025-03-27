@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('BroadcastingInfrastructureManufacturers', {
+    await queryInterface.createTable('ElectricDistributionTransformers', {
       id: {
         type: Sequelize.UUID,
         primaryKey: true,
@@ -11,17 +11,17 @@ module.exports = {
       parent_id: {
         type: Sequelize.UUID,
         references: { 
-          model: 'BroadcastingInfrastructureManufacturers',
+          model: 'ElectricDistributionTransformers',
           key: 'id'
         },
         onUpdate: "CASCADE",
         onDelete: "CASCADE"
       },
-      broadcasting_infrastructure_id: {
+      project_id: {
         type: Sequelize.UUID,
         allowNull: false,
         references: {
-          model: 'BroadcastingInfrastructures',
+          model: 'projects',
           key: 'id'
         },
         onUpdate: "CASCADE",
@@ -31,19 +31,35 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
-      antennas: {
-        type: Sequelize.STRING
+      service_area: {
+        type: Sequelize.DOUBLE
       },
-      transmitters: {
-        type: Sequelize.STRING
+      installation_year: {
+        type: Sequelize.INTEGER
       },
-      towers: {
-        type: Sequelize.STRING
+      transformers_total_number: {
+        type: Sequelize.INTEGER
       },
-      cables: {
-        type: Sequelize.STRING
+      gps_x_coordinates: {
+        type: Sequelize.DOUBLE
       },
-      others: {
+      gps_y_coordinates: {
+        type: Sequelize.DOUBLE
+      },
+      fire_extinguishing_technology_id: {
+        type: Sequelize.UUID,
+        allowNull: false,
+        references: {
+          model: 'ProjectMasterData',
+          key: 'id'
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE"
+      },
+      other: {
+        type: Sequelize.TEXT
+      },
+      remark: {
         type: Sequelize.TEXT
       },
       createdAt: {
@@ -57,6 +73,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('BroadcastingInfrastructureManufacturers');
+    await queryInterface.dropTable('ElectricDistributionTransformers');
   }
 };

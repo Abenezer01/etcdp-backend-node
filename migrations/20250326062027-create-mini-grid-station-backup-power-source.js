@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('BroadcastingInfrastructureManufacturers', {
+    await queryInterface.createTable('MiniGridStationBackupPowerSources', {
       id: {
         type: Sequelize.UUID,
         primaryKey: true,
@@ -11,17 +11,17 @@ module.exports = {
       parent_id: {
         type: Sequelize.UUID,
         references: { 
-          model: 'BroadcastingInfrastructureManufacturers',
+          model: 'MiniGridStationBackupPowerSources',
           key: 'id'
         },
         onUpdate: "CASCADE",
         onDelete: "CASCADE"
       },
-      broadcasting_infrastructure_id: {
+      mini_grid_station_id: {
         type: Sequelize.UUID,
         allowNull: false,
         references: {
-          model: 'BroadcastingInfrastructures',
+          model: 'MiniGridStations',
           key: 'id'
         },
         onUpdate: "CASCADE",
@@ -29,21 +29,27 @@ module.exports = {
       },
       name: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
       },
-      antennas: {
-        type: Sequelize.STRING
+      capacity: {
+        type: Sequelize.DOUBLE
       },
-      transmitters: {
-        type: Sequelize.STRING
+      installation_year: {
+        type: Sequelize.INTEGER
       },
-      towers: {
-        type: Sequelize.STRING
+      distribution_lines_total_length: {
+        type: Sequelize.DOUBLE
       },
-      cables: {
-        type: Sequelize.STRING
+      lifetime: {
+        type: Sequelize.INTEGER
       },
-      others: {
+      commissioning_date: {
+        type: Sequelize.DATE
+      },
+      other: {
+        type: Sequelize.TEXT
+      },
+      remark: {
         type: Sequelize.TEXT
       },
       createdAt: {
@@ -57,6 +63,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('BroadcastingInfrastructureManufacturers');
+    await queryInterface.dropTable('MiniGridStationBackupPowerSources');
   }
 };

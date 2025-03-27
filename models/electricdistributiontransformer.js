@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class Transmission extends Model {
+  class ElectricDistributionTransformer extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  Transmission.init({
+  ElectricDistributionTransformer.init({
     id: {
       type: DataTypes.UUID,
       primaryKey: true,
@@ -22,22 +22,29 @@ module.exports = (sequelize, DataTypes) => {
     parent_id: DataTypes.UUID,
     project_id: {
       type: DataTypes.UUID,
-      allowNull: false,
+      allowNull: false
     },
     name: {
       type: DataTypes.STRING,
       allowNull: false
     },
-    transmission_voltage: DataTypes.DOUBLE,
-    distance_to_substation: DataTypes.DOUBLE,
-    transmission_lines_number: DataTypes.INTEGER,
+    service_area: DataTypes.DOUBLE,
+    installation_year: DataTypes.INTEGER,
+    transformers_total_number: DataTypes.INTEGER,
+    gps_x_coordinates: DataTypes.DOUBLE,
+    gps_y_coordinates: DataTypes.DOUBLE,
+    fire_extinguishing_technology_id: {
+      type: DataTypes.UUID,
+      allowNull: false
+    },
+    other: DataTypes.TEXT,
     remark: DataTypes.TEXT
   }, {
     createdAt: 'created_at',
     updatedAt: 'updated_at',
     sequelize,
-    modelName: 'Transmission',
-    tableName: 'Transmissions',
+    modelName: 'ElectricDistributionTransformer',
+    tableName: 'ElectricDistributionTransformers',
   });
-  return Transmission;
+  return ElectricDistributionTransformer;
 };

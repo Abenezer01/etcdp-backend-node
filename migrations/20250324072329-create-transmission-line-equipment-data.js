@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('BroadcastingInfrastructureManufacturers', {
+    await queryInterface.createTable('TransmissionLineEquipmentData', {
       id: {
         type: Sequelize.UUID,
         primaryKey: true,
@@ -11,17 +11,17 @@ module.exports = {
       parent_id: {
         type: Sequelize.UUID,
         references: { 
-          model: 'BroadcastingInfrastructureManufacturers',
+          model: 'TransmissionLineEquipmentData',
           key: 'id'
         },
         onUpdate: "CASCADE",
         onDelete: "CASCADE"
       },
-      broadcasting_infrastructure_id: {
+      transmission_line_id: {
         type: Sequelize.UUID,
         allowNull: false,
         references: {
-          model: 'BroadcastingInfrastructures',
+          model: 'TransmissionLineInformations',
           key: 'id'
         },
         onUpdate: "CASCADE",
@@ -31,19 +31,34 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
-      antennas: {
+      insulator_type: {
         type: Sequelize.STRING
       },
-      transmitters: {
+      ground_wire_type: {
         type: Sequelize.STRING
       },
-      towers: {
+      fiber_optics_number: {
+        type: Sequelize.INTEGER
+      },
+      opgw_uts: {
+        type: Sequelize.DOUBLE
+      },
+      opgw_weight: {
+        type: Sequelize.DOUBLE
+      },
+      owner_operator: {
         type: Sequelize.STRING
       },
-      cables: {
+      tower_grounding: {
         type: Sequelize.STRING
       },
-      others: {
+      tower_circuit_arrangement: {
+        type: Sequelize.STRING
+      },
+      other_equipment: {
+        type: Sequelize.STRING
+      },
+      remark: {
         type: Sequelize.TEXT
       },
       createdAt: {
@@ -57,6 +72,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('BroadcastingInfrastructureManufacturers');
+    await queryInterface.dropTable('TransmissionLineEquipmentData');
   }
 };

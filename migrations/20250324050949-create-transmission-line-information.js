@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('BroadcastingInfrastructureManufacturers', {
+    await queryInterface.createTable('TransmissionLineInformations', {
       id: {
         type: Sequelize.UUID,
         primaryKey: true,
@@ -11,17 +11,17 @@ module.exports = {
       parent_id: {
         type: Sequelize.UUID,
         references: { 
-          model: 'BroadcastingInfrastructureManufacturers',
+          model: 'TransmissionLineInformations',
           key: 'id'
         },
         onUpdate: "CASCADE",
         onDelete: "CASCADE"
       },
-      broadcasting_infrastructure_id: {
+      project_id: {
         type: Sequelize.UUID,
         allowNull: false,
         references: {
-          model: 'BroadcastingInfrastructures',
+          model: 'projects',
           key: 'id'
         },
         onUpdate: "CASCADE",
@@ -31,19 +31,31 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
-      antennas: {
-        type: Sequelize.STRING
+      transmission_voltage: {
+        type: Sequelize.DOUBLE
       },
-      transmitters: {
-        type: Sequelize.STRING
+      transmission_line_route_length: {
+        type: Sequelize.DOUBLE
       },
-      towers: {
-        type: Sequelize.STRING
+      circuit_number: {
+        type: Sequelize.INTEGER
       },
-      cables: {
-        type: Sequelize.STRING
+      starting_point_northing: {
+        type: Sequelize.DOUBLE
       },
-      others: {
+      starting_point_easting: {
+        type: Sequelize.DOUBLE
+      },
+      ending_point_northing: {
+        type: Sequelize.DOUBLE
+      },
+      ending_point_easting: {
+        type: Sequelize.DOUBLE
+      },
+      lifetime: {
+        type: Sequelize.INTEGER
+      },
+      remark: {
         type: Sequelize.TEXT
       },
       createdAt: {
@@ -57,6 +69,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('BroadcastingInfrastructureManufacturers');
+    await queryInterface.dropTable('TransmissionLineInformations');
   }
 };

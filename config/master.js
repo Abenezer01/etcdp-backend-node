@@ -239,7 +239,18 @@ const modulemodels = {
     "solarResourceinformation",
     "solarpanel",
     "geothermalpowerwell",
-    "geothermalpowerinfrastructure"
+    "geothermalpowerinfrastructure",
+    "transmissionlineinformation",
+    "transmissionlineconductorandtowerdata",
+    "transmissionlineequipmentdata",
+    "substationtransformerandswitchgeardata",
+    "substationlayoutandcommunicationdata",
+    "minigridstation",
+    "minigridstationdistributionline",
+    "minigridstationconsumer",
+    "minigridstationbackuppowersource",
+    "minigridstationdistributionlineinfrastructure",
+    "electricdistributiontransformer"
   ],
 
   stakeholder: [

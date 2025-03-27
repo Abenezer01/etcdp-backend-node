@@ -28,6 +28,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.UUID,
       allowNull: false,
     },
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
     antennas: DataTypes.STRING,
     transmitters: DataTypes.STRING,
     towers: DataTypes.STRING,

@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('BroadcastingInfrastructureManufacturers', {
+    await queryInterface.createTable('MiniGridStationConsumers', {
       id: {
         type: Sequelize.UUID,
         primaryKey: true,
@@ -11,17 +11,17 @@ module.exports = {
       parent_id: {
         type: Sequelize.UUID,
         references: { 
-          model: 'BroadcastingInfrastructureManufacturers',
+          model: 'MiniGridStationConsumers',
           key: 'id'
         },
         onUpdate: "CASCADE",
         onDelete: "CASCADE"
       },
-      broadcasting_infrastructure_id: {
+      mini_grid_station_id: {
         type: Sequelize.UUID,
         allowNull: false,
         references: {
-          model: 'BroadcastingInfrastructures',
+          model: 'MiniGridStations',
           key: 'id'
         },
         onUpdate: "CASCADE",
@@ -29,21 +29,36 @@ module.exports = {
       },
       name: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
       },
-      antennas: {
-        type: Sequelize.STRING
+      residential: {
+        type: Sequelize.INTEGER
       },
-      transmitters: {
-        type: Sequelize.STRING
+      commercial: {
+        type: Sequelize.INTEGER
       },
-      towers: {
-        type: Sequelize.STRING
+      productive_industrial: {
+        type: Sequelize.INTEGER
       },
-      cables: {
-        type: Sequelize.STRING
+      health_centers: {
+        type: Sequelize.INTEGER
       },
-      others: {
+      schools: {
+        type: Sequelize.INTEGER
+      },
+      street_lighting: {
+        type: Sequelize.INTEGER
+      },
+      other: {
+        type: Sequelize.INTEGER
+      },
+      expected_electricity_sales: {
+        type: Sequelize.DOUBLE
+      },
+      electricity_tariff: {
+        type: Sequelize.DOUBLE
+      },
+      remark: {
         type: Sequelize.TEXT
       },
       createdAt: {
@@ -57,6 +72,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('BroadcastingInfrastructureManufacturers');
+    await queryInterface.dropTable('MiniGridStationConsumers');
   }
 };

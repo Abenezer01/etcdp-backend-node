@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class ReliabilityAndMaintenance extends Model {
+  class SubstationTransformerAndSwitchGearData extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -13,37 +13,42 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  ReliabilityAndMaintenance.init({
+  SubstationTransformerAndSwitchGearData.init({
     id: {
       type: DataTypes.UUID,
       primaryKey: true,
       defaultValue: DataTypes.UUIDV4
     },
     parent_id: DataTypes.UUID,
-    project_id: {
+    transmission_line_id: {
       type: DataTypes.UUID,
       allowNull: false,
     },
     name: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
     },
-    maintenance_frequency_id: {
+    transformers_number: DataTypes.INTEGER,
+    transformer_type: DataTypes.STRING,
+    transformer_capacity: DataTypes.DOUBLE,
+    input_voltage_level: DataTypes.DOUBLE,
+    output_voltage_level: DataTypes.DOUBLE,
+    switchgear_type_id: {
       type: DataTypes.UUID,
       allowNull: false,
     },
-    total_outage_duration: DataTypes.DOUBLE,
-    total_interruption_number: DataTypes.INTEGER,
-    saidi: DataTypes.DOUBLE,
-    saifi: DataTypes.DOUBLE,
-    automatic_fault_detection_restoration_system_installed: DataTypes.BOOLEAN,
+    circuit_breaker_type_id: {
+      type: DataTypes.UUID,
+      allowNull: false,
+    },
+    other_equipment: DataTypes.STRING,
     remark: DataTypes.TEXT
   }, {
     createdAt: 'created_at',
     updatedAt: 'updated_at',
     sequelize,
-    modelName: 'ReliabilityAndMaintenance',
-    tableName: 'ReliabilityAndMaintenances',
+    modelName: 'SubstationTransformerAndSwitchGearData',
+    tableName: 'SubstationTransformerAndSwitchGearData',
   });
-  return ReliabilityAndMaintenance;
+  return SubstationTransformerAndSwitchGearData;
 };

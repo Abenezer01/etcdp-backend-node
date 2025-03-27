@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('BroadcastingInfrastructureManufacturers', {
+    await queryInterface.createTable('MiniGridStationDistributionLines', {
       id: {
         type: Sequelize.UUID,
         primaryKey: true,
@@ -11,17 +11,17 @@ module.exports = {
       parent_id: {
         type: Sequelize.UUID,
         references: { 
-          model: 'BroadcastingInfrastructureManufacturers',
+          model: 'MiniGridStationDistributionLines',
           key: 'id'
         },
         onUpdate: "CASCADE",
         onDelete: "CASCADE"
       },
-      broadcasting_infrastructure_id: {
+      mini_grid_station_id: {
         type: Sequelize.UUID,
         allowNull: false,
         references: {
-          model: 'BroadcastingInfrastructures',
+          model: 'MiniGridStations',
           key: 'id'
         },
         onUpdate: "CASCADE",
@@ -29,21 +29,39 @@ module.exports = {
       },
       name: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
       },
-      antennas: {
+      system_type: {
         type: Sequelize.STRING
       },
-      transmitters: {
+      lines_type: {
         type: Sequelize.STRING
       },
-      towers: {
-        type: Sequelize.STRING
+      line_length: {
+        type: Sequelize.DOUBLE
       },
-      cables: {
-        type: Sequelize.STRING
+      poles: {
+        type: Sequelize.ENUM('Concrete', 'Wood', "Steel"),
+        allowNull: false,
+        defaultValue: 'Concrete'
       },
-      others: {
+      transformer_type_id: {
+        type: Sequelize.UUID,
+        allowNull: false,
+        references: {
+          model: 'ProjectMasterData',
+          key: 'id'
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE"
+      },
+      transformers_number: {
+        type: Sequelize.INTEGER
+      },
+      transformers_size: {
+        type: Sequelize.DOUBLE
+      },
+      remark: {
         type: Sequelize.TEXT
       },
       createdAt: {
@@ -57,6 +75,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('BroadcastingInfrastructureManufacturers');
+    await queryInterface.dropTable('MiniGridStationDistributionLines');
   }
 };

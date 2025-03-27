@@ -1,5 +1,280 @@
 const validateReply = require("../../../../utils/validateerror");
 
+const electricDistributionTransformerValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+
+  const validationRule = {
+    project_id: "required|string", // UUID should be a string
+    name: "required|string",
+    service_area: "numeric",
+    installation_year: "integer",
+    transformers_total_number: "integer",
+    gps_x_coordinates: "numeric",
+    gps_y_coordinates: "numeric",
+    fire_extinguishing_technology_id: "required|string", // UUID should be a string
+    other: "string",
+    remark: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
+const miniGridStationDistributionLineInfrastructureValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+
+  const validationRule = {
+    mini_grid_station_id: "required|string", // UUID should be a string
+    name: "required|string",
+    distribution_line_type_id: "required|string", // UUID should be a string
+    distribution_line_material_id: "required|string", // UUID should be a string
+    distribution_line_conductor_size: "numeric",
+    voltage_level: "numeric",
+    topology: "required|string|in:Radial, Ring", // Ensure the value is one of the allowed options
+    switching_station_connection: "boolean",
+    station_name: "string",
+    remark: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
+const miniGridStationBackupPowerSourceValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+
+  const validationRule = {
+    mini_grid_station_id: "required|string", // UUID should be a string
+    name: "required|string",
+    capacity: "numeric",
+    installation_year: "integer",
+    distribution_lines_total_length: "numeric",
+    lifetime: "integer",
+    commissioning_date: "date",
+    other: "string",
+    remark: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
+const miniGridStationConsumerValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+
+  const validationRule = {
+    mini_grid_station_id: "required|string", // UUID should be a string
+    name: "required|string",
+    residential: "integer",
+    commercial: "integer",
+    productive_industrial: "integer",
+    health_centers: "integer",
+    schools: "integer",
+    street_lighting: "integer",
+    other: "integer",
+    expected_electricity_sales: "numeric",
+    electricity_tariff: "numeric",
+    remark: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
+const miniGridStationDistributionLineValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+
+  const validationRule = {
+    mini_grid_station_id: "required|string", // UUID should be a string
+    name: "required|string",
+    system_type: "string",
+    lines_type: "string",
+    line_length: "numeric",
+    poles: "required|string|in:Concrete,Wood,Steel",
+    transformer_type_id: "required|string",
+    transformers_number: "integer",
+    transformers_size: "numeric",
+    remark: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
+const miniGridStationValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+
+  const validationRule = {
+    substation_id: "required|string", // UUID should be a string
+    name: "required|string",
+    minigrid_size: "numeric",
+    battery_type_id: "string",
+    battery_size: "numeric",
+    inverter: "numeric",
+    system_voltage: "numeric",
+    expected_annual_generation: "numeric",
+    diesel_generator: "required|string|in:Equipped,Not Equipped",
+    owner_operator: "string",
+    remark: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
+
+const substationLayoutAndCommunicationDataValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+
+  const validationRule = {
+    substation_id: "required|string", // UUID should be a string
+    name: "required|string",
+    substation_layout: "string",
+    equipped_with_standby_diesel_generator: "string",
+    substation_busbar_type: "string",
+    substation_communication_system_id: "required|string", // UUID should be a string
+    scada_system: "boolean",
+    substation_grounding_system_id: "required|string", // UUID should be a string
+    substation_altitude_level: "numeric",
+    remark: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
+const substationTransformerAndSwitchGearDataValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+
+  const validationRule = {
+    transmission_line_id: "required|string", // UUID should be a string
+    name: "required|string",
+    transformers_number: "integer",
+    transformer_type: "string",
+    transformer_capacity: "numeric",
+    input_voltage_level: "numeric",
+    output_voltage_level: "numeric",
+    switchgear_type_id: "required|string", // UUID should be a string
+    circuit_breaker_type_id: "required|string", // UUID should be a string
+    other_equipment: "string",
+    remark: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
+const transmissionLineEquipmentDataValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+
+  const validationRule = {
+    transmission_line_id: "required|string", // UUID should be a string
+    name: "required|string",
+    insulator_type: "string",
+    ground_wire_type: "string",
+    fiber_optics_number: "integer",
+    opgw_uts: "numeric",
+    opgw_weight: "numeric",
+    owner_operator: "string",
+    tower_grounding: "string",
+    tower_circuit_arrangement: "string",
+    other_equipment: "string",
+    remark: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
+const transmissionLineConductorAndTowerDataValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+
+  const validationRule = {
+    transmission_line_id: "required|string", // UUID should be a string
+    name: "required|string",
+    conductor_type: "string",
+    conductor_code_name_id: "required|string",
+    strands_number: "integer",
+    conductor_size: "numeric",
+    conductors_per_phase_number: "integer",
+    tower_type_id: "required|string",
+    tower_height: "numeric",
+    conductor_diameter: "numeric",
+    each_strand_diameter: "numeric",
+    tower_foundation_type_id: "required|string",
+    other_equipment: "string",
+    remark: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
+const transmissionLineInformationValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+
+  const validationRule = {
+    project_id: "required|string", // UUID should be a string
+    name: "required|string",
+    transmission_voltage: "numeric",
+    transmission_line_route_length: "numeric",
+    circuit_number: "integer",
+    starting_point_northing: "numeric",
+    starting_point_easting: "numeric",
+    ending_point_northing: "numeric",
+    ending_point_easting: "numeric",
+    lifetime: "integer",
+    remark: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
 const geothermalPowerInfrastructureValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
   if (param === "failed") {
@@ -2703,6 +2978,21 @@ const paymentValidate = async (req, res, next) => {
   await validateReply.validateReply(req.body, validationRule, res, next);
 };
 module.exports = { 
+  electricDistributionTransformerValidate,
+  miniGridStationDistributionLineInfrastructureValidate,
+  miniGridStationBackupPowerSourceValidate,
+  miniGridStationConsumerValidate,
+  miniGridStationDistributionLineValidate,
+
+
+  miniGridStationValidate,
+  substationLayoutAndCommunicationDataValidate, 
+
+  substationTransformerAndSwitchGearDataValidate,
+  transmissionLineEquipmentDataValidate,
+  transmissionLineConductorAndTowerDataValidate,
+  transmissionLineInformationValidate,
+  
   geothermalPowerInfrastructureValidate,
   geothermalPowerWellValidate,
   solarPanelValidate,

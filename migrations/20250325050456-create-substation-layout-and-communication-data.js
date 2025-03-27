@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('ReliabilityAndMaintenances', {
+    await queryInterface.createTable('SubstationLayoutAndCommunicationData', {
       id: {
         type: Sequelize.UUID,
         primaryKey: true,
@@ -11,17 +11,17 @@ module.exports = {
       parent_id: {
         type: Sequelize.UUID,
         references: { 
-          model: 'ReliabilityAndMaintenances',
+          model: 'SubstationLayoutAndCommunicationData',
           key: 'id'
         },
         onUpdate: "CASCADE",
         onDelete: "CASCADE"
       },
-      project_id: {
+      substation_id: {
         type: Sequelize.UUID,
         allowNull: false,
         references: {
-          model: 'projects',
+          model: 'SubstationTransformerAndSwitchGearData',
           key: 'id'
         },
         onUpdate: "CASCADE",
@@ -29,9 +29,18 @@ module.exports = {
       },
       name: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
       },
-      maintenance_frequency_id: {
+      substation_layout: {
+        type: Sequelize.STRING
+      },
+      equipped_with_standby_diesel_generator: {
+        type: Sequelize.STRING
+      },
+      substation_busbar_type: {
+        type: Sequelize.STRING
+      },
+      substation_communication_system_id: {
         type: Sequelize.UUID,
         allowNull: false,
         references: {
@@ -41,20 +50,21 @@ module.exports = {
         onUpdate: "CASCADE",
         onDelete: "CASCADE"
       },
-      total_outage_duration: {
-        type: Sequelize.DOUBLE
-      },
-      total_interruption_number: {
-        type: Sequelize.INTEGER
-      },
-      saidi: {
-        type: Sequelize.DOUBLE
-      },
-      saifi: {
-        type: Sequelize.DOUBLE
-      },
-      automatic_fault_detection_restoration_system_installed: {
+      scada_system: {
         type: Sequelize.BOOLEAN
+      },
+      substation_grounding_system_id: {
+        type: Sequelize.UUID,
+        allowNull: false,
+        references: {
+          model: 'ProjectMasterData',
+          key: 'id'
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE"
+      },
+      substation_altitude_level: {
+        type: Sequelize.DOUBLE
       },
       remark: {
         type: Sequelize.TEXT
@@ -70,6 +80,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('ReliabilityAndMaintenances');
+    await queryInterface.dropTable('SubstationLayoutAndCommunicationData');
   }
 };
