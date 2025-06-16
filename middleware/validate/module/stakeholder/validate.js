@@ -368,6 +368,7 @@ const stakeholderTypeValidate = async (req, res, next) => {
   }
   const validationRule = {
     title: "required|string",
+    flag: "string",
   };
 
   await validateReply.validateReply(req.body, validationRule, res, next);
@@ -473,12 +474,90 @@ const certificateValidate = async (req, res, next) => {
   }
   const validationRule = {
     stakeholder_id: "required|string",
+    type: "required|string",
     title: "required|string",
-    date_of_issue: "required|date",
+    scope: "required|string",
+    certifying_body: "required|string",
+    certification_number: "required|string",
+    issue_date: "required|date",
+    expire_date: "required|date",
+    remark: "string"
   };
 
   await validateReply.validateReply(req.body, validationRule, res, next);
 };
+
+
+const upgradeValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid id",
+    });
+  }
+  const validationRule = {
+    stakeholder_id: "required|string",
+    upgrade_type: "required|string",
+    previous_level: "string",
+    upgraded_level: "string",
+    ownership_percentage: "numeric",
+    description: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
+
+const vehicleValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid id",
+    });
+  }
+  const validationRule = {
+    stakeholder_id: "required|string",
+    vehicle_name: "required|string",
+    plate_number: "required|string",
+    brand_name: "string",
+    model: "required|string",
+    year: "integer",
+    chassis_number: "string",
+    engine_number: "string",
+    capacity: "string",
+    purpose: "string",
+    quantity: "integer",
+    current_situation: "string",
+    location: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
+
+const licenseValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid id",
+    });
+  }
+  const validationRule = {
+    stakeholder_id: "required|string",
+    license_type: "required|string",
+    license_category: "required|string",
+    license_name: "required|string",
+    license_scope: "required|string",
+    licensing_body: "required|string",
+    license_number: "required|string",
+    issue_date: "required|date",
+    expire_date: "required|date",
+    remark: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
 const totalEmployeeValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
   if (param === "failed") {
@@ -749,6 +828,10 @@ const StakeholderServiceValidate = async (req, res, next) => {
   await validateReply.validateReply(req.body, validationRule, res, next);
 };
 module.exports = {
+  licenseValidate,
+  vehicleValidate,
+  upgradeValidate,
+
   stakeholderEmployeeValidate,
   stakeholderMaterialValidate,
   safetyEquipmentValidate,

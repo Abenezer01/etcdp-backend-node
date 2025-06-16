@@ -13,19 +13,16 @@ module.exports = (sequelize, DataTypes) => {
         as: "department",
         foreignKey: "department_id",
       });
-      Resource.belongsTo(models.Image, {
-        foreignKey: "image_id",
-      });
       Resource.belongsTo(models.ResourceType, {
-        as: "resourcetype",
+        as: "resourceType",
         foreignKey: "resourcetype_id",
       });
       Resource.belongsTo(models.ResourceCategory, {
-        as: "resourcecategory",
+        as: "resourceCategory",
         foreignKey: "resourcecategory_id",
       });
       Resource.belongsTo(models.ResourceSubCategory, {
-        as: "resourcesubcategory",
+        as: "resourceSubCategory",
         foreignKey: "resourcesubcategory_id",
       });
     }
@@ -39,21 +36,39 @@ module.exports = (sequelize, DataTypes) => {
       },
       parent_id: DataTypes.UUID,
       department_id: DataTypes.UUID,
-      resourcetype_id: DataTypes.UUID,
-      resourcecategory_id: DataTypes.UUID,
-      resourcesubcategory_id: DataTypes.UUID,
-      measurement_unit: DataTypes.STRING,
-      title: DataTypes.STRING,
-      description: DataTypes.TEXT,
-      image_id: DataTypes.UUID,
-      revision_no: DataTypes.INTEGER,
+      resourcetype_id: {
+        type: DataTypes.UUID,
+        allowNull: false
+      },
+      resourcecategory_id: {
+        type: DataTypes.UUID,
+        allowNull: false
+      },
+      resourcesubcategory_id: {
+        type: DataTypes.UUID,
+        allowNull: false
+      },
+
+      name: {
+        type: DataTypes.STRING,
+        allowNull: false
+      },
+      quantity_measurement_unit_id: {
+        type: DataTypes.UUID,
+        allowNull: false
+      },
+      quality_measurement_unit_id: {
+        type: DataTypes.UUID,
+        allowNull: false
+      },
+      remark: DataTypes.TEXT,
     },
     {
       createdAt: "created_at",
       updatedAt: "updated_at" ,     
       sequelize,
       modelName: "Resource",
-      tableName: "resources"
+      tableName: "Resources"
     }
   );
 

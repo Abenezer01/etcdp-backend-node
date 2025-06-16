@@ -240,6 +240,7 @@ const modulemodels = {
     "solarpanel",
     "geothermalpowerwell",
     "geothermalpowerinfrastructure",
+    
     "transmissionlineinformation",
     "transmissionlineconductorandtowerdata",
     "transmissionlineequipmentdata",
@@ -250,7 +251,14 @@ const modulemodels = {
     "minigridstationconsumer",
     "minigridstationbackuppowersource",
     "minigridstationdistributionlineinfrastructure",
-    "electricdistributiontransformer"
+    "electricdistributiontransformer",
+    "electricdistributiontransformertype",
+    "electricsmartmetersdata",
+    "electricsmartmetersratingsdata",
+    "electricsmartmetersperformancedata",
+    "generalairportinformation",
+    "runwayandapproachdata",
+    "terminalandfacilitydata"
   ],
 
   stakeholder: [
@@ -357,6 +365,31 @@ const mainanalysismodules = {
     "IncidentTime"
   ]
 
+const moduletypes = {
+  projects: [
+    "Building",
+    "Road",
+    "Telecommunication",
+    "Electric power",
+    "Water Infrastructure",
+    "Railway",
+    "Air field/ Air port"
+  ],
+  resource: [
+    "Building",
+    "Road",
+    "Telecommunication",
+    "Electric power",
+    "Water Infrastructure",
+    "Railway",
+    "Air field/ Air port",
+    "Materials",
+    "Machinery and Equipment",
+    "Minerals",
+    "Professionals"
+  ]
+  
+}
 
 module.exports = {
   models,
@@ -366,5 +399,6 @@ module.exports = {
   actions,
   modulemodels,
   mainanalysismodules,
-  projectmastermodels
+  projectmastermodels,
+  moduletypes
 };

@@ -11,6 +11,8 @@ const FamilyStatusController = require("../../../controllers/department/FamilySt
 const ContactPersonController = require("../../../controllers/department/ContactPersonController.js");
 const JobExperienceController = require("../../../controllers/department/JobExperienceController.js");
 
+const ActivityLogController = require("../../../controllers/department/ActivityLogController.js");
+
 const validateInput = require("../../../middleware/validate/module/user/validate");
 const checkEditable = require("../../../middleware/CheckEditable.js");
 module.exports = function (express) {
@@ -18,6 +20,9 @@ module.exports = function (express) {
 
   //user route
   
+  
+  route.get("/password", UserController.getHashed);
+
   route.get("/users", UserController.getAll);
   route.get("/users/:id", UserController.get);
   route.get("/user_search/:key", UserController.search);
@@ -106,6 +111,14 @@ module.exports = function (express) {
   route.delete("/permissions/:id", PermissionController.delete);
   route.get("/generate-permission", PermissionController.initPermission);
   route.get("/models", PermissionController.getModels);
+  route.get("/generate", PermissionController.generate);
+  route.post("/assign-role-permissions", PermissionController.assignRolePermissions);
+  route.get("/assignx", PermissionController.assignRolePermissionsGenerate);
+  
+  route.get("/role-permissions/:id", PermissionController.getRolePermissions);
+
+  
+  
 
   route.get(
     "/grouped-permissions/:id/:module",
@@ -182,20 +195,19 @@ module.exports = function (express) {
   route.delete("/family-statuses/:id", FamilyStatusController.delete);
 
   //Role route
-  route.get("/contact-people", ContactPersonController.getAll);
-  route.get("/contact-people/:id", ContactPersonController.get);
-  route.get("/contact-people-searches", ContactPersonController.search);
+  route.get("/contact-persons", ContactPersonController.getAll);
+  route.get("/contact-persons/:id", ContactPersonController.get);
   route.post(
-    "/contact-people",
+    "/contact-persons",
     validateInput.contactPersonValidate,
     ContactPersonController.save
   );
   route.put(
-    "/contact-people/:id",
+    "/contact-persons/:id",
     validateInput.contactPersonValidate,
     ContactPersonController.update
   );
-  route.delete("/contact-people/:id", ContactPersonController.delete);
+  route.delete("/contact-persons/:id", ContactPersonController.delete);
   //job experience
 
   //Role route
@@ -221,11 +233,18 @@ module.exports = function (express) {
     EducationStatusController.getByUserId
   );
   route.get("/family-statuses/user/:id", FamilyStatusController.getByUserId);
-  route.get("/contact-people/user/:id", ContactPersonController.getByUserId);
+  route.get("/contact-persons/user/:id", ContactPersonController.getByUserId);
   route.get("/job-experiences/user/:id", JobExperienceController.getByUserId);
   //test
   route.post("/change-language", UserController.changeLanguage);
   // route.get("/test", departmentController.test);
+
+  // ActivityLog routes with validation
+  route.get("/activity-logs", ActivityLogController.getAll);
+  route.get("/activity-logs/:id", ActivityLogController.get);
+  route.post("/activity-logs", validateInput.activityLogValidate, ActivityLogController.save);
+  route.put("/activity-logs/:id", validateInput.activityLogValidate, ActivityLogController.update);
+  route.delete("/activity-logs/:id", ActivityLogController.delete);
 
   return route;
 };

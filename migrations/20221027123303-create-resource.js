@@ -1,7 +1,7 @@
 "use strict";
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("resources", {
+    await queryInterface.createTable("Resources", {
       id: {
         allowNull: false,
         primaryKey: true,
@@ -10,7 +10,7 @@ module.exports = {
       parent_id: {
         type: Sequelize.UUID,
         references: {
-          model: "resources",
+          model: "Resources",
           key: "id",
         },
         onUpdate: "CASCADE",
@@ -55,21 +55,31 @@ module.exports = {
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
       },
-      title: {
-        type: Sequelize.TEXT,
-      },
-      description: {
-        type: Sequelize.TEXT,
-      },
-      measurement_unit: {
+      name: {
         type: Sequelize.STRING,
+        allowNull: false
       },
-      image_id: {
+      quantity_measurement_unit_id: {
         type: Sequelize.UUID,
+        allowNull: false,
+        references: {
+          model: "ResourceMasterData",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
       },
-      revision_no: {
-        type: Sequelize.INTEGER,
+      quality_measurement_unit_id: {
+        type: Sequelize.UUID,
+        allowNull: false,
+        references: {
+          model: "ResourceMasterData",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
       },
+      remark: Sequelize.TEXT,
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
@@ -81,6 +91,6 @@ module.exports = {
     });
   },
   async down(queryInterface, /* Sequelize */) {
-    await queryInterface.dropTable("resources");
+    await queryInterface.dropTable("Resources");
   },
 };

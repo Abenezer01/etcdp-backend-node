@@ -1,4 +1,26 @@
 const validateReply = require("../../../../utils/validateerror");
+
+const activityLogValidate = async (req, res, next) => {
+
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid id",
+    });
+  }
+  const validationRule = {
+    user_id: "required|string",
+    action: "string",
+    module: "string",
+    target_id: "string",
+    target_type: "string",
+    ip_address: "string",
+    user_agent: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
 // const {
 //     user
 // } = require("../models");
@@ -62,14 +84,14 @@ const educationStatusValidate = async (req, res, next) => {
     });
   }
   const validationRule = {
-    education_level: "string",
-    field_of_study: "required|string",
-    school_name: "required|string",
-    start_date: "required|date",
-    end_date: "date",
     user_id: "required|string",
-    address_id: "string",
-    gpa: "numeric",
+    study_field_id: "required|string",
+    school_name: "string",
+    education_level: "string",
+    program_type: "required|string",
+    start_date: "required|date",
+    end_date: "required|date",
+    gpa: "required|numeric"
   };
 
   await validateReply.validateReply(req.body, validationRule, res, next);
@@ -99,16 +121,14 @@ const contactPersonValidate = async (req, res, next) => {
     });
   }
   const validationRule = {
-    parent_id: "string",
+    user_id: "required|string",
+    national_id_no: "string",
     first_name: "required|string",
     middle_name: "required|string",
     last_name: "required|string",
     gender: "required|string",
-    email: "required|email|string",
-    phone_number: "required|string",
-    employer_company: "required|string",
-    type: "string",
-    user_id: "required|string",
+    phone_no: "required|string",
+    email: "email"
   };
 
   await validateReply.validateReply(req.body, validationRule, res, next);
@@ -122,15 +142,13 @@ const jobExperienceValidate = async (req, res, next) => {
     });
   }
   const validationRule = {
-    parent_id: "string",
-    company_name: "required|string",
-    department: "required|string",
-    position: "required|string",
-    role: "required|string",
-    start_date: "date",
-    end_date: "date",
     user_id: "required|string",
-    address_id: "string",
+    company_name: "required|string",
+    department: "string",
+    position: "string",
+    task_description: "required|string",
+    start_date: "required|date",
+    end_date: "date"
   };
 
   await validateReply.validateReply(req.body, validationRule, res, next);
@@ -220,6 +238,7 @@ const userPhotoValidate = async (req, res, next) => {
   }
 };
 module.exports = {
+  activityLogValidate,
   createUser,
   userPhotoValidate,
   positionValidate,

@@ -10,7 +10,7 @@ module.exports = function (express) {
   route.get("/filter/documents", DocumentController.filter);
   route.get("/document_search", DocumentController.search);
   route.post(
-    "/document",
+    "/documents",
     validateData.documentValidate,
     DocumentController.save
   );

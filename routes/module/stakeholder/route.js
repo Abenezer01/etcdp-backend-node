@@ -36,6 +36,10 @@ const SafetyEquipmentController = require("../../../controllers/stakeholder/Safe
 const StakeholderMaterialController = require("../../../controllers/stakeholder/StakeholderMaterialController");
 const StakeholderEmployeeController = require("../../../controllers/stakeholder/StakeholderEmployeeController");
 
+const UpgradeController = require("../../../controllers/stakeholder/UpgradeController.js");
+const VehicleController = require("../../../controllers/stakeholder/VehicleController.js");
+const LicenseController = require("../../../controllers/stakeholder/LicenseController.js");
+
 const validateData = require("../../../middleware/validate/module/stakeholder/validate");
 
 module.exports = function (express) {
@@ -117,11 +121,6 @@ module.exports = function (express) {
   //certificate route
   route.get("/certificates/", CertificateController.getAll);
   route.get("/certificates/:id", CertificateController.get);
-  route.get(
-    "/certificates/stakeholder/:id",
-    CertificateController.getCertificateWithStakeholderId
-  );
-  route.get("/certificate-searches", CertificateController.search);
   route.post(
     "/certificates",
     validateData.certificateValidate,
@@ -133,6 +132,28 @@ module.exports = function (express) {
     CertificateController.update
   );
   route.delete("/certificates/:id", CertificateController.delete);
+
+  // Upgrade routes with validation
+  route.get("/upgrades", UpgradeController.getAll);
+  route.get("/upgrades/:id", UpgradeController.get);
+  route.post("/upgrades", validateData.upgradeValidate, UpgradeController.save);
+  route.put("/upgrades/:id", validateData.upgradeValidate, UpgradeController.update);
+  route.delete("/upgrades/:id", UpgradeController.delete);
+
+  // Vehicle routes with validation
+  route.get("/vehicles", VehicleController.getAll);
+  route.get("/vehicles/:id", VehicleController.get);
+  route.post("/vehicles", validateData.vehicleValidate, VehicleController.save);
+  route.put("/vehicles/:id", validateData.vehicleValidate, VehicleController.update);
+  route.delete("/vehicles/:id", VehicleController.delete);
+
+  // License routes with validation
+  route.get("/licenses", LicenseController.getAll);
+  route.get("/licenses/:id", LicenseController.get);
+  route.post("/licenses", validateData.licenseValidate, LicenseController.save);
+  route.put("/licenses/:id", validateData.licenseValidate, LicenseController.update);
+  route.delete("/licenses/:id", LicenseController.delete);
+
   //total employee route
   route.get("/total-employees/", TotalEmployeeController.getAll);
   route.get("/total-employees/:id", TotalEmployeeController.get);

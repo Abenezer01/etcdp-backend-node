@@ -18,8 +18,8 @@ module.exports = (sequelize, DataTypes) => {
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4,
       },
-      parent_department_id: DataTypes.UUID,
       parent_id: DataTypes.UUID,
+      parent_department_id: DataTypes.UUID,
       name: {
         type: DataTypes.STRING,
         allowNull: false,

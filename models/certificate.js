@@ -23,29 +23,42 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.UUID,
         allowNull: false,
       },
-      type: DataTypes.STRING,
+      type: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
       title: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      description: DataTypes.TEXT,
-      certificate_no: DataTypes.STRING,
-      date_of_issue: DataTypes.DATE,
-      expiry_date: DataTypes.DATE,
-      initial_certificate_no: DataTypes.STRING,
-      initial_certificate_issue_date: DataTypes.DATE,
-
-      file_id: DataTypes.UUID,
-      revision_no: {
-        type: DataTypes.INTEGER,
+      scope: {
+        type: DataTypes.STRING,
+        allowNull: false
       },
+      certifying_body: {
+        type: DataTypes.STRING,
+        allowNull: false
+      },
+      certification_number: {
+        type: DataTypes.STRING,
+        allowNull: false
+      },
+      issue_date: {
+        type: DataTypes.DATE,
+        allowNull: false
+      },
+      expire_date: {
+        type: DataTypes.DATE,
+        allowNull: false
+      },
+      remark: DataTypes.TEXT
     },
     {
       createdAt: "created_at",
       updatedAt: "updated_at" ,     
       sequelize,
       modelName: "Certificate",
-      tableName: "certificates"
+      tableName: "Certificates"
     }
   );
   return Certificate;

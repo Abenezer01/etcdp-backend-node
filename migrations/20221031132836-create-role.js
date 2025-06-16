@@ -8,16 +8,16 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.UUID,
       },
-      department_id: {
-        type: Sequelize.UUID,
-        allowNull: false,
-        references: {
-          model: "departments",
-          key: "id",
-        },
-        onUpdate: "CASCADE",
-        onDelete: "CASCADE",
-      },
+      // department_id: {
+      //   type: Sequelize.UUID,
+      //   allowNull: false,
+      //   references: {
+      //     model: "departments",
+      //     key: "id",
+      //   },
+      //   onUpdate: "CASCADE",
+      //   onDelete: "CASCADE",
+      // },
       name: {
         allowNull: false,
         type: Sequelize.STRING,

@@ -23,6 +23,9 @@ module.exports = {
       description: {
         type: Sequelize.TEXT,
       },
+      flag: {
+        type: Sequelize.STRING,
+      },
       revision_no: {
         type: Sequelize.INTEGER,
       },

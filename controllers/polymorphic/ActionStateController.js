@@ -188,7 +188,7 @@ self.approve = async (req, res) => {
            
         } else {
         let action = await ActionState.create({
-          model: model.toLowerCase(),
+          model: model,
           model_id: id,
           action: "APPROVE",
           user_id: usr.usrID,
@@ -273,7 +273,7 @@ self.reject = async (req, res) => {
 
         } else {
         let action = await ActionState.create({
-          model: model.toLowerCase(),
+          model: model,
           model_id: id,
           action: "REJECT",
           user_id: usr.usrID,
@@ -328,11 +328,13 @@ self.authorize = async (req, res) => {
 
       } else {
         let action = await ActionState.findAll({
-            model_id: id,
-            action: {
-                [Op.in]: ["REGISTER", "CHECK", "APPROVE"]
-            },
-            user_id: usr.usrID
+            where: {
+                model_id: id,
+                action: {
+                    [Op.in]: ["REGISTER", "CHECK", "APPROVE"]
+                },
+                user_id: usr.usrID
+            }
 
         });
 
@@ -356,7 +358,7 @@ self.authorize = async (req, res) => {
         } else {
 
         let action = await ActionState.create({
-          model: model.toLowerCase(),
+          model: model,
           model_id: id,
           action: "AUTHORIZE",
           user_id: usr.usrID,

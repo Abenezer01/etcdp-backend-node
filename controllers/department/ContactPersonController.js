@@ -38,24 +38,6 @@ self.delete = async (req, res) => {
   deleteRecord(ContactPerson, req, res);
 };
 
-self.search = async (req, res) => {
-  try {
-    let text = req.query.text;
-    let data = await ContactPerson.findAll({
-      where: {
-        name: {
-          [Op.like]: "%" + text + "%",
-        },
-      },
-    });
-    return res.json(data);
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
-};
-
 self.getByUserId = async (req, res) => {
   const { id } = req.params;
   try {

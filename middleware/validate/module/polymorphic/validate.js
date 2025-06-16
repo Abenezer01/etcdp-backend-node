@@ -1,4 +1,74 @@
 const validateReply = require("../../../../utils/validateerror");
+
+const dataCollectionGuideValidate = async (req, res, next) => {
+
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid id",
+    });
+  }
+  const validationRule = {
+    model: "required|string",
+    title: "required|string",
+    description: "string",
+    instruction: "string",
+    data_collection_frequency: "string",
+    data_source: "string",
+    responsible_data_collector_body: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+const addressMasterDataValidate = async (req, res, next) => {
+
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid id",
+    });
+  }
+  const validationRule = {
+    parent_address_id: "string",
+    parent: "string",
+    type: "required|string",
+    title: "required|string",
+    description: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
+const infrastructureSubCategoryValidate = async (req, res, next) => {
+  const validationRule = {
+    infrastructurecategory_id: "required|string",
+    title: "required|string",
+    description: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
+const infrastructureCategoryValidate = async (req, res, next) => {
+  const validationRule = {
+    infrastructuretype_id: "required|string",
+    title: "required|string",
+    description: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+const moduleTypeValidate = async (req, res, next) => {
+  const validationRule = {
+    module: "required|string",
+    title: "required|string",
+    flag: "string",
+    description: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
 const addressValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
   if (param === "failed") {
@@ -166,6 +236,13 @@ const filterValidate = async (req, res, next) => {
 };
 
 module.exports = {
+  dataCollectionGuideValidate,
+  addressMasterDataValidate,
+
+  infrastructureSubCategoryValidate,
+  infrastructureCategoryValidate,
+  moduleTypeValidate,
+  
   addressValidate,
   modelMenuValidate,
   actionStateValidate,

@@ -10,6 +10,9 @@ const ModelMenuController = require("../../../controllers/polymorphic/ModelMenuC
 const NotificationController = require("../../../controllers/polymorphic/NotificationController.js");
 const FileController = require("../../../controllers/polymorphic/FileController");
 const ReportController = require("../../../controllers/polymorphic/ReportController.js");
+const DataCollectionGuideController = require("../../../controllers/polymorphic/DataCollectionGuideController.js");
+
+
 module.exports = function (express) {
   const route = express.Router();
 
@@ -112,5 +115,22 @@ module.exports = function (express) {
   );
   route.post("/notifications/:id", NotificationController.get);
 
+
+  // DataCollectionGuide routes with validation
+route.get("/data-collection-guides", DataCollectionGuideController.getAll);
+route.get("/data-collection-guides/:id", DataCollectionGuideController.get);
+route.post(
+  "/data-collection-guides",
+  validateData.dataCollectionGuideValidate,
+  DataCollectionGuideController.save
+);
+route.put(
+  "/data-collection-guides/:id",
+  validateData.dataCollectionGuideValidate,
+  DataCollectionGuideController.update
+);
+route.delete("/data-collection-guides/:id", DataCollectionGuideController.delete);
+
+  
   return route;
 };

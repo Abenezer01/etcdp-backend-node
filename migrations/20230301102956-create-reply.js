@@ -10,23 +10,23 @@ module.exports = {
       },
       actionstate_id: {
         type: Sequelize.UUID,
+        allowNull: false,
         references: {
           model: "actionstates",
           key: "id",
         },
         onUpdate: "CASCADE",
-        onDelete: "CASCADE",
-        allowNull: false
+        onDelete: "CASCADE"
       },
       creator_id: {
         type: Sequelize.UUID,
+        allowNull: false,
         references: {
           model: "users",
           key: "id",
         },
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
-        allowNull: false
       },
       content: {
         type: Sequelize.TEXT,

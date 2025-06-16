@@ -1,4 +1,4 @@
-const { ActionState } = require("../../models");
+const { ActionState, ActivityLog} = require("../../models");
 const usrData = require("../../utils/userDataFromToken");
 const self = {};
 
@@ -14,6 +14,30 @@ self.saveActionState = async (model_id, model, action, user_id, req, res) => {
       time: new Date(),
     });
     return act;
+
+    // if(act) {
+    //   let me = await actionHelper.notifyActor(act,'check', usr.usrID, usr.departmentID)
+    //   return me
+    // }
+  } catch (error) {
+    return {
+      message: error.message,
+    };
+  }
+};
+
+self.saveActivityLog = async (user_id, action, module, target_id, target_type, req, res) => {
+  try {
+    const activity = await ActivityLog.create({
+      user_id: user_id,
+      action,
+      module,
+      target_id,
+      target_type,
+      ip_address: req.ip,
+      user_agent: req.get('User-Agent'),
+    });
+    return activity;
 
     // if(act) {
     //   let me = await actionHelper.notifyActor(act,'check', usr.usrID, usr.departmentID)

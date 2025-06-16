@@ -80,14 +80,25 @@ const DocumentTypeController = require("../../../controllers/document/documentTy
 const DocumentCategoryController = require("../../../controllers/document/documentCategoryController.js");
 const DocumentSubCategoryController = require("../../../controllers/document/documentSubCategoryController.js");
 
-
-
 const ConstructionRelatedServiceController = require("../../../controllers/stakeholder/ConstructionRelatedServiceController");
+
+const ModuleTypeController = require("../../../controllers/polymorphic/ModuleTypeController.js");
+const InfrastructureCategoryController = require("../../../controllers/polymorphic/InfrastructureCategoryController.js");
+const InfrastructureSubCategoryController = require("../../../controllers/polymorphic/InfrastructureSubCategoryController.js");
+
+const ResourceMasterDataController = require("../../../controllers/resources/ResourceMasterDataController.js");
+
+const AddressMasterDataController = require("../../../controllers/polymorphic/AddressMasterDataController.js");
+
 
 const validateStakeholderData = require("../../../middleware/validate/module/stakeholder/validate");
 const validateResourceData = require("../../../middleware/validate/module/construction resource/validate.js");
 const validateProjectData = require("../../../middleware/validate/module/project/validate.js");
 const validateDocumentData = require("../../../middleware/validate/module/document/validate.js");
+
+const validateResource = require("../../../middleware/validate/module/resource/validate.js");
+
+const validateData = require("../../../middleware/validate/module/polymorphic/validate.js");
 
 module.exports = function (express) {
   const route = express.Router();
@@ -857,8 +868,42 @@ route.put("/project-general-master-data/:id", validateProjectData.projectMasterD
 route.delete("/project-general-master-data/:id", ProjectMasterDataController.delete);
 
 
+// ModuleType routes with validation
+route.get("/infrastructure-types", ModuleTypeController.getAll);
+route.get("/infrastructure-types/:id", ModuleTypeController.get);
+route.post("/infrastructure-types", validateData.moduleTypeValidate, ModuleTypeController.save);
+route.put("/infrastructure-types/:id", validateData.moduleTypeValidate, ModuleTypeController.update);
+route.delete("/infrastructure-types/:id", ModuleTypeController.delete);
+
+// InfrastructureCategory routes with validation
+route.get("/infrastructure-categories", InfrastructureCategoryController.getAll);
+route.get("/infrastructure-categories/:id", InfrastructureCategoryController.get);
+route.post("/infrastructure-categories", validateData.infrastructureCategoryValidate, InfrastructureCategoryController.save);
+route.put("/infrastructure-categories/:id", validateData.infrastructureCategoryValidate, InfrastructureCategoryController.update);
+route.delete("/infrastructure-categories/:id", InfrastructureCategoryController.delete);
+
+// InfrastructureSubCategory routes with validation
+route.get("/infrastructure-sub-categories", InfrastructureSubCategoryController.getAll);
+route.get("/infrastructure-sub-categories/:id", InfrastructureSubCategoryController.get);
+route.post("/infrastructure-sub-categories", validateData.infrastructureSubCategoryValidate, InfrastructureSubCategoryController.save);
+route.put("/infrastructure-sub-categories/:id", validateData.infrastructureSubCategoryValidate, InfrastructureSubCategoryController.update);
+route.delete("/infrastructure-sub-categories/:id", InfrastructureSubCategoryController.delete);
 
 
-  
+// ResourceMasterData routes with validation
+route.get("/resource-general-master-data", ResourceMasterDataController.getAll);
+route.get("/resource-general-master-data/:id", ResourceMasterDataController.get);
+route.post("/resource-general-master-data", validateResource.resourceMasterDataValidate, ResourceMasterDataController.save);
+route.put("/resource-general-master-data/:id", validateResource.resourceMasterDataValidate, ResourceMasterDataController.update);
+route.delete("/resource-general-master-data/:id", ResourceMasterDataController.delete);
+
+
+// AddressMasterData routes with validation
+route.get("/address-master-data", AddressMasterDataController.getAll);
+route.get("/address-master-data/:id", AddressMasterDataController.get);
+route.post("/address-master-data", validateData.addressMasterDataValidate, AddressMasterDataController.save);
+route.put("/address-master-data/:id", validateData.addressMasterDataValidate, AddressMasterDataController.update);
+route.delete("/address-master-data/:id", AddressMasterDataController.delete);
+
   return route;
 };

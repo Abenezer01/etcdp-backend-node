@@ -23,6 +23,9 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
+      flag: {
+        type: DataTypes.STRING,
+      },
       description: DataTypes.TEXT,
       revision_no: DataTypes.INTEGER,
     },

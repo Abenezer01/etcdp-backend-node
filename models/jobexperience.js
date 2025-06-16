@@ -18,45 +18,36 @@ module.exports = (sequelize, DataTypes) => {
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4,
       },
-      parent_id: {
-        type: DataTypes.UUID,
-      },
-      company_name: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      department: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      position: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      role: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      start_date: {
-        type: DataTypes.DATE,
-      },
-      end_date: {
-        type: DataTypes.DATE,
-      },
+      parent_id: DataTypes.UUID,
       user_id: {
         type: DataTypes.UUID,
         allowNull: false,
       },
-      address_id: {
-        type: DataTypes.UUID,
+      company_name: {
+        type: DataTypes.STRING,
+        allowNull: false
       },
+      department: DataTypes.STRING,
+      position: DataTypes.STRING,
+      task_description: {
+        type: DataTypes.TEXT,
+        allowNull: false
+      },
+      start_date: {
+        type: DataTypes.DATE,
+        allowNull: false
+      },
+      end_date: {
+        type: DataTypes.DATE,
+        allowNull: false
+      }
     },
     {
       createdAt: "created_at",
       updatedAt: "updated_at" ,     
       sequelize,
       modelName: "JobExperience",
-      tableName: "jobexperiences"
+      tableName: "JobExperiences"
     }
   );
   return JobExperience;

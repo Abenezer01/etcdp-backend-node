@@ -5,6 +5,7 @@ const {
     StakeholderType,
     StakeholderCategory,
     StakeholderSubCategory,
+    StakeholderDepartment,
     Ownership,
     BusinessField,
     OperationLocation,
@@ -15,6 +16,10 @@ const { getRecordById, saveRecord, updateRecord, deleteRecord } = require("../ut
 const dotenv = require("dotenv");
 dotenv.config();
 const paginationHelper = require("../utils/pagination-helper");
+
+const usrData = require("../../utils/userDataFromToken");
+const actionHelper = require("../utils/action-helper");
+
 
 const Op = Sequelize.Op;
 
@@ -102,7 +107,55 @@ self.search = async (req, res) => {
 
 
 self.save = async (req, res) => {
-  saveRecord(Stakeholder, req, res);
+  try {
+    let body = req.body;
+    let data = await Stakeholder.create(body);
+    let usr = await usrData.userData(req, res);
+
+    if(data){
+      let stakeholderDepartment = await StakeholderDepartment.create({
+        stakeholder_id: data.id,
+        name: "Main Office",
+        description: "Main office description",
+      });
+
+      await actionHelper.saveActionState(
+        data.id,
+        "Stakeholder",
+        "REGISTER",
+        usr.usrID,
+        req,
+        res
+      );
+
+      await actionHelper.saveActivityLog(
+        usr.usrID, "create", "module", data.id, "Stakeholder", req, res
+      )
+
+      if(stakeholderDepartment){  
+        await actionHelper.saveActionState(
+          stakeholderDepartment.id,
+          "StakeholderDepartment",
+          "REGISTER",
+          usr.usrID,
+          req,
+          res
+        );
+  
+        await actionHelper.saveActivityLog(
+          usr.usrID, "create", "module", stakeholderDepartment.id, "StakeholderDepartment", req, res
+        )
+  
+      }
+
+    }
+
+    return res.apiSuccess({data});
+
+  } catch (error) {
+    res.apiError(error);
+  }
+  // saveRecord(Stakeholder, req, res);
 };
 
 self.update = async (req, res) => {

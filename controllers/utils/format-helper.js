@@ -38,6 +38,7 @@ const getRecordById = async (model, req, res, include = []) => {
   const saveRecord = async (model, req, res) => {
     try {        
       const body = req.body;
+      
       const data = await model.create(body);
   
       if (data) {
@@ -50,7 +51,12 @@ const getRecordById = async (model, req, res, include = []) => {
           req,
           res
         );
+
+        await actionHelper.saveActivityLog(
+          usr.usrID, "create", "module", data.id, model.name, req, res
+        )
       }
+
   
       res.apiSuccess({
         data: data
@@ -90,7 +96,14 @@ const getRecordById = async (model, req, res, include = []) => {
       });
   
       if (deleted) {
-        return res.status(204).json(); // No Content
+        //delete all related data like action state
+        // await ActionState.destroy({
+        //   where: {
+        //     model_id: id
+        //   }
+        // })
+         return res.status(200).json({ message: 'Record deleted successfully.' });
+
       }
   
       throw new Error("Record not found");

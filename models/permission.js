@@ -23,12 +23,16 @@ module.exports = (sequelize, DataTypes) => {
         unique: true,
         allowNull: false,
       },
+      model: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
       module: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      category: {
-        type: DataTypes.STRING,
+      description: {
+        type: DataTypes.TEXT,
       },
     },
     {

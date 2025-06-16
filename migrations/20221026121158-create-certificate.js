@@ -1,7 +1,7 @@
 "use strict";
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("certificates", {
+    await queryInterface.createTable("Certificates", {
       id: {
         allowNull: false,
         primaryKey: true,
@@ -10,7 +10,7 @@ module.exports = {
       parent_id: {
         type: Sequelize.UUID,
         references: {
-          model: "certificates",
+          model: "Certificates",
           key: "id",
         },
         onUpdate: "CASCADE",
@@ -28,42 +28,33 @@ module.exports = {
       },
       type: {
         type: Sequelize.STRING,
+        allowNull: false,
       },
       title: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      description: {
-        type: Sequelize.TEXT,
-      },
-      certificate_no: {
+      scope: {
         type: Sequelize.STRING,
+        allowNull: false
       },
-      date_of_issue: {
+      certifying_body: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      certification_number: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      issue_date: {
         type: Sequelize.DATE,
         allowNull: false,
       },
-      expiry_date: {
+      expire_date: {
         type: Sequelize.DATE,
+        allowNull: false,
       },
-      initial_certificate_no: {
-        type: Sequelize.STRING,
-      },
-      initial_certificate_issue_date: {
-        type: Sequelize.DATE,
-      },
-      file_id: {
-        type: Sequelize.UUID,
-        references: {
-          model: "files",
-          key: "id",
-        },
-        onUpdate: "CASCADE",
-        onDelete: "CASCADE",
-      },
-      revision_no: {
-        type: Sequelize.INTEGER,
-      },
+      remark: Sequelize.TEXT,
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
@@ -75,6 +66,6 @@ module.exports = {
     });
   },
   async down(queryInterface, /* Sequelize */) {
-    await queryInterface.dropTable("certificates");
+    await queryInterface.dropTable("Certificates");
   },
 };

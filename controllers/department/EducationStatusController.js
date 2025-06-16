@@ -1,4 +1,4 @@
-const { EducationStatus, Sequelize } = require("../../models");
+const { EducationStatus, StudyField, Sequelize } = require("../../models");
 const paginationHelper = require("../utils/pagination-helper");
 const { getRecordById, saveRecord, updateRecord, deleteRecord } = require("../utils/format-helper");
 
@@ -9,7 +9,16 @@ let self = {};
 
 self.getAll = async (req, res) => {
   try {
-    const paginatedResult = await paginationHelper(EducationStatus, req);
+    const whereCondition = { };
+
+
+    const includeOptions = [
+      {
+          model: StudyField,
+          as: "studyField"
+      },
+    ];
+    const paginatedResult = await paginationHelper(EducationStatus, req, whereCondition, includeOptions);
 
     // Use the response formatter to send the success response
     res.apiSuccess({

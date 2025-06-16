@@ -8,7 +8,8 @@ const loginRoute = require("./routes/module/auth/route");
 const stakeholderRoute = require("./routes/module/stakeholder/route");
 const masterdataRoute = require("./routes/module/masterdata/route");
 
-const resourceRoute = require("./routes/module/construction resource/route");
+// const resourceRoute = require("./routes/module/construction resource/route");
+const resourceRoute = require("./routes/module/resource/route");
 const documentRoute = require("./routes/module/document/route");
 const analyticRoute = require("./routes/module/analytic/route");
 const route_view = require("./routes/route_view");

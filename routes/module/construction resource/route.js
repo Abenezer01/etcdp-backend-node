@@ -11,19 +11,8 @@ const ResourceStudyLevelController = require("../../../controllers/construction 
 const ResourceWorkExperienceController = require("../../../controllers/construction resource/ResourceWorkExperienceController");
 
 const SalaryController = require("../../../controllers/construction resource/SalaryController");
-const ProfessionalController = require("../../../controllers/construction resource/ProfessionalController");
-const ProfessionalAddressController = require("../../../controllers/construction resource/ProfessionalAddressController");
 
-const ProfessionalContactController = require("../../../controllers/construction resource/ProfessionalContactController");
-const ProfessionalContactPeopleController = require("../../../controllers/construction resource/ProfessionalContactPeopleController");
 
-const ProfessionalAdditionalInformationController = require("../../../controllers/construction resource/ProfessionalAdditionalInformationController");
-
-const ProfessionalEducationController = require("../../../controllers/construction resource/ProfessionalEducationController");
-
-const ProfessionalWorkExperienceController = require("../../../controllers/construction resource/ProfessionalWorkExperienceController");
-const ProfessionalAssociationMembershipController = require("../../../controllers/construction resource/ProfessionalAssociationMembershipController");
-const ProfessionalCertificationController = require("../../../controllers/construction resource/ProfessionalCertificationController");
 
 
 const validateData = require("../../../middleware/validate/module/construction resource/validate");
@@ -307,107 +296,6 @@ module.exports = function (express) {
   );
 
 
-  // Professionals routes with validation
-  route.get("/professionals", ProfessionalController.getAll);
-  route.get("/professionals/:id", ProfessionalController.get);
-  route.post("/professionals", validateData.professionalValidate, ProfessionalController.save);
-  route.put(
-    "/professionals/:id",
-    validateData.professionalValidate,
-    ProfessionalController.update
-  );
-  route.delete("/professionals/:id", ProfessionalController.delete);
-
-
-  // professional address
-  route.get("/professional-addresses", ProfessionalAddressController.getAll);
-  route.get("/professional-addresses/:id", ProfessionalAddressController.get);
-  route.post("/professional-addresses", validateData.professionalAddressValidate, ProfessionalAddressController.save);
-  route.put(
-    "/professional-addresses/:id",
-    validateData.professionalAddressValidate,
-    ProfessionalAddressController.update
-  );
-  route.delete("/professional-addresses/:id", ProfessionalAddressController.delete);
-
-  // Professional contacts routes with validation
-  route.get("/professional-contacts", ProfessionalContactController.getAll);
-  route.get("/professional-contacts/:id", ProfessionalContactController.get);
-  route.post("/professional-contacts", validateData.professionalContactValidate, ProfessionalContactController.save);
-  route.put(
-    "/professional-contacts/:id",
-    validateData.professionalContactValidate,
-    ProfessionalContactController.update
-  );
-  route.delete("/professional-contacts/:id", ProfessionalContactController.delete);
-
-  // Professional contact people routes with validation
-  route.get("/professional-contact-people", ProfessionalContactPeopleController.getAll);
-  route.get("/professional-contact-people/:id", ProfessionalContactPeopleController.get);
-  route.post("/professional-contact-people", validateData.professionalContactPeopleValidate, ProfessionalContactPeopleController.save);
-  route.put(
-    "/professional-contact-people/:id",
-    validateData.professionalContactPeopleValidate,
-    ProfessionalContactPeopleController.update
-  );
-  route.delete("/professional-contact-people/:id", ProfessionalContactPeopleController.delete);
   
-
-  // Professional additional information routes with validation
-  route.get("/professional-additional-information", ProfessionalAdditionalInformationController.getAll);
-  route.get("/professional-additional-information/:id", ProfessionalAdditionalInformationController.get);
-  route.post("/professional-additional-information", validateData.professionalAdditionalInformationValidate, ProfessionalAdditionalInformationController.save);
-  route.put(
-    "/professional-additional-information/:id",
-    validateData.professionalAdditionalInformationValidate,
-    ProfessionalAdditionalInformationController.update
-  );
-  route.delete("/professional-additional-information/:id", ProfessionalAdditionalInformationController.delete);
-
-
-  // Professional education routes with validation
-  route.get("/professional-educations", ProfessionalEducationController.getAll);
-  route.get("/professional-educations/:id", ProfessionalEducationController.get);
-  route.post("/professional-educations", validateData.professionalEducationValidate, ProfessionalEducationController.save);
-  route.put(
-    "/professional-educations/:id",
-    validateData.professionalEducationValidate,
-    ProfessionalEducationController.update
-  );
-  route.delete("/professional-educations/:id", ProfessionalEducationController.delete);
-
-  // Professional work experiences routes with validation
-  route.get("/professional-work-experiences", ProfessionalWorkExperienceController.getAll);
-  route.get("/professional-work-experiences/:id", ProfessionalWorkExperienceController.get);
-  route.post("/professional-work-experiences", validateData.professionalWorkExperienceValidate, ProfessionalWorkExperienceController.save);
-  route.put(
-    "/professional-work-experiences/:id",
-    validateData.professionalWorkExperienceValidate,
-    ProfessionalWorkExperienceController.update
-  );
-  route.delete("/professional-work-experiences/:id", ProfessionalWorkExperienceController.delete);
-
-  
-  // Professional association memberships routes with validation
-  route.get("/professional-association-memberships", ProfessionalAssociationMembershipController.getAll);
-  route.get("/professional-association-memberships/:id", ProfessionalAssociationMembershipController.get);
-  route.post("/professional-association-memberships", validateData.professionalAssociationMembershipValidate, ProfessionalAssociationMembershipController.save);
-  route.put(
-    "/professional-association-memberships/:id",
-    validateData.professionalAssociationMembershipValidate,
-    ProfessionalAssociationMembershipController.update
-  );
-  route.delete("/professional-association-memberships/:id", ProfessionalAssociationMembershipController.delete);
-  
-   // Professional certifications routes with validation
-   route.get("/professional-certifications", ProfessionalCertificationController.getAll);
-   route.get("/professional-certifications/:id", ProfessionalCertificationController.get);
-   route.post("/professional-certifications", validateData.professionalCertificationValidate, ProfessionalCertificationController.save);
-   route.put(
-     "/professional-certifications/:id",
-     validateData.professionalCertificationValidate,
-     ProfessionalCertificationController.update
-   );
-   route.delete("/professional-certifications/:id", ProfessionalCertificationController.delete);
   return route;
 };

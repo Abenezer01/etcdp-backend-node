@@ -36,9 +36,15 @@ let REFRESH_TOKEN_KEY = process.env.REFRESH_TOKEN_KEY;
 
 let self = {};
 
+self.getHashed = async (req, res) => {
+    let password = "Pass@ECDMS"
+    const salt = await bcrypt.genSalt();
+    const pass = await bcrypt.hash(password, salt);
+    return res.json(pass);
+}
+
 self.getAll = async (req, res) => {
 
-   
     try {
       const whereCondition = { };
   
@@ -52,6 +58,10 @@ self.getAll = async (req, res) => {
             model: UserPhone,
             as: "userphones",
             attributes: ["phone"] 
+        },
+        {
+            model: UserPosition,
+            as: "positions",
         }
       ];
 
@@ -59,14 +69,51 @@ self.getAll = async (req, res) => {
       const paginatedResult = await paginationHelper(User, req, whereCondition, includeOptions);
   
 
-      const usersWithEmail = paginatedResult.data.map(user => {
-        const userJson = user.toJSON();
-        userJson.email = userJson.useremails ? userJson.useremails.email : null;
-        userJson.phone = userJson.userphones ? userJson.userphones.phone : null;
-        delete userJson.useremails; // Remove the nested emailInfo object
-        delete userJson.userphones; // Remove the nested emailInfo object
-        return userJson;
-      });
+    //   const usersWithEmail = paginatedResult.data.map(user => {
+    //     const userJson = user.toJSON();
+    //     userJson.email = userJson.useremails ? userJson.useremails.email : null;
+    //     userJson.phone = userJson.userphones ? userJson.userphones.phone : null;
+    //     delete userJson.useremails; // Remove the nested emailInfo object
+    //     delete userJson.userphones; // Remove the nested emailInfo object
+    //     return userJson;
+    //   });
+
+    // return res.json(paginatedResult.data)
+    const usersWithEmail = await Promise.all(
+            paginatedResult.data.map(async (user) => {
+              const userJson = user.toJSON();
+          
+              userJson.email = userJson.useremails ? userJson.useremails[0].email : null;
+              userJson.phone = userJson.userphones ? userJson.userphones[0].phone : null;
+              
+              let position_id = null
+              let department_id = null
+
+              if(userJson.positions.length !== 0){
+                position_id = userJson.positions ? userJson.positions[0].position_id : null;
+                department_id = userJson.positions ? userJson.positions[0].department_id : null;
+              }
+              
+              
+              let pos = null
+              let dept = null
+              if(position_id){
+                pos = position_id ? await Position.findOne({ where: { id: position_id } }) : null;
+                dept = department_id ? await Department.findOne({ where: { id: department_id } }) : null;
+              }
+              
+              userJson.position_id = position_id;
+              userJson.position = pos;
+              userJson.department = dept;
+          
+              // Remove unnecessary nested objects
+              delete userJson.useremails;
+              delete userJson.userphones;
+              delete userJson.positions;
+          
+              return userJson;
+            })
+          );
       // Use the response formatter to send the success response
       res.apiSuccess({
         data: usersWithEmail,
@@ -102,9 +149,17 @@ self.get = async(req, res) => {
                 },
             });
 
+            let usPosition = await UserPosition.findOne({
+                where: {
+                    user_id: data.id,
+                    is_primary: true,
+                },
+            });
+
             let temp = data.toJSON();
             temp.email = usEmail ? usEmail.email : null;
             temp.phone = usPhone ? usPhone.phone : null;
+            temp.position = usPosition ? usPosition.position_id : null;
 
             res.apiSuccess({
                 data: temp
@@ -172,6 +227,7 @@ self.save = async(req, res) => {
         //     });
         // }
 
+
         // const salt = await bcrypt.genSalt(10);
         var usr = {
             first_name: body.first_name,
@@ -232,7 +288,7 @@ self.save = async(req, res) => {
                 });
 
                 //send
-                const redirectUrl = body.redirectUrl;
+                const redirectUrl = body.redirect_url ;
                 const salt = await bcrypt.genSalt();
                 const hashedResetString = await bcrypt.hash(resetString, salt);
                 var mailOptions = {
@@ -327,6 +383,34 @@ self.save = async(req, res) => {
     }
 };
 
+self.setupPassword = async(req, res) => {
+    try {
+        
+        let body = req. body;
+
+        let data = await User.findOne({
+            where: {
+                id:body.id
+            }
+        })
+
+        let password = body.password
+        const salt = await bcrypt.genSalt();
+        const hashed_password = await bcrypt.hash(password, salt);
+
+        data.password = hashed_password
+        await data.save()
+
+        return res.apiSuccess({
+            data
+        });
+
+
+    } catch (error) {
+        return res.apiError(error);
+    }
+}
+
 self.update = async (req, res) => {
     try {
         let id = req.params.id;
@@ -411,19 +495,44 @@ self.update = async (req, res) => {
                 model: UserPhone,
                 as: "userphones",
                 attributes: ["phone"] 
+            },
+            {
+                model: UserPosition,
+                as: "positions",
+                attributes: ["position_id", "department_id"] 
             }
           ];
 
         const paginatedResult = await paginationHelper(User, req, whereCondition, includeOptions);
 
-        const usersWithEmail = paginatedResult.data.map(user => {
-            const userJson = user.toJSON();
-            userJson.email = userJson.useremails ? userJson.useremails.email : null;
-            userJson.phone = userJson.userphones ? userJson.userphones.phone : null;
-            delete userJson.useremails; // Remove the nested emailInfo object
-            delete userJson.userphones; // Remove the nested emailInfo object
-            return userJson;
-          });
+        
+        const usersWithEmail = await Promise.all(
+            paginatedResult.data.map(async (user) => {
+              const userJson = user.toJSON();
+          
+              userJson.email = userJson.useremails ? userJson.useremails[0].email : null;
+              userJson.phone = userJson.userphones ? userJson.userphones[0].phone : null;
+              let position_id = userJson.positions ? userJson.positions[0].position_id : null;
+              let department_id = userJson.positions ? userJson.positions[0].department_id : null;
+              userJson.position_id = position_id;
+          
+              // Fetch position and department asynchronously
+              const pos = position_id ? await Position.findOne({ where: { id: position_id } }) : null;
+              const dept = department_id ? await Department.findOne({ where: { id: department_id } }) : null;
+          
+              userJson.position = pos;
+              userJson.department = dept;
+          
+              // Remove unnecessary nested objects
+              delete userJson.useremails;
+              delete userJson.userphones;
+              delete userJson.positions;
+          
+              return userJson;
+            })
+          );
+          
+
     
         // Use the response formatter to send the success response
         res.apiSuccess({
@@ -670,7 +779,7 @@ self.sendMail = async(req, res) => {
             },
         });
         if (us) {
-            const redirectUrl = body.redirectUrl;
+            const redirectUrl = body.redirect_url ;
 
             let preset = await PasswordReset.findOne({
                 where: {
@@ -690,7 +799,7 @@ self.sendMail = async(req, res) => {
                 html: `
 
 				<p>Your EtCDP account is ready, click on the link below to fillout your password</p>
-				<p><a href= ${redirectUrl}${us.id}/${hashedResetString.replace(
+				<p><a href= ${redirectUrl}/auth/${us.id}/${hashedResetString.replace(
           /\//g,
           "slash"
         )}>Link to setup password</a></p>
@@ -811,10 +920,7 @@ self.requestPasswordReset = async(req, res) => {
                 subject: "Password Reset",
                 html: `
 				<p>Someone just requested to change your EtCDP account's credentials. If this was you, click on the link below to reset them.</p>
-				<p><a href= ${redirectUrl}${us.id}/${hashedResetString.replace(
-          /\//g,
-          "slash"
-        )}>Link to reset credentials</a></p>
+				<p><a href= ${redirectUrl}?token=${hashedResetString}&user_id=${us.id}>Link to reset credentials</a></p>
 				<p>This link will expire within 60 minutes. </p>
 				<p>If you don't want to reset your credentials, just ignore this message and nothing will be changed.</p>`,
             };
@@ -877,6 +983,7 @@ self.resetPassword = async(req, res) => {
         });
 
         if (existing) {
+            
             // const expiredAt = existing.expiresAt
             // if(expiredAt < Date.now()){
             // 	return res.status(410).json({
@@ -886,11 +993,14 @@ self.resetPassword = async(req, res) => {
 
             const hashedResetString = existing.token;
             //FYI resetString is the hashed one from the sent letter
-            let hashed = resetString.replace(/slash/g, "/");
+            let hashed = resetString;
+            // let hashed = resetString.replace(/slash/g, "/");
             const valid = await bcrypt.compare(hashedResetString, hashed);
             if (valid) {
+
                 const salt = await bcrypt.genSalt();
                 const pass = await bcrypt.hash(password, salt);
+
                 await User.update({ password: pass }, {
                     where: {
                         id: user_id,

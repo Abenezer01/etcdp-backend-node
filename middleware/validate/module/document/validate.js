@@ -9,6 +9,7 @@ const documentTypeValidate = async (req, res, next) => {
   }
   const validationRule = {
     title: "required|string",
+    flag: "string",
   };
 
   await validateReply.validateReply(req.body, validationRule, res, next);

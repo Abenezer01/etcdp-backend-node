@@ -23,7 +23,11 @@ module.exports = (sequelize, DataTypes) => {
       //     allowNull: false
       // },
 
-      name: DataTypes.STRING,
+      name: {
+        type: DataTypes.STRING,
+        allowNull: false
+      },
+      description: DataTypes.TEXT
     },
     {
       createdAt: "created_at",

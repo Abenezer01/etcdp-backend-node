@@ -18,9 +18,13 @@ module.exports = (sequelize, DataTypes) => {
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4,
       },
-
-      parent_id: {
+      parent_id: DataTypes.UUID,
+      user_id: {
         type: DataTypes.UUID,
+        allowNull: false,
+      },
+      national_id_no: {
+        type: DataTypes.STRING
       },
       first_name: {
         type: DataTypes.STRING,
@@ -38,27 +42,11 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      email: {
-        type: DataTypes.STRING,
-        unique: true,
-        allowNull: false,
-      },
-      phone_number: {
+      phone_no: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      employer_company: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      type: {
-        type: DataTypes.STRING,
-        default: "Emergency Contact",
-      },
-      user_id: {
-        type: DataTypes.UUID,
-        allowNull: false,
-      },
+      email: DataTypes.STRING,
       full_name: {
         type: DataTypes.VIRTUAL,
         get() {
@@ -71,7 +59,7 @@ module.exports = (sequelize, DataTypes) => {
       updatedAt: "updated_at" ,     
       sequelize,
       modelName: "ContactPerson",
-      tableName: "contactpeople"
+      tableName: "ContactPeople"
 
     }
   );

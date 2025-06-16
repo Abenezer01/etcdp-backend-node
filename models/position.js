@@ -23,6 +23,9 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.UUID,
         allowNull: false,
       },
+      role_id: {
+        type: DataTypes.UUID
+      },
       name: {
         type: DataTypes.STRING,
         allowNull: false,

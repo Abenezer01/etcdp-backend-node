@@ -19,22 +19,23 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: DataTypes.UUIDV4,
       },
       parent_id: DataTypes.UUID,
-      resource_id: DataTypes.UUID,
-      title: {
+      resource_id: {
+        type: DataTypes.UUID,
+        allowNull: false
+      },
+      name: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      description: DataTypes.TEXT,
-      image: DataTypes.TEXT,
-      datasource: DataTypes.STRING,
-      revision_no: DataTypes.INTEGER,
+      manufacturer: DataTypes.STRING,
+      remark: DataTypes.TEXT,
     },
     {
       createdAt: "created_at",
       updatedAt: "updated_at" ,     
       sequelize,
       modelName: "ResourceBrand",
-      tableName: "resourcebrands"
+      tableName: "ResourceBrands"
     }
   );
   return ResourceBrand;

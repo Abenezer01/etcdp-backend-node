@@ -305,16 +305,28 @@ self.getDepartments = async (req, res) => {
     const id = req.params.id;
     let departments = [];
 
-    if (id) {
-      const parent = await Department.findOne({ where: { id } });
-      if (!parent) {
-        return res.status(404).json({ error: "Parent department not found" });
-      }
-      const children = await Department.findAll({ where: { parent_department_id: id } });
-      const allChildren = await self.getAllChildren(children);
-      departments = [parent, ...children, ...allChildren];
+      if (id) {
+        const parent = await Department.findOne({ where: { id } });
+        
+        if (!parent) {
+          return res.status(404).json({ error: "Parent department not found" });
+        }
+
+        const children = await Department.findAll({ where: { parent_department_id: id } });
+
+
+      // return res.json({
+      //   children
+        
+      // })
+
+      // const allChildren = await self.getChildren(children)
+      
+
+        departments = [parent, ...children];
+        // departments = [parent, ...children, ...allChildren];
     } else {
-      departments = await Department.findAll();
+        departments = await Department.findAll();
     }
 
     const arr = await Promise.all(
@@ -358,6 +370,80 @@ self.getDepartments = async (req, res) => {
     res.apiError(error);
   }
 };
+
+self.getChildren = async (req, res) => {
+  let id = req.params.id;
+  try {
+    let parent = await Department.findOne({
+      where: {
+        id: id,
+      },
+    });
+    let data = await Department.findAll({
+      where: {
+        parent_department_id: id,
+      },
+    });
+    let all = await self.getAllChildren(data);
+    Array.prototype.push.apply(all, data);
+    all.unshift(parent);
+    let arr = [];
+    for (let dept of all) {
+      let posi = await UserPosition.findAll({
+        attributes: ["user_id"],
+        where: {
+          department_id: dept.id,
+        },
+      });
+
+      let userId = [...new Set(posi.map((item) => item.user_id))].filter(
+        (n) => n
+      );
+
+      let staffs = await User.findAndCountAll({
+        where: {
+          id: {
+            [Op.in]: userId,
+          },
+        },
+      });
+
+      let pos = await Position.findOne({
+        where: {
+          department_id: dept.id,
+          is_head: true,
+        },
+      });
+
+      const uspos = pos
+        ? await UserPosition.findOne({ where: { position_id: pos.id } })
+        : null;
+      const head = uspos
+        ? await User.findOne({ where: { user_id: uspos.user_id } })
+        : null;
+
+      arr.push({
+        id: dept.id,
+        parentNodeId: dept.parent_department_id,
+        name: dept.name,
+        head: head ? head : null,
+        staff_no: staffs.count,
+      });
+    }
+
+    // arr.find(department => department.id==id).parentNodeId=null
+    // return res.json(arr)
+    const container = arr.map((department) =>
+      department.id === id ? { ...department, parentNodeId: null } : department
+    );
+    return res.json(container);
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
 
 self.getDepartmentDashboad = async (req, res) => {
   try {

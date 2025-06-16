@@ -13,12 +13,16 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
+      model: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
       module: {
         type: Sequelize.STRING,
         allowNul: false,
       },
-      category: {
-        type: Sequelize.STRING,
+      description: {
+        type: Sequelize.TEXT,
       },
       createdAt: {
         allowNull: false,

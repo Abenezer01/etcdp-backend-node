@@ -36,6 +36,7 @@ const RailwayStationController = require("../../../controllers/project/RailwaySt
 const WaterIrrigationDamController = require("../../../controllers/project/WaterIrrigationDamController.js");
 const PortController = require("../../../controllers/project/PortController.js");
 const PaymentController = require("../../../controllers/project/PaymentController.js");
+
 const ProjectOutcome45C3Controller = require("../../../controllers/project/ProjectOutcome45C3Controller.js");
 const ProjectAdditionalInfo48A1Controller = require("../../../controllers/project/ProjectAdditionalInfo48A1Controller.js");
 
@@ -133,6 +134,67 @@ const MiniGridStationConsumerController = require("../../../controllers/projects
 const MiniGridStationBackupPowerSourceController = require("../../../controllers/projects/MiniGridStationBackupPowerSourceController.js");
 const MiniGridStationDistributionLineInfrastructureController = require("../../../controllers/projects/MiniGridStationDistributionLineInfrastructureController.js");
 const ElectricDistributionTransformerController = require("../../../controllers/projects/ElectricDistributionTransformerController.js");
+const ElectricGridControlCenterPerformanceAndMaintenanceController = require("../../../controllers/projects/ElectricGridControlCenterPerformanceAndMaintenanceController.js");
+
+
+const ElectricDistributionTransformerTypeController = require("../../../controllers/projects/ElectricDistributionTransformerTypeController.js");
+const ElectricSmartMetersDataController = require("../../../controllers/projects/ElectricSmartMetersDataController.js");
+const ElectricSmartMetersRatingsDataController = require("../../../controllers/projects/ElectricSmartMetersRatingsDataController.js");
+const ElectricSmartMetersPerformanceDataController = require("../../../controllers/projects/ElectricSmartMetersPerformanceDataController.js");
+const ElectricSmartMetersPrivacyAndSecurityDataController = require("../../../controllers/projects/ElectricSmartMetersPrivacyAndSecurityDataController.js");
+const ElectricGridControlCenterDataController = require("../../../controllers/projects/ElectricGridControlCenterDataController.js");
+const ElectricGridControlCenterCyberSecurityDataController = require("../../../controllers/projects/ElectricGridControlCenterCyberSecurityDataController.js");
+
+const GeneralAirportInformationController = require("../../../controllers/projects/GeneralAirportInformationController.js");
+const RunwayAndApproachDataController = require("../../../controllers/projects/RunwayAndApproachDataController.js");
+const TerminalAndFacilityDataController = require("../../../controllers/projects/TerminalAndFacilityDataController.js");
+
+const GeneralDamInformationController = require("../../../controllers/projects/GeneralDamInformationController.js");
+
+const DamReservoirCharacteristicController = require("../../../controllers/projects/DamReservoirCharacteristicController.js");
+const DamOutletAndEnergyDissipationSystemController = require("../../../controllers/projects/DamOutletAndEnergyDissipationSystemController.js");
+const DamMonitoringAndInstrumentationController = require("../../../controllers/projects/DamMonitoringAndInstrumentationController.js");
+const IrrigationAndDrainageDataController = require("../../../controllers/projects/IrrigationAndDrainageDataController.js");
+const CanalAndPipeSystemController = require("../../../controllers/projects/CanalAndPipeSystemController.js");
+const PumpingSystemAndDrainageController = require("../../../controllers/projects/PumpingSystemAndDrainageController.js");
+const WaterTreatmentController = require("../../../controllers/projects/WaterTreatmentController.js");
+
+const RailwayTrackDataController = require("../../../controllers/projects/RailwayTrackDataController.js");
+const RailwayTrackGeometryDataController = require("../../../controllers/projects/RailwayTrackGeometryDataController.js");
+const RailwayTrackConditionAssessmentController = require("../../../controllers/projects/RailwayTrackConditionAssessmentController.js");
+const RailwayTrackMaintenanceAndInspectionController = require("../../../controllers/projects/RailwayTrackMaintenanceAndInspectionController.js");
+
+const RailwayTrackRehabilitationOrRenewalController = require("../../../controllers/projects/RailwayTrackRehabilitationOrRenewalController.js");
+const RailwayTrackSafetyController = require("../../../controllers/projects/RailwayTrackSafetyController.js");
+const RailwayBallastController = require("../../../controllers/projects/RailwayBallastController.js");
+const RailwayBallastMaterialDataController = require("../../../controllers/projects/RailwayBallastMaterialDataController.js");
+const RailwayBallastMaterialSpecificationController = require("../../../controllers/projects/RailwayBallastMaterialSpecificationController.js");
+const RailwayBallastConditionAssessmentController = require("../../../controllers/projects/RailwayBallastConditionAssessmentController.js");
+const RailwayBallastMaintenanceAndRenewalController = require("../../../controllers/projects/RailwayBallastMaintenanceAndRenewalController.js");
+
+const RailwayBallastDrainageAndWaterManagementController = require("../../../controllers/projects/RailwayBallastDrainageAndWaterManagementController.js");
+const RailwayBallastEnvironmentalAndOtherFactorController = require("../../../controllers/projects/RailwayBallastEnvironmentalAndOtherFactorController.js");
+const RailwaySubBallastMaterialController = require("../../../controllers/projects/RailwaySubBallastMaterialController.js");
+const RailwaySubBallastMaterialTestController = require("../../../controllers/projects/RailwaySubBallastMaterialTestController.js");
+const RailwaySubBallastConditionAssessmentController = require("../../../controllers/projects/RailwaySubBallastConditionAssessmentController.js");
+const RailwaySubBallastMaintenanceAndRenewalController = require("../../../controllers/projects/RailwaySubBallastMaintenanceAndRenewalController.js");
+const RailwaySubBallastDrainageAndWaterManagementController = require("../../../controllers/projects/RailwaySubBallastDrainageAndWaterManagementController.js");
+const RailwaySubBallastEnvironmentalAndOtherFactorController = require("../../../controllers/projects/RailwaySubBallastEnvironmentalAndOtherFactorController.js");
+const RailwaySleeperCharacteristicController = require("../../../controllers/projects/RailwaySleeperCharacteristicController.js");
+
+const RailwaySleeperConditionAssessmentController = require("../../../controllers/projects/RailwaySleeperConditionAssessmentController.js");
+const RailwaySleeperMaintenanceAndReplacementController = require("../../../controllers/projects/RailwaySleeperMaintenanceAndReplacementController.js");
+const RailwaySleeperFasteningSystemController = require("../../../controllers/projects/RailwaySleeperFasteningSystemController.js");
+const RailwaySleeperEnvironmentalAndOtherFactorController = require("../../../controllers/projects/RailwaySleeperEnvironmentalAndOtherFactorController.js");
+const RailwayFasteningSystemCharacteristicController = require("../../../controllers/projects/RailwayFasteningSystemCharacteristicController.js");
+const RailwayFasteningSystemConditionAssessmentController = require("../../../controllers/projects/RailwayFasteningSystemConditionAssessmentController.js");
+const RailwayFasteningSystemMaintenanceAndReplacementController = require("../../../controllers/projects/RailwayFasteningSystemMaintenanceAndReplacementController.js");
+const RailwayFasteningSystemEnvironmentalFactorController = require("../../../controllers/projects/RailwayFasteningSystemEnvironmentalFactorController.js");
+const RailwaySignalingSystemController = require("../../../controllers/projects/RailwaySignalingSystemController.js");
+const RailwayCommunicationSystemController = require("../../../controllers/projects/RailwayCommunicationSystemController.js");
+const RailwaySystemConditionAssessmentController = require("../../../controllers/projects/RailwaySystemConditionAssessmentController.js");
+const RailwayCommunicationSystemMaintenanceAndTestingController = require("../../../controllers/projects/RailwayCommunicationSystemMaintenanceAndTestingController.js");
+
 
 
 const validateData = require("../../../middleware/validate/module/project/validate");
@@ -1499,6 +1561,570 @@ module.exports = function (express) {
   route.post("/electric-distribution-transformers", validateData.electricDistributionTransformerValidate, ElectricDistributionTransformerController.save);
   route.put("/electric-distribution-transformers/:id", validateData.electricDistributionTransformerValidate, ElectricDistributionTransformerController.update);
   route.delete("/electric-distribution-transformers/:id", ElectricDistributionTransformerController.delete);
+
+  // ElectricDistributionTransformerType routes with validation
+  route.get("/electric-distribution-transformer-types", ElectricDistributionTransformerTypeController.getAll);
+  route.get("/electric-distribution-transformer-types/:id", ElectricDistributionTransformerTypeController.get);
+  route.post("/electric-distribution-transformer-types", validateData.electricDistributionTransformerTypeValidate, ElectricDistributionTransformerTypeController.save);
+  route.put("/electric-distribution-transformer-types/:id", validateData.electricDistributionTransformerTypeValidate, ElectricDistributionTransformerTypeController.update);
+  route.delete("/electric-distribution-transformer-types/:id", ElectricDistributionTransformerTypeController.delete);
+
+  // ElectricSmartMetersData routes with validation
+  route.get("/electric-smart-meters-data", ElectricSmartMetersDataController.getAll);
+  route.get("/electric-smart-meters-data/:id", ElectricSmartMetersDataController.get);
+  route.post("/electric-smart-meters-data", validateData.electricSmartMetersDataValidate, ElectricSmartMetersDataController.save);
+  route.put("/electric-smart-meters-data/:id", validateData.electricSmartMetersDataValidate, ElectricSmartMetersDataController.update);
+  route.delete("/electric-smart-meters-data/:id", ElectricSmartMetersDataController.delete);
+
+  // ElectricSmartMetersRatingsData routes with validation
+  route.get("/electric-smart-meters-ratings-data", ElectricSmartMetersRatingsDataController.getAll);
+  route.get("/electric-smart-meters-ratings-data/:id", ElectricSmartMetersRatingsDataController.get);
+  route.post("/electric-smart-meters-ratings-data", validateData.electricSmartMetersRatingsDataValidate, ElectricSmartMetersRatingsDataController.save);
+  route.put("/electric-smart-meters-ratings-data/:id", validateData.electricSmartMetersRatingsDataValidate, ElectricSmartMetersRatingsDataController.update);
+  route.delete("/electric-smart-meters-ratings-data/:id", ElectricSmartMetersRatingsDataController.delete);
+
+  // ElectricSmartMetersPerformanceData routes with validation
+  route.get("/electric-smart-meters-performance-data", ElectricSmartMetersPerformanceDataController.getAll);
+  route.get("/electric-smart-meters-performance-data/:id", ElectricSmartMetersPerformanceDataController.get);
+  route.post("/electric-smart-meters-performance-data", validateData.electricSmartMetersPerformanceDataValidate, ElectricSmartMetersPerformanceDataController.save);
+  route.put("/electric-smart-meters-performance-data/:id", validateData.electricSmartMetersPerformanceDataValidate, ElectricSmartMetersPerformanceDataController.update);
+  route.delete("/electric-smart-meters-performance-data/:id", ElectricSmartMetersPerformanceDataController.delete);
+
+  // ElectricSmartMetersPrivacyAndSecurityData routes with validation
+  route.get("/electric-smart-meters-privacy-and-security-data", ElectricSmartMetersPrivacyAndSecurityDataController.getAll);
+  route.get("/electric-smart-meters-privacy-and-security-data/:id", ElectricSmartMetersPrivacyAndSecurityDataController.get);
+  route.post("/electric-smart-meters-privacy-and-security-data", validateData.electricSmartMetersPrivacyAndSecurityDataValidate, ElectricSmartMetersPrivacyAndSecurityDataController.save);
+  route.put("/electric-smart-meters-privacy-and-security-data/:id", validateData.electricSmartMetersPrivacyAndSecurityDataValidate, ElectricSmartMetersPrivacyAndSecurityDataController.update);
+  route.delete("/electric-smart-meters-privacy-and-security-data/:id", ElectricSmartMetersPrivacyAndSecurityDataController.delete);
+
+  // ElectricGridControlCenterData routes with validation
+  route.get("/electric-grid-control-center-data", ElectricGridControlCenterDataController.getAll);
+  route.get("/electric-grid-control-center-data/:id", ElectricGridControlCenterDataController.get);
+  route.post("/electric-grid-control-center-data", validateData.electricGridControlCenterDataValidate, ElectricGridControlCenterDataController.save);
+  route.put("/electric-grid-control-center-data/:id", validateData.electricGridControlCenterDataValidate, ElectricGridControlCenterDataController.update);
+  route.delete("/electric-grid-control-center-data/:id", ElectricGridControlCenterDataController.delete);
+
+  // ElectricGridControlCenterPerformanceAndMaintenance routes with validation
+  route.get("/electric-grid-control-center-performance-and-maintenance", ElectricGridControlCenterPerformanceAndMaintenanceController.getAll);
+  route.get("/electric-grid-control-center-performance-and-maintenance/:id", ElectricGridControlCenterPerformanceAndMaintenanceController.get);
+  route.post("/electric-grid-control-center-performance-and-maintenance", validateData.electricGridControlCenterPerformanceAndMaintenanceValidate, ElectricGridControlCenterPerformanceAndMaintenanceController.save);
+  route.put("/electric-grid-control-center-performance-and-maintenance/:id", validateData.electricGridControlCenterPerformanceAndMaintenanceValidate, ElectricGridControlCenterPerformanceAndMaintenanceController.update);
+  route.delete("/electric-grid-control-center-performance-and-maintenance/:id", ElectricGridControlCenterPerformanceAndMaintenanceController.delete);
+
+  // ElectricGridControlCenterCyberSecurityData routes with validation
+  route.get("/electric-grid-control-center-cyber-security-data", ElectricGridControlCenterCyberSecurityDataController.getAll);
+  route.get("/electric-grid-control-center-cyber-security-data/:id", ElectricGridControlCenterCyberSecurityDataController.get);
+  route.post("/electric-grid-control-center-cyber-security-data", validateData.electricGridControlCenterCyberSecurityDataValidate, ElectricGridControlCenterCyberSecurityDataController.save);
+  route.put("/electric-grid-control-center-cyber-security-data/:id", validateData.electricGridControlCenterCyberSecurityDataValidate, ElectricGridControlCenterCyberSecurityDataController.update);
+  route.delete("/electric-grid-control-center-cyber-security-data/:id", ElectricGridControlCenterCyberSecurityDataController.delete);
+
+  // GeneralAirportInformation routes with validation
+  route.get("/general-airport-informations", GeneralAirportInformationController.getAll);
+  route.get("/general-airport-informations/:id", GeneralAirportInformationController.get);
+  route.post("/general-airport-informations", validateData.generalAirportInformationValidate, GeneralAirportInformationController.save);
+  route.put("/general-airport-informations/:id", validateData.generalAirportInformationValidate, GeneralAirportInformationController.update);
+  route.delete("/general-airport-informations/:id", GeneralAirportInformationController.delete);
+
+  // RunwayAndApproachData routes with validation
+  route.get("/runway-and-approach-datas", RunwayAndApproachDataController.getAll);
+  route.get("/runway-and-approach-datas/:id", RunwayAndApproachDataController.get);
+  route.post("/runway-and-approach-datas", validateData.runwayAndApproachDataValidate, RunwayAndApproachDataController.save);
+  route.put("/runway-and-approach-datas/:id", validateData.runwayAndApproachDataValidate, RunwayAndApproachDataController.update);
+  route.delete("/runway-and-approach-datas/:id", RunwayAndApproachDataController.delete);
+
+  // TerminalAndFacilityData routes with validation
+  route.get("/terminal-and-facility-datas", TerminalAndFacilityDataController.getAll);
+  route.get("/terminal-and-facility-datas/:id", TerminalAndFacilityDataController.get);
+  route.post("/terminal-and-facility-datas", validateData.terminalAndFacilityDataValidate, TerminalAndFacilityDataController.save);
+  route.put("/terminal-and-facility-datas/:id", validateData.terminalAndFacilityDataValidate, TerminalAndFacilityDataController.update);
+  route.delete("/terminal-and-facility-datas/:id", TerminalAndFacilityDataController.delete);
+
+  //water dam type
+  // GeneralDamInformation routes with validation
+  route.get("/general-dam-informations", GeneralDamInformationController.getAll);
+  route.get("/general-dam-informations/:id", GeneralDamInformationController.get);
+  route.post("/general-dam-informations", validateData.generalDamInformationValidate, GeneralDamInformationController.save);
+  route.put("/general-dam-informations/:id", validateData.generalDamInformationValidate, GeneralDamInformationController.update);
+  route.delete("/general-dam-informations/:id", GeneralDamInformationController.delete);
+
+  // RailwayTrackData routes with validation
+  route.get("/railway-track-data", RailwayTrackDataController.getAll);
+  route.get("/railway-track-data/:id", RailwayTrackDataController.get);
+  route.post("/railway-track-data", validateData.railwayTrackDataValidate, RailwayTrackDataController.save);
+  route.put("/railway-track-data/:id", validateData.railwayTrackDataValidate, RailwayTrackDataController.update);
+  route.delete("/railway-track-data/:id", RailwayTrackDataController.delete);
+
+  // RailwayTrackGeometryData routes with validation
+  route.get("/railway-track-geometry-data", RailwayTrackGeometryDataController.getAll);
+  route.get("/railway-track-geometry-data/:id", RailwayTrackGeometryDataController.get);
+  route.post("/railway-track-geometry-data", validateData.railwayTrackGeometryDataValidate, RailwayTrackGeometryDataController.save);
+  route.put("/railway-track-geometry-data/:id", validateData.railwayTrackGeometryDataValidate, RailwayTrackGeometryDataController.update);
+  route.delete("/railway-track-geometry-data/:id", RailwayTrackGeometryDataController.delete);
+
+  // RailwayTrackConditionAssessment routes with validation
+  route.get("/railway-track-condition-assessments", RailwayTrackConditionAssessmentController.getAll);
+  route.get("/railway-track-condition-assessments/:id", RailwayTrackConditionAssessmentController.get);
+  route.post("/railway-track-condition-assessments", validateData.railwayTrackConditionAssessmentValidate, RailwayTrackConditionAssessmentController.save);
+  route.put("/railway-track-condition-assessments/:id", validateData.railwayTrackConditionAssessmentValidate, RailwayTrackConditionAssessmentController.update);
+  route.delete("/railway-track-condition-assessments/:id", RailwayTrackConditionAssessmentController.delete);
+
+  // RailwayTrackMaintenanceAndInspection routes with validation
+  route.get("/railway-track-maintenance-and-inspections", RailwayTrackMaintenanceAndInspectionController.getAll);
+  route.get("/railway-track-maintenance-and-inspections/:id", RailwayTrackMaintenanceAndInspectionController.get);
+  route.post(
+    "/railway-track-maintenance-and-inspections",
+    validateData.railwayTrackMaintenanceAndInspectionValidate,
+    RailwayTrackMaintenanceAndInspectionController.save
+  );
+  route.put(
+    "/railway-track-maintenance-and-inspections/:id",
+    validateData.railwayTrackMaintenanceAndInspectionValidate,
+    RailwayTrackMaintenanceAndInspectionController.update
+  );
+  route.delete("/railway-track-maintenance-and-inspections/:id", RailwayTrackMaintenanceAndInspectionController.delete);
+
+  
+  // RailwayTrackRehabilitationOrRenewal routes with validation
+  route.get("/railway-track-rehabilitation-or-renewals", RailwayTrackRehabilitationOrRenewalController.getAll);
+  route.get("/railway-track-rehabilitation-or-renewals/:id", RailwayTrackRehabilitationOrRenewalController.get);
+  route.post(
+    "/railway-track-rehabilitation-or-renewals",
+    validateData.railwayTrackRehabilitationOrRenewalValidate,
+    RailwayTrackRehabilitationOrRenewalController.save
+  );
+  route.put(
+    "/railway-track-rehabilitation-or-renewals/:id",
+    validateData.railwayTrackRehabilitationOrRenewalValidate,
+    RailwayTrackRehabilitationOrRenewalController.update
+  );
+  route.delete("/railway-track-rehabilitation-or-renewals/:id", RailwayTrackRehabilitationOrRenewalController.delete);
+  // RailwayTrackSafety routes with validation
+route.get("/railway-track-safeties", RailwayTrackSafetyController.getAll);
+route.get("/railway-track-safeties/:id", RailwayTrackSafetyController.get);
+route.post(
+  "/railway-track-safeties",
+  validateData.railwayTrackSafetyValidate,
+  RailwayTrackSafetyController.save
+);
+route.put(
+  "/railway-track-safeties/:id",
+  validateData.railwayTrackSafetyValidate,
+  RailwayTrackSafetyController.update
+);
+route.delete("/railway-track-safeties/:id", RailwayTrackSafetyController.delete);
+
+  // RailwayBallast routes with validation
+  route.get("/railway-ballasts", RailwayBallastController.getAll);
+  route.get("/railway-ballasts/:id", RailwayBallastController.get);
+  route.post(
+    "/railway-ballasts",
+    validateData.railwayBallastValidate,
+    RailwayBallastController.save
+  );
+  route.put(
+    "/railway-ballasts/:id",
+    validateData.railwayBallastValidate,
+    RailwayBallastController.update
+  );
+  route.delete("/railway-ballasts/:id", RailwayBallastController.delete);
+
+  // RailwayBallastMaterialData routes with validation
+  route.get("/railway-ballast-material-data", RailwayBallastMaterialDataController.getAll);
+  route.get("/railway-ballast-material-data/:id", RailwayBallastMaterialDataController.get);
+  route.post(
+    "/railway-ballast-material-data",
+    validateData.railwayBallastMaterialDataValidate,
+    RailwayBallastMaterialDataController.save
+  );
+  route.put(
+    "/railway-ballast-material-data/:id",
+    validateData.railwayBallastMaterialDataValidate,
+    RailwayBallastMaterialDataController.update
+  );
+  route.delete("/railway-ballast-material-data/:id", RailwayBallastMaterialDataController.delete);
+
+  // RailwayBallastMaterialSpecification routes with validation
+  route.get("/railway-ballast-material-specifications", RailwayBallastMaterialSpecificationController.getAll);
+  route.get("/railway-ballast-material-specifications/:id", RailwayBallastMaterialSpecificationController.get);
+  route.post(
+    "/railway-ballast-material-specifications",
+    validateData.railwayBallastMaterialSpecificationValidate,
+    RailwayBallastMaterialSpecificationController.save
+  );
+  route.put(
+    "/railway-ballast-material-specifications/:id",
+    validateData.railwayBallastMaterialSpecificationValidate,
+    RailwayBallastMaterialSpecificationController.update
+  );
+  route.delete("/railway-ballast-material-specifications/:id", RailwayBallastMaterialSpecificationController.delete);
+
+  // RailwayBallastConditionAssessment routes with validation
+  route.get("/railway-ballast-condition-assessments", RailwayBallastConditionAssessmentController.getAll);
+  route.get("/railway-ballast-condition-assessments/:id", RailwayBallastConditionAssessmentController.get);
+  route.post(
+    "/railway-ballast-condition-assessments",
+    validateData.railwayBallastConditionAssessmentValidate,
+    RailwayBallastConditionAssessmentController.save
+  );
+  route.put(
+    "/railway-ballast-condition-assessments/:id",
+    validateData.railwayBallastConditionAssessmentValidate,
+    RailwayBallastConditionAssessmentController.update
+  );
+  route.delete("/railway-ballast-condition-assessments/:id", RailwayBallastConditionAssessmentController.delete);
+
+  // RailwayBallastMaintenanceAndRenewal routes with validation
+  route.get("/railway-ballast-maintenance-and-renewals", RailwayBallastMaintenanceAndRenewalController.getAll);
+  route.get("/railway-ballast-maintenance-and-renewals/:id", RailwayBallastMaintenanceAndRenewalController.get);
+  route.post(
+    "/railway-ballast-maintenance-and-renewals",
+    validateData.railwayBallastMaintenanceAndRenewalValidate,
+    RailwayBallastMaintenanceAndRenewalController.save
+  );
+  route.put(
+    "/railway-ballast-maintenance-and-renewals/:id",
+    validateData.railwayBallastMaintenanceAndRenewalValidate,
+    RailwayBallastMaintenanceAndRenewalController.update
+  );
+  route.delete("/railway-ballast-maintenance-and-renewals/:id", RailwayBallastMaintenanceAndRenewalController.delete);
+
+  // RailwayBallastDrainageAndWaterManagement routes with validation
+  route.get("/railway-ballast-drainage-and-water-managements", RailwayBallastDrainageAndWaterManagementController.getAll);
+  route.get("/railway-ballast-drainage-and-water-managements/:id", RailwayBallastDrainageAndWaterManagementController.get);
+  route.post(
+    "/railway-ballast-drainage-and-water-managements",
+    validateData.railwayBallastDrainageAndWaterManagementValidate,
+    RailwayBallastDrainageAndWaterManagementController.save
+  );
+  route.put(
+    "/railway-ballast-drainage-and-water-managements/:id",
+    validateData.railwayBallastDrainageAndWaterManagementValidate,
+    RailwayBallastDrainageAndWaterManagementController.update
+  );
+  route.delete("/railway-ballast-drainage-and-water-managements/:id", RailwayBallastDrainageAndWaterManagementController.delete);
+
+
+  // RailwayBallastEnvironmentalAndOtherFactor routes with validation
+  route.get("/railway-ballast-environmental-and-other-factors", RailwayBallastEnvironmentalAndOtherFactorController.getAll);
+  route.get("/railway-ballast-environmental-and-other-factors/:id", RailwayBallastEnvironmentalAndOtherFactorController.get);
+  route.post(
+    "/railway-ballast-environmental-and-other-factors",
+    validateData.railwayBallastEnvironmentalAndOtherFactorValidate,
+    RailwayBallastEnvironmentalAndOtherFactorController.save
+  );
+  route.put(
+    "/railway-ballast-environmental-and-other-factors/:id",
+    validateData.railwayBallastEnvironmentalAndOtherFactorValidate,
+    RailwayBallastEnvironmentalAndOtherFactorController.update
+  );
+  route.delete("/railway-ballast-environmental-and-other-factors/:id", RailwayBallastEnvironmentalAndOtherFactorController.delete);
+
+  // RailwaySubBallastMaterial routes with validation
+  route.get("/railway-sub-ballast-materials", RailwaySubBallastMaterialController.getAll);
+  route.get("/railway-sub-ballast-materials/:id", RailwaySubBallastMaterialController.get);
+  route.post(
+    "/railway-sub-ballast-materials",
+    validateData.railwaySubBallastMaterialValidate,
+    RailwaySubBallastMaterialController.save
+  );
+  route.put(
+    "/railway-sub-ballast-materials/:id",
+    validateData.railwaySubBallastMaterialValidate,
+    RailwaySubBallastMaterialController.update
+  );
+  route.delete("/railway-sub-ballast-materials/:id", RailwaySubBallastMaterialController.delete);
+
+  // RailwaySubBallastMaterialTest routes with validation
+  route.get("/railway-sub-ballast-material-tests", RailwaySubBallastMaterialTestController.getAll);
+  route.get("/railway-sub-ballast-material-tests/:id", RailwaySubBallastMaterialTestController.get);
+  route.post(
+    "/railway-sub-ballast-material-tests",
+    validateData.railwaySubBallastMaterialTestValidate,
+    RailwaySubBallastMaterialTestController.save
+  );
+  route.put(
+    "/railway-sub-ballast-material-tests/:id",
+    validateData.railwaySubBallastMaterialTestValidate,
+    RailwaySubBallastMaterialTestController.update
+  );
+  route.delete("/railway-sub-ballast-material-tests/:id", RailwaySubBallastMaterialTestController.delete);
+
+  // RailwaySubBallastConditionAssessment routes with validation
+  route.get("/railway-sub-ballast-condition-assessments", RailwaySubBallastConditionAssessmentController.getAll);
+  route.get("/railway-sub-ballast-condition-assessments/:id", RailwaySubBallastConditionAssessmentController.get);
+  route.post(
+    "/railway-sub-ballast-condition-assessments",
+    validateData.railwaySubBallastConditionAssessmentValidate,
+    RailwaySubBallastConditionAssessmentController.save
+  );
+  route.put(
+    "/railway-sub-ballast-condition-assessments/:id",
+    validateData.railwaySubBallastConditionAssessmentValidate,
+    RailwaySubBallastConditionAssessmentController.update
+  );
+  route.delete("/railway-sub-ballast-condition-assessments/:id", RailwaySubBallastConditionAssessmentController.delete);
+
+  // RailwaySubBallastMaintenanceAndRenewal routes with validation
+  route.get("/railway-sub-ballast-maintenance-and-renewals", RailwaySubBallastMaintenanceAndRenewalController.getAll);
+  route.get("/railway-sub-ballast-maintenance-and-renewals/:id", RailwaySubBallastMaintenanceAndRenewalController.get);
+  route.post(
+    "/railway-sub-ballast-maintenance-and-renewals",
+    validateData.railwaySubBallastMaintenanceAndRenewalValidate,
+    RailwaySubBallastMaintenanceAndRenewalController.save
+  );
+  route.put(
+    "/railway-sub-ballast-maintenance-and-renewals/:id",
+    validateData.railwaySubBallastMaintenanceAndRenewalValidate,
+    RailwaySubBallastMaintenanceAndRenewalController.update
+  );
+  route.delete("/railway-sub-ballast-maintenance-and-renewals/:id", RailwaySubBallastMaintenanceAndRenewalController.delete);
+
+  // RailwaySubBallastDrainageAndWaterManagement routes with validation
+  route.get("/railway-sub-ballast-drainage-and-water-managements", RailwaySubBallastDrainageAndWaterManagementController.getAll);
+  route.get("/railway-sub-ballast-drainage-and-water-managements/:id", RailwaySubBallastDrainageAndWaterManagementController.get);
+  route.post(
+    "/railway-sub-ballast-drainage-and-water-managements",
+    validateData.railwaySubBallastDrainageAndWaterManagementValidate,
+    RailwaySubBallastDrainageAndWaterManagementController.save
+  );
+  route.put(
+    "/railway-sub-ballast-drainage-and-water-managements/:id",
+    validateData.railwaySubBallastDrainageAndWaterManagementValidate,
+    RailwaySubBallastDrainageAndWaterManagementController.update
+  );
+  route.delete("/railway-sub-ballast-drainage-and-water-managements/:id", RailwaySubBallastDrainageAndWaterManagementController.delete);
+
+
+  // RailwaySubBallastEnvironmentalAndOtherFactor routes with validation
+  route.get("/railway-sub-ballast-environmental-and-other-factors", RailwaySubBallastEnvironmentalAndOtherFactorController.getAll);
+  route.get("/railway-sub-ballast-environmental-and-other-factors/:id", RailwaySubBallastEnvironmentalAndOtherFactorController.get);
+  route.post(
+    "/railway-sub-ballast-environmental-and-other-factors",
+    validateData.railwaySubBallastEnvironmentalAndOtherFactorValidate,
+    RailwaySubBallastEnvironmentalAndOtherFactorController.save
+  );
+  route.put(
+    "/railway-sub-ballast-environmental-and-other-factors/:id",
+    validateData.railwaySubBallastEnvironmentalAndOtherFactorValidate,
+    RailwaySubBallastEnvironmentalAndOtherFactorController.update
+  );
+  route.delete("/railway-sub-ballast-environmental-and-other-factors/:id", RailwaySubBallastEnvironmentalAndOtherFactorController.delete);
+
+  // RailwaySleeperCharacteristic routes with validation
+  route.get("/railway-sleeper-characteristics", RailwaySleeperCharacteristicController.getAll);
+  route.get("/railway-sleeper-characteristics/:id", RailwaySleeperCharacteristicController.get);
+  route.post(
+    "/railway-sleeper-characteristics",
+    validateData.railwaySleeperCharacteristicValidate,
+    RailwaySleeperCharacteristicController.save
+  );
+  route.put(
+    "/railway-sleeper-characteristics/:id",
+    validateData.railwaySleeperCharacteristicValidate,
+    RailwaySleeperCharacteristicController.update
+  );
+  route.delete("/railway-sleeper-characteristics/:id", RailwaySleeperCharacteristicController.delete);
+
+  // RailwaySleeperConditionAssessment routes with validation
+  route.get("/railway-sleeper-condition-assessments", RailwaySleeperConditionAssessmentController.getAll);
+  route.get("/railway-sleeper-condition-assessments/:id", RailwaySleeperConditionAssessmentController.get);
+  route.post(
+    "/railway-sleeper-condition-assessments",
+    validateData.railwaySleeperConditionAssessmentValidate,
+    RailwaySleeperConditionAssessmentController.save
+  );
+  route.put(
+    "/railway-sleeper-condition-assessments/:id",
+    validateData.railwaySleeperConditionAssessmentValidate,
+    RailwaySleeperConditionAssessmentController.update
+  );
+  route.delete("/railway-sleeper-condition-assessments/:id", RailwaySleeperConditionAssessmentController.delete);
+
+  // RailwaySleeperMaintenanceAndReplacement routes with validation
+  route.get("/railway-sleeper-maintenance-and-replacements", RailwaySleeperMaintenanceAndReplacementController.getAll);
+  route.get("/railway-sleeper-maintenance-and-replacements/:id", RailwaySleeperMaintenanceAndReplacementController.get);
+  route.post(
+    "/railway-sleeper-maintenance-and-replacements",
+    validateData.railwaySleeperMaintenanceAndReplacementValidate,
+    RailwaySleeperMaintenanceAndReplacementController.save
+  );
+  route.put(
+    "/railway-sleeper-maintenance-and-replacements/:id",
+    validateData.railwaySleeperMaintenanceAndReplacementValidate,
+    RailwaySleeperMaintenanceAndReplacementController.update
+  );
+  route.delete("/railway-sleeper-maintenance-and-replacements/:id", RailwaySleeperMaintenanceAndReplacementController.delete);
+
+  // RailwaySleeperFasteningSystem routes with validation
+  route.get("/railway-sleeper-fastening-systems", RailwaySleeperFasteningSystemController.getAll);
+  route.get("/railway-sleeper-fastening-systems/:id", RailwaySleeperFasteningSystemController.get);
+  route.post(
+    "/railway-sleeper-fastening-systems",
+    validateData.railwaySleeperFasteningSystemValidate,
+    RailwaySleeperFasteningSystemController.save
+  );
+  route.put(
+    "/railway-sleeper-fastening-systems/:id",
+    validateData.railwaySleeperFasteningSystemValidate,
+    RailwaySleeperFasteningSystemController.update
+  );
+  route.delete("/railway-sleeper-fastening-systems/:id", RailwaySleeperFasteningSystemController.delete);
+
+  // RailwaySleeperEnvironmentalAndOtherFactor routes with validation
+  route.get("/railway-sleeper-environmental-and-other-factors", RailwaySleeperEnvironmentalAndOtherFactorController.getAll);
+  route.get("/railway-sleeper-environmental-and-other-factors/:id", RailwaySleeperEnvironmentalAndOtherFactorController.get);
+  route.post(
+    "/railway-sleeper-environmental-and-other-factors",
+    validateData.railwaySleeperEnvironmentalAndOtherFactorValidate,
+    RailwaySleeperEnvironmentalAndOtherFactorController.save
+  );
+  route.put(
+    "/railway-sleeper-environmental-and-other-factors/:id",
+    validateData.railwaySleeperEnvironmentalAndOtherFactorValidate,
+    RailwaySleeperEnvironmentalAndOtherFactorController.update
+  );
+  route.delete("/railway-sleeper-environmental-and-other-factors/:id", RailwaySleeperEnvironmentalAndOtherFactorController.delete);
+
+  // RailwayFasteningSystemCharacteristic routes with validation
+  route.get("/railway-fastening-system-characteristics", RailwayFasteningSystemCharacteristicController.getAll);
+  route.get("/railway-fastening-system-characteristics/:id", RailwayFasteningSystemCharacteristicController.get);
+  route.post(
+    "/railway-fastening-system-characteristics",
+    validateData.railwayFasteningSystemCharacteristicValidate,
+    RailwayFasteningSystemCharacteristicController.save
+  );
+  route.put(
+    "/railway-fastening-system-characteristics/:id",
+    validateData.railwayFasteningSystemCharacteristicValidate,
+    RailwayFasteningSystemCharacteristicController.update
+  );
+  route.delete("/railway-fastening-system-characteristics/:id", RailwayFasteningSystemCharacteristicController.delete);
+
+  // RailwayFasteningSystemConditionAssessment routes with validation
+  route.get("/railway-fastening-system-condition-assessments", RailwayFasteningSystemConditionAssessmentController.getAll);
+  route.get("/railway-fastening-system-condition-assessments/:id", RailwayFasteningSystemConditionAssessmentController.get);
+  route.post(
+    "/railway-fastening-system-condition-assessments",
+    validateData.railwayFasteningSystemConditionAssessmentValidate,
+    RailwayFasteningSystemConditionAssessmentController.save
+  );
+  route.put(
+    "/railway-fastening-system-condition-assessments/:id",
+    validateData.railwayFasteningSystemConditionAssessmentValidate,
+    RailwayFasteningSystemConditionAssessmentController.update
+  );
+  route.delete("/railway-fastening-system-condition-assessments/:id", RailwayFasteningSystemConditionAssessmentController.delete);
+
+
+  // RailwayFasteningSystemMaintenanceAndReplacement routes with validation
+  route.get(
+    "/railway-fastening-system-maintenance-and-replacements",
+    RailwayFasteningSystemMaintenanceAndReplacementController.getAll
+  );
+  route.get(
+    "/railway-fastening-system-maintenance-and-replacements/:id",
+    RailwayFasteningSystemMaintenanceAndReplacementController.get
+  );
+  route.post(
+    "/railway-fastening-system-maintenance-and-replacements",
+    validateData.railwayFasteningSystemMaintenanceAndReplacementValidate,
+    RailwayFasteningSystemMaintenanceAndReplacementController.save
+  );
+  route.put(
+    "/railway-fastening-system-maintenance-and-replacements/:id",
+    validateData.railwayFasteningSystemMaintenanceAndReplacementValidate,
+    RailwayFasteningSystemMaintenanceAndReplacementController.update
+  );
+  route.delete(
+    "/railway-fastening-system-maintenance-and-replacements/:id",
+    RailwayFasteningSystemMaintenanceAndReplacementController.delete
+  );
+
+  // RailwayFasteningSystemEnvironmentalFactor routes with validation
+  route.get(
+    "/railway-fastening-system-environmental-factors",
+    RailwayFasteningSystemEnvironmentalFactorController.getAll
+  );
+  route.get(
+    "/railway-fastening-system-environmental-factors/:id",
+    RailwayFasteningSystemEnvironmentalFactorController.get
+  );
+  route.post(
+    "/railway-fastening-system-environmental-factors",
+    validateData.railwayFasteningSystemEnvironmentalFactorValidate,
+    RailwayFasteningSystemEnvironmentalFactorController.save
+  );
+  route.put(
+    "/railway-fastening-system-environmental-factors/:id",
+    validateData.railwayFasteningSystemEnvironmentalFactorValidate,
+    RailwayFasteningSystemEnvironmentalFactorController.update
+  );
+  route.delete(
+    "/railway-fastening-system-environmental-factors/:id",
+    RailwayFasteningSystemEnvironmentalFactorController.delete
+  );
+
+  // RailwaySignalingSystem routes with validation
+  route.get("/railway-signaling-systems", RailwaySignalingSystemController.getAll);
+  route.get("/railway-signaling-systems/:id", RailwaySignalingSystemController.get);
+  route.post(
+    "/railway-signaling-systems",
+    validateData.railwaySignalingSystemValidate,
+    RailwaySignalingSystemController.save
+  );
+  route.put(
+    "/railway-signaling-systems/:id",
+    validateData.railwaySignalingSystemValidate,
+    RailwaySignalingSystemController.update
+  );
+  route.delete("/railway-signaling-systems/:id", RailwaySignalingSystemController.delete);
+
+  // RailwayCommunicationSystem routes with validation
+  route.get("/railway-communication-systems", RailwayCommunicationSystemController.getAll);
+  route.get("/railway-communication-systems/:id", RailwayCommunicationSystemController.get);
+  route.post(
+    "/railway-communication-systems",
+    validateData.railwayCommunicationSystemValidate,
+    RailwayCommunicationSystemController.save
+  );
+  route.put(
+    "/railway-communication-systems/:id",
+    validateData.railwayCommunicationSystemValidate,
+    RailwayCommunicationSystemController.update
+  );
+  route.delete("/railway-communication-systems/:id", RailwayCommunicationSystemController.delete);
+
+  // RailwaySystemConditionAssessment routes with validation
+  route.get("/railway-system-condition-assessments", RailwaySystemConditionAssessmentController.getAll);
+  route.get("/railway-system-condition-assessments/:id", RailwaySystemConditionAssessmentController.get);
+  route.post(
+    "/railway-system-condition-assessments",
+    validateData.railwaySystemConditionAssessmentValidate,
+    RailwaySystemConditionAssessmentController.save
+  );
+  route.put(
+    "/railway-system-condition-assessments/:id",
+    validateData.railwaySystemConditionAssessmentValidate,
+    RailwaySystemConditionAssessmentController.update
+  );
+  route.delete("/railway-system-condition-assessments/:id", RailwaySystemConditionAssessmentController.delete);
+
+
+  // RailwayCommunicationSystemMaintenanceAndTesting routes with validation
+  route.get("/railway-communication-system-maintenance-and-testings", RailwayCommunicationSystemMaintenanceAndTestingController.getAll);
+  route.get("/railway-communication-system-maintenance-and-testings/:id", RailwayCommunicationSystemMaintenanceAndTestingController.get);
+  route.post(
+    "/railway-communication-system-maintenance-and-testings",
+    validateData.railwayCommunicationSystemMaintenanceAndTestingValidate,
+    RailwayCommunicationSystemMaintenanceAndTestingController.save
+  );
+  route.put(
+    "/railway-communication-system-maintenance-and-testings/:id",
+    validateData.railwayCommunicationSystemMaintenanceAndTestingValidate,
+    RailwayCommunicationSystemMaintenanceAndTestingController.update
+  );
+  route.delete("/railway-communication-system-maintenance-and-testings/:id", RailwayCommunicationSystemMaintenanceAndTestingController.delete);
+
 
   return route;
 
