@@ -62,13 +62,13 @@
 
         "moment": "^2.29.4",
 
-        "mysql2": "^2.0.2",
+        "mysql2": "^3.14.1",
 
         "node-fetch": "^2.6.9",
 
         "nodemailer": "^6.9.1",
 
-        "nodemailer-smtp-transport": "^2.7.4",
+        "nodemailer-smtp-transport": "^2.4.2",
 
         "pdfkit": "^0.15.0",
 
@@ -80,7 +80,7 @@
 
         "socket.io": "^4.6.1",
 
-        "translate": "^2.0.2",
+        "translate": "^3.0.1",
 
         "uuid": "^9.0.0",
 
@@ -96,7 +96,7 @@
 
         "globals": "^15.6.0",
 
-        "nodemon": "^2.0.20"
+        "nodemon": "^3.1.10"
 
     }
 

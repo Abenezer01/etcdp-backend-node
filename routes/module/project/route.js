@@ -195,6 +195,12 @@ const RailwayCommunicationSystemController = require("../../../controllers/proje
 const RailwaySystemConditionAssessmentController = require("../../../controllers/projects/RailwaySystemConditionAssessmentController.js");
 const RailwayCommunicationSystemMaintenanceAndTestingController = require("../../../controllers/projects/RailwayCommunicationSystemMaintenanceAndTestingController.js");
 
+const RailwayCommunicationSystemSafetyAndComplianceController = require("../../../controllers/projects/RailwayCommunicationSystemSafetyAndComplianceController.js");
+const RailwayEnvironmentalAndOtherFactorController = require("../../../controllers/projects/RailwayEnvironmentalAndOtherFactorController.js");
+const RailwayVehicleIdentificationController = require("../../../controllers/projects/RailwayVehicleIdentificationController.js");
+const RailwayVehicleSpecificationController = require("../../../controllers/projects/RailwayVehicleSpecificationController.js");
+const RailwayVehicleMaintenanceAndInspectionController = require("../../../controllers/projects/RailwayVehicleMaintenanceAndInspectionController.js");
+
 
 
 const validateData = require("../../../middleware/validate/module/project/validate");
@@ -2125,6 +2131,127 @@ route.delete("/railway-track-safeties/:id", RailwayTrackSafetyController.delete)
   );
   route.delete("/railway-communication-system-maintenance-and-testings/:id", RailwayCommunicationSystemMaintenanceAndTestingController.delete);
 
+
+  // RailwayCommunicationSystemSafetyAndCompliance routes with validation
+  route.get(
+    "/railway-communication-system-safety-and-compliances",
+    RailwayCommunicationSystemSafetyAndComplianceController.getAll
+  );
+  route.get(
+    "/railway-communication-system-safety-and-compliances/:id",
+    RailwayCommunicationSystemSafetyAndComplianceController.get
+  );
+  route.post(
+    "/railway-communication-system-safety-and-compliances",
+    validateData.railwayCommunicationSystemSafetyAndComplianceValidate,
+    RailwayCommunicationSystemSafetyAndComplianceController.save
+  );
+  route.put(
+    "/railway-communication-system-safety-and-compliances/:id",
+    validateData.railwayCommunicationSystemSafetyAndComplianceValidate,
+    RailwayCommunicationSystemSafetyAndComplianceController.update
+  );
+  route.delete(
+    "/railway-communication-system-safety-and-compliances/:id",
+    RailwayCommunicationSystemSafetyAndComplianceController.delete
+  );
+
+  // RailwayEnvironmentalAndOtherFactor routes with validation
+  route.get(
+    "/railway-environmental-and-other-factors",
+    RailwayEnvironmentalAndOtherFactorController.getAll
+  );
+  route.get(
+    "/railway-environmental-and-other-factors/:id",
+    RailwayEnvironmentalAndOtherFactorController.get
+  );
+  route.post(
+    "/railway-environmental-and-other-factors",
+    validateData.railwayEnvironmentalAndOtherFactorValidate,
+    RailwayEnvironmentalAndOtherFactorController.save
+  );
+  route.put(
+    "/railway-environmental-and-other-factors/:id",
+    validateData.railwayEnvironmentalAndOtherFactorValidate,
+    RailwayEnvironmentalAndOtherFactorController.update
+  );
+  route.delete(
+    "/railway-environmental-and-other-factors/:id",
+    RailwayEnvironmentalAndOtherFactorController.delete
+  );
+
+  // RailwayVehicleIdentification routes with validation
+  route.get(
+    "/railway-vehicle-identifications",
+    RailwayVehicleIdentificationController.getAll
+  );
+  route.get(
+    "/railway-vehicle-identifications/:id",
+    RailwayVehicleIdentificationController.get
+  );
+  route.post(
+    "/railway-vehicle-identifications",
+    validateData.railwayVehicleIdentificationValidate,
+    RailwayVehicleIdentificationController.save
+  );
+  route.put(
+    "/railway-vehicle-identifications/:id",
+    validateData.railwayVehicleIdentificationValidate,
+    RailwayVehicleIdentificationController.update
+  );
+  route.delete(
+    "/railway-vehicle-identifications/:id",
+    RailwayVehicleIdentificationController.delete
+  );
+
+  // RailwayVehicleSpecification routes with validation
+  route.get(
+    "/railway-vehicle-specifications",
+    RailwayVehicleSpecificationController.getAll
+  );
+  route.get(
+    "/railway-vehicle-specifications/:id",
+    RailwayVehicleSpecificationController.get
+  );
+  route.post(
+    "/railway-vehicle-specifications",
+    validateData.railwayVehicleSpecificationValidate,
+    RailwayVehicleSpecificationController.save
+  );
+  route.put(
+    "/railway-vehicle-specifications/:id",
+    validateData.railwayVehicleSpecificationValidate,
+    RailwayVehicleSpecificationController.update
+  );
+  route.delete(
+    "/railway-vehicle-specifications/:id",
+    RailwayVehicleSpecificationController.delete
+  );
+
+
+  // RailwayVehicleMaintenanceAndInspection routes with validation
+  route.get(
+    "/railway-vehicle-maintenance-and-inspections",
+    RailwayVehicleMaintenanceAndInspectionController.getAll
+  );
+  route.get(
+    "/railway-vehicle-maintenance-and-inspections/:id",
+    RailwayVehicleMaintenanceAndInspectionController.get
+  );
+  route.post(
+    "/railway-vehicle-maintenance-and-inspections",
+    validateData.railwayVehicleMaintenanceAndInspectionValidate,
+    RailwayVehicleMaintenanceAndInspectionController.save
+  );
+  route.put(
+    "/railway-vehicle-maintenance-and-inspections/:id",
+    validateData.railwayVehicleMaintenanceAndInspectionValidate,
+    RailwayVehicleMaintenanceAndInspectionController.update
+  );
+  route.delete(
+    "/railway-vehicle-maintenance-and-inspections/:id",
+    RailwayVehicleMaintenanceAndInspectionController.delete
+  );
 
   return route;
 

@@ -1,5 +1,109 @@
 const validateReply = require("../../../../utils/validateerror");
 
+
+const railwayVehicleMaintenanceAndInspectionValidate = async (req, res, next) => {
+
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+  const validationRule = {
+    project_id: "required|string",
+    railway_vehicle_identification_id: "required|string",
+    maintenance_history_records: "string",
+    vehicle_weight_and_load_capacity: "string",
+    maximum_speed: "numeric",
+    braking_system_type: "string",
+    remark: "string"
+
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+}
+const railwayVehicleSpecificationValidate = async (req, res, next) => {
+
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+  const validationRule = {
+    project_id: "required|string",
+    railway_vehicle_identification_id: "required|string",
+    vehicle_dimensions: "string",
+    vehicle_weight_and_load_capacity: "string",
+    maximum_speed: "numeric",
+    braking_system_type: "string",
+    remark: "string"
+
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+}
+const railwayVehicleIdentificationValidate = async (req, res, next) => {
+
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+  const validationRule = {
+    project_id: "required|string",
+    vehicle_identification_number: "string",
+    vehicle_type: "string",
+    manufacturer_supplier_name: "string",
+    manufacturer_supplier_address: "string",
+    manufacture_year: "integer",
+    ownership_or_leasing_details: "string",
+    remark: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+}
+const railwayEnvironmentalAndOtherFactorValidate = async (req, res, next) => {
+
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+  const validationRule = {
+    project_id: "required|string",
+    railway_line_section_name: "required|string",
+    environmental_compliance_measures: "boolean",
+    environmental_impact_assessment: "boolean",
+    data_recording_date: "date",
+    remark: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+}
+const railwayCommunicationSystemSafetyAndComplianceValidate = async (req, res, next) => {
+
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+  const validationRule = {
+    project_id: "required|string",
+    railway_line_section_name: "required|string",
+    safety_measures_and_protocols_done: "boolean",
+    compliance_with_signaling_and_communication_standards: "boolean",
+    incident_or_accident_records: "boolean",
+    incident_date: "date",
+    remark: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+}
+
 const railwayCommunicationSystemMaintenanceAndTestingValidate = async (req, res, next) => {
 
   let param = await validateReply.checkParam(req, res, next);
@@ -3941,6 +4045,11 @@ const paymentValidate = async (req, res, next) => {
   await validateReply.validateReply(req.body, validationRule, res, next);
 };
 module.exports = {
+  railwayVehicleMaintenanceAndInspectionValidate,
+  railwayVehicleSpecificationValidate,
+  railwayVehicleIdentificationValidate,
+  railwayEnvironmentalAndOtherFactorValidate,
+  railwayCommunicationSystemSafetyAndComplianceValidate,
   railwayCommunicationSystemMaintenanceAndTestingValidate,
   railwaySystemConditionAssessmentValidate,
   railwayCommunicationSystemValidate,
