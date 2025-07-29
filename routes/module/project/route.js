@@ -201,6 +201,18 @@ const RailwayVehicleIdentificationController = require("../../../controllers/pro
 const RailwayVehicleSpecificationController = require("../../../controllers/projects/RailwayVehicleSpecificationController.js");
 const RailwayVehicleMaintenanceAndInspectionController = require("../../../controllers/projects/RailwayVehicleMaintenanceAndInspectionController.js");
 
+const RailwayVehicleOperationalPerformanceController = require("../../../controllers/projects/RailwayVehicleOperationalPerformanceController.js");
+const RailwayVehicleSafetyAndComplianceController = require("../../../controllers/projects/RailwayVehicleSafetyAndComplianceController.js");
+const RailwayVehicleInteriorAndPassengerAmenityController = require("../../../controllers/projects/RailwayVehicleInteriorAndPassengerAmenityController.js");
+const RailwayVehicleLoadAndCargoSpecificationController = require("../../../controllers/projects/RailwayVehicleLoadAndCargoSpecificationController.js");
+const RailwayStationPlatformLayoutController = require("../../../controllers/projects/RailwayStationPlatformLayoutController.js");
+const RailwayStationPlatformFacilityController = require("../../../controllers/projects/RailwayStationPlatformFacilityController.js");
+const RailwayStationPlatformStructuralElementController = require("../../../controllers/projects/RailwayStationPlatformStructuralElementController.js");
+const RailwayStationPlatformSignageAndWayFindingController = require("../../../controllers/projects/RailwayStationPlatformSignageAndWayFindingController.js");
+const RailwayStationPlatformSafetyAndSecurityController = require("../../../controllers/projects/RailwayStationPlatformSafetyAndSecurityController.js");
+const RailwayStationPlatformSurfaceAndFinishController = require("../../../controllers/projects/RailwayStationPlatformSurfaceAndFinishController.js");
+const RailwayStationPlatformPassengerFlowAndCapacityController = require("../../../controllers/projects/RailwayStationPlatformPassengerFlowAndCapacityController.js");
+const RailwayStationPlatformEnvironmentalAndOtherFactorController = require("../../../controllers/projects/RailwayStationPlatformEnvironmentalAndOtherFactorController.js");
 
 
 const validateData = require("../../../middleware/validate/module/project/validate");
@@ -2251,6 +2263,299 @@ route.delete("/railway-track-safeties/:id", RailwayTrackSafetyController.delete)
   route.delete(
     "/railway-vehicle-maintenance-and-inspections/:id",
     RailwayVehicleMaintenanceAndInspectionController.delete
+  );
+
+  // RailwayVehicleOperationalPerformance routes with validation
+  route.get(
+    "/railway-vehicle-operational-performances",
+    RailwayVehicleOperationalPerformanceController.getAll
+  );
+  route.get(
+    "/railway-vehicle-operational-performances/:id",
+    RailwayVehicleOperationalPerformanceController.get
+  );
+  route.post(
+    "/railway-vehicle-operational-performances",
+    validateData.railwayVehicleOperationalPerformanceValidate,
+    RailwayVehicleOperationalPerformanceController.save
+  );
+  route.put(
+    "/railway-vehicle-operational-performances/:id",
+    validateData.railwayVehicleOperationalPerformanceValidate,
+    RailwayVehicleOperationalPerformanceController.update
+  );
+  route.delete(
+    "/railway-vehicle-operational-performances/:id",
+    RailwayVehicleOperationalPerformanceController.delete
+  );
+
+  // RailwayVehicleSafetyAndCompliance routes with validation
+  route.get(
+    "/railway-vehicle-safety-and-compliances",
+    RailwayVehicleSafetyAndComplianceController.getAll
+  );
+  route.get(
+    "/railway-vehicle-safety-and-compliances/:id",
+    RailwayVehicleSafetyAndComplianceController.get
+  );
+  route.post(
+    "/railway-vehicle-safety-and-compliances",
+    validateData.railwayVehicleSafetyAndComplianceValidate,
+    RailwayVehicleSafetyAndComplianceController.save
+  );
+  route.put(
+    "/railway-vehicle-safety-and-compliances/:id",
+    validateData.railwayVehicleSafetyAndComplianceValidate,
+    RailwayVehicleSafetyAndComplianceController.update
+  );
+  route.delete(
+    "/railway-vehicle-safety-and-compliances/:id",
+    RailwayVehicleSafetyAndComplianceController.delete
+  );
+
+  // RailwayVehicleInteriorAndPassengerAmenity routes with validation
+  route.get(
+    "/railway-vehicle-interior-and-passenger-amenities",
+    RailwayVehicleInteriorAndPassengerAmenityController.getAll
+  );
+  route.get(
+    "/railway-vehicle-interior-and-passenger-amenities/:id",
+    RailwayVehicleInteriorAndPassengerAmenityController.get
+  );
+  route.post(
+    "/railway-vehicle-interior-and-passenger-amenities",
+    validateData.railwayVehicleInteriorAndPassengerAmenityValidate,
+    RailwayVehicleInteriorAndPassengerAmenityController.save
+  );
+  route.put(
+    "/railway-vehicle-interior-and-passenger-amenities/:id",
+    validateData.railwayVehicleInteriorAndPassengerAmenityValidate,
+    RailwayVehicleInteriorAndPassengerAmenityController.update
+  );
+  route.delete(
+    "/railway-vehicle-interior-and-passenger-amenities/:id",
+    RailwayVehicleInteriorAndPassengerAmenityController.delete
+  );
+
+  // RailwayVehicleLoadAndCargoSpecification routes with validation
+  route.get(
+    "/railway-vehicle-load-and-cargo-specifications",
+    RailwayVehicleLoadAndCargoSpecificationController.getAll
+  );
+  route.get(
+    "/railway-vehicle-load-and-cargo-specifications/:id",
+    RailwayVehicleLoadAndCargoSpecificationController.get
+  );
+  route.post(
+    "/railway-vehicle-load-and-cargo-specifications",
+    validateData.railwayVehicleLoadAndCargoSpecificationValidate,
+    RailwayVehicleLoadAndCargoSpecificationController.save
+  );
+  route.put(
+    "/railway-vehicle-load-and-cargo-specifications/:id",
+    validateData.railwayVehicleLoadAndCargoSpecificationValidate,
+    RailwayVehicleLoadAndCargoSpecificationController.update
+  );
+  route.delete(
+    "/railway-vehicle-load-and-cargo-specifications/:id",
+    RailwayVehicleLoadAndCargoSpecificationController.delete
+  );
+
+
+  // RailwayStationPlatformLayout routes with validation
+  route.get(
+    "/railway-station-platform-layouts",
+    RailwayStationPlatformLayoutController.getAll
+  );
+  route.get(
+    "/railway-station-platform-layouts/:id",
+    RailwayStationPlatformLayoutController.get
+  );
+  route.post(
+    "/railway-station-platform-layouts",
+    validateData.railwayStationPlatformLayoutValidate,
+    RailwayStationPlatformLayoutController.save
+  );
+  route.put(
+    "/railway-station-platform-layouts/:id",
+    validateData.railwayStationPlatformLayoutValidate,
+    RailwayStationPlatformLayoutController.update
+  );
+  route.delete(
+    "/railway-station-platform-layouts/:id",
+    RailwayStationPlatformLayoutController.delete
+  );
+
+  // RailwayStationPlatformFacility routes with validation
+  route.get(
+    "/railway-station-platform-facilities",
+    RailwayStationPlatformFacilityController.getAll
+  );
+  route.get(
+    "/railway-station-platform-facilities/:id",
+    RailwayStationPlatformFacilityController.get
+  );
+  route.post(
+    "/railway-station-platform-facilities",
+    validateData.railwayStationPlatformFacilityValidate,
+    RailwayStationPlatformFacilityController.save
+  );
+  route.put(
+    "/railway-station-platform-facilities/:id",
+    validateData.railwayStationPlatformFacilityValidate,
+    RailwayStationPlatformFacilityController.update
+  );
+  route.delete(
+    "/railway-station-platform-facilities/:id",
+    RailwayStationPlatformFacilityController.delete
+  );
+
+
+  // RailwayStationPlatformStructuralElement routes with validation
+  route.get(
+    "/railway-station-platform-structural-elements",
+    RailwayStationPlatformStructuralElementController.getAll
+  );
+  route.get(
+    "/railway-station-platform-structural-elements/:id",
+    RailwayStationPlatformStructuralElementController.get
+  );
+  route.post(
+    "/railway-station-platform-structural-elements",
+    validateData.railwayStationPlatformStructuralElementValidate,
+    RailwayStationPlatformStructuralElementController.save
+  );
+  route.put(
+    "/railway-station-platform-structural-elements/:id",
+    validateData.railwayStationPlatformStructuralElementValidate,
+    RailwayStationPlatformStructuralElementController.update
+  );
+  route.delete(
+    "/railway-station-platform-structural-elements/:id",
+    RailwayStationPlatformStructuralElementController.delete
+  );
+
+  // RailwayStationPlatformSignageAndWayFinding routes with validation
+  route.get(
+    "/railway-station-platform-signage-and-way-findings",
+    RailwayStationPlatformSignageAndWayFindingController.getAll
+  );
+  route.get(
+    "/railway-station-platform-signage-and-way-findings/:id",
+    RailwayStationPlatformSignageAndWayFindingController.get
+  );
+  route.post(
+    "/railway-station-platform-signage-and-way-findings",
+    validateData.railwayStationPlatformSignageAndWayFindingValidate,
+    RailwayStationPlatformSignageAndWayFindingController.save
+  );
+  route.put(
+    "/railway-station-platform-signage-and-way-findings/:id",
+    validateData.railwayStationPlatformSignageAndWayFindingValidate,
+    RailwayStationPlatformSignageAndWayFindingController.update
+  );
+  route.delete(
+    "/railway-station-platform-signage-and-way-findings/:id",
+    RailwayStationPlatformSignageAndWayFindingController.delete
+  );
+
+
+  // RailwayStationPlatformSafetyAndSecurity routes with validation
+  route.get(
+    "/railway-station-platform-safety-and-securities",
+    RailwayStationPlatformSafetyAndSecurityController.getAll
+  );
+  route.get(
+    "/railway-station-platform-safety-and-securities/:id",
+    RailwayStationPlatformSafetyAndSecurityController.get
+  );
+  route.post(
+    "/railway-station-platform-safety-and-securities",
+    validateData.railwayStationPlatformSafetyAndSecurityValidate,
+    RailwayStationPlatformSafetyAndSecurityController.save
+  );
+  route.put(
+    "/railway-station-platform-safety-and-securities/:id",
+    validateData.railwayStationPlatformSafetyAndSecurityValidate,
+    RailwayStationPlatformSafetyAndSecurityController.update
+  );
+  route.delete(
+    "/railway-station-platform-safety-and-securities/:id",
+    RailwayStationPlatformSafetyAndSecurityController.delete
+  );
+
+  // RailwayStationPlatformSurfaceAndFinish routes with validation
+  route.get(
+    "/railway-station-platform-surface-and-finishes",
+    RailwayStationPlatformSurfaceAndFinishController.getAll
+  );
+  route.get(
+    "/railway-station-platform-surface-and-finishes/:id",
+    RailwayStationPlatformSurfaceAndFinishController.get
+  );
+  route.post(
+    "/railway-station-platform-surface-and-finishes",
+    validateData.railwayStationPlatformSurfaceAndFinishValidate,
+    RailwayStationPlatformSurfaceAndFinishController.save
+  );
+  route.put(
+    "/railway-station-platform-surface-and-finishes/:id",
+    validateData.railwayStationPlatformSurfaceAndFinishValidate,
+    RailwayStationPlatformSurfaceAndFinishController.update
+  );
+  route.delete(
+    "/railway-station-platform-surface-and-finishes/:id",
+    RailwayStationPlatformSurfaceAndFinishController.delete
+  );
+
+
+  // RailwayStationPlatformPassengerFlowAndCapacity routes with validation
+  route.get(
+    "/railway-station-platform-passenger-flow-and-capacities",
+    RailwayStationPlatformPassengerFlowAndCapacityController.getAll
+  );
+  route.get(
+    "/railway-station-platform-passenger-flow-and-capacities/:id",
+    RailwayStationPlatformPassengerFlowAndCapacityController.get
+  );
+  route.post(
+    "/railway-station-platform-passenger-flow-and-capacities",
+    validateData.railwayStationPlatformPassengerFlowAndCapacityValidate,
+    RailwayStationPlatformPassengerFlowAndCapacityController.save
+  );
+  route.put(
+    "/railway-station-platform-passenger-flow-and-capacities/:id",
+    validateData.railwayStationPlatformPassengerFlowAndCapacityValidate,
+    RailwayStationPlatformPassengerFlowAndCapacityController.update
+  );
+  route.delete(
+    "/railway-station-platform-passenger-flow-and-capacities/:id",
+    RailwayStationPlatformPassengerFlowAndCapacityController.delete
+  );
+
+
+  // RailwayStationPlatformEnvironmentalAndOtherFactor routes with validation
+  route.get(
+    "/railway-station-platform-environmental-and-other-factors",
+    RailwayStationPlatformEnvironmentalAndOtherFactorController.getAll
+  );
+  route.get(
+    "/railway-station-platform-environmental-and-other-factors/:id",
+    RailwayStationPlatformEnvironmentalAndOtherFactorController.get
+  );
+  route.post(
+    "/railway-station-platform-environmental-and-other-factors",
+    validateData.railwayStationPlatformEnvironmentalAndOtherFactorValidate,
+    RailwayStationPlatformEnvironmentalAndOtherFactorController.save
+  );
+  route.put(
+    "/railway-station-platform-environmental-and-other-factors/:id",
+    validateData.railwayStationPlatformEnvironmentalAndOtherFactorValidate,
+    RailwayStationPlatformEnvironmentalAndOtherFactorController.update
+  );
+  route.delete(
+    "/railway-station-platform-environmental-and-other-factors/:id",
+    RailwayStationPlatformEnvironmentalAndOtherFactorController.delete
   );
 
   return route;

@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class RailwayVehicleOperationalPerformance extends Model {
+  class RailwayVehicleSafetyAndCompliance extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  RailwayVehicleOperationalPerformance.init({
+  RailwayVehicleSafetyAndCompliance.init({
     id: {
       type: DataTypes.UUID,
       primaryKey: true,
@@ -28,17 +28,17 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.UUID,
       allowNull: false,
     },
-    fuel_or_energy_consumption: DataTypes.STRING,
-    mileage_or_operating_hours: DataTypes.STRING,
-    reliability_and_availability: DataTypes.STRING,
-    performance_indicators: DataTypes.STRING,
+    safety_features_and_systems: DataTypes.STRING,
+    comply_with_regulatory_standards_and_certifications: DataTypes.BOOLEAN,
+    incident_records_number: DataTypes.INTEGER,
+    action_taken_to_accidents: DataTypes.STRING,
     remark: DataTypes.TEXT
   }, {
     createdAt: 'created_at',
     updatedAt: 'updated_at',
     sequelize,
-    modelName: 'RailwayVehicleOperationalPerformance',
-    tableName: 'RailwayVehicleOperationalPerformances',
+    modelName: 'RailwayVehicleSafetyAndCompliance',
+    tableName: 'RailwayVehicleSafetyAndCompliances',
   });
-  return RailwayVehicleOperationalPerformance;
+  return RailwayVehicleSafetyAndCompliance;
 };

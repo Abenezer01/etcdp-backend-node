@@ -1,6 +1,243 @@
 const validateReply = require("../../../../utils/validateerror");
 
 
+const railwayStationPlatformEnvironmentalAndOtherFactorValidate = async (req, res, next) => {
+
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+  const validationRule = {
+    project_id: "required|string",
+    railway_station_platform_layout_id: "required|string",
+    environmental_compliance_measures: "string",
+    noise_and_vibration_control_measures: "string",
+    sustainable_design_features: "string",
+    remark: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+}
+const railwayStationPlatformPassengerFlowAndCapacityValidate = async (req, res, next) => {
+
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+  const validationRule = {
+    project_id: "required|string",
+    railway_station_platform_layout_id: "required|string",
+    passenger_flow_during_peak_hour: "string",
+    minimum_passenger_flow: "string",
+    capacity_assessment: "string",
+    remark: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+}
+const railwayStationPlatformSurfaceAndFinishValidate = async (req, res, next) => {
+
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+  const validationRule = {
+    project_id: "required|string",
+    railway_station_platform_layout_id: "required|string",
+    flooring_materials: "string",
+    surface_treatment: "string",
+    paint_or_color_schemes: "string",
+    remark: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+}
+const railwayStationPlatformSafetyAndSecurityValidate = async (req, res, next) => {
+
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+  const validationRule = {
+    project_id: "required|string",
+    railway_station_platform_layout_id: "required|string",
+    platform_safety_and_security: "string",
+    fire_safety_measures: "string",
+    surveillance_systems: "string",
+    remark: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+}
+const railwayStationPlatformSignageAndWayFindingValidate = async (req, res, next) => {
+
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+  const validationRule = {
+    project_id: "required|string",
+    railway_station_platform_layout_id: "required|string",
+    signage_type_and_placement: "string",
+    accessibility_signage: "string",
+    remark: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+}
+const railwayStationPlatformStructuralElementValidate = async (req, res, next) => {
+
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+  const validationRule = {
+    project_id: "required|string",
+    railway_station_platform_layout_id: "required|string",
+    materials_used: "string",
+    roofing_type_and_design: "string",
+    lighting_fixtures: "boolean",
+    accessibility_features: "string",
+    remark: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+}
+const railwayStationPlatformFacilityValidate = async (req, res, next) => {
+
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+  const validationRule = {
+    project_id: "required|string",
+    railway_station_platform_layout_id: "required|string",
+    waiting_areas_seating_capacity: "boolean",
+    ticketing_facilities_availability: "boolean",
+    restrooms_and_amenities_availability: "boolean",
+    passenger_information_system: "string",
+    accessibility_features: "string",
+    remark: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+}
+const railwayStationPlatformLayoutValidate = async (req, res, next) => {
+
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+  const validationRule = {
+    project_id: "required|string",
+    name: "required|string",
+    platforms_number: "integer",
+    platform_configuration: "string",
+    platform_length: "numeric",
+    platform_width: "numeric",
+    accessibility_features: "string",
+    remark: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+}
+
+const railwayVehicleLoadAndCargoSpecificationValidate = async (req, res, next) => {
+
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+  const validationRule = {
+    project_id: "required|string",
+    railway_vehicle_identification_id: "required|string",
+    load_capacity_and_weight_limits: "string",
+    cargo_restrictions_or_special_requirements: "string",
+    coupling_and_uncoupling_procedures: "boolean",
+    remark: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+}
+
+const railwayVehicleInteriorAndPassengerAmenityValidate = async (req, res, next) => {
+
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+  const validationRule = {
+    project_id: "required|string",
+    railway_vehicle_identification_id: "required|string",
+    seating_capacity: "integer",
+    passenger_amenities_availability: "string",
+    accessibility_features_for_passengers_with_disabilities: "boolean",
+    remark: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+}
+const railwayVehicleSafetyAndComplianceValidate = async (req, res, next) => {
+
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+  const validationRule = {
+    project_id: "required|string",
+    railway_vehicle_identification_id: "required|string",
+    safety_features_and_systems: "string",
+    comply_with_regulatory_standards_and_certifications: "boolean",
+    incident_records_number: "integer",
+    action_taken_to_accidents: "string",
+    remark: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+}
+const railwayVehicleOperationalPerformanceValidate = async (req, res, next) => {
+
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+  const validationRule = {
+    project_id: "required|string",
+    railway_vehicle_identification_id: "required|string",
+    fuel_or_energy_consumption: "string",
+    mileage_or_operating_hours: "string",
+    reliability_and_availability: "string",
+    performance_indicators: "string",
+    remark: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+}
+
 const railwayVehicleMaintenanceAndInspectionValidate = async (req, res, next) => {
 
   let param = await validateReply.checkParam(req, res, next);
@@ -4045,6 +4282,18 @@ const paymentValidate = async (req, res, next) => {
   await validateReply.validateReply(req.body, validationRule, res, next);
 };
 module.exports = {
+  railwayStationPlatformEnvironmentalAndOtherFactorValidate,
+  railwayStationPlatformPassengerFlowAndCapacityValidate,
+  railwayStationPlatformSurfaceAndFinishValidate,
+  railwayStationPlatformSafetyAndSecurityValidate,
+  railwayStationPlatformSignageAndWayFindingValidate,
+  railwayStationPlatformStructuralElementValidate,
+  railwayStationPlatformFacilityValidate,
+  railwayStationPlatformLayoutValidate,
+  railwayVehicleLoadAndCargoSpecificationValidate,
+  railwayVehicleInteriorAndPassengerAmenityValidate,
+  railwayVehicleSafetyAndComplianceValidate,
+  railwayVehicleOperationalPerformanceValidate,
   railwayVehicleMaintenanceAndInspectionValidate,
   railwayVehicleSpecificationValidate,
   railwayVehicleIdentificationValidate,
