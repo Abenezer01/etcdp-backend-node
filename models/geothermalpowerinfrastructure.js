@@ -26,7 +26,10 @@ module.exports = (sequelize, DataTypes) => {
     },
     turbine_manufacturer: DataTypes.STRING,
     turbine_model: DataTypes.STRING,
-    turbine_type_id: DataTypes.UUID,
+    turbine_type_id: {
+      type: DataTypes.UUID,
+      allowNull: false,
+    },
     each_turbine_capacity: DataTypes.DOUBLE,
     remark: DataTypes.TEXT
   }, {

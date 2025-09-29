@@ -20,7 +20,7 @@ module.exports = {
         type: Sequelize.UUID,
         allowNull: false,
         references: {
-          model: "resources",
+          model: "Resources",
           key: "id",
         },
         onUpdate: "CASCADE",
@@ -30,7 +30,7 @@ module.exports = {
         type: Sequelize.UUID,
         allowNull: false,
         references: {
-          model: "resourcebrands",
+          model: "ResourceBrands",
           key: "id",
         },
         onUpdate: "CASCADE",
@@ -46,7 +46,15 @@ module.exports = {
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
       },
-      project_id: { type: Sequelize.UUID },
+      project_id: {
+        type: Sequelize.UUID,
+        references: {
+          model: 'projects',
+          key: 'id'
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE"
+      },
       unit_price: {
         type: Sequelize.DOUBLE,
       },

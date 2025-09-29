@@ -54,7 +54,7 @@ module.exports = {
         type: Sequelize.STRING,
       },
       amount: {
-        type: Sequelize.BIGINT,
+        type: Sequelize.DOUBLE,
       },
       remark: {
         type: Sequelize.TEXT,

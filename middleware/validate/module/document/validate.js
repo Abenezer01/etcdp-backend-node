@@ -63,6 +63,7 @@ const documentValidate = async (req, res, next) => {
     documenttype_id: "required|string",
     documentcategory_id: "required|string",
     documentsubcategory_id: "required|string",
+    title: "required|string",
   };
 
   await validateReply.validateReply(req.body, validationRule, res, next);

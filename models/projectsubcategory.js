@@ -34,6 +34,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       title: {
         type: DataTypes.STRING,
+        allowNull: false
       },
       description: DataTypes.TEXT,
       revision_no: DataTypes.INTEGER,

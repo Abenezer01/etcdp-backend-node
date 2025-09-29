@@ -22,15 +22,15 @@ module.exports = (sequelize, DataTypes) => {
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4,
       },
-      title: {
-        type: DataTypes.STRING,
-      },
       parent_id: {
         type: DataTypes.UUID,
       },
       project_id: {
         type: DataTypes.UUID,
         allowNull: false,
+      },
+      title: {
+        type: DataTypes.STRING,
       },
       number_of_days: {
         type: DataTypes.INTEGER,

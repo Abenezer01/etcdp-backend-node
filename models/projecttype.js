@@ -35,6 +35,7 @@ module.exports = (sequelize, DataTypes) => {
       description: DataTypes.TEXT,
       flag: {
         type: DataTypes.STRING,
+        allowNull: true
       },
       revision_no: DataTypes.INTEGER,
     },

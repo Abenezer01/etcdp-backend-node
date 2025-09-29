@@ -13,6 +13,11 @@ module.exports = (sequelize, DataTypes) => {
   }
   RolePermission.init(
     {
+      id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+      },
       role_id: DataTypes.UUID,
       permission_id: DataTypes.UUID,
     },
@@ -21,7 +26,7 @@ module.exports = (sequelize, DataTypes) => {
       updatedAt: "updated_at" ,     
       sequelize,
       modelName: "RolePermission",
-      tableName: "rolespermissions"
+      tableName: "rolepermissions"
     }
   );
   return RolePermission;

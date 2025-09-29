@@ -425,7 +425,7 @@ const stakeHolderValidate = async (req, res, next) => {
     trade_name: "required|string",
     tin: "required|string",
     ownership_id: "required|string",
-    businessfield_id: "required|string",
+    businessfield_id: "string",
     origin: "required|string",
   };
 

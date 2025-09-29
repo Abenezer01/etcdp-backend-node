@@ -40,8 +40,7 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
         },
         type: {
-            type: DataTypes.STRING,
-            allowNull: null,
+            type: DataTypes.STRING
         },
         project_expense: DataTypes.DOUBLE,
         manpower: DataTypes.DOUBLE,

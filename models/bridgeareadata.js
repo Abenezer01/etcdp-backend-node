@@ -34,7 +34,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     river_width: DataTypes.DOUBLE,
     highest_water_level: DataTypes.DOUBLE,
-    lowest_water_level: DataTypes.DOUBLE,
+  lowest_water_level: DataTypes.DOUBLE,
     area_topography_id: {
       type: DataTypes.UUID,
       allowNull: false,

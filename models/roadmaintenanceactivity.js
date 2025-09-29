@@ -28,8 +28,14 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    maintenance_frequency_id: DataTypes.UUID,
-    maintenance_type_id: DataTypes.UUID,
+    maintenance_frequency_id: {
+      type: DataTypes.UUID,
+      allowNull: false,
+    },
+    maintenance_type_id: {
+      type: DataTypes.UUID,
+      allowNull: false,
+    },
     consultant: DataTypes.STRING,
     remark: DataTypes.TEXT
   }, {

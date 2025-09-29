@@ -2425,8 +2425,8 @@ const roadMaintenanceActivityValidate = async (req, res, next) => {
   const validationRule = {
     project_id: "required|string",
     road_segment: "required|string",
-    maintenance_frequency_id: "string",
-    maintenance_type_id: "string",
+    maintenance_frequency_id: "required|string",
+    maintenance_type_id: "required|string",
     consultant: "string",
     remark: "string"
   };
@@ -3922,6 +3922,23 @@ const projectPlanValidate = async (req, res, next) => {
   }
   const validationRule = {
     project_id: "required|string",
+    type: "string",
+    project_expense: "numeric",
+    manpower: "numeric",
+    direct_labour: "numeric",
+    indirect_labour: "numeric",
+    material: "numeric",
+    machinery: "numeric",
+    other_expense: "numeric",
+    sub_contractor_cost: "numeric",
+    financial_performance: "numeric",
+    physical_performance: "numeric",
+    cost_due_to_rework: "numeric",
+    over_head_cost: "numeric",
+    year: "string",
+    quarter: "string",
+    start: "required|date",
+    end: "date"
   };
 
   await validateReply.validateReply(req.body, validationRule, res, next);
@@ -3935,6 +3952,26 @@ const projectReportValidate = async (req, res, next) => {
   }
   const validationRule = {
     project_id: "required|string",
+    projectplan_id: "required|uuid",
+    monthlyreport_id: "required|uuid",
+    type: "string",
+    project_expense: "numeric",
+    manpower: "numeric",
+    direct_labour: "numeric",
+    indirect_labour: "numeric",
+    material: "numeric",
+    machinery: "numeric",
+    other_expense: "numeric",
+    sub_contractor_cost: "numeric",
+    financial_performance: "numeric",
+    physical_performance: "numeric",
+    cost_due_to_rework: "numeric",
+    over_head_cost: "numeric",
+    year: "string",
+    quarter: "string",
+    start: "required|date",
+    end: "date",
+    profit: "numeric",
   };
 
   await validateReply.validateReply(req.body, validationRule, res, next);

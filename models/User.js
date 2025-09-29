@@ -79,7 +79,10 @@ module.exports = (sequelize, DataTypes) => {
       gender: DataTypes.STRING,
       marital_status: DataTypes.BOOLEAN,
       partner_name: DataTypes.STRING,
-      birth_date: DataTypes.DATE,
+      birth_date: {
+        type: DataTypes.DATE,
+        allowNull: false,
+      },
       refresh_token: DataTypes.TEXT,
       revision_no: DataTypes.INTEGER,
       stakeholder_id: DataTypes.UUID,

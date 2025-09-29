@@ -1,10 +1,10 @@
 'use strict';
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  asyid: {
-       nc up(queryInterface, Sequelize) {
+  async up(queryInterface, Sequelize) {
     await queryInterface.createTable('RailwayFasteningSystemCharacteristics', {
-       type: Sequelize.UUID,
+      id: {
+        type: Sequelize.UUID,
         primaryKey: true,
         defaultValue: Sequelize.UUIDV4
       },

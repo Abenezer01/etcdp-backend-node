@@ -39,10 +39,19 @@ module.exports = (sequelize, DataTypes) => {
       },
       parent_id: DataTypes.UUID,
       department_id: DataTypes.UUID,
-      documenttype_id: DataTypes.UUID,
-      documentcategory_id: DataTypes.UUID,
+      documenttype_id: {
+        type: DataTypes.UUID,
+        allowNull: false,
+      },
+      documentcategory_id: {
+        type: DataTypes.UUID,
+        allowNull: false,
+      },
       documentsubcategory_id: DataTypes.UUID,
-      title: DataTypes.STRING,
+      title: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
       description: DataTypes.TEXT,
       author: DataTypes.STRING,
       edition: DataTypes.STRING,

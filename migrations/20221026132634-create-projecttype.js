@@ -25,6 +25,7 @@ module.exports = {
       },
       flag: {
         type: Sequelize.STRING,
+        allowNull: true
       },
       revision_no: {
         type: Sequelize.INTEGER,

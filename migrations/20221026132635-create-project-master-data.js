@@ -33,6 +33,9 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
+      flag: {
+        type: Sequelize.STRING
+      },
       description: {
         type: Sequelize.TEXT
       },
