@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class ResourceMasterData extends Model {
+  class RailwayPowerSupplyConfiguration extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -13,35 +13,30 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  ResourceMasterData.init({
+  RailwayPowerSupplyConfiguration.init({
     id: {
       type: DataTypes.UUID,
       primaryKey: true,
       defaultValue: DataTypes.UUIDV4
     },
     parent_id: DataTypes.UUID,
-    resource_type_id: {
+    project_id: {
       type: DataTypes.UUID,
-      allowNull: false
+      allowNull: false,
     },
-    model: {
-      type: DataTypes.STRING,
-      allowNull: false
+    power_supply_system_type_id: {
+      type: DataTypes.UUID,
+      allowNull: false,
     },
-    title: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    flag: {
-      type: DataTypes.STRING
-    },
-    description: DataTypes.TEXT,
+    voltage_level_and_frequency: DataTypes.STRING,
+    power_supply_capacity_and_load_requirements: DataTypes.STRING,
+    remark: DataTypes.TEXT
   }, {
     createdAt: 'created_at',
     updatedAt: 'updated_at',
     sequelize,
-    modelName: 'ResourceMasterData',
-    tableName: 'ResourceMasterData',
+    modelName: 'RailwayPowerSupplyConfiguration',
+    tableName: 'RailwayPowerSupplyConfigurations',
   });
-  return ResourceMasterData;
+  return RailwayPowerSupplyConfiguration;
 };

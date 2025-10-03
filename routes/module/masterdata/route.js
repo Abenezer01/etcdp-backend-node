@@ -867,6 +867,8 @@ route.post("/project-general-master-data", validateProjectData.projectMasterData
 route.put("/project-general-master-data/:id", validateProjectData.projectMasterDataValidate, ProjectMasterDataController.update);
 route.delete("/project-general-master-data/:id", ProjectMasterDataController.delete);
 
+route.get("/project-general", ProjectMasterDataController.getMasterData);
+
 
 // ModuleType routes with validation
 route.get("/infrastructure-types", ModuleTypeController.getAll);

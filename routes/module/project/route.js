@@ -213,6 +213,7 @@ const RailwayStationPlatformSafetyAndSecurityController = require("../../../cont
 const RailwayStationPlatformSurfaceAndFinishController = require("../../../controllers/projects/RailwayStationPlatformSurfaceAndFinishController.js");
 const RailwayStationPlatformPassengerFlowAndCapacityController = require("../../../controllers/projects/RailwayStationPlatformPassengerFlowAndCapacityController.js");
 const RailwayStationPlatformEnvironmentalAndOtherFactorController = require("../../../controllers/projects/RailwayStationPlatformEnvironmentalAndOtherFactorController.js");
+const RailwayPowerSupplyConfigurationController = require("../../../controllers/projects/RailwayPowerSupplyConfigurationController.js");
 
 
 const validateData = require("../../../middleware/validate/module/project/validate");
@@ -2557,6 +2558,13 @@ route.delete("/railway-track-safeties/:id", RailwayTrackSafetyController.delete)
     "/railway-station-platform-environmental-and-other-factors/:id",
     RailwayStationPlatformEnvironmentalAndOtherFactorController.delete
   );
+
+
+  route.get("/railway-power-supply-configurations", RailwayPowerSupplyConfigurationController.getAll);
+  route.get("/railway-power-supply-configurations/:id", RailwayPowerSupplyConfigurationController.get);
+  route.post("/railway-power-supply-configurations", validateData.railwayPowerSupplyConfigurationValidate, RailwayPowerSupplyConfigurationController.save);
+  route.put("/railway-power-supply-configurations/:id", validateData.railwayPowerSupplyConfigurationValidate, RailwayPowerSupplyConfigurationController.update);
+  route.delete("/railway-power-supply-configurations/:id", RailwayPowerSupplyConfigurationController.delete);
 
   return route;
 

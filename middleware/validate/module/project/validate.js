@@ -1,6 +1,25 @@
 const validateReply = require("../../../../utils/validateerror");
 
 
+const railwayPowerSupplyConfigurationValidate = async (req, res, next) => {
+
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+  const validationRule = {
+    project_id: "required|string",
+    power_supply_system_type_id: "required|string",
+    voltage_level_and_frequency: "string",
+    power_supply_capacity_and_load_requirements: "string",
+    remark: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+}
+
 const railwayStationPlatformEnvironmentalAndOtherFactorValidate = async (req, res, next) => {
 
   let param = await validateReply.checkParam(req, res, next);
@@ -4319,6 +4338,8 @@ const paymentValidate = async (req, res, next) => {
   await validateReply.validateReply(req.body, validationRule, res, next);
 };
 module.exports = {
+  railwayPowerSupplyConfigurationValidate,  
+
   railwayStationPlatformEnvironmentalAndOtherFactorValidate,
   railwayStationPlatformPassengerFlowAndCapacityValidate,
   railwayStationPlatformSurfaceAndFinishValidate,

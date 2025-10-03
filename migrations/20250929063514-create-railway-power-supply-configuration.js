@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('ResourceMasterData', {
+    await queryInterface.createTable('RailwayPowerSupplyConfigurations', {
       id: {
         type: Sequelize.UUID,
         primaryKey: true,
@@ -10,34 +10,41 @@ module.exports = {
       },
       parent_id: {
         type: Sequelize.UUID,
-        references: {
-          model: 'ResourceMasterData',
-          key: 'id'
-        }
-      },
-      resource_type_id: {
-        type: Sequelize.UUID,
-        allowNull: false,
-        references: {
-          model: 'resourcetypes',
+        references: { 
+          model: 'RailwayPowerSupplyConfigurations',
           key: 'id'
         },
         onUpdate: "CASCADE",
-        onDelete: "CASCADE",
+        onDelete: "CASCADE"
       },
-      model: {
-        type: Sequelize.STRING,
-        allowNull: false
+      project_id: {
+        type: Sequelize.UUID,
+        allowNull: false,
+        references: {
+          model: 'projects',
+          key: 'id'
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE"
       },
-      title: {
-        type: Sequelize.STRING,
-        allowNull: false
+      power_supply_system_type_id: {
+        type: Sequelize.UUID,
+        allowNull: false,
+        references: {
+          model: 'ProjectMasterData',
+          key: 'id'
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE"
       },
-      description: {
-        type: Sequelize.TEXT
-      },
-      flag: {
+      voltage_level_and_frequency: {
         type: Sequelize.STRING
+      },
+      power_supply_capacity_and_load_requirements: {
+        type: Sequelize.STRING
+      },
+      remark: {
+        type: Sequelize.TEXT
       },
       createdAt: {
         allowNull: false,
@@ -50,6 +57,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('ResourceMasterData');
+    await queryInterface.dropTable('RailwayPowerSupplyConfigurations');
   }
 };

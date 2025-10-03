@@ -35,7 +35,7 @@ const getRecordById = async (model, req, res, include = []) => {
       res.apiError(error);
     }
   };
-  const saveRecord = async (model, req, res) => {
+  const  saveRecord = async (model, req, res) => {
     try {        
       const body = req.body;
       
