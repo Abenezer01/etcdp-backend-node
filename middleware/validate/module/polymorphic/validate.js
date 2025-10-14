@@ -33,6 +33,7 @@ const addressMasterDataValidate = async (req, res, next) => {
     parent: "string",
     type: "required|string",
     title: "required|string",
+    is_root: "boolean",
     description: "string"
   };
 

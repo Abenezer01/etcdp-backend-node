@@ -32,6 +32,15 @@ module.exports = {
       description: {
         type: Sequelize.TEXT,
       },
+      address_id: {
+        type: Sequelize.UUID,
+        references: {
+          model: "AddressMasterData",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
+      },
       revision_no: {
         type: Sequelize.INTEGER,
       },

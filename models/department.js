@@ -24,6 +24,9 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
+      address_id: {
+        type : DataTypes.UUID, 
+      },
       description: DataTypes.TEXT,
       revision_no: DataTypes.INTEGER,
     },

@@ -1,10 +1,11 @@
-const { RailwayStationPlatformEnvironmentalAndOtherFactor  , Sequelize } = require("../../models");
+const { RailwayStationPlatformEnvironmentalAndOtherFactor, ProjectOverview  , Sequelize } = require("../../models");
 const Op = Sequelize.Op;
 const dotenv = require("dotenv");
 dotenv.config();
 
 const paginationHelper = require("../utils/pagination-helper");
 const { getRecordById, saveRecord, updateRecord, deleteRecord } = require("../utils/format-helper");
+const project = require("../../models/project");
 let self = {};
 
 self.getAll = async (req, res) => {
@@ -16,6 +17,27 @@ self.getAll = async (req, res) => {
       data: paginatedResult.data,
       total: paginatedResult.total,
     }, paginatedResult.pagination);
+
+  } catch (error) {
+    res.apiError(error);
+  }
+};
+
+self.getAl = async (req, res) => {
+  try {
+
+    ProjectOverview.removeAttribute('id');
+    let data = await ProjectOverview.findAll();
+    return res.json({ data });
+
+
+    const paginatedResult = await paginationHelper(ProjectOverview , req);
+
+    // Use the response formatter to send the success response
+    res.apiSuccess({
+      data: paginatedResult.data,
+      total: paginatedResult.total,
+    }, paginatedResult.pagination );
 
   } catch (error) {
     res.apiError(error);

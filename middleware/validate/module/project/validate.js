@@ -1,14 +1,69 @@
 const validateReply = require("../../../../utils/validateerror");
 
+const { RailwayPowerSupplyConfiguration  , Sequelize } = require("../../../../models");
 
-const railwayPowerSupplyConfigurationValidate = async (req, res, next) => {
+const { Op } = require("sequelize");
 
-  let param = await validateReply.checkParam(req, res, next);
-  if (param === "failed") {
-    return res.status(400).json({
-      message: "Invalid ID format",
-    });
-  }
+/**
+ * Generic validation middleware for Sequelize models
+ * @param {object} model - Sequelize model (e.g., RailwayPowerSupplyConfiguration)
+ * @param {object} validationRule - Validation rules
+ * @param {array} uniqueFields - Fields that must be unique
+ */
+const validateModelData = (model, validationRule, uniqueFields = []) => {
+  return async (req, res, next) => {
+    try {
+      // Step 1: Basic validation
+      const param = await validateReply.checkParam(req, res, next);
+      if (param === "failed") {
+        return res.status(400).json({ message: "Invalid ID format" });
+      }
+
+      await validateReply.validateReply(req.body, validationRule, res, next);
+
+      // Step 2: Unique field check
+      for (const field of uniqueFields) {
+        const value = req.body[field];
+        if (!value) continue;
+
+        const whereClause = { [field]: value };
+
+        // If updating (PUT/PATCH), ignore current record
+        if (req.params.id) {
+          whereClause.id = { [Op.ne]: req.params.id };
+        }
+
+        const exists = await model.findOne({ where: whereClause });
+        if (exists) {
+          return res.status(400).json({
+            message: `${field} must be unique. "${value}" already exists.`,
+          });
+        }else {
+        return res.status(400).json({
+          message: "success"
+        });
+        }
+      }
+
+      next();
+    } catch (error) {
+      console.error("Validation error:", error);
+      res.status(500).json({ message: "Server error during validation." });
+    }
+  };
+};
+
+module.exports = validateModelData;
+
+
+// const railwayPowerSupplyConfigurationValidate = async (req, res, next) => {
+
+//   let param = await validateReply.checkParam(req, res, next);
+//   if (param === "failed") {
+//     return res.status(400).json({
+//       message: "Invalid ID format",
+//     });
+//   }
   const validationRule = {
     project_id: "required|string",
     power_supply_system_type_id: "required|string",
@@ -17,8 +72,16 @@ const railwayPowerSupplyConfigurationValidate = async (req, res, next) => {
     remark: "string"
   };
 
-  await validateReply.validateReply(req.body, validationRule, res, next);
-}
+  // `remark` is unique
+const railwayPowerSupplyConfigurationValidate = validateModelData(
+  RailwayPowerSupplyConfiguration,
+  validationRule,
+  ["remark"]
+);
+  
+
+//   await validateReply.validateReply(req.body, validationRule, res, next);
+// }
 
 const railwayStationPlatformEnvironmentalAndOtherFactorValidate = async (req, res, next) => {
 

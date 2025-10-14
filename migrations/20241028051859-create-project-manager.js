@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('ProjectManager65A1s', {
+    await queryInterface.createTable('ProjectManagers', {
       id: {
         allowNull: false,
         primaryKey: true,
@@ -11,7 +11,7 @@ module.exports = {
       parent_id: {
         type: Sequelize.UUID,
         references: {
-          model: "ProjectManager65A1s",
+          model: "ProjectManagers",
           key: "id",
         },
         onUpdate: "CASCADE",
@@ -75,6 +75,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('ProjectManager65A1s');
+    await queryInterface.dropTable('ProjectManagers');
   }
 };

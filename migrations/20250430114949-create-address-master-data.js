@@ -37,6 +37,10 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
+      is_root: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
+      },
       description: {
         type: Sequelize.TEXT
       },

@@ -19,7 +19,7 @@ const StakeholderPhoneController = require("../../../controllers/stakeholder/Sta
 const StakeholderOwnerOrManager26ABController = require("../../../controllers/stakeholder/StakeholderOwnerOrManager26ABController");
 const StakeholderAddress26A3Controller = require("../../../controllers/stakeholder/StakeholderAddress26A3Controller");
 
-const JointVenture34A1Controller = require("../../../controllers/stakeholder/JointVenture34A1Controller");
+const JointVentureController = require("../../../controllers/stakeholder/JointVentureController");
 const JointVentureCompanyController = require("../../../controllers/stakeholder/JointVentureCompanyController");
 
 const StakeholderAdditionalInformationController = require("../../../controllers/stakeholder/StakeholderAdditionalInformationController");
@@ -471,15 +471,15 @@ module.exports = function (express) {
     
   
     // joint venture routes with validation
-    route.get("/joint-ventures", JointVenture34A1Controller.getAll);
-    route.get("/joint-ventures/:id", JointVenture34A1Controller.get);
-    route.post("/joint-ventures", validateData.jointVentureValidate, JointVenture34A1Controller.save);
+    route.get("/joint-ventures", JointVentureController.getAll);
+    route.get("/joint-ventures/:id", JointVentureController.get);
+    route.post("/joint-ventures", validateData.jointVentureValidate, JointVentureController.save);
     route.put(
       "/joint-ventures/:id",
       validateData.jointVentureValidate,
-      JointVenture34A1Controller.update
+      JointVentureController.update
     );
-    route.delete("/joint-ventures/:id", JointVenture34A1Controller.delete);
+    route.delete("/joint-ventures/:id", JointVentureController.delete);
   
   
     // joint venture companies routes with validation

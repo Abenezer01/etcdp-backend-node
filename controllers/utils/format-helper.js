@@ -79,9 +79,11 @@ const getRecordById = async (model, req, res, include = []) => {
         return res.apiSuccess({
           data: updatedData
         });
+      }else{
+        throw new Error("Record not found");
+  
       }
   
-      throw new Error("Record not found");
     } catch (error) {
       res.apiError(error);
     }

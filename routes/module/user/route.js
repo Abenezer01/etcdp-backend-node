@@ -114,6 +114,7 @@ module.exports = function (express) {
   route.get("/generate", PermissionController.generate);
   route.post("/assign-role-permissions", PermissionController.assignRolePermissions);
   route.get("/assignx", PermissionController.assignRolePermissionsGenerate);
+  route.get("/test", PermissionController.test);
   
   route.get("/role-permissions/:id", PermissionController.getRolePermissions);
 

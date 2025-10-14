@@ -15,6 +15,7 @@ const {
   ProjectBond,
   ProjectExtensionTime,
   Payment,
+  ProjectContractDataOverview,
   sequelize,
   Sequelize,
 } = require("./../../models");
@@ -593,6 +594,66 @@ self.countAllProjectWithProjectCategory = async (req, res) => {
     res.apiError(error);
   }
 };
+
+self.getProjectContractData = async (req, res) => {
+  try {
+    const id = req.params.id;
+    ProjectContractDataOverview.removeAttribute('id');
+
+
+    const project = await ProjectContractDataOverview.findOne({
+      where: { project_id: id }
+    });
+
+    if (!project) return res.apiError("Project not found");
+
+    // Compute derived values
+    const used_time = project.commencement_date
+      ? moment().diff(project.commencement_date, 'days')
+      : null;
+
+    const completion_date = project.commencement_date
+      ? moment(project.commencement_date)
+          .add(project.original_contract_duration + project.total_extension_days, 'days')
+      : null;
+
+    const spi = (project.actual_financial_performance / (project.planned_financial_performance || 1)) * 100;
+    const cpi = (project.actual_financial_performance / (project.actual_cost || 1)) * 100;
+    const sv = project.actual_financial_performance - project.planned_financial_performance;
+    const cv = project.actual_financial_performance - project.actual_cost;
+    
+    // Map stakeholder IDs to names (optional)
+    const client = project.client_id ? await self.getStakeholderName(project.client_id) : null;
+    const consultant = project.consultant_id ? await self.getStakeholderName(project.consultant_id) : null;
+    const contractor = project.contractor_id ? await self.getStakeholderName(project.contractor_id) : null;
+
+    return res.apiSuccess({
+      data: {
+        name: project.project_name,
+        client,
+        consultant,
+        contractor,
+        contract_duration: project.original_contract_duration,
+        total_contract_amount: project.total_contract_amount,
+        commencement_date: project.commencement_date,
+        elapsed_time: used_time,
+        completion_date,
+        cpi,
+        spi,
+        cv,
+        sv,
+        paid_ipc: project.paid_ipc,
+        earned_revenue: project.actual_financial_performance,
+        planned_revenue: project.planned_financial_performance,
+        actual_cost: project.actual_cost
+      }
+    });
+
+  } catch (error) {
+    res.apiError(error);
+  }
+};
+
 
 self.getProjectData = async (req, res) => {
   let id = req.params.id;

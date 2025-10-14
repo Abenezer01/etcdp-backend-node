@@ -37,11 +37,11 @@ const WaterIrrigationDamController = require("../../../controllers/project/Water
 const PortController = require("../../../controllers/project/PortController.js");
 const PaymentController = require("../../../controllers/project/PaymentController.js");
 
-const ProjectOutcome45C3Controller = require("../../../controllers/project/ProjectOutcome45C3Controller.js");
-const ProjectAdditionalInfo48A1Controller = require("../../../controllers/project/ProjectAdditionalInfo48A1Controller.js");
+const ProjectOutcomeController = require("../../../controllers/project/ProjectOutcomeController.js");
+const ProjectAdditionalInfoController = require("../../../controllers/project/ProjectAdditionalInfoController.js");
 
 // new 
-const ProjectManager65A1Controller = require("../../../controllers/projects/ProjectManager65A1Controller.js");
+const ProjectManagerController = require("../../../controllers/projects/ProjectManagerController.js");
 const ProjectContactPersonController = require("../../../controllers/projects/ProjectContactPersonController.js");
 const ProjectSafetyStatusController = require("../../../controllers/projects/ProjectSafetyStatusController.js");
 const ProjectQualityController = require("../../../controllers/projects/ProjectQualityController.js");  
@@ -222,49 +222,49 @@ module.exports = function (express) {
   const route = express.Router();
 
   //project outcomes
-  route.get("/project-outcomes", ProjectOutcome45C3Controller.getAll);
-  route.get("/project-outcomes/:id", ProjectOutcome45C3Controller.get);
-  // route.get("/project/project-outcomes/:id", ProjectOutcome45C3Controller.getByProjectId);
-  route.post("/project-outcomes", validateData.railWayValidate, ProjectOutcome45C3Controller.save);
+  route.get("/project-outcomes", ProjectOutcomeController.getAll);
+  route.get("/project-outcomes/:id", ProjectOutcomeController.get);
+  // route.get("/project/project-outcomes/:id", ProjectOutcomeController.getByProjectId);
+  route.post("/project-outcomes", validateData.railWayValidate, ProjectOutcomeController.save);
   route.put(
     "/project-outcomes/:id",
     validateData.railWayValidate,
-    ProjectOutcome45C3Controller.update
+    ProjectOutcomeController.update
   );
-  route.delete("/project-outcomes/:id", ProjectAdditionalInfo48A1Controller.delete);
+  route.delete("/project-outcomes/:id", ProjectAdditionalInfoController.delete);
 
   //project outcomes
-  route.get("/project-additional-infos", ProjectAdditionalInfo48A1Controller.getAll);
-  route.get("/project-additional-infos/:id", ProjectAdditionalInfo48A1Controller.get);
-  route.post("/project-additional-infos", validateData.railWayValidate, ProjectAdditionalInfo48A1Controller.save);
+  route.get("/project-additional-infos", ProjectAdditionalInfoController.getAll);
+  route.get("/project-additional-infos/:id", ProjectAdditionalInfoController.get);
+  route.post("/project-additional-infos", validateData.railWayValidate, ProjectAdditionalInfoController.save);
   route.put(
     "/project-additional-infos/:id",
     validateData.railWayValidate,
-    ProjectAdditionalInfo48A1Controller.update
+    ProjectAdditionalInfoController.update
   );
-  route.delete("/project-additional-infos/:id", ProjectAdditionalInfo48A1Controller.delete);
+  route.delete("/project-additional-infos/:id", ProjectAdditionalInfoController.delete);
 //project outcomes
-  route.get("/project-outcomes", ProjectOutcome45C3Controller.getAll);
-  route.get("/project-outcomes/:id", ProjectOutcome45C3Controller.get);
-  // route.get("/project/project-outcomes/:id", ProjectOutcome45C3Controller.getByProjectId);
-  route.post("/project-outcomes", validateData.railWayValidate, ProjectOutcome45C3Controller.save);
+  route.get("/project-outcomes", ProjectOutcomeController.getAll);
+  route.get("/project-outcomes/:id", ProjectOutcomeController.get);
+  // route.get("/project/project-outcomes/:id", ProjectOutcomeController.getByProjectId);
+  route.post("/project-outcomes", validateData.railWayValidate, ProjectOutcomeController.save);
   route.put(
     "/project-outcomes/:id",
     validateData.railWayValidate,
-    ProjectOutcome45C3Controller.update
+    ProjectOutcomeController.update
   );
-  route.delete("/project-outcomes/:id", ProjectAdditionalInfo48A1Controller.delete);
+  route.delete("/project-outcomes/:id", ProjectAdditionalInfoController.delete);
 
   //project outcomes
-  route.get("/project-additional-infos", ProjectAdditionalInfo48A1Controller.getAll);
-  route.get("/project-additional-infos/:id", ProjectAdditionalInfo48A1Controller.get);
-  route.post("/project-additional-infos", validateData.railWayValidate, ProjectAdditionalInfo48A1Controller.save);
+  route.get("/project-additional-infos", ProjectAdditionalInfoController.getAll);
+  route.get("/project-additional-infos/:id", ProjectAdditionalInfoController.get);
+  route.post("/project-additional-infos", validateData.railWayValidate, ProjectAdditionalInfoController.save);
   route.put(
     "/project-additional-infos/:id",
     validateData.railWayValidate,
-    ProjectAdditionalInfo48A1Controller.update
+    ProjectAdditionalInfoController.update
   );
-  route.delete("/project-additional-infos/:id", ProjectAdditionalInfo48A1Controller.delete);
+  route.delete("/project-additional-infos/:id", ProjectAdditionalInfoController.delete);
 
   //Project status
   route.get("/project-statuses", ProjectStatusController.getAll);
@@ -640,6 +640,7 @@ module.exports = function (express) {
     "/project-general-information/:id",
     ProjectController.getProjectDetail
   );
+  route.get("/project-contract-detail/:id", ProjectController.getProjectContractData);
   route.get("/project-detail/:id", ProjectController.getProjectData);
   route.get(
     "/general-project-finance/:id",
@@ -1007,16 +1008,16 @@ module.exports = function (express) {
     ProjectController.countAllProjectWithProjectCategory
   );
 
-  // ProjectManager65A1 routes with validation
-  route.get("/project-managers", ProjectManager65A1Controller.getAll);
-  route.get("/project-managers/:id", ProjectManager65A1Controller.get);
-  route.post("/project-managers", validateData.railWayValidate, ProjectManager65A1Controller.save);
+  // ProjectManager routes with validation
+  route.get("/project-managers", ProjectManagerController.getAll);
+  route.get("/project-managers/:id", ProjectManagerController.get);
+  route.post("/project-managers", validateData.railWayValidate, ProjectManagerController.save);
   route.put(
     "/project-managers/:id",
     validateData.railWayValidate,
-    ProjectManager65A1Controller.update
+    ProjectManagerController.update
   );
-  route.delete("/project-managers/:id", ProjectManager65A1Controller.delete);
+  route.delete("/project-managers/:id", ProjectManagerController.delete);
 
   // ProjectContactPerson routes with validation
   route.get("/project-contact-people", ProjectContactPersonController.getAll);
@@ -2536,6 +2537,8 @@ route.delete("/railway-track-safeties/:id", RailwayTrackSafetyController.delete)
 
 
   // RailwayStationPlatformEnvironmentalAndOtherFactor routes with validation
+  route.get("/project-overviews", RailwayStationPlatformEnvironmentalAndOtherFactorController.getAl);
+
   route.get(
     "/railway-station-platform-environmental-and-other-factors",
     RailwayStationPlatformEnvironmentalAndOtherFactorController.getAll

@@ -1,4 +1,4 @@
-const { ProjectOutcome45C3 , Sequelize } = require("../../models");
+const { ProjectAdditionalInfo , Sequelize } = require("../../models");
 const Op = Sequelize.Op;
 const dotenv = require("dotenv");
 dotenv.config();
@@ -9,7 +9,7 @@ let self = {};
 
 self.getAll = async (req, res) => {
   try {
-    const paginatedResult = await paginationHelper(ProjectOutcome45C3, req);
+    const paginatedResult = await paginationHelper(ProjectAdditionalInfo, req);
 
     // Use the response formatter to send the success response
     res.apiSuccess({
@@ -23,19 +23,19 @@ self.getAll = async (req, res) => {
 };
 
 self.get = async (req, res) => {
-  getRecordById(ProjectOutcome45C3, req, res);
+  getRecordById(ProjectAdditionalInfo, req, res);
 };
 
 self.save = async (req, res) => {
-  saveRecord(ProjectOutcome45C3, req, res);
+  saveRecord(ProjectAdditionalInfo, req, res);
 };
 
 self.update = async (req, res) => {
-  updateRecord(ProjectOutcome45C3, req, res);
+  updateRecord(ProjectAdditionalInfo, req, res);
 };
 
 self.delete = async (req, res) => {
-  deleteRecord(ProjectOutcome45C3, req, res);
+  deleteRecord(ProjectAdditionalInfo, req, res);
 };
 
 module.exports = self;

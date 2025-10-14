@@ -1,5 +1,5 @@
-const ProjectOutcome45C3Controller = require("../../../controllers/project/ProjectOutcome45C3Controller.js");
-const ProjectAdditionalInfo48A1Controller = require("../../../controllers/project/ProjectAdditionalInfo48A1Controller.js");
+const ProjectOutcomeController = require("../../../controllers/project/ProjectOutcomeController.js");
+const ProjectAdditionalInfoController = require("../../../controllers/project/ProjectAdditionalInfoController.js");
 const BackupPowerInfrastructure73BController = require("../../../controllers/projects/BackupPowerInfrastructure73BController.js");
 const BroadcastCoverage63FController = require("../../../controllers/projects/BroadcastCoverage63FController.js");
 const BudgetRelated55DController = require("../../../controllers/projects/BudgetRelated55DController.js");
@@ -38,7 +38,7 @@ const Project44A1Controller = require("../../../controllers/projects/Project44A1
 const ProjectAddress45AController = require("../../../controllers/projects/ProjectAddress45AController.js");
 const ProjectDetail44A2Controller = require("../../../controllers/projects/ProjectDetail44A2Controller.js");
 const ProjectFinance45C1Controller = require("../../../controllers/projects/ProjectFinance45C1Controller.js");
-const ProjectManager65A1Controller = require("../../../controllers/projects/ProjectManager65A1Controller.js");
+const ProjectManagerController = require("../../../controllers/projects/ProjectManagerController.js");
 const ProjectMilestone55BController = require("../../../controllers/projects/ProjectMilestone55BController.js");
 const ProjectStaff48A2Controller = require("../../../controllers/projects/ProjectStaff48A2Controller.js");
 const ProjectStaffTraining48A3Controller = require("../../../controllers/projects/ProjectStaffTraining48A3Controller.js");
@@ -341,16 +341,16 @@ module.exports = function (express) {
   );
   route.delete("/project-detail-44a2/:id", ProjectDetail44A2Controller.delete);
 
-    // ProjectManager65A1 routes with validation
-  route.get("/project-manager-65a1", ProjectManager65A1Controller.getAll);
-  route.get("/project-manager-65a1/:id", ProjectManager65A1Controller.get);
-  route.post("/project-manager-65a1", validateData.railWayValidate, ProjectManager65A1Controller.save);
+    // ProjectManager routes with validation
+  route.get("/project-manager-65a1", ProjectManagerController.getAll);
+  route.get("/project-manager-65a1/:id", ProjectManagerController.get);
+  route.post("/project-manager-65a1", validateData.railWayValidate, ProjectManagerController.save);
   route.put(
     "/project-manager-65a1/:id",
     validateData.railWayValidate,
-    ProjectManager65A1Controller.update
+    ProjectManagerController.update
   );
-  route.delete("/project-manager-65a1/:id", ProjectManager65A1Controller.delete);
+  route.delete("/project-manager-65a1/:id", ProjectManagerController.delete);
 
   // ProjectMilestone55B routes with validation
   route.get("/project-milestone-55b", ProjectMilestone55BController.getAll);
@@ -703,27 +703,27 @@ module.exports = function (express) {
 
   // ProjectFinance45C1
   //project outcomes
-  route.get("/project-outcomes", ProjectOutcome45C3Controller.getAll);
-  route.get("/project-outcomes/:id", ProjectOutcome45C3Controller.get);
-  // route.get("/project/project-outcomes/:id", ProjectOutcome45C3Controller.getByProjectId);
-  route.post("/project-outcomes", validateData.railWayValidate, ProjectOutcome45C3Controller.save);
+  route.get("/project-outcomes", ProjectOutcomeController.getAll);
+  route.get("/project-outcomes/:id", ProjectOutcomeController.get);
+  // route.get("/project/project-outcomes/:id", ProjectOutcomeController.getByProjectId);
+  route.post("/project-outcomes", validateData.railWayValidate, ProjectOutcomeController.save);
   route.put(
     "/project-outcomes/:id",
     validateData.railWayValidate,
-    ProjectOutcome45C3Controller.update
+    ProjectOutcomeController.update
   );
-  route.delete("/project-outcomes/:id", ProjectAdditionalInfo48A1Controller.delete);
+  route.delete("/project-outcomes/:id", ProjectAdditionalInfoController.delete);
 
   //project outcomes
-  route.get("/project-additional-infos", ProjectAdditionalInfo48A1Controller.getAll);
-  route.get("/project-additional-infos/:id", ProjectAdditionalInfo48A1Controller.get);
-  route.post("/project-additional-infos", validateData.railWayValidate, ProjectAdditionalInfo48A1Controller.save);
+  route.get("/project-additional-infos", ProjectAdditionalInfoController.getAll);
+  route.get("/project-additional-infos/:id", ProjectAdditionalInfoController.get);
+  route.post("/project-additional-infos", validateData.railWayValidate, ProjectAdditionalInfoController.save);
   route.put(
     "/project-additional-infos/:id",
     validateData.railWayValidate,
-    ProjectAdditionalInfo48A1Controller.update
+    ProjectAdditionalInfoController.update
   );
-  route.delete("/project-additional-infos/:id", ProjectAdditionalInfo48A1Controller.delete);
+  route.delete("/project-additional-infos/:id", ProjectAdditionalInfoController.delete);
 
   return route;
 };

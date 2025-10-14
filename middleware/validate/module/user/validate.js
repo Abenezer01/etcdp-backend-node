@@ -180,6 +180,7 @@ const departmentValidate = async (req, res, next) => {
   }
   const validationRule = {
     name: "required|string",
+    parent_id: "string"
   };
 
 

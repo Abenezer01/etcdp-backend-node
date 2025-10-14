@@ -34,6 +34,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false
     },
+    is_root: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
+    },
     description: DataTypes.TEXT
   }, {
     createdAt: "created_at",
