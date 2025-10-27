@@ -10,60 +10,274 @@ const { Op } = require("sequelize");
  * @param {object} validationRule - Validation rules
  * @param {array} uniqueFields - Fields that must be unique
  */
-const validateModelData = (model, validationRule, uniqueFields = []) => {
-  return async (req, res, next) => {
-    try {
-      // Step 1: Basic validation
-      const param = await validateReply.checkParam(req, res, next);
-      if (param === "failed") {
-        return res.status(400).json({ message: "Invalid ID format" });
-      }
 
-      await validateReply.validateReply(req.body, validationRule, res, next);
 
-      // Step 2: Unique field check
-      for (const field of uniqueFields) {
-        const value = req.body[field];
-        if (!value) continue;
+// const validateModelData = (model, validationRule, uniqueFields = []) => {
+//   return async (req, res, next) => {
+//     try {
+//       // Step 1: Basic validation
+//       const param = await validateReply.checkParam(req, res, next);
+//       if (param === "failed") {
+//         return res.status(400).json({ message: "Invalid ID format" });
+//       }
 
-        const whereClause = { [field]: value };
+//       await validateReply.validateReply(req.body, validationRule, res, next);
 
-        // If updating (PUT/PATCH), ignore current record
-        if (req.params.id) {
-          whereClause.id = { [Op.ne]: req.params.id };
-        }
+//       // Step 2: Unique field check
+//       for (const field of uniqueFields) {
+//         const value = req.body[field];
+//         if (!value) continue;
 
-        const exists = await model.findOne({ where: whereClause });
-        if (exists) {
-          return res.status(400).json({
-            message: `${field} must be unique. "${value}" already exists.`,
-          });
-        }else {
-        return res.status(400).json({
-          message: "success"
-        });
-        }
-      }
+//         const whereClause = { [field]: value };
 
-      next();
-    } catch (error) {
-      console.error("Validation error:", error);
-      res.status(500).json({ message: "Server error during validation." });
-    }
+//         // If updating (PUT/PATCH), ignore current record
+//         if (req.params.id) {
+//           whereClause.id = { [Op.ne]: req.params.id };
+//         }
+
+//         const exists = await model.findOne({ where: whereClause });
+//         if (exists) {
+//           return res.status(400).json({
+//             message: `${field} must be unique. "${value}" already exists.`,
+//           });
+//         }else {
+//         return res.status(400).json({
+//           message: "success"
+//         });
+//         }
+//       }
+
+//       next();
+//     } catch (error) {
+//       console.error("Validation error:", error);
+//       res.status(500).json({ message: "Server error during validation." });
+//     }
+//   };
+// };
+
+// module.exports = validateModelData;
+
+const railwayMaintenanceEnvironmentalAndOtherFactorValidate = async(req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if(param === "failed"){
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+  const validationRule = {
+    project_id: "required|string",
+    facility_name: "required|string",
+    environmental_compliance_measures: "string",
+    noise_reduction_measures: "string",
+    sustainable_design_features: "string",
+    remark: "string"
   };
+  await validateReply.validateReply(req.body, validationRule, res, next);
 };
 
-module.exports = validateModelData;
+
+const railwayMaintenanceFacilityAndSecurityValidate = async(req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if(param === "failed"){
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+  const validationRule = {
+    project_id: "required|string",
+    facility_name: "required|string",
+    fire_safety_measures: "string",
+    ventilation_and_exhaust_system_availability: "boolean",
+    security_measures: "string",
+    remark: "string"  
+  };
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
+const railwayMaintenanceFacilityScheduleAndProcedureValidate = async(req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if(param === "failed"){
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+  const validationRule = {
+    project_id: "required|string",
+    facility_name: "required|string",
+    maintenance_schedules_and_routines_availability: "boolean",
+    procedures_for_planned_and_preventive_maintenance_availability: "boolean",
+    documentation_and_record_keeping_practices_availability: "boolean",
+    remark: "string"
+  };
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
+const railwayMaintenanceWorkforceAndFacilityStaffValidate = async(req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if(param === "failed"){
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+  const validationRule = {
+    project_id: "required|string",
+    facility_name: "required|string",
+    maintenance_personnel_number: "integer",
+    staff_facilities: "boolean",
+    training_facilities_and_resources: "boolean",
+    trainers_instructors_number: "integer",
+    remark: "string"
+  };
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
 
 
-// const railwayPowerSupplyConfigurationValidate = async (req, res, next) => {
+const railwayMaintenanceFacilityInfrastructureAndUtilityValidate = async(req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if(param === "failed"){
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+  const validationRule = {
+    project_id: "required|string",
+    facility_name: "required|string",
+    rail_tracks_and_turnout_availability: "boolean",
+    fueling_and_refueling_facility_availability: "boolean",
+    compressed_air_system_availability: "boolean",
+    remarks: "string"
+  };
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
 
-//   let param = await validateReply.checkParam(req, res, next);
-//   if (param === "failed") {
-//     return res.status(400).json({
-//       message: "Invalid ID format",
-//     });
-//   }
+
+
+const railwayMaintenanceFacilityEquipmentAndToolValidate = async(req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if(param === "failed"){
+    return res.status(400).json({
+      message: "Invalid ID format", 
+    });
+  }
+  const validationRule = {
+    project_id: "required|string",
+    facility_name: "required|string",
+    maintenance_equipment_and_tool_available_type: "string",
+    hoists_cranes_and_lifting_equipment: "boolean",
+    diagnostic_and_testing_equipment: "string",
+    tools_and_machinery_specific_to_maintenance_activities: "string",
+    remark: "string"
+  };
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
+
+const railwayMaintenanceFacilityLayoutAndDesignValidate = async(req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if(param === "failed"){
+    return res.status(400).json({
+      message: "Invalid ID format", 
+    });
+  }
+  const validationRule = {
+    project_id: "required|string",
+    facility_name: "required|string",
+    facility_layout_and_dimension: "string",
+    maintenance_bays_number_and_size: "string",
+    spare_parts_and_equipment_storage_areas: "string",
+    office_and_administrative_areas_availability: "boolean",
+    remark: "string" 
+  };
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
+const railwayMaintenanceFacilityTypeAndPurposeValidate = async(req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if(param === "failed"){
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+  const validationRule = {
+    project_id: "required|string",
+    facility_name: "string",
+    maintenance_activities_conducted: "string",
+    remark: "string" };
+  await validateReply.validateReply(req.body, validationRule, res, next);
+}
+const railwayPowerSupplyEnvironmentalAndOtherFactorValidate = async(req, res, next) => {  
+  let param = await validateReply.checkParam(req, res, next);
+  if(param === "failed"){
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  } 
+  const validationRule = {      
+    project_id: "required|string",
+    railway_station_platform_layout_id: "required|string",
+    environmental_compliance_measures: "string",
+    remark: "string"
+};
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
+
+const railwayPowerSupplySafetyAndComplianceValidate =  async(req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if(param === "failed"){
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+
+  const validationRule = {
+    project_id: "required|string",
+    railway_station_platform_layout_id: "required|string",
+    safety_measures_and_protocols: "boolean", 
+    compliance_with_electrical_safety_standards_and_regulations: "boolean",
+    remark: "string"
+};
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
+
+const railwayPowerSupplyMaintenanceAndTestingValidate = async(req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if(param === "failed") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+  const validationRule = {
+    project_id: "required|string",
+    railway_station_platform_layout_id: "required|string",
+    remark: "string" };
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
+const railwayPowerDistributionValidate =  async (req, res, next) => { 
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") { 
+    return res.status(400).json({ 
+      message: "Invalid ID format", 
+    }); 
+  } 
+  const validationRule = { 
+    project_id: "required|string", 
+    railway_station_platform_layout_id: "required|string", 
+    remark: "string"
+};
+  await validateReply.validateReply(req.body, validationRule, res, next);
+}
+
+const railwayPowerSupplyConfigurationValidate = async (req, res, next) => {
+
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
   const validationRule = {
     project_id: "required|string",
     power_supply_system_type_id: "required|string",
@@ -73,15 +287,32 @@ module.exports = validateModelData;
   };
 
   // `remark` is unique
-const railwayPowerSupplyConfigurationValidate = validateModelData(
-  RailwayPowerSupplyConfiguration,
-  validationRule,
-  ["remark"]
-);
+// const railwayPowerSupplyConfigurationValidate = validateModelData(
+//   RailwayPowerSupplyConfiguration,
+//   validationRule,
+//   ["remark"]
+// );
   
 
-//   await validateReply.validateReply(req.body, validationRule, res, next);
-// }
+  await validateReply.validateReply(req.body, validationRule, res, next);
+}
+
+const railwayPowerSubstationsAndEquipmentValidate = async (req, res, next) => {
+
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+  const validationRule = {
+    project_id: "required|string",
+    railway_station_platform_layout_id: "required|string",
+    substation_capacity_and_equipment_specifications: "string",
+    remark: "string"
+  };  
+   await validateReply.validateReply(req.body, validationRule, res, next);
+}   
 
 const railwayStationPlatformEnvironmentalAndOtherFactorValidate = async (req, res, next) => {
 
@@ -4401,6 +4632,20 @@ const paymentValidate = async (req, res, next) => {
   await validateReply.validateReply(req.body, validationRule, res, next);
 };
 module.exports = {
+  railwayMaintenanceEnvironmentalAndOtherFactorValidate,
+  railwayMaintenanceFacilityAndSecurityValidate,
+  railwayMaintenanceFacilityScheduleAndProcedureValidate,
+  railwayMaintenanceWorkforceAndFacilityStaffValidate,
+  railwayMaintenanceFacilityInfrastructureAndUtilityValidate,
+  railwayMaintenanceFacilityEquipmentAndToolValidate,
+  railwayMaintenanceFacilityLayoutAndDesignValidate,
+  railwayMaintenanceFacilityTypeAndPurposeValidate,
+  railwayPowerSupplyEnvironmentalAndOtherFactorValidate,
+  railwayPowerSupplySafetyAndComplianceValidate,
+
+  railwayPowerSupplyMaintenanceAndTestingValidate,
+  railwayPowerDistributionValidate,
+  railwayPowerSubstationsAndEquipmentValidate,
   railwayPowerSupplyConfigurationValidate,  
 
   railwayStationPlatformEnvironmentalAndOtherFactorValidate,

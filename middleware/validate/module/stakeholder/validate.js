@@ -1,5 +1,28 @@
 const validateReply = require("../../../../utils/validateerror");
 
+const stakeholderDocumentValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid id",
+    });
+  }
+
+  const validationRule = {
+    stakeholder_id: "required|string",
+    document_type: "required|string",
+    title: "required|string",
+    description: "string",
+    author: "string",
+    edition: "string",
+    publication_date: "date",
+    isbn: "string",
+    copy_right_notice: "string",
+
+  };
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
 const stakeholderEmployeeValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
   if (param === "failed") {
@@ -828,6 +851,7 @@ const StakeholderServiceValidate = async (req, res, next) => {
   await validateReply.validateReply(req.body, validationRule, res, next);
 };
 module.exports = {
+  stakeholderDocumentValidate,
   licenseValidate,
   vehicleValidate,
   upgradeValidate,

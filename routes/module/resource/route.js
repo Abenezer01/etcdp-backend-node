@@ -159,5 +159,9 @@ module.exports = function (express) {
    );
    route.delete("/professional-certifications/:id", ProfessionalCertificationController.delete);
 
+  //Matrix
+  route.get(
+    "/matrix/resource", ResourceController.countAllResourceWithResourceType
+  );
   return route;
 };

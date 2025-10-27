@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('StakeholderOwnerOrManager26ABs', {
+    await queryInterface.createTable('StakeholderAddresses', {
       id: {
         allowNull: false,
         primaryKey: true,
@@ -11,7 +11,7 @@ module.exports = {
       parent_id: {
         type: Sequelize.UUID,
         references: {
-          model: "StakeholderOwnerOrManager26ABs",
+          model: "StakeholderAddresses",
           key: "id",
         },
         onUpdate: "CASCADE",
@@ -27,49 +27,41 @@ module.exports = {
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
       },
-      type: {
+      country: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      region: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      city: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      sub_city: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      woreda: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      street: {
         type: Sequelize.STRING
       },
-      first_name: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
-      middle_name: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
-      last_name: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
-      department: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
-      position: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
-      nationality: {
+      block_no: {
         type: Sequelize.STRING
       },
-      national_id_no: {
+      website: {
         type: Sequelize.STRING
       },
-      birth_date: {
-        type: Sequelize.DATE,
+      northing: {
+        type: Sequelize.DOUBLE,
         allowNull: false
       },
-      gender: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
-      phone_no: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
-      email: {
-        type: Sequelize.STRING,
+      easting: {
+        type: Sequelize.DOUBLE,
         allowNull: false
       },
       createdAt: {
@@ -83,6 +75,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('StakeholderOwnerOrManager26ABs');
+    await queryInterface.dropTable('StakeholderAddresses');
   }
 };

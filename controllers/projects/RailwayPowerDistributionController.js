@@ -1,4 +1,4 @@
-const { StakeholderOwnerOrManager26AB , Sequelize } = require("../../models");
+const { RailwayPowerDistribution  , Sequelize } = require("../../models");
 const Op = Sequelize.Op;
 const dotenv = require("dotenv");
 dotenv.config();
@@ -9,7 +9,7 @@ let self = {};
 
 self.getAll = async (req, res) => {
   try {
-    const paginatedResult = await paginationHelper(StakeholderOwnerOrManager26AB, req);
+    const paginatedResult = await paginationHelper(RailwayPowerDistribution , req);
 
     // Use the response formatter to send the success response
     res.apiSuccess({
@@ -23,19 +23,19 @@ self.getAll = async (req, res) => {
 };
 
 self.get = async (req, res) => {
-  getRecordById(StakeholderOwnerOrManager26AB, req, res);
+  getRecordById(RailwayPowerDistribution , req, res);
 };
 
 self.save = async (req, res) => {
-  saveRecord(StakeholderOwnerOrManager26AB, req, res);
+  saveRecord(RailwayPowerDistribution , req, res);
 };
 
 self.update = async (req, res) => {
-  updateRecord(StakeholderOwnerOrManager26AB, req, res);
+  updateRecord(RailwayPowerDistribution , req, res);
 };
 
 self.delete = async (req, res) => {
-  deleteRecord(StakeholderOwnerOrManager26AB, req, res);
+  deleteRecord(RailwayPowerDistribution , req, res);
 };
 
 module.exports = self;

@@ -22,7 +22,7 @@ module.exports = function (express) {
   route.delete("/documents/:id", DocumentController.delete);
   //summary
   route.get(
-    "/matrix/documents",
+    "/matrix/document",
     DocumentController.countAllDocumentWithDocumentType
   );
   return route;

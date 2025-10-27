@@ -215,6 +215,22 @@ const RailwayStationPlatformPassengerFlowAndCapacityController = require("../../
 const RailwayStationPlatformEnvironmentalAndOtherFactorController = require("../../../controllers/projects/RailwayStationPlatformEnvironmentalAndOtherFactorController.js");
 const RailwayPowerSupplyConfigurationController = require("../../../controllers/projects/RailwayPowerSupplyConfigurationController.js");
 
+const RailwayPowerSubstationsAndEquipmentController = require("../../../controllers/projects/RailwayPowerSubstationsAndEquipmentController.js");
+const RailwayPowerDistributionController = require("../../../controllers/projects/RailwayPowerDistributionController.js");
+const RailwayPowerSupplyMaintenanceAndTestingController = require("../../../controllers/projects/RailwayPowerSupplyMaintenanceAndTestingController.js");
+
+
+const RailwayPowerSupplySafetyAndComplianceController = require("../../../controllers/projects/RailwayPowerSupplySafetyAndComplianceController.js");
+const RailwayPowerSupplyEnvironmentalAndOtherFactorController = require("../../../controllers/projects/RailwayPowerSupplyEnvironmentalAndOtherFactorController.js");
+
+const RailwayMaintenanceFacilityTypeAndPurposeController = require("../../../controllers/projects/RailwayMaintenanceFacilityTypeAndPurposeController.js");
+const RailwayMaintenanceFacilityLayoutAndDesignController = require("../../../controllers/projects/RailwayMaintenanceFacilityLayoutAndDesignController.js");
+const RailwayMaintenanceFacilityEquipmentAndToolController = require("../../../controllers/projects/RailwayMaintenanceFacilityEquipmentAndToolController.js");
+const RailwayMaintenanceFacilityInfrastructureAndUtilityController = require("../../../controllers/projects/RailwayMaintenanceFacilityInfrastructureAndUtilityController.js");
+const RailwayMaintenanceWorkforceAndFacilityStaffController = require("../../../controllers/projects/RailwayMaintenanceWorkforceAndFacilityStaffController.js");
+const RailwayMaintenanceFacilityScheduleAndProcedureController = require("../../../controllers/projects/RailwayMaintenanceFacilityScheduleAndProcedureController.js");
+const RailwayMaintenanceFacilityAndSecurityController = require("../../../controllers/projects/RailwayMaintenanceFacilityAndSecurityController.js");
+const RailwayMaintenanceEnvironmentalAndOtherFactorController = require("../../../controllers/projects/RailwayMaintenanceEnvironmentalAndOtherFactorController.js");
 
 const validateData = require("../../../middleware/validate/module/project/validate");
 
@@ -1000,10 +1016,10 @@ module.exports = function (express) {
 
   //summary
   route.get(
-    "/matrix/projects",
+    "/matrix/project",
     ProjectController.countAllProjectWithProjectType
   );
-  route.get(
+  route.get(  
     "/count/project/projectcategories",
     ProjectController.countAllProjectWithProjectCategory
   );
@@ -2568,6 +2584,98 @@ route.delete("/railway-track-safeties/:id", RailwayTrackSafetyController.delete)
   route.post("/railway-power-supply-configurations", validateData.railwayPowerSupplyConfigurationValidate, RailwayPowerSupplyConfigurationController.save);
   route.put("/railway-power-supply-configurations/:id", validateData.railwayPowerSupplyConfigurationValidate, RailwayPowerSupplyConfigurationController.update);
   route.delete("/railway-power-supply-configurations/:id", RailwayPowerSupplyConfigurationController.delete);
+
+  route.get("/railway-power-substations-and-equipments", RailwayPowerSubstationsAndEquipmentController.getAll);
+  route.get("/railway-power-substations-and-equipments/:id", RailwayPowerSubstationsAndEquipmentController.get);
+  route.post("/railway-power-substations-and-equipments", validateData.railwayPowerSubstationsAndEquipmentValidate, RailwayPowerSubstationsAndEquipmentController.save);
+  route.put("/railway-power-substations-and-equipments/:id", validateData.railwayPowerSubstationsAndEquipmentValidate, RailwayPowerSubstationsAndEquipmentController.update);
+  route.delete("/railway-power-substations-and-equipments/:id", RailwayPowerSubstationsAndEquipmentController.delete);
+  
+
+  route.get("/railway-power-distributions", RailwayPowerDistributionController.getAll);
+  route.get("/railway-power-distributions/:id", RailwayPowerDistributionController.get);
+  route.post("/railway-power-distributions", validateData.railwayPowerDistributionValidate, RailwayPowerDistributionController.save);
+  route.put("/railway-power-distributions/:id", validateData.railwayPowerDistributionValidate, RailwayPowerDistributionController.update);
+  route.delete("/railway-power-distributions/:id", RailwayPowerDistributionController.delete);
+
+  
+  route.get("/railway-power-supply-maintenance-and-testings", RailwayPowerSupplyMaintenanceAndTestingController.getAll);
+  route.get("/railway-power-supply-maintenance-and-testings/:id", RailwayPowerSupplyMaintenanceAndTestingController.get);
+  route.post("/railway-power-supply-maintenance-and-testings", validateData.railwayPowerSupplyMaintenanceAndTestingValidate, RailwayPowerSupplyMaintenanceAndTestingController.save);
+  route.put("/railway-power-supply-maintenance-and-testings/:id", validateData.railwayPowerSupplyMaintenanceAndTestingValidate, RailwayPowerSupplyMaintenanceAndTestingController.update);
+  route.delete("/railway-power-supply-maintenance-and-testings/:id", RailwayPowerSupplyMaintenanceAndTestingController.delete);
+  
+  route.get("/railway-power-supply-safety-and-compliances", RailwayPowerSupplySafetyAndComplianceController.getAll);
+  route.get("/railway-power-supply-safety-and-compliances/:id", RailwayPowerSupplySafetyAndComplianceController.get);
+  route.post("/railway-power-supply-safety-and-compliances", validateData.railwayPowerSupplySafetyAndComplianceValidate, RailwayPowerSupplySafetyAndComplianceController.save);
+  route.put("/railway-power-supply-safety-and-compliances/:id", validateData.railwayPowerSupplySafetyAndComplianceValidate, RailwayPowerSupplySafetyAndComplianceController.update);
+  route.delete("/railway-power-supply-safety-and-compliances/:id", RailwayPowerSupplySafetyAndComplianceController.delete);
+
+  route.get("/railway-power-supply-environmental-and-other-factors", RailwayPowerSupplyEnvironmentalAndOtherFactorController.getAll);
+  route.get("/railway-power-supply-environmental-and-other-factors/:id", RailwayPowerSupplyEnvironmentalAndOtherFactorController.get);
+  route.post("/railway-power-supply-environmental-and-other-factors", validateData.railwayPowerSupplyEnvironmentalAndOtherFactorValidate, RailwayPowerSupplyEnvironmentalAndOtherFactorController.save);
+  route.put("/railway-power-supply-environmental-and-other-factors/:id", validateData.railwayPowerSupplyEnvironmentalAndOtherFactorValidate, RailwayPowerSupplyEnvironmentalAndOtherFactorController.update);
+  route.delete("/railway-power-supply-environmental-and-other-factors/:id", RailwayPowerSupplyEnvironmentalAndOtherFactorController.delete);
+
+  // RailwayMaintenanceFacilityTypeAndPurpose routes with validation
+  route.get("/railway-maintenance-facility-type-and-purposes", RailwayMaintenanceFacilityTypeAndPurposeController.getAll);
+  route.get("/railway-maintenance-facility-type-and-purposes/:id", RailwayMaintenanceFacilityTypeAndPurposeController.get);
+  route.post("/railway-maintenance-facility-type-and-purposes", validateData.railwayMaintenanceFacilityTypeAndPurposeValidate, RailwayMaintenanceFacilityTypeAndPurposeController.save);
+  route.put("/railway-maintenance-facility-type-and-purposes/:id", validateData.railwayMaintenanceFacilityTypeAndPurposeValidate, RailwayMaintenanceFacilityTypeAndPurposeController.update);
+  route.delete("/railway-maintenance-facility-type-and-purposes/:id", RailwayMaintenanceFacilityTypeAndPurposeController.delete);
+
+  // RailwayMaintenanceFacilityLayoutAndDesign routes with validation
+  route.get("/railway-maintenance-facility-layout-and-designs", RailwayMaintenanceFacilityLayoutAndDesignController.getAll);
+  route.get("/railway-maintenance-facility-layout-and-designs/:id", RailwayMaintenanceFacilityLayoutAndDesignController.get);
+  route.post("/railway-maintenance-facility-layout-and-designs", validateData.railwayMaintenanceFacilityLayoutAndDesignValidate, RailwayMaintenanceFacilityLayoutAndDesignController.save);
+  route.put("/railway-maintenance-facility-layout-and-designs/:id", validateData.railwayMaintenanceFacilityLayoutAndDesignValidate, RailwayMaintenanceFacilityLayoutAndDesignController.update);
+  route.delete("/railway-maintenance-facility-layout-and-designs/:id", RailwayMaintenanceFacilityLayoutAndDesignController.delete);
+
+
+  // RailwayMaintenanceFacilityEquipmentAndTool routes with validation
+  route.get("/railway-maintenance-facility-equipment-and-tools", RailwayMaintenanceFacilityEquipmentAndToolController.getAll);
+  route.get("/railway-maintenance-facility-equipment-and-tools/:id", RailwayMaintenanceFacilityEquipmentAndToolController.get);
+  route.post("/railway-maintenance-facility-equipment-and-tools", validateData.railwayMaintenanceFacilityEquipmentAndToolValidate, RailwayMaintenanceFacilityEquipmentAndToolController.save);
+  route.put("/railway-maintenance-facility-equipment-and-tools/:id", validateData.railwayMaintenanceFacilityEquipmentAndToolValidate, RailwayMaintenanceFacilityEquipmentAndToolController.update);
+  route.delete("/railway-maintenance-facility-equipment-and-tools/:id", RailwayMaintenanceFacilityEquipmentAndToolController.delete);
+
+
+  // RailwayMaintenanceFacilityInfrastructureAndUtility routes with validation
+  route.get("/railway-maintenance-facility-infrastructure-and-utilities", RailwayMaintenanceFacilityInfrastructureAndUtilityController.getAll);
+  route.get("/railway-maintenance-facility-infrastructure-and-utilities/:id", RailwayMaintenanceFacilityInfrastructureAndUtilityController.get);
+  route.post("/railway-maintenance-facility-infrastructure-and-utilities", validateData.railwayMaintenanceFacilityInfrastructureAndUtilityValidate, RailwayMaintenanceFacilityInfrastructureAndUtilityController.save);
+  route.put("/railway-maintenance-facility-infrastructure-and-utilities/:id", validateData.railwayMaintenanceFacilityInfrastructureAndUtilityValidate, RailwayMaintenanceFacilityInfrastructureAndUtilityController.update);
+  route.delete("/railway-maintenance-facility-infrastructure-and-utilities/:id", RailwayMaintenanceFacilityInfrastructureAndUtilityController.delete);
+
+
+  // RailwayMaintenanceWorkforceAndFacilityStaff routes with validation
+  route.get("/railway-maintenance-workforce-and-facility-staffs", RailwayMaintenanceWorkforceAndFacilityStaffController.getAll);
+  route.get("/railway-maintenance-workforce-and-facility-staffs/:id", RailwayMaintenanceWorkforceAndFacilityStaffController.get);
+  route.post("/railway-maintenance-workforce-and-facility-staffs", validateData.railwayMaintenanceWorkforceAndFacilityStaffValidate, RailwayMaintenanceWorkforceAndFacilityStaffController.save);
+  route.put("/railway-maintenance-workforce-and-facility-staffs/:id", validateData.railwayMaintenanceWorkforceAndFacilityStaffValidate, RailwayMaintenanceWorkforceAndFacilityStaffController.update);
+  route.delete("/railway-maintenance-workforce-and-facility-staffs/:id", RailwayMaintenanceWorkforceAndFacilityStaffController.delete);
+
+  // RailwayMaintenanceFacilityScheduleAndProcedure routes with validation
+  route.get("/railway-maintenance-facility-schedule-and-procedures", RailwayMaintenanceFacilityScheduleAndProcedureController.getAll);
+  route.get("/railway-maintenance-facility-schedule-and-procedures/:id", RailwayMaintenanceFacilityScheduleAndProcedureController.get);
+  route.post("/railway-maintenance-facility-schedule-and-procedures", validateData.railwayMaintenanceFacilityScheduleAndProcedureValidate, RailwayMaintenanceFacilityScheduleAndProcedureController.save);
+  route.put("/railway-maintenance-facility-schedule-and-procedures/:id", validateData.railwayMaintenanceFacilityScheduleAndProcedureValidate, RailwayMaintenanceFacilityScheduleAndProcedureController.update);
+  route.delete("/railway-maintenance-facility-schedule-and-procedures/:id", RailwayMaintenanceFacilityScheduleAndProcedureController.delete);
+  
+  // RailwayMaintenanceFacilityAndSecurity routes with validation
+  route.get("/railway-maintenance-facility-and-securities", RailwayMaintenanceFacilityAndSecurityController.getAll);
+  route.get("/railway-maintenance-facility-and-securities/:id", RailwayMaintenanceFacilityAndSecurityController.get);
+  route.post("/railway-maintenance-facility-and-securities", validateData.railwayMaintenanceFacilityAndSecurityValidate, RailwayMaintenanceFacilityAndSecurityController.save);
+  route.put("/railway-maintenance-facility-and-securities/:id", validateData.railwayMaintenanceFacilityAndSecurityValidate, RailwayMaintenanceFacilityAndSecurityController.update);
+  route.delete("/railway-maintenance-facility-and-securities/:id", RailwayMaintenanceFacilityAndSecurityController.delete);
+
+  // RailwayMaintenanceEnvironmentalAndOtherFactor routes with validation
+  route.get("/railway-maintenance-environmental-and-other-factors", RailwayMaintenanceEnvironmentalAndOtherFactorController.getAll);
+  route.get("/railway-maintenance-environmental-and-other-factors/:id", RailwayMaintenanceEnvironmentalAndOtherFactorController.get);
+  route.post("/railway-maintenance-environmental-and-other-factors", validateData.railwayMaintenanceEnvironmentalAndOtherFactorValidate, RailwayMaintenanceEnvironmentalAndOtherFactorController.save);
+  route.put("/railway-maintenance-environmental-and-other-factors/:id", validateData.railwayMaintenanceEnvironmentalAndOtherFactorValidate, RailwayMaintenanceEnvironmentalAndOtherFactorController.update);
+  route.delete("/railway-maintenance-environmental-and-other-factors/:id", RailwayMaintenanceEnvironmentalAndOtherFactorController.delete);
+
 
   return route;
 

@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class StakeholderOwnerOrManager26AB extends Model {
+  class StakeholderOwnerOrManager extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  StakeholderOwnerOrManager26AB.init({
+  StakeholderOwnerOrManager.init({
     id: {
         type: DataTypes.UUID,
         primaryKey: true,
@@ -69,8 +69,8 @@ module.exports = (sequelize, DataTypes) => {
       createdAt: "created_at",
       updatedAt: "updated_at" ,     
       sequelize,
-      modelName: 'StakeholderOwnerOrManager26AB',
-      tableName: 'StakeholderOwnerOrManager26ABs',
+      modelName: 'StakeholderOwnerOrManager',
+      tableName: 'StakeholderOwnerOrManagers',
   });
-  return StakeholderOwnerOrManager26AB;
+  return StakeholderOwnerOrManager;
 };

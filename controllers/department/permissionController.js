@@ -1451,19 +1451,21 @@ let department = [
 ];
 
 for (let m of department) { 
-      let per = await Permission.findOne({
+      let per = await Permission.findAll({
         where: {
           model: m
         }
       });
 
-      if(per){
-        per.module = "department";
-        per.type = "DEPARTMENT";
-        await per.save()
-      } 
-    }
+      if(per.length > 0){
+        for(let p of per){
+          p.module = "department";
+          p.type = "CENTER";
+          await p.save()
+        }
 
+      }
+    }
 
 
     let masterdata = [
@@ -1527,6 +1529,27 @@ for (let m of department) {
           "risklevel",
           "incidenttype",
           "incidenttime",
+    ];
+    
+    for (let m of masterdata) { 
+      let per = await Permission.findAll({
+        where: {
+          model: m
+        }
+      });
+
+      if(per.length > 0){
+        for(let p of per){
+          p.module = "masterdata";
+          p.type = "MASTERDATA";
+          await p.save()
+        }
+
+      }
+      
+    }
+
+    let general = [
           "projectmasterdata",
           "constructionresourcetype",
           "constructionresourcecategory",
@@ -1541,18 +1564,23 @@ for (let m of department) {
           "resourcemasterdata",
           "addressmasterdata"
       ];
-for (let m of masterdata) { 
-      let per = await Permission.findOne({
+
+     for (let m of general) { 
+      let per = await Permission.findAll({
         where: {
           model: m
         }
       });
 
-      if(per){
-        per.module = "masterdata";
-        per.type = "MASTERDATA";
-        await per.save()
-      } 
+      if(per.length > 0){
+        for(let p of per){
+          p.module = "masterdata";
+          p.type = "GENERAL";
+          await p.save()
+        }
+
+      }
+      
     }
     
     //resource raleted models
@@ -1575,17 +1603,22 @@ for (let m of masterdata) {
 
 
 for (let m of resource) { 
-      let per = await Permission.findOne({
+      let per = await Permission.findAll({
         where: {
           model: m
         }
       });
 
-      if(per){
-        per.module = "resource"
-        per.type = "RESOURCE"
-        await per.save()
-      } 
+      if(per.length > 0){
+        for(let p of per){
+          p.module = "resource";
+          p.type = "RESOURCE";
+          await p.save()
+        }
+
+      }
+
+     
     }
 
     // stakeholder related models
@@ -1627,20 +1660,25 @@ for (let m of resource) {
 ];
 
 for (let m of stakeholder) { 
-      let per = await Permission.findOne({
+      let per = await Permission.findAll({
         where: {
           model: m
         }
       });
 
-      if(per){
-        per.module = "stakeholder";
-        per.type = "CONTRACTOR";
-        await per.save()
-      } 
+      if(per.length > 0){
+        for(let p of per){
+          p.module = "stakeholder";
+          p.type = "CONTRACTOR";
+          await p.save()
+        }
+
+      }
+      
+      
     }
 
-    return res.json("success")
+    
 
     // to classify model to type
     // the type will be used to group permissions
@@ -1698,7 +1736,7 @@ for (let m of stakeholder) {
   "projecttime": "BUILDING",
   "projectbond": "BUILDING",
   "payment": "BUILDING",
-  "projectoutcome45c3": "BUILDING",
+  "projectoutcome": "BUILDING",
   "projectadditionalinfo48a1": "BUILDING",
   "projectmanager65a1": "BUILDING",
   "projectcontactperson": "BUILDING",
@@ -1834,16 +1872,22 @@ for (const model in modelTypeMap) {
   // Get the value (type) associated with the current key (model)
   const type = modelTypeMap[model];
   
-  let per = await Permission.findOne({
+  let per = await Permission.findAll({
     where: {
       model: model
     }
   });
 
-  if(per){
-    per.type = type
-    await per.save()
-  } 
+  if(per.length > 0){
+        for(let p of per){
+          p.module = "project";
+          p.type = type;
+          await p.save()
+        }
+
+      }
+  
+  
 }
 
 return res.json("done");

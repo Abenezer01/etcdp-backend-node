@@ -1,4 +1,4 @@
-const { StakeholderAddress26A3 , Sequelize } = require("../../models");
+const { StakeholderAddress , Sequelize } = require("../../models");
 const Op = Sequelize.Op;
 const dotenv = require("dotenv");
 dotenv.config();
@@ -9,7 +9,7 @@ let self = {};
 
 self.getAll = async (req, res) => {
   try {
-    const paginatedResult = await paginationHelper(StakeholderAddress26A3, req);
+    const paginatedResult = await paginationHelper(StakeholderAddress, req);
 
     // Use the response formatter to send the success response
     res.apiSuccess({
@@ -23,19 +23,19 @@ self.getAll = async (req, res) => {
 };
 
 self.get = async (req, res) => {
-  getRecordById(StakeholderAddress26A3, req, res);
+  getRecordById(StakeholderAddress, req, res);
 };
 
 self.save = async (req, res) => {
-  saveRecord(StakeholderAddress26A3, req, res);
+  saveRecord(StakeholderAddress, req, res);
 };
 
 self.update = async (req, res) => {
-  updateRecord(StakeholderAddress26A3, req, res);
+  updateRecord(StakeholderAddress, req, res);
 };
 
 self.delete = async (req, res) => {
-  deleteRecord(StakeholderAddress26A3, req, res);
+  deleteRecord(StakeholderAddress, req, res);
 };
 
 module.exports = self;

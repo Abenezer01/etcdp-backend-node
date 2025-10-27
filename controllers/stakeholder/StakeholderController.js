@@ -9,6 +9,8 @@ const {
     Ownership,
     BusinessField,
     OperationLocation,
+    Project,
+    ProjectStakeholder,
     sequelize,
     Sequelize,
 } = require("./../../models");
@@ -250,7 +252,7 @@ self.countAllStakeholderWithStakeType = async (req, res) => {
       type: sequelize.QueryTypes.SELECT,
     });
     let querySubCategoryString =
-      "SELECT stakesubcategories.id AS id,stakesubcategories.title AS name,stakesubcategories.stakeholdercategory_id AS category_id, COALESCE(COUNT(stakeholders.id), 0) AS total FROM stakesubcategories LEFT JOIN stakeholders ON stakesubcategories.id = stakeholders.stakesubcategory_id GROUP BY stakesubcategories.title,category_id,id;";
+      "SELECT stakesubcategories.id AS id,stakesubcategories.title AS name,stakesubcategories.stakeholdercategory_id AS category_id, COALESCE(COUNT(stakeholders.id), 0) AS total FROM stakesubcategories LEFT JOIN stakeholders ON stakesubcategories.id = stakeholders.stakeholdersubcategory_id GROUP BY stakesubcategories.title,category_id,id;";
     let stakeholderSubCategoryData = await sequelize.query(
       querySubCategoryString,
       {
@@ -372,5 +374,33 @@ self.getStakeholderData = async(req, res) => {
     res.apiError(error);
   }
 };
+
+self.getStakeholderProjects = async(req, res) => {
+
+    let {id} = req.params;
+
+    try {
+        let data = await Project.findAll({
+            include: [{
+                model: ProjectStakeholder,
+                as: 'projectstakeholders',
+                where: { stakeholder_id: id },
+                attributes: [] // We don't need attributes from the join table itself
+            }],
+            // If you only want projects directly associated with the stakeholder,
+            // and not projects that might have other stakeholderprojects entries,
+            // you might need to adjust the include or add a distinct clause.
+            // For a simple join, this should work.
+        });
+
+
+        res.apiSuccess({
+          data: data
+        });
+
+  } catch (error) {
+    res.apiError(error);
+  }
+}
       
 module.exports = self;

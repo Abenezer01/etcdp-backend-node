@@ -10,7 +10,7 @@ module.exports = {
         p.department_id,
 
         -- Financials (from projectfinances)
-        pf.original_contract_amount,
+        pf.main_contract_price_amount,
 
         -- Time (from projecttimes)
         pt.original_contract_duration,
@@ -37,7 +37,7 @@ module.exports = {
 
       GROUP BY 
         p.id, p.name, p.department_id,
-        pf.original_contract_amount,
+        pf.main_contract_price_amount,
         pt.original_contract_duration,
         p.created_at, p.updated_at;
     `);

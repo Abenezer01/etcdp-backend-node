@@ -16,8 +16,8 @@ const StakeholderServiceController = require("../../../controllers/stakeholder/S
 const OperationlocationController = require("../../../controllers/stakeholder/OperationlocationController");
 const StakeholderEmailController = require("../../../controllers/stakeholder/StakeholderEmailController");
 const StakeholderPhoneController = require("../../../controllers/stakeholder/StakeholderPhoneController");
-const StakeholderOwnerOrManager26ABController = require("../../../controllers/stakeholder/StakeholderOwnerOrManager26ABController");
-const StakeholderAddress26A3Controller = require("../../../controllers/stakeholder/StakeholderAddress26A3Controller");
+const StakeholderOwnerOrManagerController = require("../../../controllers/stakeholder/StakeholderOwnerOrManagerController");
+const StakeholderAddressController = require("../../../controllers/stakeholder/StakeholderAddressController");
 
 const JointVentureController = require("../../../controllers/stakeholder/JointVentureController");
 const JointVentureCompanyController = require("../../../controllers/stakeholder/JointVentureCompanyController");
@@ -39,6 +39,8 @@ const StakeholderEmployeeController = require("../../../controllers/stakeholder/
 const UpgradeController = require("../../../controllers/stakeholder/UpgradeController.js");
 const VehicleController = require("../../../controllers/stakeholder/VehicleController.js");
 const LicenseController = require("../../../controllers/stakeholder/LicenseController.js");
+
+const StakeholderDocumentController = require("../../../controllers/stakeholder/StakeholderDocumentController.js");
 
 const validateData = require("../../../middleware/validate/module/stakeholder/validate");
 
@@ -86,6 +88,7 @@ module.exports = function (express) {
   route.delete("/stakeholders/:id", StakeholderController.delete);
   route.get("/general-infos/:id", StakeholderController.getStakeholderData);
 
+  route.get("/stakeholder-projects/:id", StakeholderController.getStakeholderProjects);
   //stakeholder contact person
   route.get(
     "/stakeholder-contact-people",
@@ -447,27 +450,27 @@ module.exports = function (express) {
   route.delete("/stakeholder-phones/:id", StakeholderPhoneController.delete);
 
   // stakeholder managers routes with validation
-  route.get("/stakeholder-managers", StakeholderOwnerOrManager26ABController.getAll);
-  route.get("/stakeholder-managers/:id", StakeholderOwnerOrManager26ABController.get);
-  route.post("/stakeholder-managers", validateData.stakeholderManagerValidate, StakeholderOwnerOrManager26ABController.save);
+  route.get("/stakeholder-managers", StakeholderOwnerOrManagerController.getAll);
+  route.get("/stakeholder-managers/:id", StakeholderOwnerOrManagerController.get);
+  route.post("/stakeholder-managers", validateData.stakeholderManagerValidate, StakeholderOwnerOrManagerController.save);
   route.put(
     "/stakeholder-managers/:id",
     validateData.stakeholderManagerValidate,
-    StakeholderOwnerOrManager26ABController.update
+    StakeholderOwnerOrManagerController.update
   );
-  route.delete("/stakeholder-managers/:id", StakeholderOwnerOrManager26ABController.delete);
+  route.delete("/stakeholder-managers/:id", StakeholderOwnerOrManagerController.delete);
   
 
     // stakeholder addresses routes with validation
-    route.get("/stakeholder-addresses", StakeholderAddress26A3Controller.getAll);
-    route.get("/stakeholder-addresses/:id", StakeholderAddress26A3Controller.get);
-    route.post("/stakeholder-addresses", validateData.stakeholderManagerValidate, StakeholderAddress26A3Controller.save);
+    route.get("/stakeholder-addresses", StakeholderAddressController.getAll);
+    route.get("/stakeholder-addresses/:id", StakeholderAddressController.get);
+    route.post("/stakeholder-addresses", validateData.stakeholderManagerValidate, StakeholderAddressController.save);
     route.put(
       "/stakeholder-addresses/:id",
       validateData.stakeholderManagerValidate,
-      StakeholderAddress26A3Controller.update
+      StakeholderAddressController.update
     );
-    route.delete("/stakeholder-addresses/:id", StakeholderAddress26A3Controller.delete);
+    route.delete("/stakeholder-addresses/:id", StakeholderAddressController.delete);
     
   
     // joint venture routes with validation
@@ -615,6 +618,13 @@ module.exports = function (express) {
     route.post("/stakeholder-employees", StakeholderEmployeeController.save);
     route.put("/stakeholder-employees/:id", StakeholderEmployeeController.update);
     route.delete("/stakeholder-employees/:id", StakeholderEmployeeController.delete);
+
+    // stakeholder document routes with validation
+    route.get("/stakeholder-documents", StakeholderDocumentController.getAll);
+    route.get("/stakeholder-documents/:id", StakeholderDocumentController.get);
+    route.post("/stakeholder-documents", validateData.stakeholderDocumentValidate, StakeholderDocumentController.save);
+    route.put("/stakeholder-documents/:id", validateData.stakeholderDocumentValidate, StakeholderDocumentController.update);
+    route.delete("/stakeholder-documents/:id", StakeholderDocumentController.delete);
     return route;
 
 };
