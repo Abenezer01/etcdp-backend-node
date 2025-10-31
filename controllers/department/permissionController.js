@@ -7,6 +7,7 @@ const { getRecordById, saveRecord, updateRecord, deleteRecord } = require("../ut
 const Op = Sequelize.Op;
 const master = require("../../config/master");
 const { parseParams } = require("../../utils/request/param-hanlder");
+const { where } = require("sequelize");
 
 let self = {};
 
@@ -1434,155 +1435,94 @@ self.test = async (req, res) => {
 //   "pumpingsystemanddrainage",
 //   "watertreatment"
 // ];
-
     
-let department = [
-  "user",
-  "role",
-  "permission",
-  "position",
-  "department",
-  "educationstatus",
-  "child",
-  "familystatus",
-  "contactperson",
-  "jobexperience",
-  "activitylog"
-];
+let department = {
+  "user": "USER",
+  "educationstatus":"USER",
+  "child":"USER",
+  "familystatus": "USER",
+  "contactperson": "USER",
+  "jobexperience": "USER",
+  "activitylog": "USER",
+  "role" : "ROLE",
+  "permission": "ROLE",
+  "position": "POSITION",
+  "department": "DEPARTMENT"
+};
 
-for (let m of department) { 
-      let per = await Permission.findAll({
-        where: {
-          model: m
-        }
-      });
 
-      if(per.length > 0){
-        for(let p of per){
-          p.module = "department";
-          p.type = "CENTER";
-          await p.save()
-        }
-
-      }
+for (const model in department) {
+  // Get the value (type) associated with the current key (model)
+  const type = department[model];
+  
+  let per = await Permission.findAll({
+    where: {
+      model: model
     }
+  });
 
 
-    let masterdata = [
-          "ownershiptype",
-          "studylevel",
-          "businessfield",
-          "studyprogram",
-          "studyfield",
-          "agelevel",
-          "workexperience",
-          "status",
-          "stakeholdercategory",
-          "stakeholdersubcategory",
-          "stakeholdertype",
-          "projecttype",
-          "projectcategory",
-          "projectsubcategory",
-          "functionalclassification",
-          "designclassification",
-          "designstandard",
-          "designtrafficflow",
-          "surfacetype",
-          "crosssectiontype",
-          "intersectiontype",
-          "drivewayaccesspoint",
-          "pedestrianfacility",
-          "roadlengthtype",
-          "areatopography",
-          "piertype",
-          "abutmenttype",
-          "endwalltypeinlet",
-          "endwalltypeoutlet",
-          "pavedwaterwaytype",
-          "soiltype",
-          "guardrailtype",
-          "bridgestructuretype",
-          "spansupporttype",
-          "deckslabtype",
-          "expansionjointtype",
-          "bridgepartdefect",
-          "damagetype",
-          "damagecondition",
-          "hydrologydefect",
-          "roadsafetyfeature",
-          "counttype",
-          "projectphase",
-          "inspectiontype",
-          "currentcondition",
-          "groundwaterimpact",
-          "slopestability",
-          "maintenancefrequency",
-          "maintenancetype",
-          "drainagetype",
-          "drainagecondition",
-          "assessmentcondition",
-          "severitylevel",
-          "suggestedrepair",
-          "recommendedactionurgency",
-          "hazardtype",
-          "potentialimpact",
-          "risklevel",
-          "incidenttype",
-          "incidenttime",
-    ];
-    
-    for (let m of masterdata) { 
-      let per = await Permission.findAll({
-        where: {
-          model: m
-        }
-      });
 
-      if(per.length > 0){
+  if(per.length > 0){
         for(let p of per){
-          p.module = "masterdata";
-          p.type = "MASTERDATA";
+          p.module = "center";
+          p.type = type;
           await p.save()
         }
 
       }
+}
+
+
+
+
+    let masterdata = {
+          
+          "stakeholdercategory": "STAKEHOLDER",
+          "stakeholdersubcategory": "STAKEHOLDER",
+          "stakeholdertype": "STAKEHOLDER",
+          "projecttype": "PROJECT",
+          "projectcategory": "PROJECT",
+          "projectsubcategory": "PROJECT",
+          "resourcetype" : "RESOURCE",
+          "resourcecategory" : "RESOURCE",
+          "resourcesubcategory" : "RESOURCE",
+          "documenttype": "DOCUMENT",
+          "documentcategory": "DOCUMENT",
+          "documentsubcategory": "DOCUMENT",
+          "moduletype": "INFRASTRUCTURE",
+          "infrastructurecategory" : "INFRASTRUCTURE",
+          "infrastructuresubcategory": "INFRASTRUCTURE",
+          "projectmasterdata": "GENERAL",
+          "resourcemasterdata": "GENERAL",
+          "stakeholdermasterdata": "GENERAL"
+        
+    };
+
+
+    for (const model in masterdata) {
+      // Get the value (type) associated with the current key (model)
+      const type = masterdata[model];
       
-    }
-
-    let general = [
-          "projectmasterdata",
-          "constructionresourcetype",
-          "constructionresourcecategory",
-          "constructionresourcesubcategory",
-          "documenttype",
-          "documentcategory",
-          "documentsubcategory",
-          "constructionrelatedservice",
-          "moduletype",
-          "infrastructurecategory",
-          "infrastructuresubcategory",
-          "resourcemasterdata",
-          "addressmasterdata"
-      ];
-
-     for (let m of general) { 
       let per = await Permission.findAll({
         where: {
-          model: m
+          model: model
         }
       });
 
-      if(per.length > 0){
-        for(let p of per){
-          p.module = "masterdata";
-          p.type = "GENERAL";
-          await p.save()
-        }
 
-      }
-      
+
+      if(per.length > 0){
+            for(let p of per){
+              p.module = "masterdata";
+              p.type = type;
+              await p.save()
+            }
+
+          }
     }
-    
+
+ return res.json("done")
     //resource raleted models
    let resource =  [
   "resource",
