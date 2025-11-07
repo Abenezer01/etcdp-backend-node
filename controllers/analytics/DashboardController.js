@@ -4,6 +4,7 @@ const {
     Project, 
     ProjectType, 
     ProjectCategory, 
+    ProjectSubCategory,
     Document, 
     DocumentType, 
     Resource, 
@@ -23,12 +24,15 @@ const usrData = require("../../utils/userDataFromToken");
 const { mainanalysismodules } = require("../../config/master");
 const apiHelper = require("../utils/API-helper");
 const departmentHelper = require("../utils/department-helper");
+const { parseParams } = require("../../utils/request/param-hanlder");
 
 const Op = Sequelize.Op;
 
 const moment = require("moment");
+const { where } = require("sequelize");
 
 let self = {};
+
 
 self.getGeneralAnalysis = async(req, res) => {
     try {
@@ -167,7 +171,7 @@ self.getGeneralAnalysisCategory = async(req, res) => {
     }
 };
 
-self.getGeneralAnalysisDepartments = async(req, res) => {
+self.getDepartmentDistributionPerType = async(req, res) => {
     let module = req.params.module;
     let id = req.params.id;
 
@@ -283,49 +287,97 @@ self.getAllChildren = async(arr) => {
     return children;
 };
 
-self.getChildren = async(id) => {
+self.getChildren = async (id) => {
     try {
+        // 1. Get the parent department
         let parent = await Department.findOne({
-            where: {
-                id: id,
-            },
+            where: { id: id },
         });
-        let data = await Department.findAll({
-            where: {
-                parent_department_id: id,
-            },
-        });
-        let all = await self.getAllChildren(data);
-        Array.prototype.push.apply(all, data);
-        all.unshift(parent);
 
-        return all;
+        if (!parent) {
+            // Handle case where parent department is not found
+            return []; 
+        }
+
+        // 2. Get the immediate children
+        let directChildren = await Department.findAll({
+            where: { parent_department_id: id },
+        });
+        
+        // 3. Initialize a brand NEW array with immediate children to accumulate ALL descendants.
+        // ✅ The crucial 'Always Start Fresh' array!
+        let allDepartments = [...directChildren]; 
+        
+        // 4. Start the recursive search. This helper will FILL the 'allDepartments' array.
+        //    (You must define the helper function below!)
+        await self._findAllChildrenRecursive(directChildren, allDepartments);
+        
+        // 5. Add the parent department to the very front of the final list
+        allDepartments.unshift(parent); 
+
+        // 6. Return the complete, fresh, non-accumulated list
+        return allDepartments;
+
     } catch (error) {
-        return {
-            message: error.message,
-        };
+        console.error('Error in getChildren:', error);
+        // Returning an array on error is safer than returning an object in this context
+        return []; 
     }
 };
 
-self.getGeneralAnalysisDepartmentsByCategory = async(req, res) => {
+// This helper should be defined near your other self methods.
+
+self._findAllChildrenRecursive = async (departmentsToProcess, accumulatedResults) => {
+    
+    // Iterate through the departments passed in (the current level)
+    for (const dept of departmentsToProcess) {
+        
+        // Find the next level of children
+        const directChildren = await Department.findAll({
+            where: {
+                parent_department_id: dept.id,
+            },
+        });
+        
+        // If children are found...
+        if (directChildren.length > 0) {
+            // ✅ Fix: Use the spread operator to push the new results directly into the fresh array
+            accumulatedResults.push(...directChildren);
+            
+            // Recurse on the new batch of children
+            await self._findAllChildrenRecursive(directChildren, accumulatedResults);
+        }
+    }
+};
+self.getDepartmentDistributionPerCategory = async(req, res) => {
     let module = req.params.module;
     let id = req.params.id;
-
     try {
         const moduleArr = mainanalysismodules[module];
-
         const Model = moduleArr[0];
         const CategoryModel = moduleArr[2];
         const SubCategoryModel = moduleArr[3];
         let usr = await usrData.userData(req, res);
 
         let departments = await self.getChildren(usr.departmentID);
-    
         let modulecategory = await eval(CategoryModel).findOne({
             where: {
                 id: id,
-            },
-        });
+            }
+        })
+
+        
+
+        // return res.json(modulecategory)
+        // // let modulecategory = await eval(CategoryModel).findOne({
+        // //     where: {
+        // //         projecttype_id: id,
+        // //     },
+        // // });
+
+        // return res.json(modulecategory)
+
+        
 
 
         const typeId = `${moduleArr[1]}_id`.toLowerCase();
@@ -845,7 +897,7 @@ self.getSubCategoriesByModuleCategoryId = async(req, res) => {
     }
 };
 
-self.getGeneralAnalysisSubCategoryDepartments = async (req, res) => {
+self.getDepartmentDistributionPerSubCategory = async (req, res) => {
 
     let {module, id} = req.params;
     try {
@@ -1038,22 +1090,44 @@ self.getProjectTypeFinancialInformation = async(req, res) => {
 
         let totalcontractamount = maincontractpricetotal + variation_total + supplement_total - omission_total;
         
-        return res.apiSuccess({
-            data: {
-                total_contract_amount: totalcontractamount,
-                main_contract: maincontractpricetotal,
-                supplement: supplement_total,
-                variation: variation_total,
-                omission: omission_total
+        // let data = {
+        //         total_contract_amount: totalcontractamount,
+        //         main_contract: maincontractpricetotal,
+        //         supplement: supplement_total,
+        //         variation: variation_total,
+        //         omission: omission_total
+        //     }
+            
+        let data = {
+            series:[{ data: [37, 76, 65, 41, 99, 53, 70, 40, 23, 56, 23, 67] }],
+            data :[
+            {
+                title: 'Main Contract',
+                stats: totalcontractamount
+            },
+            {
+                title: 'Supplement',
+                stats: supplement_total
+            },
+            {
+                title: 'Variation',
+                stats: variation_total
+            },
+            {
+                title: 'Omission',
+                stats: omission_total
             }
+        ]};
+
+        return res.apiSuccess({
+            data
         })
-    ;
     } catch (error) {
         res.apiError(error);
     }
 };
 
-self.getProjectTypeFinancialInformationDepartments = async(req, res) => {
+self.getProjectCategoryFinancialInformationDepartments = async(req, res) => {
     
     let id = req.params.id;
 
@@ -1095,7 +1169,6 @@ self.getProjectTypeFinancialInformationDepartments = async(req, res) => {
             const maincontractpricetotal  = 0 ;
             if(maincontractpriceamount.length > 0){
                 maincontractpriceamount.reduce((total, test) => total + test.main_contract_price_amount, 0);
-
             }
 
 
@@ -1149,7 +1222,7 @@ self.getProjectTypeFinancialInformationDepartments = async(req, res) => {
 
         return res.apiSuccess({
             data: {
-                data: seriesArr,
+                series: seriesArr,
                 departments: [...new Set(departments.map((item) => item.name))].filter(
                     (n) => n
                 ),
@@ -1161,6 +1234,486 @@ self.getProjectTypeFinancialInformationDepartments = async(req, res) => {
     }
 };
 
+
+self.getProjectTypeOrCategoryDepartmentStatus = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const { type, entity } = req.query; 
+    // expected values:
+    // ?type=plan|report
+    // ?entity=category|type
+
+    const usr = await usrData.userData(req, res);
+
+    if (!['plan', 'report'].includes(type)) {
+      return res.apiError('Invalid type. Use ?type=plan or ?type=report');
+    }
+
+    if (!['category', 'type'].includes(entity)) {
+      return res.apiError('Invalid entity. Use ?entity=category or ?entity=type');
+    }
+
+    // ✅ Always start fresh
+    const departments = await self.getChildren(usr.departmentID);
+
+    // ✅ Choose model dynamically (ProjectCategory or ProjectType)
+    const EntityModel = entity === 'type' ? ProjectType : ProjectCategory;
+    const entityField =
+      entity === 'type' ? 'projecttype_id' : 'projectcategory_id';
+
+    // ✅ Validate entity existence
+    const moduleEntity = await EntityModel.findOne({ where: { id } });
+    if (!moduleEntity) {
+      return res.apiError(`${entity} not found`);
+    }
+
+    // ✅ Fetch related projects
+    const projects = await Project.findAll({
+      where: { [entityField]: moduleEntity.id },
+      attributes: ['id', 'department_id']
+    });
+
+    // ✅ Choose DataModel dynamically
+    const DataModel = type === 'plan' ? ProjectPlan : ProjectReport;
+
+    // ✅ Prepare results (fresh every call)
+    const departmentResults = await Promise.all(
+      departments.map(async (dept) => {
+        // Filter projects per department
+        const departmentProjects = projects.filter(p => p.department_id === dept.id);
+        const projectIds = departmentProjects.map(p => p.id);
+
+        if (projectIds.length === 0) {
+          return { name: dept.name, registered: 0, checked: 0, approved: 0, authorized: 0 };
+        }
+
+        // Fetch either plans or reports
+        const records = await DataModel.findAll({
+          where: { project_id: { [Op.in]: projectIds } },
+          attributes: ['id']
+        });
+
+        if (records.length === 0) {
+          return { name: dept.name, registered: 0, checked: 0, approved: 0, authorized: 0 };
+        }
+
+        const recordIds = records.map(r => r.id);
+
+        // ✅ Get latest ActionState for each record
+        const latestActions = await Promise.all(
+          recordIds.map(async (recordId) => {
+            return await ActionState.findOne({
+              where: { model_id: recordId },
+              order: [['created_at', 'DESC']],
+              attributes: ['action']
+            });
+          })
+        );
+
+        // ✅ Count per action type (reset every iteration)
+        let registered = 0, checked = 0, approved = 0, authorized = 0;
+
+        for (const action of latestActions) {
+          if (!action) continue;
+          switch (action.action) {
+            case 'REGISTER': registered++; break;
+            case 'CHECK': checked++; break;
+            case 'APPROVE': approved++; break;
+            case 'AUTHORIZE': authorized++; break;
+          }
+        }
+
+        return { name: dept.name, registered, checked, approved, authorized };
+      })
+    );
+
+    // ✅ Chart and series
+    const chart = departmentResults.map(d => d.name);
+    const series = [
+      { name: 'Registered', data: departmentResults.map(d => d.registered) },
+      { name: 'Checked', data: departmentResults.map(d => d.checked) },
+      { name: 'Approved', data: departmentResults.map(d => d.approved) },
+      { name: 'Authorized', data: departmentResults.map(d => d.authorized) }
+    ];
+
+    return res.apiSuccess({ data: { chart, series } });
+
+  } catch (error) {
+    console.error('Error in getProjectCategoryDepartmentStatus:', error);
+    return res.apiError(error.message || 'Failed to load department project status');
+  }
+};
+
+self.getProjectCategoryProjectPlanDepartments = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const usr = await usrData.userData(req, res);
+
+    // ✅ Always start fresh
+    const departments = await self.getChildren(usr.departmentID);
+
+    // return res.json(departments);
+
+    // ✅ Validate category
+    const moduleCategory = await ProjectCategory.findOne({ where: { id } });
+    if (!moduleCategory) {
+      return res.apiError('Project category not found');
+    }
+
+    // ✅ Fetch related projects (department_id + id only)
+    const projects = await Project.findAll({
+      where: { projectcategory_id: moduleCategory.id },
+      attributes: ['id', 'department_id']
+    });
+
+    // ✅ Prepare results (fresh every call)
+    const departmentResults = await Promise.all(
+      departments.map(async (dept) => {
+        // Filter projects per department
+        const departmentProjects = projects.filter(p => p.department_id === dept.id);
+        const projectIds = departmentProjects.map(p => p.id);
+
+        if (projectIds.length === 0) {
+          return { name: dept.name, registered: 0, checked: 0, approved: 0, authorized: 0 };
+        }
+
+        // Find all project plans for those projects
+        const projectPlans = await ProjectPlan.findAll({
+          where: { project_id: { [Op.in]: projectIds } },
+          attributes: ['id']
+        });
+
+        if (projectPlans.length === 0) {
+          return { name: dept.name, registered: 0, checked: 0, approved: 0, authorized: 0 };
+        }
+
+        const planIds = projectPlans.map(p => p.id);
+
+        // ✅ Get latest ActionState for each plan
+        const latestActions = await Promise.all(
+          planIds.map(async (planId) => {
+            return await ActionState.findOne({
+              where: { model_id: planId },
+              order: [['created_at', 'DESC']],
+              attributes: ['action']
+            });
+          })
+        );
+
+        // ✅ Count per action type (always reset inside map)
+        let registered = 0, checked = 0, approved = 0, authorized = 0;
+
+        for (const action of latestActions) {
+          if (!action) continue;
+          switch (action.action) {
+            case 'REGISTER': registered++; break;
+            case 'CHECK': checked++; break;
+            case 'APPROVE': approved++; break;
+            case 'AUTHORIZE': authorized++; break;
+          }
+        }
+
+        return { name: dept.name, registered, checked, approved, authorized };
+      })
+    );
+
+    // ✅ Chart and series (created new per request — no reuse)
+    const chart = departmentResults.map(d => d.name);
+    const series = [
+      { name: 'Registered', data: departmentResults.map(d => d.registered) },
+      { name: 'Checked', data: departmentResults.map(d => d.checked) },
+      { name: 'Approved', data: departmentResults.map(d => d.approved) },
+      { name: 'Authorized', data: departmentResults.map(d => d.authorized) }
+    ];
+
+    // ✅ Return fresh result
+    return res.apiSuccess({ data: { chart, series } });
+
+  } catch (error) {
+    console.error('Error in getProjectCategoryProjectPlanDepartments:', error);
+    return res.apiError(error.message || 'Failed to load project plan status');
+  }
+};
+
+
+self.getProjectCategoryProjectReportDepartments = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const usr = await usrData.userData(req, res);
+
+    // ✅ Always start fresh
+    const departments = await self.getChildren(usr.departmentID);
+
+    // return res.json(departments);
+
+    // ✅ Validate category
+    const moduleCategory = await ProjectCategory.findOne({ where: { id } });
+    if (!moduleCategory) {
+      return res.apiError('Project category not found');
+    }
+
+    // ✅ Fetch related projects (department_id + id only)
+    const projects = await Project.findAll({
+      where: { projectcategory_id: moduleCategory.id },
+      attributes: ['id', 'department_id']
+    });
+
+    // ✅ Prepare results (fresh every call)
+    const departmentResults = await Promise.all(
+      departments.map(async (dept) => {
+        // Filter projects per department
+        const departmentProjects = projects.filter(p => p.department_id === dept.id);
+        const projectIds = departmentProjects.map(p => p.id);
+
+        if (projectIds.length === 0) {
+          return { name: dept.name, registered: 0, checked: 0, approved: 0, authorized: 0 };
+        }
+
+        // Find all project plans for those projects
+        const projectReports = await ProjectReport.findAll({
+          where: { project_id: { [Op.in]: projectIds } },
+          attributes: ['id']
+        });
+
+        if (projectReports.length === 0) {
+          return { name: dept.name, registered: 0, checked: 0, approved: 0, authorized: 0 };
+        }
+
+        const reportIds = projectReports.map(p => p.id);
+
+        // ✅ Get latest ActionState for each plan
+        const latestActions = await Promise.all(
+          reportIds.map(async (reportId) => {
+            return await ActionState.findOne({
+              where: { model_id: reportId },
+              order: [['created_at', 'DESC']],
+              attributes: ['action']
+            });
+          })
+        );
+
+        // ✅ Count per action type (always reset inside map)
+        let registered = 0, checked = 0, approved = 0, authorized = 0;
+
+        for (const action of latestActions) {
+          if (!action) continue;
+          switch (action.action) {
+            case 'REGISTER': registered++; break;
+            case 'CHECK': checked++; break;
+            case 'APPROVE': approved++; break;
+            case 'AUTHORIZE': authorized++; break;
+          }
+        }
+
+        return { name: dept.name, registered, checked, approved, authorized };
+      })
+    );
+
+    // ✅ Chart and series (created new per request — no reuse)
+    const chart = departmentResults.map(d => d.name);
+    const series = [
+      { name: 'Registered', data: departmentResults.map(d => d.registered) },
+      { name: 'Checked', data: departmentResults.map(d => d.checked) },
+      { name: 'Approved', data: departmentResults.map(d => d.approved) },
+      { name: 'Authorized', data: departmentResults.map(d => d.authorized) }
+    ];
+
+    // ✅ Return fresh result
+    return res.apiSuccess({ data: { chart, series } });
+
+  } catch (error) {
+    console.error('Error in getProjectCategoryProjectReportDepartments:', error);
+    return res.apiError(error.message || 'Failed to load project report status');
+  }
+};
+
+// self.getProjectCategoryProjectPlanDepartments = async(req, res) => {
+    
+//     let id = req.params.id;
+
+//     try {
+
+//         let usr = await usrData.userData(req, res);
+
+//         let departments = await self.getChildren(usr.departmentID);
+
+//         let modulecategory = await ProjectCategory.findOne({
+//             where: {
+//                 id: id,
+//             },
+//         });
+
+
+
+//         let models = await Project.findAll({
+//             where: {
+//                 projectcategory_id: modulecategory.id,
+//             },
+//         });
+
+
+//         let series = [];
+
+//         for(let dept of departments){
+//             let projects = await Project.findAll({
+//                 where: {
+//                     projectcategory_id: modulecategory.id,
+//                     department_id: dept.id
+//                 }
+//                 });
+
+//             let proIDs = projects.map((item)=> item.id).filter(n=>n);
+
+//             let projectplans = ProjectPlan.findAll({
+//                 where: {
+//                     project_id: {
+//                         [Op.in]: proIDs
+//                     }
+//                 }
+//             });
+
+//             let registered = []
+//             let checked = []
+//             let approved = []
+//             let authorized = []
+
+//             if(projectplans.length > 0){    
+//             for(let plan of projectplans){  
+//                 const actions =  ActionState.findOne({
+//                     where: { model_id: plan.id },
+//                     order: [['created_at', 'DESC']]
+//                 });
+
+//                 switch(plan.action){ 
+//                     case "REGISTER":
+//                         registered.push(plan);
+//                         break;
+//                     case "CHECK":
+//                         checked.push(plan);
+//                         break;  
+//                     case "APPROVE":
+//                         approved.push(plan);
+//                         break;
+//                     case "AUTHORIZE":
+//                         authorized.push(plan);
+//                         break;
+//                 }
+//             }
+//             }
+            
+//             series.push({
+//                 name: dept.name,
+//                 registered: registered.length,
+//                 checked: checked.length,
+//                 approved: approved.length,
+//                 authorized: authorized.length
+//             });
+
+                    
+//         }
+
+//         return res.apiSuccess({
+//             data: {
+//                 series,
+//                 departments
+//             }
+//         });
+
+
+
+
+//         series = await Promise.all(departments.map((dept) => {
+//             const departmentprojects = models.filter((model) => model.department_id === dept.id);
+//             let proIDs = departmentprojects.map((item)=> item.id).filter(n=>n);
+
+//             let projectplans = ProjectPlan.findAll({
+//                 where: {
+//                     project_id: {
+//                         [Op.in]: proIDs
+//                     }
+//                 }
+//             });
+
+//             return res.json(proIDs)
+//             // return projectplans;
+        
+
+//             let registered = []
+//             let checked = []
+//             let approved = []
+//             let authorized = []
+
+//             if(projectplans.length > 0){    
+//             for(let plan of projectplans){
+
+//                 const actions =  ActionState.findOne({
+//                         where: { model_id: plan.id },
+//                         order: [['created_at', 'DESC']]
+//                     });
+
+
+//                 switch(plan.action){
+//                     case "REGISTER":
+//                         registered.push(plan);
+//                         break;
+//                     case "CHECK":
+//                         checked.push(plan);
+//                         break;
+//                     case "APPROVE":
+//                         approved.push(plan);
+//                         break;
+//                     case "AUTHORIZE":
+//                         authorized.push(plan);
+//                         break;
+//                 }
+//             }
+//             }
+            
+
+//             return {
+//                 name: dept.name,
+//                 registered: registered.length,
+//                 checked: checked.length,
+//                 approved: approved.length,
+//                 authorized: authorized.length
+//             };
+//             }));
+
+
+//             let seriesArr = [
+//                 {
+//                     name: "Registered",
+//                     data: series.map((item)=> item.financial_performance)
+//                 },
+//                 {
+//                    name: "Checked",
+//                    data: series.map((item)=> item.financial_performance)
+//                 },
+//                 {
+//                     name: "Approved",
+//                     data: series.map((item)=> item.varfinancial_performanceiation)
+//                 },
+//                 {
+//                     name: "Authorized",
+//                     data: series.map((item)=> item.financial_performance)
+//                 }
+//             ];
+
+
+
+//         return res.apiSuccess({
+//             data: {
+//                 series: seriesArr,
+//                 departments: [...new Set(departments.map((item) => item.name))].filter(
+//                     (n) => n
+//                 ),
+    
+//             }
+//         });
+//     } catch (error) {
+//         res.apiError(error);
+//     }
+// };
 self.getProjectCategoryLocationInformation = async(req, res) => {
     try {
 
@@ -1266,8 +1819,6 @@ self.getStakeholderCategoryLocationInformation = async(req, res) => {
 self.getProjectYearlyFinancialPlan = async(req, res) => {
     try {
         let {id, year} = req.params;
-
-        
 
         let projects = await Project.findAll({
             where: {
@@ -1405,55 +1956,33 @@ self.getProjectYearlyPerformance = async(req, res) => {
 
     try {
 
-        let {id,year, attr} = req.params;
-        let cpm = req.query.cpm;
-        if(cpm===Boolean(true)){
-            const cpmplans = await apiHelper.getExternalData("plan");
-            const cpmreports = await apiHelper.getExternalData("report");
-
-
-            let plans = cpmplans.filter((item) => item.year === year.toString());
-            let reports = cpmreports.filter((item) => item.year === year.toString());
-
-            let months  = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
-
-            let planned = months.map((month) => {
-                let eachArr = plans.filter((plan)=> plan.month===month.toString());
-                
-                let attrValue = eachArr.reduce((total, item)=> total+item[attr], 0);
-                
-                return attrValue;
-            });
-
-            let actual = months.map((month) => {
-                let eachArr = reports.filter((report)=> report.month===month.toString());
-                
-                let attrValue = eachArr.reduce((total, item)=> total+item[attr], 0);
-                
-                return attrValue;
-            });
-
-            let performanceArr = [
-                {
-                    name: "Planned",
-                    data: planned
-                },
-                {
-                    name: "Actual",
-                    data: actual
-                }
-            ];
-
-            return res.apiSuccess(performanceArr);
-        }else{
+            let {id, attr} = req.params;
             
-       
-            let projects = await Project.findAll({
-                where: {
-                    projecttype_id: id
-                }
-            });
+            let filter = req.query.filter;
+            let year = filter.year
 
+            let projects = [];
+            if(id){
+                projects = await Project.findAll({
+                    where: {
+                        projecttype_id: id,
+                        department_id: filter.department_id
+                    }
+                });
+            }else {
+               projects = await Project.findAll({
+                    where: {
+                        department_id: filter.department_id
+                    }
+                });
+            }
+            
+
+            if(projects.length === 0) {
+                return res.status(404).json({
+                    message: "Project not found",
+            });
+            }
 
             let proIDs = projects.map((item)=> item.id);
 
@@ -1478,6 +2007,7 @@ self.getProjectYearlyPerformance = async(req, res) => {
 
             let quarters  = [1, 2, 3, 4];
 
+        
             let planned = quarters.map((qua) => {
                 let eachArr = plans.filter((plan)=> plan.quarter===qua.toString());
                 
@@ -1508,28 +2038,161 @@ self.getProjectYearlyPerformance = async(req, res) => {
             return res.apiSuccess({
                 data: performanceArr
             });
-        }
-
         
     } catch (error) {
         res.apiError(error);
     }
 };
 
+
+//cpm integration
+// self.getProjectYearlyPerformance = async(req, res) => {
+
+//     try {
+
+//         let {id,year, attr} = req.params;
+//         let cpm = req.query.cpm;
+//         if(cpm===Boolean(true)){
+//             const cpmplans = await apiHelper.getExternalData("plan");
+//             const cpmreports = await apiHelper.getExternalData("report");
+
+
+//             let plans = cpmplans.filter((item) => item.year === year.toString());
+//             let reports = cpmreports.filter((item) => item.year === year.toString());
+
+//             let months  = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+
+//             let planned = months.map((month) => {
+//                 let eachArr = plans.filter((plan)=> plan.month===month.toString());
+                
+//                 let attrValue = eachArr.reduce((total, item)=> total+item[attr], 0);
+                
+//                 return attrValue;
+//             });
+
+//             let actual = months.map((month) => {
+//                 let eachArr = reports.filter((report)=> report.month===month.toString());
+                
+//                 let attrValue = eachArr.reduce((total, item)=> total+item[attr], 0);
+                
+//                 return attrValue;
+//             });
+
+//             let performanceArr = [
+//                 {
+//                     name: "Planned",
+//                     data: planned
+//                 },
+//                 {
+//                     name: "Actual",
+//                     data: actual
+//                 }
+//             ];
+
+//             return res.apiSuccess(performanceArr);
+//         }else{
+            
+       
+//             let projects = await Project.findAll({
+//                 where: {
+//                     projecttype_id: id
+//                 }
+//             });
+
+
+//             let proIDs = projects.map((item)=> item.id);
+
+//             let plans = await ProjectPlan.findAll({
+//                 where: {
+//                     year: Number(year),
+//                     project_id: {
+//                         [Op.in]: proIDs
+//                     }
+//                 }
+//             });
+
+//             let reports = await ProjectReport.findAll({
+//                 where: {
+//                     year: Number(year),
+//                     project_id: {
+//                         [Op.in]: proIDs
+//                     }
+//                 }
+//             });
+
+
+//             let quarters  = [1, 2, 3, 4];
+
+//             let planned = quarters.map((qua) => {
+//                 let eachArr = plans.filter((plan)=> plan.quarter===qua.toString());
+                
+//                 let attrValue = eachArr.reduce((total, item)=> total+item[attr], 0);
+                
+//                 return attrValue;
+//             });
+
+//             let actual = quarters.map((qua) => {
+//                 let eachArr = reports.filter((report)=> report.quarter===qua.toString());
+                
+//                 let attrValue = eachArr.reduce((total, item)=> total+item[attr], 0);
+                
+//                 return attrValue;
+//             });
+
+//             let performanceArr = [
+//                 {
+//                     name: "Planned",
+//                     data: planned
+//                 },
+//                 {
+//                     name: "Actual",
+//                     data: actual
+//                 }
+//             ];
+
+//             return res.apiSuccess({
+//                 data: performanceArr
+//             });
+//         }
+
+        
+//     } catch (error) {
+//         res.apiError(error);
+//     }
+// };
+
 self.getProjectAnnualCostAndScheduleVariances = async(req, res) => {
     try {
 
-        let {id, year} = req.params;
+        let {id} = req.params;
+            
+        let filter = req.query.filter;
+        let year = filter.year
 
-        let projects = await Project.findAll({
-            where: {
-                projecttype_id: id
-            }
-        });
+        let projects = [];
+        if(id){
+            projects = await Project.findAll({
+                where: {
+                    projecttype_id: id,
+                    department_id: filter.department_id
+                }
+            });
+        }else {
+            projects = await Project.findAll({
+                where: {
+                    department_id: filter.department_id
+                }
+            });
+        }
+
+        if(projects.length === 0) {
+            return res.status(404).json({
+                message: "Project not found",
+            })
+        };
+        
 
         let proIDs = projects.map((item)=> item.id);
-
-        
 
 
         let plans = await ProjectPlan.findAll({
@@ -1541,13 +2204,6 @@ self.getProjectAnnualCostAndScheduleVariances = async(req, res) => {
             }
         });
 
-
-
-        const cpmplans = await apiHelper.getExternalData("plan");
-        // cpmplans = cpmsplans.filter((item) => item.year === year.toString())
-
-        plans = plans.concat(cpmplans);
-
         let reports = await ProjectReport.findAll({
             where: {
                 year: Number(year),
@@ -1556,13 +2212,6 @@ self.getProjectAnnualCostAndScheduleVariances = async(req, res) => {
                 }
             }
         });
-
-
-        const cpmreports = await apiHelper.getExternalData("report");
-        // cpmreports = cpmreports.filter((item) => item.year === year.toString())
-
-
-        reports = reports.concat(cpmreports);
 
         let quarters  = [1, 2, 3, 4];
 
@@ -1595,7 +2244,28 @@ self.getProjectAnnualCostAndScheduleVariances = async(req, res) => {
         let sv = allVariances.map((item)=> item.sv);
         let cv = allVariances.map((item)=> item.cv);
 
-        let spi_cpi = [
+        // let spi_cpi = [
+        //     {
+        //         name: "spi",
+        //         data: spi
+        //     },
+        //     {
+        //         name: "cpi",
+        //         data: cpi
+        //     }];
+        //  let sv_cv = [
+        //     {
+        //         name: "sv",
+        //         data: sv
+        //     },
+        //     {
+        //         name: "cv",
+        //         data: cv
+        //     }
+        // ];
+
+    
+        let data = [
             {
                 name: "spi",
                 data: spi
@@ -1603,8 +2273,7 @@ self.getProjectAnnualCostAndScheduleVariances = async(req, res) => {
             {
                 name: "cpi",
                 data: cpi
-            }];
-         let sv_cv = [
+            },
             {
                 name: "sv",
                 data: sv
@@ -1614,16 +2283,23 @@ self.getProjectAnnualCostAndScheduleVariances = async(req, res) => {
                 data: cv
             }
         ];
-
-    
         return res.apiSuccess({
-            data: {
-                spi_cpi,
-                sv_cv
-            }
+            data: data
         });
 
         
+    } catch (error) {
+        res.apiError(error);
+    }
+};
+
+self.getUserDepartments = async(req, res) => {
+    try {
+        let usr = await usrData.userData(req, res);
+        let departments = await self.getChildren(usr.departmentID);
+        return res.apiSuccess({
+            data: departments
+        });
     } catch (error) {
         res.apiError(error);
     }
@@ -1702,6 +2378,48 @@ self.getAllProjectAnnualFinancial = async(req, res) => {
         });
 
         
+    } catch (error) {
+        res.apiError(error);
+    }
+};
+
+
+
+self.getCategoryMapping = async(req, res) => {
+    try {
+
+        let us = req.decoded;
+        let type_id = req.params.id;
+        let projectcategories = await ProjectCategory.findAll({
+            where: {
+                projecttype_id: type_id
+            }
+        });
+
+        let data = [];
+        let categories = [];
+        for(let category of projectcategories) {    
+            let projects = await Project.findAndCountAll({
+                where: {
+                    projectcategory_id: category.id,
+                    department_id: us.department_id
+                }
+            });
+
+            data.push(projects.count);
+            categories.push(category.title);
+        }
+
+        const sum = data.reduce((acc, num) => acc + num, 0);
+        const percentages = data.map(num => (num / sum) * 100);
+        let result = {   
+            data: percentages,
+            year:['2019', '2020', '2021', '2022', '2023'],
+            categories:categories
+        }
+        return res.apiSuccess({
+            data: result
+        });
     } catch (error) {
         res.apiError(error);
     }
