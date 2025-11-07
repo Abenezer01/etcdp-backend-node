@@ -279,19 +279,20 @@ self.save = async(req, res) => {
                     is_primary: true,
                 });
                 //email to user
-                const resetString = uuid.v4() + created_user.id;
-                await PasswordReset.create({
-                    user_id: created_user.id,
-                    token: resetString,
-                    expiresAt: Date.now() + 3600000,
-                    is_used: false,
-                });
+                // const resetString = uuid.v4() + created_user.id;
+                // await PasswordReset.create({
+                //     user_id: created_user.id,
+                //     token: resetString,
+                //     expiresAt: Date.now() + 3600000,
+                //     is_used: false,
+                // });
                 const redirectUrl = body.redirect_url ;
                 // sendEmail(created_user.id, body.email, redirectUrl, resetString)
-                const salt = await bcrypt.genSalt();
-                const hashedResetString = await bcrypt.hash(resetString, salt);
+                // const salt = await bcrypt.genSalt();
+                // const hashedResetString = await bcrypt.hash(resetString, salt);
 
-                self.sendPasswordSetupEmail(created_user.id, body.email, redirectUrl, hashedResetString);
+                // self.sendPasswordSetupEmail(created_user.id, body.email, redirectUrl, hashedResetString);
+                self.sendResetPasswordEmail(created_user.id, body.email, redirectUrl)
 
 
                 if (usphone) {
@@ -350,6 +351,66 @@ self.save = async(req, res) => {
     }
 };
 
+self.sendResetPasswordEmail = async(userId, email, redirectUrl) => {
+    try {
+        
+            const resetString = uuid.v4() + userId;
+
+            await PasswordReset.create({
+                user_id: userId,
+                token: resetString,
+                expiresAt: Date.now() + 3600000,
+                is_used: false,
+            });
+
+            // sendEmail(us.id, email, redirectUrl, resetString)
+            const salt = await bcrypt.genSalt();
+            const hashedResetString = await bcrypt.hash(resetString, salt);
+ 
+            var mailOptions = {
+                from: "1space.mia@gmail.com",
+                // from: process.env.AUTH_EMAIL,
+                to: email,
+                subject: "Setup Password",
+                html:
+                `
+				<p>You are registered to ECDMS, click on the link below to fillout your password.</p>
+				<p><a href= ${redirectUrl}?token=${hashedResetString}&user_id=${userId}>Link to setup password</a></p>
+				<p>This link will expire within 60 minutes. </p>`,
+            };
+
+            var transporter = nodemailer.createTransport(
+                smtpTransport({
+                    service: "gmail",
+                    host: "smtp.gmail.com",
+                    secure: false,
+                    auth: {
+                        user: "1space.mia@gmail.com",
+                        pass: "rjxcwxgyrijvturw",
+                    },
+                    tls: {
+                        rejectUnauthorized: false
+                    }
+                })
+            );
+
+
+            transporter.sendMail(mailOptions, function(error) {
+
+                if (error) {
+                    res.apiError(error);
+                    // return res.status(500).json(error)
+                } else {
+
+                    res.apiSuccess({
+                        data: { message: "Password reset link sent to you email"}
+                      });
+                }
+            });
+    } catch (error) {
+        
+    }
+}
 self.sendPasswordSetupEmail = async(userId, email, redirectUrl, hashedResetString) => {
     try {
         var mailOptions = {
