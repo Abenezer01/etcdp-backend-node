@@ -398,17 +398,16 @@ self.sendResetPasswordEmail = async(userId, email, redirectUrl) => {
             transporter.sendMail(mailOptions, function(error) {
 
                 if (error) {
-                    res.apiError(error);
+                    return apiError(error);
                     // return res.status(500).json(error)
                 } else {
 
-                    res.apiSuccess({
-                        data: { message: "Password reset link sent to you email"}
-                      });
+                    return  { message: "Password reset link sent to you email"}
+                    
                 }
             });
     } catch (error) {
-        
+        return error;
     }
 }
 self.sendPasswordSetupEmail = async(userId, email, redirectUrl, hashedResetString) => {
