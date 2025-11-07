@@ -232,6 +232,7 @@ const RailwayMaintenanceFacilityScheduleAndProcedureController = require("../../
 const RailwayMaintenanceFacilityAndSecurityController = require("../../../controllers/projects/RailwayMaintenanceFacilityAndSecurityController.js");
 const RailwayMaintenanceEnvironmentalAndOtherFactorController = require("../../../controllers/projects/RailwayMaintenanceEnvironmentalAndOtherFactorController.js");
 
+const DashboardController = require("../../../controllers/analytics/DashboardController");
 const validateData = require("../../../middleware/validate/module/project/validate");
 
 module.exports = function (express) {
@@ -2677,6 +2678,9 @@ route.delete("/railway-track-safeties/:id", RailwayTrackSafetyController.delete)
   route.delete("/railway-maintenance-environmental-and-other-factors/:id", RailwayMaintenanceEnvironmentalAndOtherFactorController.delete);
 
 
+
+   route.get(
+    "/mapping/:id",ProjectController.getCategoryMapping);
   return route;
 
 };

@@ -40,7 +40,7 @@ module.exports = {
         pf.main_contract_price_amount,
         pt.original_contract_duration,
         p.created_at, p.updated_at;
-    `);
+    `);P
   },
 
   async down(queryInterface, Sequelize) {

@@ -2,7 +2,7 @@ const express = require("express");
 const polymorphicRoute = require("./routes/module/polymorphic/route");
 
 const projectRoute = require("./routes/module/project/route");
-const projectRoute2 = require("./routes/module/project/route2");
+// const projectRoute2 = require("./routes/module/project/route2");
 const departmentRoute = require("./routes/module/user/route");
 const loginRoute = require("./routes/module/auth/route");
 const stakeholderRoute = require("./routes/module/stakeholder/route");
@@ -12,6 +12,7 @@ const masterdataRoute = require("./routes/module/masterdata/route");
 const resourceRoute = require("./routes/module/resource/route");
 const documentRoute = require("./routes/module/document/route");
 const analyticRoute = require("./routes/module/analytic/route");
+
 const route_view = require("./routes/route_view");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
@@ -46,7 +47,7 @@ app.use("/api/v1/departments", departmentRoute(express));
 app.use("/api/v1/accounts", loginRoute(express));
 app.use("/api/v1/masterdata", masterdataRoute(express));
 app.use("/api/v1/projects", projectRoute(express));
-app.use("/api/v1/projects2", projectRoute2(express));
+// app.use("/api/v1/projects2", projectRoute2(express));
 app.use("/api/v1/stakeholders", stakeholderRoute(express));
 app.use("/api/v1/resource", resourceRoute(express));
 app.use("/api/v1/documents", documentRoute(express));

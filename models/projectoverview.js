@@ -46,6 +46,7 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'ProjectOverview',
     tableName: 'project_overview',
-  });
+  }); 
   return ProjectOverview;
+
 };

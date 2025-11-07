@@ -286,46 +286,13 @@ self.save = async(req, res) => {
                     expiresAt: Date.now() + 3600000,
                     is_used: false,
                 });
-
-                //send
                 const redirectUrl = body.redirect_url ;
+                // sendEmail(created_user.id, body.email, redirectUrl, resetString)
                 const salt = await bcrypt.genSalt();
                 const hashedResetString = await bcrypt.hash(resetString, salt);
-                var mailOptions = {
-                    from: "1space.mia@gmail.com",
-                    // from: process.env.AUTH_EMAIL,
-                    to: body.email,
-                    subject: "Setup Password",
-                    html: `
-					<p>Your are registered to ONESPACE, click on the link below to fillout your password</p>
-					<p><a href= ${redirectUrl}${created_user.id}/${hashedResetString.replace(
-            /\//g,
-            "slash"
-          )}>Link to setup password</a></p>
-					`,
-                };
 
-                var transporter = nodemailer.createTransport(
-                    smtpTransport({
-                        service: "gmail",
-                        host: "smtp.gmail.com",
-                        secure: false,
-                        auth: {
-                            user: "1space.mia@gmail.com",
-                            pass: "rjxcwxgyrijvturw",
-                        },
-                    })
-                );
+                self.sendPasswordSetupEmail(created_user.id, body.email, redirectUrl, hashedResetString);
 
-                transporter.sendMail(mailOptions, function(error) {
-                    if (error) {
-                        return res.json("error" + error);
-                    } else {
-                        return res.json({
-                            message: "Email sent successfully",
-                        });
-                    }
-                });
 
                 if (usphone) {
                     if (usphone) {
@@ -382,6 +349,52 @@ self.save = async(req, res) => {
         });
     }
 };
+
+self.sendPasswordSetupEmail = async(userId, email, redirectUrl, hashedResetString) => {
+    try {
+        var mailOptions = {
+            from: "1space.mia@gmail.com",
+            // from: process.env.AUTH_EMAIL,        
+            to: email,
+            subject: "Setup Password",
+            html: `
+
+            <p> You are registered to ECDMS, click on the link below to fillout your password</p>
+            <p><a href= ${redirectUrl}/${userId}/${hashedResetString.replace(
+                /\//g,
+                "slash"
+            )}>Link to setup password</a></p>
+            `,
+        };      
+        var transporter = nodemailer.createTransport(
+            smtpTransport({
+                service: "gmail",
+                host: "smtp.gmail.com",
+                secure: false,
+                auth: {
+                    user: "1space.mia@gmail.com",
+                    pass: "rjxcwxgyrijvturw",
+                },
+            })
+        );
+
+        transporter.sendMail(mailOptions, function(error) {
+            if (error) {
+                return res.json("error" + error);
+            } else {
+                return res.json({
+                    message: "Email sent successfully",
+                });
+            }
+        });
+    }
+    catch (error) {
+        return res.status(500).json({
+            message: error.message,
+        });
+    }
+};
+      
 
 self.setupPassword = async(req, res) => {
     try {

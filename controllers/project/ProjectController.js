@@ -1227,4 +1227,40 @@ self.getContractTimeAnalysis = async(req, res) => {
 		res.apiError(error);
 	}
 };
+
+
+self.getCategoryMapping = async(req, res) => {
+    try {
+        let type_id = req.params.id;
+        let projectcategories = await ProjectCategory.findAll({
+            where: {
+                projecttype_id: type_id
+            }
+        });
+        let data = [];
+        let categories = [];
+        for(let category of projectcategories) {    
+            let projects = await Project.findAndCountAll({
+                where: {
+                    projectcategory_id: category.id
+                }
+            });
+
+            data.push(projects.count);
+            categories.push(category.title);
+        }
+
+        let result = {   
+            data: data,
+            year:['2019', '2020', '2021', '2022', '2023'],
+            categories:categories
+        }
+        return res.apiSuccess({
+            data: result
+        });
+    } catch (error) {
+        res.apiError(error);
+    }
+};
+
 module.exports = self;
