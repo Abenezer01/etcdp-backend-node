@@ -43,7 +43,7 @@ const loginUser = async (req, res) => {
     }
 
     const [usPos, usPhone] = await Promise.all([
-      UserPosition.findOne({ where: { user_id: usEmail.user_id, is_primary: true } }),
+      UserPosition.findOne({ where: { user_id: usEmail.user_id } }),
       UserPhone.findOne({ where: { user_id: usEmail.user_id, is_primary: true } })
     ]);
 
