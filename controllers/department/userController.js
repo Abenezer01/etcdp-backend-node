@@ -519,6 +519,18 @@ self.update = async (req, res) => {
                 await primary_phone.save();
             }
 
+            if(body.position_id){
+                let primary_position = await UserPosition.findOne({
+                    where: {
+                        is_primary: true,
+                        user_id: id
+                    }
+                });
+    
+                primary_position.position_id = body.position_id;
+                await primary_position.save();
+            }
+
             const updatedData = await User.findOne({ where: { id } });
 
 
