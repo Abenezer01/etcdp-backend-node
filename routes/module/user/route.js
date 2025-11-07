@@ -23,6 +23,7 @@ module.exports = function (express) {
   
   route.get("/password", UserController.getHashed);
 
+  route.get("/users-emails", UserController.getUserEmail);
   route.get("/users", UserController.getAll);
   route.get("/users/:id", UserController.get);
   route.get("/user_search/:key", UserController.search);

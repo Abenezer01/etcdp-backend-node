@@ -43,6 +43,15 @@ self.getHashed = async (req, res) => {
     return res.json(pass);
 }
 
+
+self.getUserEmail = async(req, res) => {
+    try {
+        let data = await UserEmail.findAll();
+        return res.json(data);
+    } catch (error) {
+    
+    }
+}
 self.getAll = async (req, res) => {
 
     try {
@@ -217,7 +226,12 @@ self.isEmailValid = async(email) => {
 self.save = async(req, res) => {
     try {
 
+        
+
+
         let body = req.body;
+
+        
 
         //check email is really exist -- consider the domain inclusiveness like eiabc.edu.et
         // let val = await self.isEmailValid(body.email);
@@ -229,6 +243,18 @@ self.save = async(req, res) => {
 
 
         // const salt = await bcrypt.genSalt(10);
+
+        const encryptedEmail = cipherHelper.encrypt(body.email)
+        let existed = await UserEmail.findOne({
+            where: {
+                email: encryptedEmail
+            }
+        });
+
+        if(existed){
+            return res.apiError("Email already existed!");
+        }
+
         var usr = {
             first_name: body.first_name,
             last_name: body.last_name,
