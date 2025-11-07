@@ -54,7 +54,7 @@ module.exports = function (express) {
     positionController.save
   );
   route.put("/positions/:id", positionController.update);
-  route.delete("/position/:id", positionController.delete);
+  route.delete("/positions/:id", positionController.delete);
   route.get(
     "/department-positions/:id",
     positionController.getDepartmentPositions
