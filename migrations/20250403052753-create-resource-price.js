@@ -17,6 +17,16 @@ module.exports = {
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
       },
+      department_id: {
+        type: Sequelize.UUID,
+        allowNull: false,
+        references: {
+          model: "departments",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
+      },
       resource_id: {
         type: Sequelize.UUID,
         allowNull: false,
@@ -47,15 +57,9 @@ module.exports = {
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
       },
-      unit_price_id: {
-        type: Sequelize.UUID,
-        allowNull: false,
-        references: {
-          model: "ResourceMasterData",
-          key: "id",
-        },
-        onUpdate: "CASCADE",
-        onDelete: "CASCADE",
+      unit_price: {
+        type: Sequelize.DOUBLE,
+        allowNull: false
       },
       total_quantity_available: {
         type: Sequelize.INTEGER

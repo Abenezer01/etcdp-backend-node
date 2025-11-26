@@ -5,13 +5,27 @@ dotenv.config();
 
 const paginationHelper = require("../utils/pagination-helper");
 const { getRecordById, saveRecord, updateRecord, deleteRecord } = require("../utils/format-helper");
+const usrData = require("../../utils/userDataFromToken");
+
 let self = {};
 
 self.getAll = async (req, res) => {
   try {
-    const paginatedResult = await paginationHelper(ActivityLog , req);
 
-    // Use the response formatter to send the success response
+    let usr = await usrData.userData(req, res);
+
+    const whereCondition = {user_id: usr.usrID };
+
+    const paginatedResult = await paginationHelper(ActivityLog, req, whereCondition);
+
+
+    // return res.json(data)
+
+
+    // return res.apiSuccess(data)
+    // const paginatedResult = await paginationHelper(ActivityLog , req);
+
+    // // Use the response formatter to send the success response
     res.apiSuccess({
       data: paginatedResult.data,
       total: paginatedResult.total,

@@ -20,6 +20,10 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: DataTypes.UUIDV4,
     },
     parent_id: DataTypes.UUID,
+    department_id: {
+      type: DataTypes.UUID,
+      allowNull: false
+    },
     resource_id: {
       type: DataTypes.UUID,
       allowNull: false
@@ -32,9 +36,8 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.UUID,
       allowNull: false
     },
-    unit_price_id: {
-      type: DataTypes.UUID,
-      allowNull: false
+    unit_price: {
+      type: DataTypes.DOUBLE,
     },
     total_quantity_available: DataTypes.INTEGER,
     price_date: DataTypes.DATE,

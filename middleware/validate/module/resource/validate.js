@@ -202,7 +202,7 @@ const resourcePriceValidate = async (req, res, next) => {
     resource_id: "required|string",
     resource_brand_id: "required|string",
     resource_specification_id: "required|string",
-    unit_price_id: "required|string",
+    unit_price: "required|numeric",
     total_quantity_available: "integer",
     price_date: "date",
     supplier_name_id: "required|string",

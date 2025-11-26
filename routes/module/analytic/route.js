@@ -3,6 +3,11 @@ const authRequired = require("../../../controllers/utils/auth-required");
 module.exports = function (express) {
   const route = express.Router();
   //analysis and dashboard
+
+  route.get("/resource-price-index", authRequired, DashboardController.getResourcePriceIndex);
+  route.get("/resource-inflation-rate", authRequired, DashboardController.getResourceInflationRate);
+
+  
   route.get(
     "/general-analytics/:module/:id", authRequired, 
     DashboardController.getGeneralAnalysis
@@ -12,15 +17,17 @@ module.exports = function (express) {
     DashboardController.getGeneralAnalysisCategory
   );
 
-  route.get(
-    "/type-distribution-department/:module/:id", authRequired, 
-    DashboardController.getDepartmentDistributionPerType
-  );
+  
+  // route.get(
+  //   "/sub-category-distribution-department/:module/:id", authRequired, 
+  //   DashboardController.getDepartmentDistributionPerCategory
+  // );
+  //used
+
   route.get(
     "/category-distribution-department/:module/:id", authRequired, 
-    DashboardController.getDepartmentDistributionPerCategory
+    DashboardController.getDepartmentDistributionPerType
   );
-  //used
   route.get(
     "/subcategory-distribution-department/:module/:id", authRequired,
     DashboardController.getDepartmentDistributionPerSubCategory
@@ -164,8 +171,9 @@ module.exports = function (express) {
   
  
   
-  route.get(
-    "/project-catagory-mapping/:id", authRequired, DashboardController.getCategoryMapping);
+  route.get("/project-catagory-mapping/:id", authRequired, DashboardController.getProjectCategoryMapping);
+  route.get("/stakeholder-catagory-mapping/:id", authRequired, DashboardController.getStakeholderCategoryMapping);
+
   
   return route;
 };

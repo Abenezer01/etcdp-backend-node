@@ -1,6 +1,8 @@
 const {
     Stakeholder, 
     StakeholderType, 
+    StakeholderCategory,
+    StakeholderSubCategory,
     Project, 
     ProjectType, 
     ProjectCategory, 
@@ -17,7 +19,7 @@ const {
     ProjectReport, 
     Address, 
     ActionState,
-
+    ResourcePrice, 
     Sequelize,
 } = require("../../models");
 const usrData = require("../../utils/userDataFromToken");
@@ -26,12 +28,187 @@ const apiHelper = require("../utils/API-helper");
 const departmentHelper = require("../utils/department-helper");
 const { parseParams } = require("../../utils/request/param-hanlder");
 
-const Op = Sequelize.Op;
+// const Op = Sequelize.Op;
 
 const moment = require("moment");
 const { where } = require("sequelize");
 
 let self = {};
+
+const { Op, fn, col, literal } = require("sequelize");
+
+
+self.getResourcePriceIndex = async (req, res) => {
+  try {
+    let { resource_id, baseYear } = req.query;
+
+    if (!resource_id) {
+      return res.apiError("resource_id is required");
+    }
+    baseYear = baseYear || new Date().getFullYear();
+
+    // ✅ Get user departments
+    const usr = await usrData.userData(req, res);
+    const departments = await self.getChildren(usr.departmentID);
+
+    if (!departments || departments.length === 0) {
+      return res.apiSuccess({ data: { labels: [], data: [] } });
+    }
+
+    // ✅ Get all ResourcePrice for this resource filtered by departments
+    const departmentIds = departments.map(d => d.id);
+
+    const prices = await ResourcePrice.findAll({
+      where: {
+        resource_id,
+        department_id: { [Op.in]: departmentIds }
+      },
+      attributes: [
+        "department_id",
+        [fn("EXTRACT", literal("YEAR FROM price_date")), "year"],
+        [fn("AVG", col("unit_price")), "avg_price"]
+      ],
+      group: ["department_id", literal("EXTRACT(YEAR FROM price_date)")],
+      raw: true
+    });
+
+    if (!prices || prices.length === 0) {
+      return res.apiSuccess({ data: { labels: [], data: [] } });
+    }
+
+    // ✅ Collect all years
+    const years = [...new Set(prices.map(p => p.year))].sort((a, b) => a - b);
+    const labels = years;
+
+    // ✅ Compute base year averages per department
+    const baseYearPrices = {};
+    departments.forEach(dept => {
+      const deptBasePrices = prices.filter(p => p.department_id === dept.id && Number(p.year) === Number(baseYear));
+      if (deptBasePrices.length > 0) {
+        const avgBase = deptBasePrices.reduce((sum, p) => sum + parseFloat(p.avg_price || 0), 0) / deptBasePrices.length;
+        baseYearPrices[dept.id] = avgBase;
+      }
+    });
+
+    // ✅ Build series per department
+    const dataSeries = departments.map(dept => {
+      const deptPrices = prices.filter(p => p.department_id === dept.id);
+      const deptBase = baseYearPrices[dept.id] || 1; // fallback if no base year price
+
+      const data = labels.map(year => {
+        const yearPrices = deptPrices.filter(p => Number(p.year) === Number(year));
+        if (yearPrices.length === 0) return 0;
+        const avgYear = yearPrices.reduce((sum, p) => sum + parseFloat(p.avg_price || 0), 0) / yearPrices.length;
+        return Number(((avgYear / deptBase) * 100).toFixed(2));
+      });
+
+      return {
+        label: dept.name,
+        data
+      };
+    });
+
+    return res.apiSuccess({
+      data: {
+        labels,
+        data: dataSeries
+      }
+    });
+
+  } catch (error) {
+    console.error("Error in getResourcePriceIndex:", error);
+    return res.apiError(error.message || "Failed to calculate resource price index");
+  }
+};
+self.getResourceInflationRate = async (req, res) => {
+  try {
+    let { resource_id } = req.query;
+
+    if (!resource_id) {
+      return res.apiError("resource_id is required");
+    }
+    // baseYear = baseYear || new Date().getFullYear();
+
+    // ✅ Get user and departments
+    const usr = await usrData.userData(req, res);
+    const departments = await self.getChildren(usr.departmentID);
+
+    if (!departments || departments.length === 0) {
+      return res.apiSuccess({ data: { labels: [], data: [] } });
+    }
+
+    const departmentIds = departments.map(d => d.id);
+
+    // ✅ Fetch yearly average prices per department
+    const prices = await ResourcePrice.findAll({
+      where: {
+        resource_id,
+        department_id: { [Op.in]: departmentIds },
+      },
+      attributes: [
+        "department_id",
+        [fn("EXTRACT", literal("YEAR FROM price_date")), "year"],
+        [fn("AVG", col("unit_price")), "avg_price"],
+      ],
+      group: ["department_id", literal("EXTRACT(YEAR FROM price_date)")],
+      raw: true,
+    });
+
+    if (!prices || prices.length === 0) {
+      return res.apiSuccess({ data: { labels: [], data: [] } });
+    }
+
+    // ✅ Collect all years sorted
+    const years = [...new Set(prices.map(p => p.year))].sort((a, b) => a - b);
+    if (years.length < 2) {
+      return res.apiSuccess({ data: { labels: years, data: [] } });
+    }
+
+    // ✅ Compute inflation per department
+    const dataSeries = departments.map(dept => {
+      const deptPrices = prices
+        .filter(p => p.department_id === dept.id)
+        .sort((a, b) => a.year - b.year);
+
+      if (deptPrices.length < 2) {
+        return { label: dept.name, data: [] };
+      }
+
+      // Convert to price index relative to first available year
+      const basePrice = parseFloat(deptPrices[0].avg_price) || 1;
+      const indexes = deptPrices.map(p => (parseFloat(p.avg_price) / basePrice) * 100);
+
+      // Compute inflation between consecutive years
+      const inflationRates = [];
+      for (let i = 1; i < indexes.length; i++) {
+        const prev = indexes[i - 1];
+        const curr = indexes[i];
+        const inflation = ((curr - prev) / prev) * 100;
+        inflationRates.push(Number(inflation.toFixed(2)));
+      }
+
+      return {
+        label: dept.name,
+        data: inflationRates,
+      };
+    });
+
+    // ✅ Labels start from the 2nd year (since inflation is year-over-year)
+    const labels = years.slice(1);
+
+    return res.apiSuccess({
+      data: {
+        labels,
+        data: dataSeries,
+      },
+    });
+
+  } catch (error) {
+    console.error("Error in getResourceInflationRate:", error);
+    return res.apiError(error.message || "Failed to calculate inflation rates");
+  }
+};
+
 
 
 self.getGeneralAnalysis = async(req, res) => {
@@ -349,114 +526,106 @@ self._findAllChildrenRecursive = async (departmentsToProcess, accumulatedResults
         }
     }
 };
-self.getDepartmentDistributionPerCategory = async(req, res) => {
-    let module = req.params.module;
-    let id = req.params.id;
-    try {
-        const moduleArr = mainanalysismodules[module];
-        const Model = moduleArr[0];
-        const CategoryModel = moduleArr[2];
-        const SubCategoryModel = moduleArr[3];
-        let usr = await usrData.userData(req, res);
 
-        let departments = await self.getChildren(usr.departmentID);
-        let modulecategory = await eval(CategoryModel).findOne({
-            where: {
-                id: id,
-            }
-        })
+self.getDepartmentDistributionPerCategory = async (req, res) => {
+  let module = req.params.module;
+  let id = req.params.id;
 
-        
+  try {
+    const moduleArr = mainanalysismodules[module];
+    const Model = moduleArr[0];
+    const CategoryModel = moduleArr[2];
+    const SubCategoryModel = moduleArr[3];
+    let usr = await usrData.userData(req, res);
 
-        // return res.json(modulecategory)
-        // // let modulecategory = await eval(CategoryModel).findOne({
-        // //     where: {
-        // //         projecttype_id: id,
-        // //     },
-        // // });
+    // Get departments under the user's department
+    let departments = await self.getChildren(usr.departmentID);
 
-        // return res.json(modulecategory)
+    // Get the category
+    let modulecategory = await eval(CategoryModel).findOne({
+      where: { id },
+    });
 
-        
-
-
-        const typeId = `${moduleArr[1]}_id`.toLowerCase();
-
-        let stake = await eval(Model).findAndCountAll({
-            where: {
-                [typeId]: modulecategory.projecttype_id,
-            },
-        });
-        
-        const categoryId = `${moduleArr[2]}_id`.toLowerCase();
-
-        let subcategories = await eval(SubCategoryModel).findAll({
-            where: {
-                [categoryId]: modulecategory.id,
-            },
-        });
-
-        let subcategoryelement = {};
-        let subcategoryId = `${moduleArr[3]}_id`.toLowerCase();
-
-        if (subcategories.length > 0) {
-            for (let subcategory of subcategories) {
-                let catestake = await eval(Model).findAll({
-                    where: {
-                        [subcategoryId]: subcategory.id,
-                    },
-                    include: [{
-                        model: Department,
-                        as: "department",
-                    }, ],
-                });
-
-                const countByName = catestake.reduce((acc, obj) => {
-                    const department_id = obj.department_id;
-
-                    acc[obj.department.name] = (acc[department_id] || 0) + 1;
-                    return acc;
-                }, {});
-
-                let existing = Object.keys(countByName);
-                const filteredData = departments.filter(
-                    (item) => !existing.includes(item.name)
-                );
-                const nameFiltered = filteredData.map((item) => item.name);
-
-                let remainingObj = {};
-
-                nameFiltered.forEach((element) => {
-                    remainingObj[element] = 0;
-                });
-                const mergedObj = Object.assign({}, countByName, remainingObj);
-
-                let deptObj = {};
-                deptObj["count"] = catestake.length;
-                deptObj["departments"] =
-                    Object.keys(mergedObj).length === 0 ? 0 : Object.values(mergedObj);
-                subcategoryelement[subcategory.title] =
-                    Object.keys(deptObj).length === 0 ? 0 : deptObj;
-            }
-        }
-
-        let first = {
-            title: modulecategory.title,
-            list: subcategoryelement,
-            departments: [...new Set(departments.map((item) => item.name))].filter(
-                (n) => n
-            ),
-            count: stake.count,
-        };
-
-        return res.apiSuccess({
-            data: first
-        });
-
-    } catch (error) {
-        res.apiError(error);
+    if (!modulecategory) {
+      return res.apiError("Category not found");
     }
+
+    const typeId = `${moduleArr[1]}_id`.toLowerCase();
+
+    // FIX: compare the field to the actual id value
+    let stake = await eval(Model).findAndCountAll({
+      where: { [typeId]: id },
+    });
+
+    const categoryId = `${moduleArr[2]}_id`.toLowerCase();
+
+    let subcategories = await eval(SubCategoryModel).findAll({
+      where: { [categoryId]: modulecategory.id },
+    });
+
+    let subcategoryelement = {};
+    const subcategoryId = `${moduleArr[3]}_id`.toLowerCase();
+
+    if (subcategories.length > 0) {
+      for (let subcategory of subcategories) {
+        let catestake = await eval(Model).findAll({
+          where: { [subcategoryId]: subcategory.id },
+          include: [
+            {
+              model: Department,
+              as: "department",
+              attributes: ["id", "name"],
+            },
+          ],
+        });
+
+        // FIX: safely access department name
+        const countByName = catestake.reduce((acc, obj) => {
+          const dept = obj.department;
+          if (dept && dept.name) {
+            acc[dept.name] = (acc[dept.name] || 0) + 1;
+          }
+          return acc;
+        }, {});
+
+        // Get missing departments (those not in countByName)
+        const existingNames = Object.keys(countByName);
+        const missingDepartments = departments
+          .filter((d) => !existingNames.includes(d.name))
+          .map((d) => d.name);
+
+        // Add missing departments with zero count
+        const remainingObj = Object.fromEntries(
+          missingDepartments.map((name) => [name, 0])
+        );
+
+        // Merge both objects
+        const mergedObj = { ...countByName, ...remainingObj };
+
+        // Prepare data
+        subcategoryelement[subcategory.title] = {
+          count: catestake.length,
+          departments: Object.values(mergedObj),
+        };
+      }
+    }
+
+    const first = {
+      title: modulecategory.title,
+      list: subcategoryelement,
+      departments: [
+        ...new Set(departments.map((item) => item.name)),
+      ].filter(Boolean),
+      count: stake.count,
+    };
+
+    return res.apiSuccess({ data: first });
+  } catch (error) {
+    console.error(error);
+    res.apiError(error);
+  }
 };
+
 
 self.getModuleTypesAnalysis = async(req, res) => {
     
@@ -2169,18 +2338,21 @@ self.getProjectAnnualCostAndScheduleVariances = async(req, res) => {
         let filter = req.query.filter;
         let year = filter.year
 
+        let usr = await usrData.userData(req, res);
+        let department_id = filter.department_id?filter.department_id: usr.departmentID
+        
         let projects = [];
         if(id){
             projects = await Project.findAll({
                 where: {
                     projecttype_id: id,
-                    department_id: filter.department_id
+                    department_id: department_id
                 }
             });
         }else {
             projects = await Project.findAll({
                 where: {
-                    department_id: filter.department_id
+                    department_id: department_id
                 }
             });
         }
@@ -2385,7 +2557,7 @@ self.getAllProjectAnnualFinancial = async(req, res) => {
 
 
 
-self.getCategoryMapping = async(req, res) => {
+self.getProjectCategoryMapping = async(req, res) => {
     try {
 
         let us = req.decoded;
@@ -2425,6 +2597,52 @@ self.getCategoryMapping = async(req, res) => {
     }
 };
 
+
+self.getStakeholderCategoryMapping = async(req, res) => {
+    try {
+
+        let us = req.decoded;
+        let type_id = req.params.id;
+        let stakeholdercategories = await StakeholderCategory.findAll({
+            where: {
+                stakeholdertype_id: type_id
+            }
+        });
+
+        let data = [];
+        let categories = [];
+        for(let category of stakeholdercategories) {    
+            let stakeholders = await Stakeholder.findAndCountAll({
+                where: {
+                    stakeholdercategory_id: category.id,
+                    department_id: us.department_id
+                }
+            });
+
+            data.push(stakeholders.count);
+            categories.push(category.title);
+        }
+
+
+        const sum = data.reduce((acc, num) => acc + (Number(num) || 0), 0);
+        // return 0 if data is null
+        const percentages = data.map(num => {
+        const value = Number(num) || 0;
+        return sum > 0 ? (value / sum) * 100 : 0;
+        });
+
+        let result = {   
+            data: percentages,
+            year:['2022', '2023', '2024', '2025'],
+            categories:categories
+        }
+        return res.apiSuccess({
+            data: result
+        });
+    } catch (error) {
+        res.apiError(error);
+    }
+};
 
 
 module.exports = self;
