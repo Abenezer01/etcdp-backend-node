@@ -3,6 +3,14 @@ const {
   Position,
   User,
   UserPosition,
+  Stakeholder,
+  Project,
+  ProjectType,
+  StakeholderType,
+  ResourceType,
+  DocumentType,
+  Resource,
+  Document,
   Sequelize,
 } = require("../../models");
 const usrData = require("../../utils/userDataFromToken");
@@ -120,6 +128,7 @@ self.save = async (req, res) => {
     }
     return res.json(data);
   } catch (error) {
+    
     res.status(500).json({
       message: error.message,
     });
@@ -479,6 +488,112 @@ self.getDepartmentDashboad = async (req, res) => {
     });
   }
 };
+self.getUserDashboard = async (req, res) => {
+  try {
+    const usr = await usrData.userData(req, res);
+    const department_id = usr.departmentID;
+
+    // Fetch everything in parallel
+    const [
+      stakeholders,
+      projects,
+      resources,
+      documents,
+      projectTypes,
+      stakeholderTypes,
+      resourceTypes,
+      documentTypes
+    ] = await Promise.all([
+      Stakeholder.findAll({ where: { department_id } }),
+      Project.findAll({ where: { department_id } }),
+      Resource.findAll({ where: { department_id } }),
+      Document.findAll({ where: { department_id } }),
+      ProjectType.findAll(),
+      StakeholderType.findAll(),
+      ResourceType.findAll(),
+      DocumentType.findAll()
+    ]);
+
+    // Count queries
+    const [
+      projectCounts,
+      stakeholderCounts,
+      resourceCounts,
+      documentCounts
+    ] = await Promise.all([
+      Project.findAll({
+        attributes: ["projecttype_id", [Sequelize.fn("COUNT", "*"), "count"]],
+        where: { department_id },
+        group: ["projecttype_id"]
+      }),
+      Stakeholder.findAll({
+        attributes: ["stakeholdertype_id", [Sequelize.fn("COUNT", "*"), "count"]],
+        where: { department_id },
+        group: ["stakeholdertype_id"]
+      }),
+      Resource.findAll({
+        attributes: ["resourcetype_id", [Sequelize.fn("COUNT", "*"), "count"]],
+        where: { department_id },
+        group: ["resourcetype_id"]
+      }),
+      Document.findAll({
+        attributes: ["documenttype_id", [Sequelize.fn("COUNT", "*"), "count"]],
+        where: { department_id },
+        group: ["documenttype_id"]
+      })
+    ]);
+
+    // Helper → return array of objects like [{electric:1}, {mechanical:0}]
+    const mapTypesToObjects = (types, counts, typeIdKey) => {
+      return types.map(type => {
+        const found = counts.find(c => c[typeIdKey] === type.id);
+        const count = found ? Number(found.get("count")) : 0;
+
+        return {
+          [toSnakeCase(type.title)]: count
+        };
+      });
+    };
+
+    const data = {
+      project: {
+        total: projects.length,
+        types: mapTypesToObjects(projectTypes, projectCounts, "projecttype_id")
+      },
+      stakeholder: {
+        total: stakeholders.length,
+        types: mapTypesToObjects(stakeholderTypes, stakeholderCounts, "stakeholdertype_id")
+      },
+      resource: {
+        total: resources.length,
+        types: mapTypesToObjects(resourceTypes, resourceCounts, "resourcetype_id")
+      },
+      document: {
+        total: documents.length,
+        types: mapTypesToObjects(documentTypes, documentCounts, "documenttype_id")
+      }
+    };
+
+    res.apiSuccess({
+      data: data
+    })
+
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+// helper
+function toSnakeCase(str) {
+  return str
+    .trim()
+    .replace(/[^a-zA-Z0-9]+/g, "_")
+    .replace(/_+/g, "_")
+    .toLowerCase();
+}
+
 
 
 // self.test = async(req, res) => {

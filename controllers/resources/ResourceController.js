@@ -5,12 +5,19 @@ dotenv.config();
 
 const paginationHelper = require("../utils/pagination-helper");
 const { getRecordById, saveRecord, updateRecord, deleteRecord } = require("../utils/format-helper");
+const usrData = require("../../utils/userDataFromToken");
+const actionHelper = require("../utils/action-helper");
+
 let self = {};
 
 self.getAll = async (req, res) => {
   try {
 
-    const whereCondition = { };
+    let usr = await usrData.userData(req, res);
+
+    const whereCondition = { 
+      department_id: usr.departmentID
+    };
 
     const includeOptions = [
         {
@@ -44,7 +51,35 @@ self.get = async (req, res) => {
 };
 
 self.save = async (req, res) => {
-  saveRecord(Resource , req, res);
+  try {
+    let body = req.body;
+
+    let data = await Resource.create(body);
+    let usr = await usrData.userData(req, res);
+
+    if(data){
+
+      data.department_id = usr.departmentID;
+      await data.save();
+
+      await actionHelper.saveActionState(
+        data.id,
+        "Resource",
+        "REGISTER",
+        usr.usrID,
+        req,
+        res
+      );
+
+      await actionHelper.saveActivityLog(
+        usr.usrID, "create", "module", data.id, "Resource", req, res
+      )
+
+    }
+
+  } catch (error) {
+    res.apiError(error);
+  }
 };
 
 self.update = async (req, res) => {

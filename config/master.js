@@ -144,6 +144,15 @@ let roleName = [
   "Authorizer",
   "Viewer",
 ];
+
+let positionRole = [
+  "4d07c74f-e59c-4493-a507-eed08fad4b37", // Admin
+  "2bb2264f-273e-44be-9267-aa4c2fa651c0", // Register
+  "898bcfd5-64ab-46ed-a41f-a327e51e2ef9", // Checker
+  "c636b088-0c1f-4da2-98b8-c007c3123209", // Approver
+  "d1d51868-38cc-4189-b2c3-bb4d07b9df3c", // Authorizer
+  "5153031f-239e-483e-9cda-39207363dc2f", // Viewer
+]
 let actions = ["register", "check", "approve", "authorize", "view"];
 
 const modulemodels = {

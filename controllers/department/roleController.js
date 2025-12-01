@@ -1,6 +1,9 @@
-const { Role, RolePermission, Sequelize } = require("../../models");
+const { Role, RolePermission, Permission, ActionState, Sequelize } = require("../../models");
 const paginationHelper = require("../utils/pagination-helper");
 const { getRecordById, saveRecord, updateRecord, deleteRecord } = require("../utils/format-helper");
+
+const usrData = require("../../utils/userDataFromToken");
+const actionHelper = require("../utils/action-helper");
 
 const Op = Sequelize.Op;
 
@@ -96,4 +99,163 @@ self.givePermission = async (req, res) => {
   }
 };
 
+self.defaultRole = async (req, res) => {
+  try {
+
+    
+    const usr = await usrData.userData(req, res);  
+
+    let rolename = "Viewer";
+
+    let role = await Role.create({
+        name: rolename,
+        description: "Viewer Role"
+    });
+
+    if (role) {
+      
+      await actionHelper.saveActivityLog(
+            usr.usrID, "create", "center", role.id, "role", req, res
+      )
+
+      await actionHelper.saveActionState(
+                role.id,
+                "role",
+                "REGISTER",
+                usr.usrID,
+                req,
+                res
+              );
+
+      
+    
+      let actions  = ["view"];
+      // let actions  = ["view", "create", "update", "delete", "approve", "check", "authorize"];
+      for (let action of actions) {
+        let permissions = await Permission.findAll({
+          where: {
+            name: {
+              [Op.like]: `${action}%`
+            },
+            module: {
+               [Op.notIn]: ["center", "masterdata"]
+             }
+          }
+        });
+
+        // let permissions = await Permission.findAll({
+        //   where: {
+        //     name: {
+        //       [Op.like]: `${action}%`
+        //     },
+        //     module: {
+        //       [Op.notIn]: ["center", "masterdata"]
+        //     }
+        //   }
+        // });
+
+
+        for (let per of permissions) {
+          await RolePermission.create({
+              permission_id: per.id,
+              role_id: role.id
+          });
+        }
+      }
+    }
+    
+    return res.json(role)
+
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+
+self.defaultRoleAdmin = async (req, res) => {
+  try {
+
+    
+    const usr = await usrData.userData(req, res);  
+
+    let rolename = "ADMIN-USER";
+
+    let role = await Role.create({
+        name: rolename,
+        description: "Admin Role"
+    });
+
+    if (role) {
+      
+      await actionHelper.saveActivityLog(
+            usr.usrID, "create", "center", role.id, "role", req, res
+      )
+
+      await actionHelper.saveActionState(
+                role.id,
+                "role",
+                "REGISTER",
+                usr.usrID,
+                req,
+                res
+              );
+
+      
+    
+      let actions  = ["view", "create", "update", "delete", "approve", "check", "authorize"];
+      for (let action of actions) {
+        let permissions = await Permission.findAll({
+          where: {
+            name: {
+              [Op.like]: `${action}%`
+            },
+            module: {
+              [Op.in]: ["center", "masterdata"]
+             }
+          }
+        });
+
+        for (let per of permissions) {
+          await RolePermission.create({
+              permission_id: per.id,
+              role_id: role.id
+          });
+        }
+      }
+
+      //second
+
+      let actionss  = ["view"];
+      for (let action of actionss) {
+        let permissions = await Permission.findAll({
+          where: {
+            name: {
+              [Op.like]: `${action}%`
+            },
+            module: {
+              [Op.notIn]: ["center", "masterdata"]
+             }
+          }
+        });
+
+        for (let per of permissions) {
+          await RolePermission.create({
+              permission_id: per.id,
+              role_id: role.id
+          });
+        }
+      }
+
+    }
+    
+    return res.json(role)
+
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};
 module.exports = self;

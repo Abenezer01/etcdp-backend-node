@@ -30,8 +30,14 @@ let self = {};
 self.getAll = async (req, res) => {
 
   try {
+
+    let usr = await usrData.userData(req, res);
+
+    const whereCondition = { 
+      department_id: usr.departmentID
+    };
   
-    const paginatedResult = await paginationHelper(Stakeholder, req);
+    const paginatedResult = await paginationHelper(Stakeholder, req, whereCondition);
 
     // Use the response formatter to send the success response
     res.apiSuccess({
@@ -111,10 +117,15 @@ self.search = async (req, res) => {
 self.save = async (req, res) => {
   try {
     let body = req.body;
+
     let data = await Stakeholder.create(body);
     let usr = await usrData.userData(req, res);
 
     if(data){
+
+      data.department_id = usr.departmentID;
+      await data.save();
+      
       let stakeholderDepartment = await StakeholderDepartment.create({
         stakeholder_id: data.id,
         name: "Main Office",
@@ -155,7 +166,7 @@ self.save = async (req, res) => {
     return res.apiSuccess({data});
 
   } catch (error) {
-    res.apiError(error);
+    res.apiError(error);P
   }
   // saveRecord(Stakeholder, req, res);
 };

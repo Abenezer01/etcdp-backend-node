@@ -18,11 +18,15 @@ let self = {};
 const path = require("path");
 const fs = require("fs");
 
-
-
 self.getAll = async (req, res) => {
   try {
-    const paginatedResult = await paginationHelper(Document, req);
+
+    let usr = await usrData.userData(req, res);
+
+    const whereCondition = { 
+      department_id: usr.departmentID
+    };
+    const paginatedResult = await paginationHelper(Document, req, whereCondition);
 
     // Use the response formatter to send the success response
     res.apiSuccess({

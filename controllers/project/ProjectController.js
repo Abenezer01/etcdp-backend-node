@@ -73,7 +73,11 @@ self.getAll = async (req, res) => {
     // let x = Socket.emitToUser("userId123", "event_name", { message: "Hello, user!" });
 
     // return res.json(x);
-    const whereCondition = { };
+    let usr = await usrData.userData(req, res);
+
+    const whereCondition = { 
+      department_id: usr.departmentID
+    };
 
 
     const includeOptions = [

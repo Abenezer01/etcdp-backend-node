@@ -29,11 +29,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       user_id: {
         type: DataTypes.UUID,
-        allowNull: false,
-        references: {
-          model: "User", 
-          key: "id"
-        }
+        allowNull: false
       },
       email: {
         type: DataTypes.TEXT,

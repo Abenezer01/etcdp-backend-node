@@ -79,10 +79,8 @@ module.exports = function (express) {
   route.get("/sub-departments/:id", departmentController.getSubDepartments);
   route.get("/parent-department", departmentController.getParentDepartment);
 
-  route.get(
-    "/department-dashboard/:id",
-    departmentController.getDepartmentDashboad
-  );
+  route.get("/department-dashboard/:id", departmentController.getDepartmentDashboad);
+  route.get("/user-dashboard", departmentController.getUserDashboard);
 
   route.get("/search-department/:id?", departmentController.getParentOrGivenId);
   route.get("/department-structure", departmentController.getDepartments);
@@ -92,6 +90,9 @@ module.exports = function (express) {
   route.get("/all-parents/:id", departmentController.getToRoot);
 
   //Role route
+  
+  route.get("/default-role", roleController.defaultRole);
+  // route.get("/default-role", roleController.defaultRoleAdmin);
   route.get("/roles", roleController.getAll);
   route.get("/roles/:id", roleController.get);
   route.get("/role_search", roleController.search);
@@ -108,6 +109,8 @@ module.exports = function (express) {
     validateInput.permissionValidate,
     PermissionController.save
   );
+
+
   route.put("/permissions/:id", PermissionController.update);
   route.delete("/permissions/:id", PermissionController.delete);
   route.get("/generate-permission", PermissionController.initPermission);
@@ -147,6 +150,8 @@ module.exports = function (express) {
     PermissionController.getPermissionsByModule
   );
   route.get("/permission-modules", PermissionController.getPermissionModules);
+  route.get("/permission-change", PermissionController.changeModulePermissons);
+
   //Photo route
   // route.get("/photos", UserPhotoController.getAll);
   // route.get("/photo/:id", UserPhotoController.get);

@@ -1,4 +1,4 @@
-const { Permission, PositionPermission, RolePermission, Sequelize, } = require("../../models");
+const { Permission, PositionPermission, RolePermission, Position, Sequelize } = require("../../models");
 const paginationHelper = require("../utils/pagination-helper");
 const usrData = require("../../utils/userDataFromToken");
 
@@ -8,6 +8,7 @@ const Op = Sequelize.Op;
 const master = require("../../config/master");
 const { parseParams } = require("../../utils/request/param-hanlder");
 const { where } = require("sequelize");
+const e = require("cors");
 
 let self = {};
 
@@ -61,37 +62,36 @@ self.assignRolePermissions = async (req, res) => {
     let permissions = body.permissions
 
     for (let per of permissions) {
-      let exist = await RolePermission.findOne({
-        where: {
-          role_id: id,
-          permission_id: per.id
-        }
-      })
-      if (!exist) {
-        await RolePermission.create({
-          role_id: id,
-          permission_id: per.id
+        let exist = await RolePermission.findOne({
+          where: {
+            role_id: id,
+            permission_id: per.id
+          }
         })
-
-      }
-      else{
-        // return res.json(exist)
-        if(!per.is_selected){
-          await RolePermission.destroy({
-            where: {
-              role_id: id,
-              permission_id: per.id
-            }
+      
+        if(!exist && per.is_selected) {
+          await RolePermission.create({
+            permission_id: per.id,
+            role_id: id 
           })
-        }
-      }
 
-      return res.status(200).json({
+        }
+
+        if (exist && !per.is_selected) {
+            await RolePermission.destroy({
+              where: {
+                role_id: id,
+                permission_id: per.id
+              }
+            });
+        }
+    }
+
+    return res.status(200).json({
         message: "Successfully Assigned"
       }); // No Content
 
-    }
-  } catch (error) {
+    } catch (error) {
     res.apiError(error);
   }
 }
@@ -393,35 +393,52 @@ self.assignPositionPermissions = async (req, res) => {
 self.getUserPermission = async (req, res) => {
   try {
     const usr = await usrData.userData(req, res);
-    const positionpermissions = await PositionPermission.findAll({
+
+    const pos = await Position.findOne({
       where: {
-        position_id: usr.position_id,
+        id: usr.position_id,
       },
     });
 
-    // return res.json(positionpermissions)
 
-    const perArr = await Promise.all(
-      positionpermissions.map(async (posper) => {
-        const data = await Permission.findOne({
-          where: {
-            id: posper.permission_id,
-          },
-        });
-        let obj = {
-          action: data ? (data.name).split("_")[0] : null,
-          subject: data ? data.module : null
-        };
-        return obj;
-      })
-    );
 
-    // Remove any null values from the array
-    const filteredArr = perArr.filter(Boolean);
+    if (pos) {
+      const rolepermissions = await RolePermission.findAll({
+        where: {
+          role_id: pos.role_id
+        },
+      });
 
-    res.apiSuccess({
-      data: filteredArr,
-    });
+
+
+      const perArr = await Promise.all(
+        rolepermissions.map(async (posper) => {
+          const data = await Permission.findOne({
+            where: {
+              id: posper.permission_id,
+            },
+          });
+          let obj = {
+            action: data ? (data.name).split("_")[0] : null,
+            subject: data ? data.model : null
+          };
+          return obj;
+        })
+      );
+
+      // Remove any null values from the array
+      const filteredArr = perArr.filter(Boolean);
+
+      res.apiSuccess({
+        data: filteredArr,
+      });
+    } else {  
+      return res.json([]);
+    }
+
+
+
+    
   } catch (error) {
     res.apiError(error);
   }
@@ -869,18 +886,34 @@ self.generate = async (req, res) => {
 }
 
 self.assignRolePermissionsGenerate = async (req, res) => {
-  try {
-    let RoleId = "123451ce-44a8-462b-a07d-3d55ed3ab089";
+  try { 
 
-    let permissions = await Permission.findAll();
+    let pro = "professional"
+    let permissions = await Permission.findAll({
+        where: {
+          module: "resource",
+          model: {
+            [Op.like]: `%${pro}%`,
+          }
+        }
+    });
 
-    for (let x of permissions) {
-      const data = await RolePermission.create({
-        role_id: `${RoleId}`,
-        permission_id: `${x.id}`,
-      });
+    for(per of permissions){
+        per.type = "PROFESSIONAL";
+        await per.save();
     }
-    return res.json("hell")
+
+    // let RoleId = "123451ce-44a8-462b-a07d-3d55ed3ab089";
+
+    // let permissions = await Permission.findAll();
+
+    // for (let x of permissions) {
+    //   const data = await RolePermission.create({
+    //     role_id: `${RoleId}`,
+    //     permission_id: `${x.id}`,
+    //   });
+    // }
+    // return res.json("hell")
   } catch (error) {
     return res.json(error)
   }
@@ -1836,5 +1869,60 @@ return res.json("done");
   }
 } 
 
+self.changeModulePermissons = async (req, res) => {
+
+  try {
+
+    // let action = ['create', 'view', 'update', 'delete', 'check', 'approve', 'authorize'];
+
+    // let modelNames = ["infrastructuremasterdata", "stakeholdermasterdata", "generalmasterdata"];
+
+    // // Outer loop to iterate over the x array
+    // for (let i = 0; i < modelNames.length; i++) {
+    //   // Inner loop to iterate over the action array
+    //   for (let j = 0; j < action.length; j++) {
+
+    //     const data = await Permission.create({
+    //       name: `${action[j]}_${modelNames[i]}`,
+    //       model: `${modelNames[i]}`,
+    //       module: "masterdata",
+    //       type: "GENERAL",
+    //       description: "desc"
+    //     });
+
+    //     if(action[j] === "view"){
+    //       await RolePermission.create({
+    //         permission_id: data.id,
+    //         role_id: "80c6c0a4-e407-4396-8e28-abf15f863f8e"
+    //       })
+    //     }
+    //   }
+
+    // }
+
+    // return res.json("done")
+
+
+    let data = await Permission.findAll({
+      where: {
+        module: "project",
+        type: {
+          [Op.ne]: "BUILDING"
+        }
+      }
+    })
+
+    // return res.json(data)
+
+    for(per of data){
+      per.module = "infrastructure";
+      await per.save();
+    }
+
+    return res.json(done)
+  } catch (error) {
+    res.json(error)
+  }
+};
 
 module.exports = self;

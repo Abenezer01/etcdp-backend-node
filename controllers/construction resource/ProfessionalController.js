@@ -5,11 +5,20 @@ dotenv.config();
 
 const paginationHelper = require("../utils/pagination-helper");
 const { getRecordById, saveRecord, updateRecord, deleteRecord } = require("../utils/format-helper");
+
+const usrData = require("../../utils/userDataFromToken");
+const actionHelper = require("../utils/action-helper");
 let self = {};
 
 self.getAll = async (req, res) => {
   try {
-    const paginatedResult = await paginationHelper(Professional, req);
+
+    let usr = await usrData.userData(req, res);
+
+    const whereCondition = { 
+      department_id: usr.departmentID
+    };
+    const paginatedResult = await paginationHelper(Professional, req, whereCondition);
 
     // Use the response formatter to send the success response
     res.apiSuccess({
@@ -27,7 +36,35 @@ self.get = async (req, res) => {
 };
 
 self.save = async (req, res) => {
-  saveRecord(Professional, req, res);
+  try {
+    let body = req.body;
+
+    let data = await Professional.create(body);
+    let usr = await usrData.userData(req, res);
+
+    if(data){
+
+      data.department_id = usr.departmentID;
+      await data.save();
+
+      await actionHelper.saveActionState(
+        data.id,
+        "Professional",
+        "REGISTER",
+        usr.usrID,
+        req,
+        res
+      );
+
+      await actionHelper.saveActivityLog(
+        usr.usrID, "create", "module", data.id, "Professional", req, res
+      )
+
+    }
+
+  } catch (error) {
+    res.apiError(error);
+  }
 };
 
 self.update = async (req, res) => {

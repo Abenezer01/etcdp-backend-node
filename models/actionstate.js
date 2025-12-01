@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
   }
-  ActionState.init(
+ActionState.init(
     {
       id: {
         type: DataTypes.UUID,

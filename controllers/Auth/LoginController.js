@@ -29,6 +29,7 @@ const loginUser = async (req, res) => {
       where: { email: encryptedEmail, is_primary: true }
     });
 
+
     if (!usEmail) {
       return res.apiError("User not found!");
     }
@@ -42,11 +43,15 @@ const loginUser = async (req, res) => {
       return res.apiError("Email address doesn't exist");
     }
 
+
+
+
     const [usPos, usPhone] = await Promise.all([
       UserPosition.findOne({ where: { user_id: usEmail.user_id } }),
       UserPhone.findOne({ where: { user_id: usEmail.user_id, is_primary: true } })
     ]);
 
+    
     if (!usPos) {
       return res.apiError("User has no primary position!");
     }

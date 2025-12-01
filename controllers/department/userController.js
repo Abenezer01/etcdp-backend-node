@@ -55,6 +55,7 @@ self.getUserEmail = async(req, res) => {
 self.getAll = async (req, res) => {
 
     try {
+
       const whereCondition = { };
   
       const includeOptions = [
@@ -87,7 +88,6 @@ self.getAll = async (req, res) => {
     //     return userJson;
     //   });
 
-    // return res.json(paginatedResult.data)
     const usersWithEmail = await Promise.all(
             paginatedResult.data.map(async (user) => {
               const userJson = user.toJSON();

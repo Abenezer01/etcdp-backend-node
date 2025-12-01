@@ -1,4 +1,4 @@
-const { ProjectMasterData  , Sequelize } = require("../../models");
+const { ProjectMasterData, Sequelize } = require("../../models");
 const Op = Sequelize.Op;
 const dotenv = require("dotenv");
 dotenv.config();
@@ -11,6 +11,7 @@ let self = {};
 
 self.getAll = async (req, res) => {
   try {
+
     const paginatedResult = await paginationHelper(ProjectMasterData , req);
 
     // Use the response formatter to send the success response
