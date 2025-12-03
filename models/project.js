@@ -45,12 +45,15 @@ module.exports = (sequelize, DataTypes) => {
       });
       Project.belongsTo(models.ProjectCategory, {
         foreignKey: "projectcategory_id",
+        as: "projectcategory",
       });
       Project.belongsTo(models.ProjectSubCategory, {
         foreignKey: "projectsubcategory_id",
+        as: "projectsubcategory",
       });
       Project.belongsTo(models.ProjectType, {
         foreignKey: "projecttype_id",
+        as: "projecttype",
       });
       Project.belongsTo(models.Department, {
         as: "department",

@@ -11,6 +11,7 @@ const NotificationController = require("../../../controllers/polymorphic/Notific
 const FileController = require("../../../controllers/polymorphic/FileController");
 const ReportController = require("../../../controllers/polymorphic/ReportController.js");
 const DataCollectionGuideController = require("../../../controllers/polymorphic/DataCollectionGuideController.js");
+const ExportController = require("../../../controllers/polymorphic/ExportController.js");
 
 
 module.exports = function (express) {
@@ -131,6 +132,7 @@ route.put(
 );
 route.delete("/data-collection-guides/:id", DataCollectionGuideController.delete);
 
+route.get("/project-export-excel", ExportController.getAll);
   
   return route;
 };
