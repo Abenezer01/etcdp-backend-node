@@ -13,15 +13,15 @@ module.exports = (sequelize, DataTypes) => {
       //     foreignKey: 'image_id',
       // });
       Document.belongsTo(models.DocumentType, {
-        //as: "documenttype",
+        as: "documenttype",
         foreignKey: "documenttype_id",
       });
       Document.belongsTo(models.DocumentCategory, {
-        // as: "documentcategory",
+        as: "documentcategory",
         foreignKey: "documentcategory_id",
       });
       Document.belongsTo(models.DocumentSubCategory, {
-        //as: "documentsubcategory",
+        as: "documentsubcategory",
         foreignKey: "documentsubcategory_id",
       });
       Document.belongsTo(models.Department, {

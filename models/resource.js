@@ -25,6 +25,7 @@ module.exports = (sequelize, DataTypes) => {
         as: "resourceSubCategory",
         foreignKey: "resourcesubcategory_id",
       });
+      
     }
   }
   Resource.init(

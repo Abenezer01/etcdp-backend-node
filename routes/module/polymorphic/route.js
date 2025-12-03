@@ -132,7 +132,10 @@ route.put(
 );
 route.delete("/data-collection-guides/:id", DataCollectionGuideController.delete);
 
-route.get("/project-export-excel", ExportController.getAll);
+route.get("/stakeholder-export", ExportController.exportStakeholder);
+route.get("/project-export", ExportController.exportProject);
+route.get("/resource-export", ExportController.exportResource);
+route.get("/document-export", ExportController.exportDocument);
   
   return route;
 };
