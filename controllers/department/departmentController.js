@@ -310,6 +310,7 @@ self.getAllChildren = async (arr) => {
 };
 
 self.getDepartments = async (req, res) => {
+
   try {
     const id = req.params.id;
     let departments = [];
@@ -344,18 +345,28 @@ self.getDepartments = async (req, res) => {
           attributes: ["user_id"],
           where: { department_id: dept.id },
         });
+
         const userId = [...new Set(userpos.map((item) => item.user_id))].filter((n) => n);
+
+
 
         const staffs = await User.findAndCountAll({
           where: { id: { [Op.in]: userId } },
         });
 
+
+
         const pos = await Position.findOne({
           where: { department_id: dept.id, is_head: true },
         });
 
+
+
         const uspos = pos ? await UserPosition.findOne({ where: { position_id: pos.id } }) : null;
-        const head = uspos ? await User.findOne({ where: { user_id: uspos.user_id } }) : null;
+
+        const head = uspos ? await User.findOne({ where: { id: uspos.user_id } }) : null;
+
+
 
         return {
           id: dept.id,
@@ -366,6 +377,9 @@ self.getDepartments = async (req, res) => {
         };
       })
     );
+
+
+
 
     const result = id ? arr.map((dept) =>
       dept.id === id ? { ...dept, parent_node_id: null } : dept
