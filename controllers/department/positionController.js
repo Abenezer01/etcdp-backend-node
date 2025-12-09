@@ -28,6 +28,19 @@ self.get = async (req, res) => {
 };
 
 self.save = async (req, res) => {
+  let body = req.body;
+  const existing = await Position.findOne({
+      where: { 
+        name: body.name.trim(),
+        department_id: body.department_id
+      }
+  });
+
+    if (existing) {
+      return res.status(401).json({
+        message: "Position name already exists!"
+      });
+    }
   saveRecord(Position, req, res);
 };
 
