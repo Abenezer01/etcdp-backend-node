@@ -41,6 +41,8 @@ module.exports = function (express) {
   route.post("/switch-account", UserController.switchAccount);
   route.get("/user-positions/:id", UserController.getAllUserPositions);
   route.get("/user-check-status/:id", UserController.checkUserStatus);
+  
+  route.get("/change-password", UserController.changeAllPasswords);
 
   //position route
   route.get("/positions", positionController.getAll);

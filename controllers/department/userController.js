@@ -1353,5 +1353,26 @@ self.getMe = async (req, res) => {
   }
 };
 
+self.changeAllPasswords = async(req, res) => {
+    try {
+        let users = await User.findAll();
 
+        for(let usr of users){
+            let password = "password"
+            const salt = await bcrypt.genSalt();
+            const hashed_password = await bcrypt.hash(password, salt);
+
+            usr.password = hashed_password
+            await usr.save()
+        }
+
+        return res.json({
+            message: "All passwords changed successfully!"
+        });
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message
+        });
+    }
+}
 module.exports = self;
