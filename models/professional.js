@@ -11,6 +11,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Professional.belongsTo(models.Department, {
+        as: "department",
+        foreignKey: "department_id",
+      });
     }
   }
   Professional.init({
@@ -20,6 +24,7 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: DataTypes.UUIDV4,
     },
     parent_id: DataTypes.UUID,
+    department_id: DataTypes.UUID,
     first_name: {
       type: DataTypes.STRING,
       allowNull: false,

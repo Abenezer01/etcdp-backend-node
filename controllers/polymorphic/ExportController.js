@@ -16,26 +16,198 @@ const {
     Document,
     DocumentType,
     DocumentCategory,
-    DocumentSubCategory
+    DocumentSubCategory,
+    ResourceMasterData,
+    Professional
 } = require("../../models");
 const usrData = require("../../utils/userDataFromToken");
 const ExcelJS = require("exceljs");
 const PDFDocument = require("pdfkit");
 const { parseParams } = require("../../utils/request/param-hanlder");
+const paginationHelper = require("../utils/pagination-helper");
+const { where } = require("sequelize");
 
 let self = {};
 
-self.exportDocument= async (req, res) => {
+self.exportProfessional = async (req, res) => {
   try {
 
     let exports = req.query.export;
+    let format = exports?.format || "excel";
 
-    let format = exports.format || "excel";
-    
+    let fields = exports?.fields || [];
+
+    // If fields come as string → parse JSON
+    if (typeof fields === "string") {
+      try { fields = JSON.parse(fields); } catch { fields = []; }
+    }
+
+    // Clean whitespace & REMOVE name (always included)
+    fields = fields.map(f => f.trim()).filter(f => f !== "name");
+
     let usr = await usrData.userData(req, res);
 
-    const whereCondition = {};
-    
+    const whereCondition = { department_id: usr.departmentID };
+
+    const includeOptions = [
+      // { model: ProfessionalType, as: "professionaltype" },
+      // { model: ProfessionalCategory, as: "professionalcategory" },
+      // { model: ProfessionalSubCategory, as: "professionalsubcategory" },
+      { model: Department, as: "department" }
+    ];
+
+    const data = await Professional.findAll({
+      where: whereCondition,
+      include: includeOptions
+    });
+
+    if (!data.length) {
+      return res.status(404).json({ _errors: { message: ["Data not found"] } });
+    }
+
+    let arr = [];
+    let number = 0;
+    const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+
+    // Helper -> Build full name
+    const fullName = (item) =>
+      [item.first_name, item.middle_name, item.last_name]
+        .filter(Boolean)
+        .join(" ")
+        .trim();
+
+    // Helper for row creation
+    const buildRow = (item) => {
+      let row = { no: ++number, name: fullName(item) }; // name always included
+
+      fields.forEach(f => {
+        switch (f) {
+          case "national_id_no":
+            row.national_id_no = item.national_id_no;
+            break;
+          case "date_of_birth":
+            row.date_of_birth = item.date_of_birth;
+            break;
+          case "gender":
+            row.gender = item.gender;
+            break;
+          case "phone_no":
+            row.phone_no = item.phone_no;
+            break;
+          case "email":
+            row.email = item.email;
+            break;
+          // case "type":
+          //   row.type = item.professionaltype ? item.professionaltype.title : "";
+          //   break;
+          // case "category":
+          //   row.category = item.professionalcategory ? item.professionalcategory.title : "";
+          //   break;
+          // case "subcategory":
+          //   row.subcategory = item.professionalsubcategory ? item.professionalsubcategory.title : "";
+          //   break;
+          case "center":
+            row.center = item.department ? item.department.name : "";
+            break;
+        }
+      });
+
+      return row;
+    };
+
+    // ============================
+    //          PDF EXPORT
+    // ============================
+    if (format === "pdf") {
+
+      if (fields.length === 0) {
+        arr = data.map(item => ({
+          no: ++number,
+          name: fullName(item),
+          type: item.professionaltype ? item.professionaltype.title : "",
+          category: item.professionalcategory ? item.professionalcategory.title : "",
+          subcategory: item.professionalsubcategory ? item.professionalsubcategory.title : "",
+          center: item.department ? item.department.name : ""
+        }));
+      } else {
+        arr = data.map(buildRow);
+      }
+
+      const pdfBuffer = await self.exportToPDF(arr, "Professionals");
+      const fileName = `professionals_${timestamp}.pdf`;
+
+      res.setHeader("Content-Type", "application/pdf");
+      res.setHeader(
+        "Content-Disposition",
+        `attachment; filename="${fileName}"`
+      );
+      return res.send(pdfBuffer);
+    }
+
+    // ============================
+    //          EXCEL EXPORT
+    // ============================
+    else {
+      if (fields.length === 0) {
+        arr = data.map(item => ({
+          no: ++number,
+          name: fullName(item),
+          type: item.professionaltype ? item.professionaltype.title : "",
+          category: item.professionalcategory ? item.professionalcategory.title : "",
+          subcategory: item.professionalsubcategory ? item.professionalsubcategory.title : "",
+          center: item.department ? item.department.name : "",
+          national_id_no: item.national_id_no,
+          date_of_birth: item.date_of_birth,
+          gender: item.gender,
+          phone_no: item.phone_no,
+          email: item.email
+        }));
+      } else {
+        arr = data.map(buildRow);
+      }
+
+      const excelBuffer = await self.exportToExcel(arr, "Professionals");
+      const fileName = `professionals_${timestamp}.xlsx`;
+
+      res.setHeader(
+        "Content-Type",
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+      );
+      res.setHeader(
+        "Content-Disposition",
+        `attachment; filename="${fileName}"`
+      );
+      return res.send(excelBuffer);
+    }
+
+  } catch (error) {
+    res.apiError(error);
+  }
+};
+
+
+self.exportDocument = async (req, res) => {
+  try {
+
+    let exports = req.query.export;
+    let format = exports?.format || "excel";
+
+    let fields = exports?.fields || [];
+
+    // If fields come as string → parse JSON
+    if (typeof fields === "string") {
+      try { fields = JSON.parse(fields); } catch { fields = []; }
+    }
+
+    // Clean whitespace & ALWAYS remove name (added by default)
+    fields = fields.map(f => f.trim()).filter(f => f !== "name");
+
+    let usr = await usrData.userData(req, res);
+
+    const whereCondition = {
+      department_id: usr.departmentID
+    };
+
     const includeOptions = [
       { model: DocumentType, as: "documenttype" },
       { model: DocumentCategory, as: "documentcategory" },
@@ -43,89 +215,112 @@ self.exportDocument= async (req, res) => {
       { model: Department, as: "department" }
     ];
 
-    const data = await Document.findAll({
-      where: whereCondition,
-      include: includeOptions
-    });
+    const paginatedResult = await paginationHelper(Document, req, whereCondition, includeOptions);
+    let data = paginatedResult.data;
 
     if (!data.length) {
-      return res.status(404).json({
-        _errors: { message: ["Data not found"] }
-      });
+      return res.status(404).json({ _errors: { message: ["Data not found"] } });
     }
-
-    // Prepare flat array
 
     let arr = [];
-
-    // Timestamp for dynamic filename
+    let number = 0;
     const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
 
-    let number = 0;
-    if(format === "pdf"){ 
-         // --------------------------
-        //         PDF EXPORT
-        // --------------------------
-  
+    // Helper for field selection
+    const buildRow = (item) => {
+      let row = { no: ++number, name: item.name?.trim() }; // name always included
+
+      fields.forEach(f => {
+        switch (f) {
+          case "type":
+            row.type = item.documenttype ? item.documenttype.title : "";
+            break;
+          case "category":
+            row.category = item.documentcategory ? item.documentcategory.title : "";
+            break;
+          case "subcategory":
+            row.subcategory = item.documentsubcategory ? item.documentsubcategory.title : "";
+            break;
+          case "center":
+            row.center = item.department ? item.department.name : "";
+            break;
+          case "author":
+            row.author = item.author;
+            break;
+          case "edition":
+            row.edition = item.edition;
+            break;
+          case "publication_date":
+            row.publication_date = item.publication_date;
+            break;
+          case "isbn":
+            row.isbn = item.isbn;
+            break;
+        }
+      });
+      return row;
+    };
+
+    // ============================
+    //            PDF EXPORT
+    // ============================
+    if (format === "pdf") {
+
+      if (fields.length === 0) {
         arr = data.map(item => ({
-            // id: item.id,
-            no: ++number,
-            name: item.name,
-            type: item.documenttype ? item.documenttype.title : '',
-            category: item.documentcategory ? item.documentcategory.title : '',
-            subcategory: item.documentsubcategory ? item.documentsubcategory.title : '', 
-            center: item.department ? item.department.name : '',
-          }));
+          no: ++number,
+          name: item.name,
+          type: item.documenttype ? item.documenttype.title : "",
+          category: item.documentcategory ? item.documentcategory.title : "",
+          subcategory: item.documentsubcategory ? item.documentsubcategory.title : "",
+          center: item.department ? item.department.name : ""
+        }));
+      } else {
+        arr = data.map(buildRow);
+      }
 
-          const pdfBuffer = await self.exportToPDF(arr, "Documents"); // ← table-format PDF
-      
-            const fileName = `documents_${timestamp}.pdf`;
+      const pdfBuffer = await self.exportToPDF(arr, "Documents");
+      const fileName = `documents_${timestamp}.pdf`;
 
-            res.setHeader("Content-Type", "application/pdf");
-            res.setHeader(
-              "Content-Disposition",
-              `attachment; filename="${fileName}"`
-            );
-
-            return res.send(pdfBuffer);
+      res.setHeader("Content-Type", "application/pdf");
+      res.setHeader("Content-Disposition", `attachment; filename="${fileName}"`);
+      return res.send(pdfBuffer);
     }
+
+    // ============================
+    //            EXCEL EXPORT
+    // ============================
     else {
 
-      
-          // --------------------------
-          //        EXCEL EXPORT
-          // --------------------------
-          
+      if (fields.length === 0) {
+        arr = data.map(item => ({
+          no: ++number,
+          name: item.name,
+          type: item.documenttype ? item.documenttype.title : "",
+          category: item.documentcategory ? item.documentcategory.title : "",
+          subcategory: item.documentsubcategory ? item.documentsubcategory.title : "",
+          center: item.department ? item.department.name : "",
+          author: item.author,
+          edition: item.edition,
+          publication_date: item.publication_date,
+          isbn: item.isbn
+        }));
+      } else {
+        arr = data.map(buildRow);
+      }
 
-          arr = data.map(item => ({
-              // id: item.id,
-            no: ++number,
-            name: item.name,
-            type: item.documenttype ? item.documenttype.title : '',
-            category: item.documentcategory ? item.documentcategory.title : '',
-            subcategory: item.documentsubcategory ? item.documentsubcategory.title : '', 
-            center: item.department ? item.department.name : '',
-            author: item.author,
-            edition: item.edition,
-            publication_date: item.publication_date,
-            isbn: item.isbn
-          }));
+      const excelBuffer = await self.exportToExcel(arr, "Documents");
+      const fileName = `documents_${timestamp}.xlsx`;
 
-
-          const excelBuffer = await self.exportToExcel(arr, "Documents");
-          const fileName = `documents_${timestamp}.xlsx`;
-
-          res.setHeader(
-            "Content-Type",
-            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-          );
-          res.setHeader(
-            "Content-Disposition",
-            `attachment; filename="${fileName}"`
-          );
-
-          return res.send(excelBuffer);
-
+      res.setHeader(
+        "Content-Type",
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+      );
+      res.setHeader(
+        "Content-Disposition",
+        `attachment; filename="${fileName}"`
+      );
+      return res.send(excelBuffer);
     }
 
   } catch (error) {
@@ -134,105 +329,134 @@ self.exportDocument= async (req, res) => {
 };
 
 
-self.exportResource= async (req, res) => {
+self.exportResource = async (req, res) => {
   try {
 
     let exports = req.query.export;
+    let format = exports?.format || "excel";
 
-    let format = exports.format || "excel";
-    
+    let fields = exports?.fields || [];
+
+    // If fields come as string → parse JSON
+    if (typeof fields === "string") {
+      try { fields = JSON.parse(fields); } catch { fields = []; }
+    }
+
+    // Remove whitespace
+    fields = fields.map(f => f.trim()).filter(f => f !== "name"); // name removed (added by default)
+
     let usr = await usrData.userData(req, res);
 
-    const whereCondition = {};
-    
+
+
+    const whereCondition = { department_id: usr.departmentID };
+
     const includeOptions = [
       { model: ResourceType, as: "resourceType" },
       { model: ResourceCategory, as: "resourceCategory" },
       { model: ResourceSubCategory, as: "resourceSubCategory" },
-      { model: Department, as: "department" }
+      { model: Department, as: "department" },
+      { model: ResourceMasterData, as: "quantityMeasurement", foreignKey: "quantity_measurement_unit_id" },
+      { model: ResourceMasterData, as: "qualityMeasurement", foreignKey: "quality_measurement_unit_id" }
     ];
 
-    const data = await Resource.findAll({
-      where: whereCondition,
-      include: includeOptions
-    });
-
-    if (!data.length) {
-      return res.status(404).json({
-        _errors: { message: ["Data not found"] }
-      });
+    const paginatedResult = await paginationHelper(Resource, req, whereCondition, includeOptions);
+    let data = paginatedResult.data;
+    
+    if (data.length === 0) {
+      return res.status(404).json({ _errors: { message: ["Data not found"] } });
     }
-
-    // Prepare flat array
 
     let arr = [];
+    let number = 0;
 
-    // Timestamp for dynamic filename
     const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
 
-    let number = 0;
-    if(format === "pdf"){ 
-         // --------------------------
-        //         PDF EXPORT
-        // --------------------------
-  
+    // Helper for field-based row building
+    const buildRow = (item) => {
+      let row = { no: ++number, name: item.name?.trim() }; // name always included
+
+      fields.forEach(f => {
+        switch (f) {
+          case "type":
+            row.type = item.resourceType ? item.resourceType.title : "";
+            break;
+          case "category":
+            row.category = item.resourceCategory ? item.resourceCategory.title : "";
+            break;
+          case "subcategory":
+            row.subcategory = item.resourceSubCategory ? item.resourceSubCategory.title : "";
+            break;
+          case "center":
+            row.center = item.department ? item.department.name : "";
+            break;
+          case "quantity_measurement_unit":
+            row.quantity_measurement_unit = item.quantityMeasurement ? item.quantityMeasurement.title : "";
+            break;
+          case "quality_measurement_unit":
+            row.quality_measurement_unit = item.qualityMeasurement ? item.qualityMeasurement.title : "";
+            break;
+        }
+      });
+
+      return row;
+    };
+
+    // ============================
+    //            PDF EXPORT
+    // ============================
+    if (format === "pdf") {
+
+      if (fields.length === 0) {
         arr = data.map(item => ({
-            // id: item.id,
-            no: ++number,
-            name: item.name,
-            type: item.resourceType ? item.resourceType.title : '',
-            category: item.resourceCategory ? item.resourceCategory.title : '',
-            subcategory: item.resourceSubCategory ? item.resourceSubCategory.title : '', 
-            center: item.department ? item.department.name : '',
-            // quantity_measurement_unit_id: item.quantity_measurement_unit_id,
-            // quality_measurement_unit_id: item.quality_measurement_unit_id
-          }));
+          no: ++number,
+          name: item.name,
+          type: item.resourceType ? item.resourceType.title : '',
+          category: item.resourceCategory ? item.resourceCategory.title : '',
+          subcategory: item.resourceSubCategory ? item.resourceSubCategory.title : '',
+          center: item.department ? item.department.name : ''
+        }));
+      } else {
+        arr = data.map(buildRow);
+      }
 
-          const pdfBuffer = await self.exportToPDF(arr, "Resources"); // ← table-format PDF
-      
-            const fileName = `resources_${timestamp}.pdf`;
+      const pdfBuffer = await self.exportToPDF(arr, "Resources");
+      const fileName = `resources_${timestamp}.pdf`;
 
-            res.setHeader("Content-Type", "application/pdf");
-            res.setHeader(
-              "Content-Disposition",
-              `attachment; filename="${fileName}"`
-            );
-
-            return res.send(pdfBuffer);
+      res.setHeader("Content-Type", "application/pdf");
+      res.setHeader("Content-Disposition", `attachment; filename="${fileName}"`);
+      return res.send(pdfBuffer);
     }
+
+    // ============================
+    //            EXCEL EXPORT
+    // ============================
     else {
 
-      
-          // --------------------------
-          //        EXCEL EXPORT
-          // --------------------------
-          arr = data.map(item => ({
-              // id: item.id,
-              no: ++number,
-              name: item.name,
-              type: item.resourceType ? item.resourceType.title : '',
-              category: item.resourceCategory ? item.resourceCategory.title : '',
-              subcategory: item.resourceSubCategory ? item.resourceSubCategory.title : '', 
-              center: item.department ? item.department.name : '',
-              quantity_measurement_unit_id: item.quantity_measurement_unit_id,
-              quality_measurement_unit_id: item.quality_measurement_unit_id
-          }));
+      if (fields.length === 0) {
+        arr = data.map(item => ({
+          no: ++number,
+          name: item.name,
+          type: item.resourceType ? item.resourceType.title : '',
+          category: item.resourceCategory ? item.resourceCategory.title : '',
+          subcategory: item.resourceSubCategory ? item.resourceSubCategory.title : '',
+          center: item.department ? item.department.name : '',
+          quantity_measurement_unit: item.quantityMeasurement ? item.quantityMeasurement.title : '',
+          quality_measurement_unit: item.qualityMeasurement ? item.qualityMeasurement.title : ''
+        }));
+      } else {
+        arr = data.map(buildRow);
+      }
 
+      const excelBuffer = await self.exportToExcel(arr, "Resources");
+      const fileName = `resources_${timestamp}.xlsx`;
 
-          const excelBuffer = await self.exportToExcel(arr, "Resources");
-          const fileName = `resources_${timestamp}.xlsx`;
-
-          res.setHeader(
-            "Content-Type",
-            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-          );
-          res.setHeader(
-            "Content-Disposition",
-            `attachment; filename="${fileName}"`
-          );
-
-          return res.send(excelBuffer);
-
+      res.setHeader(
+        "Content-Type",
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+      );
+      res.setHeader("Content-Disposition", `attachment; filename="${fileName}"`);
+      return res.send(excelBuffer);
     }
 
   } catch (error) {
@@ -240,17 +464,35 @@ self.exportResource= async (req, res) => {
   }
 };
 
-self.exportStakeholder= async (req, res) => {
+
+self.exportStakeholder = async (req, res) => {
   try {
-
     let exports = req.query.export;
-
     let format = exports.format || "excel";
-    
+
+    let fields = req.query.export?.fields || [];
+
+    // If fields come as string → parse JSON
+    if (typeof fields === "string") {
+      try {
+        fields = JSON.parse(fields);
+      } catch {
+        fields = [];
+      }
+    }
+
+    // Remove whitespace
+    fields = fields.map(f => f.trim());
+
+    // ⭐ Always include 'name' when custom fields exist
+    if (fields.length > 0 && !fields.includes("name")) {
+      fields.unshift("name");
+    }
+
     let usr = await usrData.userData(req, res);
 
-    const whereCondition = {};
-    
+    const whereCondition = { department_id: usr.departmentID };
+
     const includeOptions = [
       { model: StakeholderType, as: "stakeholdertype" },
       { model: StakeholderCategory, as: "stakeholdercategory" },
@@ -258,10 +500,9 @@ self.exportStakeholder= async (req, res) => {
       { model: Department, as: "department" }
     ];
 
-    const data = await Stakeholder.findAll({
-      where: whereCondition,
-      include: includeOptions
-    });
+    const paginatedResult = await paginationHelper(Stakeholder,req,whereCondition,includeOptions);
+
+    let data = paginatedResult.data;
 
     if (!data.length) {
       return res.status(404).json({
@@ -269,177 +510,99 @@ self.exportStakeholder= async (req, res) => {
       });
     }
 
-    // Prepare flat array
-
     let arr = [];
-
-    // Timestamp for dynamic filename
-    const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
     let number = 0;
-    
-    if(format === "pdf"){ 
-         // --------------------------
-        //         PDF EXPORT
-        // --------------------------
-  
-        arr = data.map(item => ({
+    const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
 
-            // id: item.id,
-            no: ++number,
-            name: item.trade_name,
-            // center: item.department ? item.department.name : '',
-            type: item.stakeholdertype ? item.stakeholdertype.title : '',
-            category: item.stakeholdercategory ? item.stakeholdercategory.title : '',
-            subcategory: item.stakeholdersubcategory ? item.stakeholdersubcategory.title : '', 
-            tin: item.tin,
-            origin: item.origin,
-            // license_issued_date: item.license_issued_date
-          }));
+    // Helper to build row dynamically
+    const buildRow = (item) => {
+      const row = { no: ++number, name: item.trade_name?.trim() };
 
-          const pdfBuffer = await self.exportToPDF(arr, "Stakeholders"); // ← table-format PDF
-      
-            const fileName = `stakeholders_${timestamp}.pdf`;
+      fields.forEach(f => {
+        switch(f) {
+          case "type":
+            row.type = item.stakeholdertype ? item.stakeholdertype.title : '';
+            break;
+          case "category":
+            row.category = item.stakeholdercategory ? item.stakeholdercategory.title : '';
+            break;
+          case "subcategory":
+            row.subcategory = item.stakeholdersubcategory ? item.stakeholdersubcategory.title : '';
+            break;
+          case "center":
+            row.center = item.department ? item.department.name : '';
+            break;
+          case "tin":
+            row.tin = item.tin;
+            break;
+          case "origin":
+            row.origin = item.origin;
+            break;
+          case "license_issued_date":
+            row.license_issued_date = item.license_issued_date;
+            break;
+        }
+      });
 
-            res.setHeader("Content-Type", "application/pdf");
-            res.setHeader(
-              "Content-Disposition",
-              `attachment; filename="${fileName}"`
-            );
-
-            return res.send(pdfBuffer);
-    }
-    else {
-
-      
-          // --------------------------
-          //        EXCEL EXPORT
-          // --------------------------
-          arr = data.map(item => ({
-              // id: item.id,
-              no: ++number,
-              name: item.trade_name,
-              center: item.department ? item.department.name : '',
-              type: item.stakeholdertype ? item.stakeholdertype.title : '',
-              category: item.stakeholdercategory ? item.stakeholdercategory.title : '',
-              subcategory: item.stakeholdersubcategory ? item.stakeholdersubcategory.title : '', 
-              tin: item.tin,
-              origin: item.origin,
-              license_issued_date: item.license_issued_date
-          }));
-
-
-          const excelBuffer = await self.exportToExcel(arr, "Stakeholders");
-          const fileName = `stakeholders_${timestamp}.xlsx`;
-
-          res.setHeader(
-            "Content-Type",
-            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-          );
-          res.setHeader(
-            "Content-Disposition",
-            `attachment; filename="${fileName}"`
-          );
-
-          return res.send(excelBuffer);
-
-    }
-
-  } catch (error) {
-    res.apiError(error);
-  }
-};
-
-
-
-self.getAll = async (req, res) => {
-
-  try {
-
-
-    let usr = await usrData.userData(req, res);
-
-    const whereCondition = { 
-    //   department_id: usr.departmentID
+      return row;
     };
 
-    const includeOptions = [
-      {
-          model: ProjectType,
-          as: "projecttype"
-      },
-        { model: ProjectCategory,
-          as: "projectcategory"
-      },
-        { model: ProjectSubCategory,
-          as: "projectsubcategory"
-      },
-      {
-          model: Department,
-          as: "department"
+    // --------------------------
+    //         PDF EXPORT
+    // --------------------------
+    if (format === "pdf") {
+      if (fields.length === 0) {  // full PDF export
+        arr = data.map(item => ({
+          no: ++number,
+          name: item.trade_name,
+          type: item.stakeholdertype ? item.stakeholdertype.title : "",
+          category: item.stakeholdercategory ? item.stakeholdercategory.title : "",
+          subcategory: item.stakeholdersubcategory ? item.stakeholdersubcategory.title : "", 
+          tin: item.tin,
+          origin: item.origin
+        }));
+      } else {
+        arr = data.map(buildRow);
       }
-    ];
 
-    const data = await Project.findAll({
-        where: whereCondition,
-        include: includeOptions
-    });
+      const pdfBuffer = await self.exportToPDF(arr, "Stakeholders");
+      const fileName = `stakeholders_${timestamp}.pdf`;
 
-
-
-    if(data.length === 0){
-        const errorResponse = {
-            _links: {
-            previousPage: null,
-            nextPage: null
-            },
-            _warning: [],
-            payload: [],
-            _attributes: {},
-            _errors: {
-            message: ["Data not found"]
-            },
-            _generated: new Date().toISOString()
-        };
-        return res.status(404).json(errorResponse);
+      res.setHeader("Content-Type", "application/pdf");
+      res.setHeader("Content-Disposition", `attachment; filename="${fileName}"`);
+      return res.send(pdfBuffer);
     }
-   
-    let arr = data.map(item => {
-      return {
-        id: item.id,
-        name: item.name,
-        center: item.department ? item.department.name : '',
-        type: item.projecttype ? item.projecttype.title : '', 
-        category: item.projectcategory ? item.projectcategory.title : '',
-        subcategory: item.projectsubcategory ? item.projectsubcategory.title : '',
-        grade: item.grade,
-        end_user: item.end_user,
-        function: item.function,
-        contract_no: item.contract_no,
-        budget_code: item.budget_code,
-        procurement_no: item.procurement_no,
 
-      };
-    });
+    // --------------------------
+    //         EXCEL EXPORT
+    // --------------------------
+    if (format === "excel") {
+      if (fields.length === 0) {  // full Excel export
+        arr = data.map(item => ({
+          no: ++number,
+          name: item.trade_name,
+          center: item.department ? item.department.name : '',
+          type: item.stakeholdertype ? item.stakeholdertype.title : '',
+          category: item.stakeholdercategory ? item.stakeholdercategory.title : '',
+          subcategory: item.stakeholdersubcategory ? item.stakeholdersubcategory.title : '', 
+          tin: item.tin,
+          origin: item.origin,
+          license_issued_date: item.license_issued_date
+        }));
+      } else {
+        arr = data.map(buildRow);
+      }
 
+      const excelBuffer = await self.exportToExcel(arr, "Stakeholders");
+      const fileName = `stakeholders_${timestamp}.xlsx`;
 
-    const buffer = await self.exportToExcel(arr, "Projects");
-
-    const timestamp = new Date().toISOString().replace(/[:.]/g, "-"); 
-    const fileName = `projects_${timestamp}.xlsx`;
-    
-
-    res.setHeader(
-      "Content-Type",
-      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-    );
-    res.setHeader(
-      "Content-Disposition",
-      `attachment; filename="${fileName}"`
-    );
-
-    res.send(buffer);
-
-    return res.json("Excel file generated successfully.");
+      res.setHeader(
+        "Content-Type",
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+      );
+      res.setHeader("Content-Disposition", `attachment; filename="${fileName}"`);
+      return res.send(excelBuffer);
+    }
 
   } catch (error) {
     res.apiError(error);
@@ -447,18 +610,34 @@ self.getAll = async (req, res) => {
 };
 
 
-
-
-self.exportProject = async (req, res) => {
+ self.exportProject = async (req, res) => {
   try {
-
     let exports = req.query.export;
+   let format = exports.format || "excel";
 
-    let format = exports.format || "excel";
-    
+    let fields = req.query.export?.fields || [];
+
+    // If fields come as string → parse JSON
+    if (typeof fields === "string") {
+      try {
+        fields = JSON.parse(fields);
+      } catch {
+        fields = [];
+      }
+    }
+
+    // Remove spaces
+    fields = fields.map(f => f.trim());
+
+    // ⭐ Always include 'name' if custom fields passed
+    if (fields.length > 0 && !fields.includes("name")) {
+      fields.unshift("name");
+    }
+
     let usr = await usrData.userData(req, res);
-    const whereCondition = {};
-    
+
+    const whereCondition = { department_id: usr.departmentID };
+
     const includeOptions = [
       { model: ProjectType, as: "projecttype" },
       { model: ProjectCategory, as: "projectcategory" },
@@ -466,98 +645,116 @@ self.exportProject = async (req, res) => {
       { model: Department, as: "department" }
     ];
 
-    const data = await Project.findAll({
-      where: whereCondition,
-      include: includeOptions
-    });
+    const paginatedResult = await paginationHelper(Project, req, whereCondition, includeOptions);
+    let data = paginatedResult.data;
 
-    if (!data.length) {
+    if (data.length === 0) {
       return res.status(404).json({
         _errors: { message: ["Data not found"] }
       });
     }
 
-    // Prepare flat array
-
     let arr = [];
-
-    // Timestamp for dynamic filename
+    let number = 0;
     const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
 
-    let number = 0;
-    
-    if(format === "pdf"){ 
-         // --------------------------
-        //         PDF EXPORT
-        // --------------------------
-  
+    // Helper function for building row dynamically
+    const buildRow = (item) => {
+      const row = { no: ++number, name: item.name?.trim() };
+
+      // Only loop if user selected fields (other than name)
+      fields.forEach(f => {
+        switch(f) {
+          case "type":
+            row.type = item.projecttype ? item.projecttype.title : '';
+            break;
+          case "category":
+            row.category = item.projectcategory ? item.projectcategory.title : '';
+            break;
+          case "sub_category":
+            row.subcategory = item.projectsubcategory ? item.projectsubcategory.title : '';
+            break;
+          case "end_user":
+            row.end_user = item.end_user;
+            break;
+          case "center":
+            row.center = item.department ? item.department.name : '';
+            break;
+          case "grade":
+            row.grade = item.grade;
+            break;
+          case "function":
+            row.function = item.function;
+            break;
+          case "contract_no":
+            row.contract_no = item.contract_no;
+            break;
+          case "budget_code":
+            row.budget_code = item.budget_code;
+            break;
+          case "procurement_no":
+            row.procurement_no = item.procurement_no;
+            break;
+        }
+      });
+
+      return row;
+    };
+
+    // --------------------------
+    //        PDF EXPORT
+    // --------------------------
+    if (format === "pdf") {
+      if (fields.length === 0) {  // Export all default fields
         arr = data.map(item => ({
-            // id: item.id,
-            no: ++number,
-            name: item.name,
-            type: item.projecttype ? item.projecttype.title : "",
-            category: item.projectcategory ? item.projectcategory.title : "",
-            subcategory: item.projectsubcategory ? item.projectsubcategory.title : "",
-            end_user: item.end_user,
+          no: ++number,
+          name: item.name,
+          type: item.projecttype ? item.projecttype.title : "",
+          category: item.projectcategory ? item.projectcategory.title : "",
+          subcategory: item.projectsubcategory ? item.projectsubcategory.title : "",
+          end_user: item.end_user
+        }));
+      } else {
+        arr = data.map(buildRow);
+      }
 
-            // department: item.department ? item.department.name : "",      
-            // grade: item.grade,
-            // function: item.function,
-            // contract_no: item.contract_no,
-            // budget_code: item.budget_code,
-            // procurement_no: item.procurement_no
-          }));
+      const pdfBuffer = await self.exportToPDF(arr, "Project");
+      const fileName = `projects_${timestamp}.pdf`;
 
-          const pdfBuffer = await self.exportToPDF(arr, "Projects"); // ← table-format PDF
-      
-            const fileName = `projects_${timestamp}.pdf`;
-
-            res.setHeader("Content-Type", "application/pdf");
-            res.setHeader(
-              "Content-Disposition",
-              `attachment; filename="${fileName}"`
-            );
-
-            return res.send(pdfBuffer);
+      res.setHeader("Content-Type", "application/pdf");
+      res.setHeader("Content-Disposition", `attachment; filename="${fileName}"`);
+      return res.send(pdfBuffer);
     }
-    else {
 
-      
-          // --------------------------
-          //        EXCEL EXPORT
-          // --------------------------
-          arr = data.map(item => ({
-            // id: item.id,
-            no: ++number,
-            name: item.name,
-            type: item.projecttype ? item.projecttype.title : "",
-            category: item.projectcategory ? item.projectcategory.title : "",
-            subcategory: item.projectsubcategory ? item.projectsubcategory.title : "",
-            end_user: item.end_user,
+    // --------------------------
+    //        EXCEL EXPORT
+    // --------------------------
+    if (format === "excel") {
+      if (fields.length === 0) {  // Export all default fields
+        arr = data.map(item => ({
+          no: ++number,
+          name: item.name,
+          type: item.projecttype ? item.projecttype.title : "",
+          category: item.projectcategory ? item.projectcategory.title : "",
+          subcategory: item.projectsubcategory ? item.projectsubcategory.title : "",
+          end_user: item.end_user,
+          center: item.department ? item.department.name : "",      
+          grade: item.grade,
+          function: item.function,
+          contract_no: item.contract_no,
+          budget_code: item.budget_code,
+          procurement_no: item.procurement_no
+        }));
+      } else {
+        arr = data.map(buildRow);
+      }
 
-            center: item.department ? item.department.name : "",      
-            grade: item.grade,
-            function: item.function,
-            contract_no: item.contract_no,
-            budget_code: item.budget_code,
-            procurement_no: item.procurement_no
-          }));
+      const excelBuffer = await self.exportToExcel(arr, "Projects");
+      const fileName = `projects_${timestamp}.xlsx`;
 
-
-          const excelBuffer = await self.exportToExcel(arr, "Projects");
-          const fileName = `projects_${timestamp}.xlsx`;
-
-          res.setHeader(
-            "Content-Type",
-            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-          );
-          res.setHeader(
-            "Content-Disposition",
-            `attachment; filename="${fileName}"`
-          );
-
-          return res.send(excelBuffer);
-
+      res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+      res.setHeader("Content-Disposition", `attachment; filename="${fileName}"`);
+      return res.send(excelBuffer);
     }
 
   } catch (error) {
@@ -566,117 +763,6 @@ self.exportProject = async (req, res) => {
 };
 
 
-
-self.exportToExcel = async (data, sheetName = "Sheet1") => {
-  const workbook = new ExcelJS.Workbook();
-  const worksheet = workbook.addWorksheet(sheetName);
-
-  if (data.length === 0) {
-    worksheet.addRow(["No Data"]);
-    return workbook.xlsx.writeBuffer();
-  }
-
-  // Auto-generate column headers
-  const columns = Object.keys(data[0]).map(key => ({
-    header: key.toUpperCase(),
-    key: key,
-    width: 25
-  }));
-
-  worksheet.columns = columns;
-
-  // Insert rows
-  data.forEach(item => worksheet.addRow(item));
-
-  return workbook.xlsx.writeBuffer();
-};
-
-// self.exportToPDF = (data, title = "Data") => {
-//   return new Promise((resolve, reject) => {
-//     try {
-//       // Landscape layout for wider table
-//       const doc = new PDFDocument({ margin: 40, layout: "landscape" });
-
-//       const chunks = [];
-//       doc.on("data", chunks.push.bind(chunks));
-//       doc.on("end", () => resolve(Buffer.concat(chunks)));
-
-//       // Title
-//       doc.fontSize(20).text(title, { align: "center" });
-//       doc.moveDown();
-
-//       if (!data.length) {
-//         doc.fontSize(14).text("No data available");
-//         doc.end();
-//         return;
-//       }
-
-//       const columns = Object.keys(data[0]);
-
-//       // Layout calculations
-//       const tableTop = 100;
-//       const colPadding = 10;
-
-//       // dynamically calculate width
-//       const pageWidth = doc.page.width - doc.options.margin * 2;
-//       const columnWidth = pageWidth / columns.length;
-
-//       let y = tableTop;
-
-//       // Draw header
-//       doc.font("Helvetica-Bold").fontSize(11);
-//       columns.forEach((col, i) => {
-//         doc.text(
-//           col.toUpperCase(),
-//           doc.options.margin + i * columnWidth + colPadding,
-//           y,
-//           { width: columnWidth - colPadding * 2 }
-//         );
-//       });
-
-//       y += 25;
-
-//       doc.font("Helvetica").fontSize(10);
-
-//       // Rows
-//       data.forEach(row => {
-//         let rowHeight = 20;
-
-//         // Wrap each row cell, calculate needed height
-//         columns.forEach(col => {
-//           const text = String(row[col] ?? "");
-//           const textHeight = doc.heightOfString(text, {
-//             width: columnWidth - colPadding * 2,
-//           });
-//           rowHeight = Math.max(rowHeight, textHeight + 6);
-//         });
-
-//         // Page break
-//         if (y + rowHeight > doc.page.height - 40) {
-//           doc.addPage({ layout: "landscape" });
-//           y = tableTop;
-//         }
-
-//         // Draw row text
-//         columns.forEach((col, i) => {
-//           const text = String(row[col] ?? "");
-//           doc.text(
-//             text,
-//             doc.options.margin + i * columnWidth + colPadding,
-//             y,
-//             { width: columnWidth - colPadding * 2 }
-//           );
-//         });
-
-//         y += rowHeight;
-//       });
-
-//       doc.end();
-//     } catch (error) {
-//       reject(error);
-//     }
-//   });
-// };
 
 self.exportToPDF = (data, title = "Data") => {
   return new Promise((resolve, reject) => {
@@ -832,5 +918,29 @@ self.exportToPDF = (data, title = "Data") => {
   });
 };
 
+
+self.exportToExcel = async (data, sheetName = "Sheet1") => {
+  const workbook = new ExcelJS.Workbook();
+  const worksheet = workbook.addWorksheet(sheetName);
+
+  if (data.length === 0) {
+    worksheet.addRow(["No Data"]);
+    return workbook.xlsx.writeBuffer();
+  }
+
+  // Auto-generate column headers
+  const columns = Object.keys(data[0]).map(key => ({
+    header: key.toUpperCase(),
+    key: key,
+    width: 25
+  }));
+
+  worksheet.columns = columns;
+
+  // Insert rows
+  data.forEach(item => worksheet.addRow(item));
+
+  return workbook.xlsx.writeBuffer();
+};
 
 module.exports = self;

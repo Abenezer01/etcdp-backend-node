@@ -25,6 +25,14 @@ module.exports = (sequelize, DataTypes) => {
         as: "resourceSubCategory",
         foreignKey: "resourcesubcategory_id",
       });
+      Resource.belongsTo(models.ResourceMasterData, {
+        as: "quantityMeasurement",
+        foreignKey: "quantity_measurement_unit_id", 
+      });
+      Resource.belongsTo(models.ResourceMasterData, {
+        as: "qualityMeasurement",
+        foreignKey: "quality_measurement_unit_id", 
+      });
       
     }
   }
