@@ -69,10 +69,8 @@ self.getAll = async (req, res) => {
 
   try {
 
-
     // let x = Socket.emitToUser("userId123", "event_name", { message: "Hello, user!" });
 
-    // return res.json(x);
     let usr = await usrData.userData(req, res);
 
     const whereCondition = { 
@@ -89,6 +87,13 @@ self.getAll = async (req, res) => {
     const paginatedResult = await paginationHelper(Project, req, whereCondition, includeOptions);
 
     let arr = paginatedResult.data;
+
+    if(arr === undefined){
+      return res.apiSuccess({ 
+        data: [],
+        total: 0
+      });
+    }
     let projectWithStatus = [];
 
     for(let ar of arr){
@@ -96,7 +101,7 @@ self.getAll = async (req, res) => {
         return new Date(current.created_at) > new Date(latest.created_at) ? current : latest;
       }, ar.projectstatuses[0]);
 
-      let temp = ar.toJSON();
+      let temp = ar
       temp.status_id = latestStatus.status_id;
       // delete temp.projectstatus;
       projectWithStatus.push(temp);

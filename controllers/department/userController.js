@@ -90,7 +90,7 @@ self.getAll = async (req, res) => {
 
     const usersWithEmail = await Promise.all(
             paginatedResult.data.map(async (user) => {
-              const userJson = user.toJSON();
+              const userJson = user;
           
               userJson.email = userJson.useremails ? userJson.useremails[0].email : null;
               userJson.phone = userJson.userphones ? userJson.userphones[0].phone : null;
@@ -619,7 +619,7 @@ self.update = async (req, res) => {
         
         const usersWithEmail = await Promise.all(
             paginatedResult.data.map(async (user) => {
-              const userJson = user.toJSON();
+              const userJson = user;
           
               userJson.email = userJson.useremails ? userJson.useremails[0].email : null;
               userJson.phone = userJson.userphones ? userJson.userphones[0].phone : null;

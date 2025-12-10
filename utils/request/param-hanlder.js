@@ -22,6 +22,7 @@ const parseParams = (req) => {
     type: req.query.type || null,
     position: req.query.position || null,
     export: req.query.export || null, // <-- Added export here
+    search: req.query.search || null,
   };
 
   return params;
