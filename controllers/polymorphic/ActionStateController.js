@@ -448,7 +448,7 @@ self.getModelAction = async (req, res) => {
       if (reject) {
         const rejectUser = await self.getUserData(reject.user_id, reject.id);
         // const rejectedFiles = await self.getFileData(reject.id, 'REJECT');
-        element.rejectedData = {
+        element.rejected_data = {
           ... reject.toJSON(),
           "user": rejectUser
           // files: rejectedFiles.rows,

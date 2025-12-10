@@ -107,8 +107,8 @@ const loginUser = async (req, res) => {
       stakeholder_id: usr.stakeholder_id
     };
 
-    const accessToken = jwt.sign(userPayload, TOKEN_KEY, { expiresIn: "1000h" });
-    const refreshToken = jwt.sign(userPayload, REFRESH_TOKEN_KEY, { expiresIn: "1000h" });
+    const accessToken = jwt.sign(userPayload, TOKEN_KEY, { expiresIn: "15m" });
+    const refreshToken = jwt.sign(userPayload, REFRESH_TOKEN_KEY, { expiresIn: "5m" });
 
     usr.refresh_token = refreshToken;
     await usr.save();
