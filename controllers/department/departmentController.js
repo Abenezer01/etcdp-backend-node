@@ -15,6 +15,7 @@ const {
 } = require("../../models");
 const usrData = require("../../utils/userDataFromToken");
 const actionHelper = require("../utils/action-helper");
+const searchHelper = require("../utils/search-helper");
 const paginationHelper = require("../utils/pagination-helper");
 const { getRecordById, updateRecord, deleteRecord } = require("../utils/format-helper");
 let master = require("../../config/master");
@@ -54,15 +55,13 @@ self.delete = async (req, res) => {
 
 self.search = async (req, res) => {
   try {
-    let text = req.query.text;
-    let data = await Department.findAll({
-      where: {
-        name: {
-          [Op.like]: "%" + text + "%",
-        },
-      },
-    });
-    return res.json(data);
+      const q = req.query.q; // query text from URL
+
+      const data = await searchHelper.globalSearch(Department, q, [
+        "name",
+        "description"
+      ]);
+      return res.json(data);
   } catch (error) {
     res.status(500).json({
       message: error.message,
@@ -73,6 +72,28 @@ self.search = async (req, res) => {
 self.save = async (req, res) => {
   try {
     let body = req.body;
+    const existing = await Department.findOne({
+      where: { name: body.name.trim() }
+    });
+
+    if (existing) {
+      const errorResponse = {
+        _links: {
+          previousPage: null,
+          nextPage: null
+        },
+        _warning: [],
+        payload: [],
+        _attributes: {},
+        _errors: {
+          message: "Department name already exists!"
+        },
+        _generated: new Date().toISOString()
+      };
+      return res.status(401).json(errorResponse);
+    }
+    
+    
     let data = await Department.create(body);
 
     let usr = await usrData.userData(req, res);

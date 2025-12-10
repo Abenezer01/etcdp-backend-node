@@ -66,7 +66,7 @@ module.exports = function (express) {
   //department route
   route.get("/departments", departmentController.getAll);
   route.get("/departments/:id", departmentController.get);
-  route.get("/department_search", departmentController.search);
+  route.get("/department/search", departmentController.search);
   route.post(
     "/departments",
     validateInput.departmentValidate,
