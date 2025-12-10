@@ -15,7 +15,6 @@ const {
 } = require("../../models");
 const usrData = require("../../utils/userDataFromToken");
 const actionHelper = require("../utils/action-helper");
-const searchHelper = require("../utils/search-helper");
 const paginationHelper = require("../utils/pagination-helper");
 const { getRecordById, updateRecord, deleteRecord } = require("../utils/format-helper");
 let master = require("../../config/master");
@@ -53,21 +52,7 @@ self.delete = async (req, res) => {
   deleteRecord(Department, req, res);
 };
 
-self.search = async (req, res) => {
-  try {
-      const q = req.query.q; // query text from URL
 
-      const data = await searchHelper.globalSearch(Department, q, [
-        "name",
-        "description"
-      ]);
-      return res.json(data);
-  } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
-};
 
 self.save = async (req, res) => {
   try {
