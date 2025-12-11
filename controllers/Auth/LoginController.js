@@ -6,18 +6,28 @@ const {
   UserEmail,
   UserPosition,
   UserPhone,
+  // Add the RefreshToken model here if needed for direct access
+  // but we primarily use the helper function now.
 } = require("../../models");
+
 const dotenv = require("dotenv");
 dotenv.config();
 
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
+// Import the new utility function for creating the secure, database-managed Refresh Token
+// const { createRefreshToken } = require("../../utils/token-helper.js"); 
+
+const { createRefreshToken } = require("../utils/token-helper.js");
 const { Socket } = require("../../utils/WebSocket.js");
 const cipherHelper = require("../utils/cipher-helper");
 
-const TOKEN_KEY = process.env.ACCESS_TOKEN_KEY;
-const REFRESH_TOKEN_KEY = process.env.REFRESH_TOKEN_KEY;
+// Ensure these keys are strong, unique, and stored in your environment variables
+const ACCESS_TOKEN_KEY = process.env.ACCESS_TOKEN_KEY;
+const REFRESH_TOKEN_KEY = process.env.REFRESH_TOKEN_KEY; 
+// NOTE: REFRESH_TOKEN_KEY is not strictly needed if using the opaque token approach, 
+// but is kept here if you want to sign the access token and refresh token differently.
 
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
@@ -29,29 +39,26 @@ const loginUser = async (req, res) => {
       where: { email: encryptedEmail, is_primary: true }
     });
 
-
     if (!usEmail) {
       return res.apiError("User not found!");
     }
 
+    // Optimized user lookup (consider adding more eager loading here for performance)
     const usr = await User.findOne({
       where: { id: usEmail.user_id, is_activated: true },
       include: [{ model: UserPosition, as: "positions" }]
     });
 
     if (!usr) {
-      return res.apiError("Email address doesn't exist");
+      // This error message may be confusing if the user was found in UserEmail
+      return res.apiError("User account not activated or does not exist."); 
     }
-
-
-
 
     const [usPos, usPhone] = await Promise.all([
       UserPosition.findOne({ where: { user_id: usEmail.user_id } }),
       UserPhone.findOne({ where: { user_id: usEmail.user_id, is_primary: true } })
     ]);
 
-    
     if (!usPos) {
       return res.apiError("User has no primary position!");
     }
@@ -82,12 +89,8 @@ const loginUser = async (req, res) => {
     const auth = bcrypt.compareSync(password, usr.password);
 
     if (!auth) {
-
       const errorResponse = {
-        _links: {
-          previousPage: null,
-          nextPage: null
-        },
+        _links: { previousPage: null, nextPage: null },
         _warning: [],
         payload: [],
         _attributes: {},
@@ -99,6 +102,8 @@ const loginUser = async (req, res) => {
       return res.status(401).json(errorResponse);
     }
 
+    // --- TOKEN GENERATION LOGIC ---
+
     const userPayload = {
       id: usr.id,
       department_id: pos.department_id,
@@ -107,21 +112,30 @@ const loginUser = async (req, res) => {
       stakeholder_id: usr.stakeholder_id
     };
 
-    const accessToken = jwt.sign(userPayload, TOKEN_KEY, { expiresIn: "15m" });
-    const refreshToken = jwt.sign(userPayload, REFRESH_TOKEN_KEY, { expiresIn: "5m" });
+    // 1. ACCESS TOKEN: Short-lived, signed JWT for API access
+    const accessToken = jwt.sign(userPayload, ACCESS_TOKEN_KEY, { expiresIn: "1h" }); 
+    
+    // 2. REFRESH TOKEN: Long-lived, random string stored in the database
+    // This is the CRITICAL change for security and proper expiration management.
+    const refreshToken = await createRefreshToken(usr.id); 
 
-    usr.refresh_token = refreshToken;
-    await usr.save();
 
-    Socket.emitToUser("loggedIn", { message: true },usr.id );
-    // let x = Socket.emitToUser("loggedIn", "event_name", { message: "Hello, user!" });
+    // Socket notification
+    Socket.emitToUser("loggedIn", { message: true }, usr.id);
 
-    let data = {user_data: replyUser, access_token: accessToken};
+    // Send both tokens back to the client
+    let data = {
+      user_data: replyUser, 
+      access_token: accessToken,
+      refresh_token: refreshToken, // Send the random string refresh token
+    };
 
     res.apiSuccess({
       data: data
     });
+
   } catch (error) {
+    console.error("Login Error:", error);
     res.apiError(error);
   }
 };
