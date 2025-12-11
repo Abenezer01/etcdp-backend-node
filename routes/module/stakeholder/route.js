@@ -94,7 +94,10 @@ module.exports = function (express) {
     "/stakeholder-contact-people",
     StakeholderContactPersonController.getAll
   );
-  route.get("/stakeholder-contact-people/:id", StakeholderContactPersonController.get);
+  route.get(
+    "/stakeholder-contact-people/:id",
+    StakeholderContactPersonController.get
+  );
   route.get(
     "/stakeholder-contact-person-searches",
     StakeholderContactPersonController.search

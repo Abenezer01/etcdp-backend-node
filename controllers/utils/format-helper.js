@@ -37,9 +37,35 @@ const getRecordById = async (model, req, res, include = []) => {
       res.apiError(error);
     }
   };
-  const  saveRecord = async (model, req, res) => {
+  const  saveRecord = async (model, req, res, uniqueAttribute = null) => {
     try {        
       const body = req.body;
+      // check for unique attribute values
+
+      if(uniqueAttribute){
+        const existingRecord = await model.findOne({
+          where: {
+            [uniqueAttribute]: body[uniqueAttribute]
+          }
+        });
+
+        if (existingRecord) {
+          const errorResponse = {
+            _links: { previousPage: null, nextPage: null },
+            _warning: [],
+            payload: [],
+            _attributes: {},
+            _errors: {
+              uniqueAttribute: [
+                `The ${uniqueAttribute} field must be unique.`
+              ]
+            },
+            _generated: new Date().toISOString()
+          };
+          return res.status(401).json(errorResponse);
+        }
+      }
+
       
       const data = await model.create(body);
   

@@ -46,7 +46,7 @@ self.search = async (req, res) => {
 
 
 self.save = async (req, res) => {
-  saveRecord(StakeholderContactPerson, req, res);
+  saveRecord(StakeholderContactPerson, req, res, "email");
 };
 
 self.update = async (req, res) => {
