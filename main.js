@@ -42,7 +42,6 @@ app.set("view engine", "ejs");
 // Assuming /api/v1/auth and /api/v1/accounts contain your login and token refresh endpoints
 // These routes MUST be mounted BEFORE the middleware.
 app.use("/api/v1/auth", loginRoute(express)); 
-app.use("/api/v1/accounts", loginRoute(express));
 app.use(
   "/api/v1",
   loginRoute(express),
@@ -57,7 +56,7 @@ app.use("/api/v1", verifyAccessToken);
 
 
 // --- PROTECTED ROUTES (Token Required) ---
-
+app.use("/api/v1/accounts", loginRoute(express));
 app.use("/api/v1/departments", departmentRoute(express));
 app.use("/api/v1/masterdata", masterdataRoute(express));
 app.use("/api/v1/projects", projectRoute(express));

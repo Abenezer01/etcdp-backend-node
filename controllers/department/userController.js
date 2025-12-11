@@ -62,12 +62,12 @@ self.getAll = async (req, res) => {
         {
             model: UserEmail,
             as: "useremails",
-            attributes: ["email"] 
+            // attributes: ["email"] 
         },
         {
             model: UserPhone,
             as: "userphones",
-            attributes: ["phone"] 
+            // attributes: ["phone"] 
         },
         {
             model: UserPosition,
@@ -92,8 +92,8 @@ self.getAll = async (req, res) => {
             paginatedResult.data.map(async (user) => {
               const userJson = user;
           
-              userJson.email = userJson.useremails ? userJson.useremails[0].email : null;
-              userJson.phone = userJson.userphones ? userJson.userphones[0].phone : null;
+              userJson.email = userJson.useremails ? userJson.useremails : null;
+              userJson.phone = userJson.userphones ? userJson.userphones : null;
               
               let position_id = null
               let department_id = null
@@ -166,8 +166,8 @@ self.get = async(req, res) => {
             });
 
             let temp = data.toJSON();
-            temp.email = usEmail ? usEmail.email : null;
-            temp.phone = usPhone ? usPhone.phone : null;
+            temp.email = usEmail ? usEmail : null;
+            temp.phone = usPhone ? usPhone : null;
             temp.position = usPosition ? usPosition.position_id : null;
 
             res.apiSuccess({
