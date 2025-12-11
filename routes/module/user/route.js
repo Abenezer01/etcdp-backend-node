@@ -153,7 +153,10 @@ module.exports = function (express) {
   );
   route.get("/permission-modules", PermissionController.getPermissionModules);
   route.get("/permission-change", PermissionController.changeModulePermissons);
+  
+  route.get("/add-permission-to-model", PermissionController.addPermissionToModel);
 
+  
   //Photo route
   // route.get("/photos", UserPhotoController.getAll);
   // route.get("/photo/:id", UserPhotoController.get);

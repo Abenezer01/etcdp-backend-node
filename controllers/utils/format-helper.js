@@ -1,5 +1,7 @@
 const usrData = require("../../utils/userDataFromToken");
 const actionHelper = require("../utils/action-helper");
+const { ActionState} = require("../../models");
+
 
 const getRecordById = async (model, req, res, include = []) => {
     try {
@@ -99,11 +101,11 @@ const getRecordById = async (model, req, res, include = []) => {
   
       if (deleted) {
         //delete all related data like action state
-        // await ActionState.destroy({
-        //   where: {
-        //     model_id: id
-        //   }
-        // })
+        await ActionState.destroy({
+          where: {
+            model_id: id
+          }
+        })
          return res.status(200).json({ message: 'Record deleted successfully.' });
 
       }

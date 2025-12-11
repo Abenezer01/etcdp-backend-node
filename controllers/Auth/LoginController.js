@@ -113,7 +113,7 @@ const loginUser = async (req, res) => {
     };
 
     // 1. ACCESS TOKEN: Short-lived, signed JWT for API access
-    const accessToken = jwt.sign(userPayload, ACCESS_TOKEN_KEY, { expiresIn: "1h" }); 
+    const accessToken = jwt.sign(userPayload, ACCESS_TOKEN_KEY, { expiresIn: "10m" }); 
     
     // 2. REFRESH TOKEN: Long-lived, random string stored in the database
     // This is the CRITICAL change for security and proper expiration management.

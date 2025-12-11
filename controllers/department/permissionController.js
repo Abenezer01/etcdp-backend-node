@@ -1925,4 +1925,32 @@ self.changeModulePermissons = async (req, res) => {
   }
 };
 
+self.addPermissionToModel = async (req, res) => {
+  try {
+
+    let action = ['create', 'view', 'update', 'delete', 'check', 'approve', 'authorize']
+
+    let model = "stakeholderownerormanager"
+    let module = "stakeholder";
+    let type = "CONTRACTOR"
+      for (let j = 0; j < action.length; j++) {
+
+        const data = await Permission.create({
+          name: `${action[j]}_${model}`,
+          model: `${model}`,
+          module: `${module}`,
+          type: `${type}`,
+          description: "description"
+        
+        });
+      }
+
+      return res.json("done")
+  } catch (error) {
+    res.json(error)
+  }
+}
+
+
+
 module.exports = self;
