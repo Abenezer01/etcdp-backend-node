@@ -26,6 +26,12 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "user_id",
         as: "positions",
       });
+
+      User.hasMany(models.RefreshToken, {
+        foreignKey: 'user_id',
+        as: 'refreshTokens', // You can retrieve all tokens like: user.getRefreshTokens()
+        onDelete: 'CASCADE'
+    });
     }
   }
   User.init(
