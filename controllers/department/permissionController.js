@@ -1928,22 +1928,42 @@ self.changeModulePermissons = async (req, res) => {
 self.addPermissionToModel = async (req, res) => {
   try {
 
+    let modelNames = [
+      "railwaypowersubstationandequipment",
+      "railwaypowersupplymaintenanceandtesting",
+      "railwaypowersupplysafetyandcompliance",
+      "railwaypowersupplyenvironmentalandotherfactor",
+      "railwaypowerdistribution",
+      "railwaymaintenancefacilitytypeandpurpose",
+      "railwaymaintenancefacilitylayoutanddesign",
+      "railwaymaintenancefacilityequipmentandtool",
+      "railwaymaintenancefacilityinfrastructureandutility",
+      "railwaymaintenancefacilityworkforceandstaff",
+      "railwaymaintenancefacilityscheduleandprocedure",
+      "railwaymaintenancefacilityandsecurity",
+      "railwaymaintenanceenvironmentalandotherfactor"
+    ];
+    let module = "project";
+    let type = "RAILWAY"
+   
+
     let action = ['create', 'view', 'update', 'delete', 'check', 'approve', 'authorize']
 
-    let model = "stakeholderownerormanager"
-    let module = "stakeholder";
-    let type = "CONTRACTOR"
+    // Outer loop to iterate over the x array
+    for (let i = 0; i < modelNames.length; i++) {
+      // Inner loop to iterate over the action array
       for (let j = 0; j < action.length; j++) {
 
         const data = await Permission.create({
-          name: `${action[j]}_${model}`,
-          model: `${model}`,
+          name: `${action[j]}_${modelNames[i]}`,
+          model: `${modelNames[i]}`,
           module: `${module}`,
           type: `${type}`,
           description: "description"
-        
         });
       }
+
+    }
 
       return res.json("done")
   } catch (error) {

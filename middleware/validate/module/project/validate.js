@@ -57,6 +57,23 @@ const { Op } = require("sequelize");
 
 // module.exports = validateModelData;
 
+
+
+const constructionMethodValidate = async(req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if(param === "failed"){
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+  const validationRule = {
+    project_id: "required|string",
+    construction_method_id: "required|string",
+    description: "string"
+  };
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
 const railwayMaintenanceEnvironmentalAndOtherFactorValidate = async(req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
   if(param === "failed"){
@@ -4632,6 +4649,7 @@ const paymentValidate = async (req, res, next) => {
   await validateReply.validateReply(req.body, validationRule, res, next);
 };
 module.exports = {
+  constructionMethodValidate,
   railwayMaintenanceEnvironmentalAndOtherFactorValidate,
   railwayMaintenanceFacilityAndSecurityValidate,
   railwayMaintenanceFacilityScheduleAndProcedureValidate,

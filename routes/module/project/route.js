@@ -233,6 +233,9 @@ const RailwayMaintenanceFacilityAndSecurityController = require("../../../contro
 const RailwayMaintenanceEnvironmentalAndOtherFactorController = require("../../../controllers/projects/RailwayMaintenanceEnvironmentalAndOtherFactorController.js");
 
 const DashboardController = require("../../../controllers/analytics/DashboardController");
+
+const ConstructionMethodController = require("../../../controllers/projects/ConstructionMethodController.js");
+
 const validateData = require("../../../middleware/validate/module/project/validate");
 
 module.exports = function (express) {
@@ -2677,6 +2680,11 @@ route.delete("/railway-track-safeties/:id", RailwayTrackSafetyController.delete)
   route.put("/railway-maintenance-environmental-and-other-factors/:id", validateData.railwayMaintenanceEnvironmentalAndOtherFactorValidate, RailwayMaintenanceEnvironmentalAndOtherFactorController.update);
   route.delete("/railway-maintenance-environmental-and-other-factors/:id", RailwayMaintenanceEnvironmentalAndOtherFactorController.delete);
 
+  route.get("/construction-methods", ConstructionMethodController.getAll);
+  route.get("/construction-methods/:id", ConstructionMethodController.get);
+  route.post("/construction-methods", validateData.constructionMethodValidate, ConstructionMethodController.save);
+  route.put("/construction-methods/:id", validateData.constructionMethodValidate, ConstructionMethodController.update);
+  route.delete("/construction-methods/:id", ConstructionMethodController.delete);
 
 
    route.get(
