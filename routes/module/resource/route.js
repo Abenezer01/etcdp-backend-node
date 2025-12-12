@@ -14,6 +14,7 @@ const ProfessionalEducationController = require("../../../controllers/constructi
 const ProfessionalWorkExperienceController = require("../../../controllers/construction resource/ProfessionalWorkExperienceController");
 const ProfessionalAssociationMembershipController = require("../../../controllers/construction resource/ProfessionalAssociationMembershipController");
 const ProfessionalCertificationController = require("../../../controllers/construction resource/ProfessionalCertificationController");
+const ProfessionalLicenseController = require("../../../controllers/projects/ProfessionalLicenseController.js");
 
 
 const validateData = require("../../../middleware/validate/module/resource/validate");
@@ -158,6 +159,13 @@ module.exports = function (express) {
      ProfessionalCertificationController.update
    );
    route.delete("/professional-certifications/:id", ProfessionalCertificationController.delete);
+
+
+  route.get("/professional-licenses", ProfessionalLicenseController.getAll);
+  route.get("/professional-licenses/:id", ProfessionalLicenseController.get);
+  route.post("/professional-licenses", validateData.professionalLicenseValidate, ProfessionalLicenseController.save);
+  route.put("/professional-licenses/:id", validateData.professionalLicenseValidate, ProfessionalLicenseController.update);
+  route.delete("/professional-licenses/:id", ProfessionalLicenseController.delete);
 
   //Matrix
   route.get(

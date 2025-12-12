@@ -89,6 +89,7 @@ const InfrastructureSubCategoryController = require("../../../controllers/polymo
 const ResourceMasterDataController = require("../../../controllers/resources/ResourceMasterDataController.js");
 
 const AddressMasterDataController = require("../../../controllers/polymorphic/AddressMasterDataController.js");
+const StakeholderMasterDataController = require("../../../controllers/projects/StakeholderMasterDataController.js");
 
 
 const validateStakeholderData = require("../../../middleware/validate/module/stakeholder/validate");
@@ -910,5 +911,12 @@ route.delete("/address-master-data/:id", AddressMasterDataController.delete);
 
 route.get("/address-structure", AddressMasterDataController.getAddresses);
 route.get("/address-structure/:id", AddressMasterDataController.getAddresses);
+
+route.get("/stakeholder-master-data", StakeholderMasterDataController.getAll);
+route.get("/stakeholder-master-data/:id", StakeholderMasterDataController.get);
+route.post("/stakeholder-master-data", validateStakeholderData.stakeholderMasterDataValidate, StakeholderMasterDataController.save);
+route.put("/stakeholder-master-data/:id", validateStakeholderData.stakeholderMasterDataValidate, StakeholderMasterDataController.update);
+route.delete("/stakeholder-master-data/:id", StakeholderMasterDataController.delete);
+
   return route;
 };

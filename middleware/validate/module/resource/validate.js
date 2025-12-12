@@ -1,6 +1,26 @@
 const validateReply = require("../../../../utils/validateerror");
 
+const professionalLicenseValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid id",
+    });
+  }
+  const validationRule = {
+    professional_id: "required|string",
+    license_type_id: "required|string",
+    license_category_id: "required|string",
+    license_name: "required|string",
+    license_scope: "string",
+    licensing_body: "string",
+    issue_date: "required|date",
+    expire_date: "required|date",
+    remark: "string"
+  };
 
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
 
 const professionalWorkExperienceValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
@@ -277,6 +297,7 @@ const resourceValidate = async (req, res, next) => {
   
 
 module.exports = {
+  professionalLicenseValidate,
   professionalWorkExperienceValidate,
   professionalAssociationMembershipValidate,
   professionalCertificationValidate,

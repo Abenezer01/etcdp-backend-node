@@ -2967,7 +2967,9 @@ const projectMasterDataValidate = async (req, res, next) => {
   }
   const validationRule = {
     project_type_id: "required|string",
+    model: "required|string",
     title: "required|string",
+    flag: "string",
     description: "string"
   };
   await validateReply.validateReply(req.body, validationRule, res, next);
