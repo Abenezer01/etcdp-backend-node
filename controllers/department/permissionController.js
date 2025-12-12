@@ -1929,22 +1929,10 @@ self.addPermissionToModel = async (req, res) => {
   try {
 
     let modelNames = [
-      "railwaypowersubstationandequipment",
-      "railwaypowersupplymaintenanceandtesting",
-      "railwaypowersupplysafetyandcompliance",
-      "railwaypowersupplyenvironmentalandotherfactor",
-      "railwaypowerdistribution",
-      "railwaymaintenancefacilitytypeandpurpose",
-      "railwaymaintenancefacilitylayoutanddesign",
-      "railwaymaintenancefacilityequipmentandtool",
-      "railwaymaintenancefacilityinfrastructureandutility",
-      "railwaymaintenancefacilityworkforceandstaff",
-      "railwaymaintenancefacilityscheduleandprocedure",
-      "railwaymaintenancefacilityandsecurity",
-      "railwaymaintenanceenvironmentalandotherfactor"
+      "jointventure"
     ];
-    let module = "project";
-    let type = "RAILWAY"
+    let module = "stakeholder";
+    let type = "CONTRACTOR"
    
 
     let action = ['create', 'view', 'update', 'delete', 'check', 'approve', 'authorize']

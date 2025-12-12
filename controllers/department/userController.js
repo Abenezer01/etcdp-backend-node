@@ -150,11 +150,22 @@ self.get = async(req, res) => {
                     is_primary: true,
                 },
             });
+            let usEmails = await UserEmail.findAll({
+                where: {
+                    user_id: data.id
+                },
+            });
 
             let usPhone = await UserPhone.findOne({
                 where: {
                     user_id: data.id,
                     is_primary: true,
+                },
+            });
+
+            let usPhones = await UserPhone.findAll({
+                where: {
+                    user_id: data.id
                 },
             });
 
@@ -165,9 +176,13 @@ self.get = async(req, res) => {
                 },
             });
 
+
             let temp = data.toJSON();
-            temp.email = usEmail ? usEmail : null;
-            temp.phone = usPhone ? usPhone : null;
+            temp.email = usEmail ? usEmail.email : null;
+            temp.phone = usPhone ? usPhone.phone : null;
+            temp.useremails = usEmails ? usEmails : null;
+            temp.userphones = usPhones ? usPhones : null;
+
             temp.position = usPosition ? usPosition.position_id : null;
 
             res.apiSuccess({
@@ -226,9 +241,6 @@ self.isEmailValid = async(email) => {
 self.save = async(req, res) => {
     try {
 
-        
-
-
         let body = req.body;
 
         
@@ -252,7 +264,22 @@ self.save = async(req, res) => {
         });
 
         if(existed){
-            return res.apiError("Email already existed!");
+            const errorResponse = {
+                _links: {
+                previousPage: null,
+                nextPage: null
+                },
+                _warning: [],
+                payload: [],
+                _attributes: {},
+                _errors: {
+                    "email": [
+                            "User Email already exist."
+                        ]
+                    },
+                _generated: new Date().toISOString()
+            };
+            return res.status(422).json(errorResponse);
         }
 
         var usr = {

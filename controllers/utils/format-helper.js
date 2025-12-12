@@ -62,7 +62,7 @@ const getRecordById = async (model, req, res, include = []) => {
             },
             _generated: new Date().toISOString()
           };
-          return res.status(401).json(errorResponse);
+          return res.status(422).json(errorResponse);
         }
       }
 

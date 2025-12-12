@@ -71,11 +71,13 @@ self.save = async (req, res) => {
         payload: [],
         _attributes: {},
         _errors: {
-          message: "Department name already exists!"
+          "name": [
+                "Department name must be unique."
+              ]
         },
         _generated: new Date().toISOString()
       };
-      return res.status(401).json(errorResponse);
+      return res.status(422).json(errorResponse);
     }
     
     

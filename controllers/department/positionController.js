@@ -37,9 +37,22 @@ self.save = async (req, res) => {
   });
 
     if (existing) {
-      return res.status(401).json({
-        message: "Position name already exists!"
-      });
+      const errorResponse = {
+        _links: {
+          previousPage: null,
+          nextPage: null
+        },
+        _warning: [],
+        payload: [],
+        _attributes: {},
+        _errors: {
+          "name": [
+                "Position name must be unique."
+              ]
+        },
+        _generated: new Date().toISOString()
+      };
+      return res.status(422).json(errorResponse);
     }
   saveRecord(Position, req, res);
 };

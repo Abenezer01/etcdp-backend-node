@@ -7,7 +7,7 @@ const { RefreshToken } = require("../../models");
 
 // Set the Refresh Token Time To Live (TTL) - e.g., 30 days
 
-const REFRESH_TOKEN_TTL_MS = 60*60 * 1000; // 10 minute in milliseconds
+const REFRESH_TOKEN_TTL_MS = 10*60 * 1000; // 10 minute in milliseconds
 
 /**
  * Creates a new, long-lived Refresh Token record in the database.
