@@ -43,7 +43,7 @@ const loginValidate = async (req, res, next) => {
       next();
     } catch (error) {
       // Handle any potential errors during the database query
-      console.error("Error checking email existence:", error);
+      //console.error("Error checking email existence:", error);
       return res.status(500).json({
         message: "Internal server error"
       });

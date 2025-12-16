@@ -93,8 +93,8 @@ module.exports = function (express) {
 
   //Role route
   
-  route.get("/default-role", roleController.defaultRole);
-  // route.get("/default-role", roleController.defaultRoleAdmin);
+  // route.get("/default-role", roleController.defaultRole);
+  route.get("/default-role", roleController.defaultRoleAdmin);
   route.get("/roles", roleController.getAll);
   route.get("/roles/:id", roleController.get);
   route.get("/role_search", roleController.search);

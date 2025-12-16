@@ -10,6 +10,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       UserPosition.belongsTo(models.Position, {
+        as: "position",
         foreignKey: "position_id",
       });
       UserPosition.belongsTo(models.Department, {

@@ -568,4 +568,22 @@ self.update = async (req, res) => {
 self.delete = async (req, res) => {
   deleteRecord(ActionState, req, res);
 };
+
+//latest action status of a model
+self.getLatestAction = async (req, res) => {
+  try {
+
+    let id = req.params.id;
+    let data = await ActionState.findOne({
+      where: {
+        model_id:id,
+      },
+    });
+    return res.apiSuccess({
+      data: data
+    });
+  } catch (error) {
+    res.apiError(error);
+  }
+};
 module.exports = self;

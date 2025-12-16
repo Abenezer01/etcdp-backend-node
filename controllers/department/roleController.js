@@ -180,11 +180,11 @@ self.defaultRoleAdmin = async (req, res) => {
     
     const usr = await usrData.userData(req, res);  
 
-    let rolename = "ADMIN-USER";
+    let rolename = "SUPER-ADMIN-ROLE";
 
     let role = await Role.create({
         name: rolename,
-        description: "Admin Role"
+        description: "Super Admin Role"
     });
 
     if (role) {
@@ -204,7 +204,7 @@ self.defaultRoleAdmin = async (req, res) => {
 
       
     
-      let actions  = ["view", "create", "update", "delete", "approve", "check", "authorize"];
+      let actions  = ["view", "create", "update", "delete"];
       for (let action of actions) {
         let permissions = await Permission.findAll({
           where: {

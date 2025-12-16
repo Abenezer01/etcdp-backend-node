@@ -72,6 +72,12 @@ self.getAll = async (req, res) => {
         {
             model: UserPosition,
             as: "positions",
+            include: [
+                {
+                    model: Position,
+                    as: "position",
+                }
+            ]
         }
       ];
 
@@ -114,7 +120,7 @@ self.getAll = async (req, res) => {
               userJson.position_id = position_id;
               userJson.position = pos;
               userJson.department = dept;
-          
+             
               // Remove unnecessary nested objects
               delete userJson.useremails;
               delete userJson.userphones;
@@ -174,6 +180,12 @@ self.get = async(req, res) => {
                     user_id: data.id,
                     is_primary: true,
                 },
+                include: [
+                    {
+                        model: Position,
+                        as: "position",
+                    }
+                ]
             });
 
 
@@ -183,7 +195,8 @@ self.get = async(req, res) => {
             temp.useremails = usEmails ? usEmails : null;
             temp.userphones = usPhones ? usPhones : null;
 
-            temp.position = usPosition ? usPosition.position_id : null;
+            temp.userposition = usPosition ? usPosition.position_id : null;
+            temp.position = usPosition ? usPosition.position : null;
 
             res.apiSuccess({
                 data: temp
