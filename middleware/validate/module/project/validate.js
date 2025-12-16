@@ -57,7 +57,39 @@ const { Op } = require("sequelize");
 
 // module.exports = validateModelData;
 
+const claimValidate =   async(req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if(param === "failed"){
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+  const validationRule = {
+    project_id: "required|string",
+    title: "required|string",
+    description: "string",
+    measures_taken: "required|string"
+  };
 
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
+const challengeValidate = async(req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if(param === "failed"){
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+  const validationRule = {
+    project_id: "required|string",
+    title: "required|string",
+    description: "string",
+    measures_taken: "required|string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
 
 const constructionMethodValidate = async(req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
@@ -4651,6 +4683,8 @@ const paymentValidate = async (req, res, next) => {
   await validateReply.validateReply(req.body, validationRule, res, next);
 };
 module.exports = {
+  claimValidate,
+  challengeValidate,
   constructionMethodValidate,
   railwayMaintenanceEnvironmentalAndOtherFactorValidate,
   railwayMaintenanceFacilityAndSecurityValidate,

@@ -21,6 +21,7 @@ const {
 } = require("./../../models");
 const moment = require("moment");
 const Op = Sequelize.Op;
+const literal = Sequelize.literal; 
 const usrData = require("../../utils/userDataFromToken");
 const actionHelper = require("../utils/action-helper");
 const cipherHelper = require("../utils/cipher-helper");
@@ -65,48 +66,176 @@ self.getAllCPMProject = async(req, res) => {
   }
 };
 
+// self.getAll = async (req, res) => {
+
+//   try {
+
+//     // let x = Socket.emitToUser("userId123", "event_name", { message: "Hello, user!" });
+
+//     let usr = await usrData.userData(req, res);
+
+//     const whereCondition = { 
+//       department_id: usr.departmentID,
+//       id: {
+//       [Op.in]: literal(`(
+//           SELECT ps.project_id
+//           FROM projectstatuses ps
+//           INNER JOIN statuses s ON s.id = ps.status_id
+//           WHERE s.title != 'Completed'
+//           AND ps.created_at = (
+//             SELECT MAX(ps2.created_at)
+//             FROM projectstatuses ps2
+//             WHERE ps2.project_id = ps.project_id
+//           )
+//         )`)
+//       }
+//     };
+
+
+//     const includeOptions = [
+//       {
+//           model: ProjectStatus,
+//           as: "projectstatuses",
+//           include: [
+//             {
+//               model: Status,
+//               as: "status",
+//               attributes: ["title"]
+//             }
+//           ]
+//       },
+//     ];
+//     const paginatedResult = await paginationHelper(Project, req, whereCondition, includeOptions);
+
+//     let arr = paginatedResult.data;
+
+//     if(arr === undefined){
+//       return res.apiSuccess({ 
+//         data: [],
+//         total: 0
+//       });
+//     }
+//     let projectWithStatus = [];
+
+//     for(let ar of arr){
+//       const latestStatus = ar.projectstatuses.reduce((latest, current) => {
+//         return new Date(current.created_at) > new Date(latest.created_at) ? current : latest;
+//       }, ar.projectstatuses[0]);
+
+//       let temp = ar
+//       temp.status_id = latestStatus.status_id;
+//       // delete temp.projectstatus;
+//       projectWithStatus.push(temp);
+//     }
+   
+//     res.apiSuccess({
+//       data: projectWithStatus,
+//       total: paginatedResult.total,
+//     }, paginatedResult.pagination);
+
+//   } catch (error) {
+//     res.apiError(error);
+//   }
+// };
+
 self.getAll = async (req, res) => {
 
   try {
 
-    // let x = Socket.emitToUser("userId123", "event_name", { message: "Hello, user!" });
+    // 1. Get user data for department filtering
+        const usr = await usrData.userData(req, res);
 
-    let usr = await usrData.userData(req, res);
+        // 2. Determine the desired filtering mode
+        const fetchCompleted = req.query.status === "infrastructure";
+        
+        // 3. Construct the subquery to find project IDs with the latest status matching the criteria
+        const latestStatusSubQuery = fetchCompleted
+            ? literal(`(
+                -- Select project IDs where the LATEST status is 'Completed'
+                SELECT ps.project_id
+                FROM projectstatuses ps
+                JOIN statuses s ON s.id = ps.status_id
+                WHERE s.title = 'Completed'
+                AND ps.created_at = (
+                    SELECT MAX(ps2.created_at)
+                    FROM projectstatuses ps2
+                    WHERE ps2.project_id = ps.project_id
+                )
+            )`)
+            : literal(`(
+                -- Select project IDs where the LATEST status is NOT 'Completed'
+                SELECT ps.project_id
+                FROM projectstatuses ps
+                JOIN statuses s ON s.id = ps.status_id
+                WHERE ps.created_at = (
+                    SELECT MAX(ps2.created_at)
+                    FROM projectstatuses ps2
+                    WHERE ps2.project_id = ps.project_id
+                )
+                AND s.title <> 'Completed'
+            )`);
 
-    const whereCondition = { 
-      department_id: usr.departmentID
-    };
 
+        // 4. Define the primary WHERE condition
+        const whereCondition = {
+            department_id: usr.departmentID,
+            // Filter by the project IDs returned by the subquery
+            id: {
+                [Op.in]: latestStatusSubQuery
+            }
+        };
 
-    const includeOptions = [
-      {
-          model: ProjectStatus,
-          as: "projectstatuses"
-      },
-    ];
-    const paginatedResult = await paginationHelper(Project, req, whereCondition, includeOptions);
+        // 5. Define inclusion options to fetch all statuses for post-processing
+        const includeOptions = [
+            {
+                model: ProjectStatus,
+                as: "projectstatuses",
+                include: [
+                    {
+                        model: Status,
+                        as: "status",
+                        attributes: ["title"]
+                    }
+                ]
+            }
+        ];
 
-    let arr = paginatedResult.data;
+        // 6. Fetch the paginated results
+        const paginatedResult = await paginationHelper(Project, req, whereCondition, includeOptions);
 
-    if(arr === undefined){
-      return res.apiSuccess({ 
-        data: [],
-        total: 0
-      });
-    }
-    let projectWithStatus = [];
+        let arr = paginatedResult.data;
 
-    for(let ar of arr){
-      const latestStatus = ar.projectstatuses.reduce((latest, current) => {
-        return new Date(current.created_at) > new Date(latest.created_at) ? current : latest;
-      }, ar.projectstatuses[0]);
+        if (!arr || arr.length === 0) {
+            return res.apiSuccess({ 
+                data: [],
+                total: 0
+            });
+        }
+        
+        let projectWithStatus = [];
 
-      let temp = ar
-      temp.status_id = latestStatus.status_id;
-      // delete temp.projectstatus;
-      projectWithStatus.push(temp);
-    }
-   
+        // 7. Process the results to attach only the *actual* latest status information
+        for (const project of arr) {
+            // Find the single latest status record from the included array
+            const latestStatusRecord = project.projectstatuses.reduce((latest, current) => {
+                return new Date(current.created_at) > new Date(latest.created_at) ? current : latest;
+            }, project.projectstatuses[0]);
+
+            // Create a temporary object to hold the project data
+            const projectData = { ...project.get({ plain: true }) }; // Use get({ plain: true }) for safe cloning
+
+            // Attach the latest status details
+            projectData.status_id = latestStatusRecord.status_id;
+            projectData.status_title = latestStatusRecord.status.title;
+            
+            // Clean up the large statuses array before sending (optional but recommended)
+            delete projectData.projectstatuses; 
+
+            projectWithStatus.push(projectData);
+        }
+
+        // 8. Return the final success response
+        
     res.apiSuccess({
       data: projectWithStatus,
       total: paginatedResult.total,
@@ -116,6 +245,8 @@ self.getAll = async (req, res) => {
     res.apiError(error);
   }
 };
+
+
 self.getProjectByTypeId = async (req, res) => {
   const {
     page = process.env.page,

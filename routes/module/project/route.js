@@ -235,6 +235,9 @@ const RailwayMaintenanceEnvironmentalAndOtherFactorController = require("../../.
 const DashboardController = require("../../../controllers/analytics/DashboardController");
 
 const ConstructionMethodController = require("../../../controllers/projects/ConstructionMethodController.js");
+const ClaimController = require("../../../controllers/projects/ClaimController.js");
+const ChallengeController = require("../../../controllers/projects/ChallengeController.js");
+
 
 const validateData = require("../../../middleware/validate/module/project/validate");
 
@@ -2685,6 +2688,19 @@ route.delete("/railway-track-safeties/:id", RailwayTrackSafetyController.delete)
   route.post("/construction-methods", validateData.constructionMethodValidate, ConstructionMethodController.save);
   route.put("/construction-methods/:id", validateData.constructionMethodValidate, ConstructionMethodController.update);
   route.delete("/construction-methods/:id", ConstructionMethodController.delete);
+
+  route.get("/claims", ClaimController.getAll);
+  route.get("/claims/:id", ClaimController.get);
+  route.post("/claims", validateData.claimValidate, ClaimController.save);
+  route.put("/claims/:id", validateData.claimValidate, ClaimController.update);
+  route.delete("/claims/:id", ClaimController.delete);
+
+
+  route.get("/challenges", ChallengeController.getAll);
+  route.get("/challenges/:id", ChallengeController.get);
+  route.post("/challenges", validateData.challengeValidate, ChallengeController.save);
+  route.put("/challenges/:id", validateData.challengeValidate, ChallengeController.update);
+  route.delete("/challenges/:id", ChallengeController.delete);
 
 
    route.get(

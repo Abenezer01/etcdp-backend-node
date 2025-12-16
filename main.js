@@ -2,6 +2,7 @@ const express = require("express");
 const polymorphicRoute = require("./routes/module/polymorphic/route");
 
 const projectRoute = require("./routes/module/project/route");
+const infrastructureRoute = require("./routes/module/infrastructure/route");
 const departmentRoute = require("./routes/module/user/route");
 const loginRoute = require("./routes/module/auth/route"); // Contains Login and Token Refresh
 const stakeholderRoute = require("./routes/module/stakeholder/route");
@@ -60,6 +61,7 @@ app.use("/api/v1/accounts", loginRoute(express));
 app.use("/api/v1/departments", departmentRoute(express));
 app.use("/api/v1/masterdata", masterdataRoute(express));
 app.use("/api/v1/projects", projectRoute(express));
+app.use("/api/v1/infrastructures", infrastructureRoute(express));
 app.use("/api/v1/stakeholders", stakeholderRoute(express));
 app.use("/api/v1/resource", resourceRoute(express));
 app.use("/api/v1/documents", documentRoute(express));
