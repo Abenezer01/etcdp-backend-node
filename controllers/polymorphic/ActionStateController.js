@@ -34,6 +34,70 @@ self.get = async (req, res) => {
   getRecordById(ActionState, req, res);
 };
 
+self.default = async (req, res) => {
+  try {
+
+    let body = req.body;
+    let id = body.model_id;
+    let model = body.model;
+
+    let usr = await usrData.userData(req, res);
+    
+
+    if (usr) {
+
+      let data = await ActionState.findOne({
+        where: {
+          model_id: id,
+          model: model,
+          action: "DEFAULT",
+        },
+      });
+  
+  
+
+      if (data) {
+        const errorResponse = {
+          _links: {
+            previousPage: null,
+            nextPage: null
+          },
+          _warning: [],
+          payload: [],
+          _attributes: {},
+          _errors: {
+            message: ["already default"]
+          },
+          _generated: new Date().toISOString()
+        };
+        return res.apiError(errorResponse);
+      } else {
+
+          let action = await ActionState.create({
+            model_id: id,
+            model: model,
+            action: "DEFAULT",
+            user_id: usr.usrID,
+            position_id: usr.position_id,
+            time: new Date(),
+          });
+
+        if(action){
+          await actorHelper.notifyActor(action,"approve", usr.usrID, usr.departmentID);
+        }
+
+        res.apiSuccess({
+          data: action
+        });
+
+        
+        
+      }
+    }
+  } catch (error) {
+    res.apiError(error);
+  }
+};
 
 
 self.check = async (req, res) => {
@@ -389,6 +453,7 @@ self.getModelAction = async (req, res) => {
     });
 
     if (data) {
+      const defaultt = data.find((item) => item.action === "DEFAULT");
       const register = data.find((item) => item.action === "REGISTER");
       const check = data.find((item) => item.action === "CHECK");
       const approve = data.find((item) => item.action === "APPROVE");
@@ -396,6 +461,16 @@ self.getModelAction = async (req, res) => {
       const authorize = data.find((item) => item.action === "AUTHORIZE");
 
       const element = {};
+      if (defaultt) {
+        const defaultUser = await self.getUserData(
+          defaultt.user_id,
+          defaultt.id
+        );
+        element.default_data = {
+          ... defaultt.toJSON(),
+          "user": defaultUser
+        };
+      }
 
       if (register) {
         const registerUser = await self.getUserData(
@@ -463,8 +538,9 @@ self.getModelAction = async (req, res) => {
       );
 
       let status = null;
-
-      if (states.includes("REJECT")) {
+      if(states.includes("DEFAULT")) {
+        status = "DEFAULT";
+      } else if (states.includes("REJECT")) {
         status = "REJECTED";
       } else if (states.includes("AUTHORIZE")) {
         status = "AUTHORIZED";

@@ -83,7 +83,7 @@ self.getAll = async (req, res) => {
 
   
       const paginatedResult = await paginationHelper(User, req, whereCondition, includeOptions);
-  
+      
 
     //   const usersWithEmail = paginatedResult.data.map(user => {
     //     const userJson = user.toJSON();
@@ -305,6 +305,7 @@ self.save = async(req, res) => {
             partner_name: body.partner_name,
             birth_date: body.birth_date,
             revision_no: body.revision_no,
+            is_admin: false,
             lang: "en"
             // password: await bcrypt.hash(body.password, salt)
         };
@@ -627,6 +628,7 @@ self.update = async (req, res) => {
             attributes: ["user_id"],
             where: {
                 department_id: id,
+                is_primary: true,
             },
         });
 
@@ -655,41 +657,84 @@ self.update = async (req, res) => {
           ];
 
         const paginatedResult = await paginationHelper(User, req, whereCondition, includeOptions);
-
+        let userArr = [];
         
-        const usersWithEmail = await Promise.all(
-            paginatedResult.data.map(async (user) => {
-              const userJson = user;
-          
-              userJson.email = userJson.useremails ? userJson.useremails[0].email : null;
-              userJson.phone = userJson.userphones ? userJson.userphones[0].phone : null;
-              let position_id = userJson.positions ? userJson.positions[0].position_id : null;
-              let department_id = userJson.positions ? userJson.positions[0].department_id : null;
-              userJson.position_id = position_id;
-          
-              // Fetch position and department asynchronously
-              const pos = position_id ? await Position.findOne({ where: { id: position_id } }) : null;
-              const dept = department_id ? await Department.findOne({ where: { id: department_id } }) : null;
-          
-              userJson.position = pos;
-              userJson.department = dept;
-          
-              // Remove unnecessary nested objects
-              delete userJson.useremails;
-              delete userJson.userphones;
-              delete userJson.positions;
-          
-              return userJson;
-            })
-          );
-          
+        let arr = paginatedResult.data;
+        for (const ar of arr) {
+            // Extract the needed values, setting defaults if missing
+            const email = ar.useremails && ar.useremails.length > 0 ? ar.useremails[0].email : null;
+            const phone = ar.userphones && ar.userphones.length > 0 ? ar.userphones[0].phone : null;
+            const position_id = ar.positions && ar.positions.length > 0 ? ar.positions[0].position_id : null;
+            const department_id = ar.positions && ar.positions.length > 0 ? ar.positions[0].department_id : null;
 
-    
+            const position = await Position.findOne({ where: { id: position_id } });
+            const department = await Department.findOne({ where: { id: department_id } });
+            // Create a NEW object (deep copy or specific properties)
+            const newUser = {
+                ...ar.toJSON(), // Important: Use .toJSON() to get a plain data object
+                email,
+                phone,
+                position_id,
+                department_id,
+                position,
+                department,
+            };
+            
+            // Remove the original nested data if you don't want it in the final response
+            delete newUser.password;
+            // delete newUser.useremails;
+            // delete newUser.userphones;
+            delete newUser.positions;
+
+            userArr.push(newUser);
+        }
+
         // Use the response formatter to send the success response
         res.apiSuccess({
-            data: usersWithEmail,
+            data: userArr,
             total: paginatedResult.total,
         }, paginatedResult.pagination);
+    
+        
+        // const usersWithEmail = await Promise.all(
+        //     paginatedResult.data.map(async (user) => {
+        //       const userJson = user;
+          
+        //       userJson.email = userJson.useremails ? userJson.useremails[0].email : null;
+        //       userJson.phone = userJson.userphones ? userJson.userphones[0].phone : null;
+        //       let position_id = userJson.positions ? userJson.positions[0].position_id : null;
+        //       let department_id = userJson.positions ? userJson.positions[0].department_id : null;
+        //       userJson.position_id = position_id;
+
+                
+        //       // Fetch position and department asynchronously
+        //       const pos = position_id ? await Position.findOne({ where: { id: position_id } }) : null;
+        //       const dept = department_id ? await Department.findOne({ where: { id: department_id } }) : null;
+          
+        //       // remove positions from userJson
+        //       delete userJson.positions;
+        //       userJson.position = pos;
+        //       userJson.department = dept;
+            
+
+          
+        //       // Remove unnecessary nested objects
+        //       delete userJson.useremails;
+        //       delete userJson.userphones;
+        //       delete userJson.positions;
+          
+        //       return userJson;
+        //     })
+        //   );
+          
+
+        //   return res.json(usersWithEmail)
+    
+        // // Use the response formatter to send the success response
+        // res.apiSuccess({
+        //     data: usersWithEmail,
+        //     total: paginatedResult.total,
+        // }, paginatedResult.pagination);
     
     } catch (error) {
       res.apiError(error);

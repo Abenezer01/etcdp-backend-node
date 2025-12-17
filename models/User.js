@@ -97,6 +97,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.BOOLEAN,
         defaultValue: true
       },
+      is_admin: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
+      },
       full_name: {
         type: DataTypes.VIRTUAL,
         get() {

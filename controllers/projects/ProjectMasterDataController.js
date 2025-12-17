@@ -6,6 +6,8 @@ dotenv.config();
 const paginationHelper = require("../utils/pagination-helper");
 const { getRecordById, saveRecord, updateRecord, deleteRecord } = require("../utils/format-helper");
 let master = require("../../config/master");
+const actionHelper = require("../utils/action-helper");
+const usrData = require("../../utils/userDataFromToken");
 
 let self = {};
 
@@ -30,7 +32,33 @@ self.get = async (req, res) => {
 };
 
 self.save = async (req, res) => {
-  saveRecord(ProjectMasterData , req, res);
+  try {
+    const body = req.body;
+    // check for unique attribute values
+    
+    const data = await ProjectMasterData.create(body);
+    
+    if (data) {
+      const usr = await usrData.userData(req, res);
+      await actionHelper.saveActionState(
+        data.id,
+        "ProjectMasterData",
+        "DEFAULT",
+        usr.usrID,
+        req,
+        res
+      );
+  
+      await actionHelper.saveActivityLog(
+        usr.usrID, "create", "module", data.id, "ProjectMasterData", req, res
+      )
+    }
+    return res.apiSuccess({
+      data: data
+    });
+  } catch (error) {
+    res.apiError(error);
+  }
 };
 
 self.update = async (req, res) => {

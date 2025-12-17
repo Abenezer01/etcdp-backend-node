@@ -39,11 +39,13 @@ module.exports = function (express) {
   //action state route
   route.get("/action-state", ActionStateController.getAll);
   route.get("/action-state/:id", ActionStateController.get);
+  route.put("/action-state/:id", ActionStateController.update);
   route.get("/action/:id", ActionStateController.getLast);
   route.post("/check", ActionStateController.check);
   route.post("/approve", ActionStateController.approve);
   route.post("/authorize", ActionStateController.authorize);
   route.post("/reject", ActionStateController.reject);
+  route.post("/default", ActionStateController.default);
   // route.put("/reject/:model/:id", validateData.actionStateValidate, ActionStateController.reject);
   route.get("/model-action-data/:id", ActionStateController.getModelAction);
   route.get("/latest-model-action/:id", ActionStateController.getLatestAction);
