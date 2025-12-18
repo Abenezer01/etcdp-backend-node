@@ -1,11 +1,21 @@
-const { Position, Department, Permission, PositionPermission, Sequelize } = require("../../models");
+const { UserPosition, User, Position, Department, Permission, PositionPermission, Sequelize } = require("../../models");
 const paginationHelper = require("../utils/pagination-helper");
 const { getRecordById, saveRecord, updateRecord, deleteRecord } = require("../utils/format-helper");
 
 const Op = Sequelize.Op;
 
 let self = {};
+self.getAllPositions = async(req, res) => {
+  try {
+   
+    let users = await User.findAll()
 
+    return res.json(users);
+
+  } catch (error) {
+    res.apiError(error);
+  }
+}
 
 self.getAll = async (req, res) => {
   try {

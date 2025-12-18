@@ -205,10 +205,12 @@ self.search = async (req, res) => {
 };
 
 self.save = async (req, res) => {
+
   try {
     let usr = await usrData.userData(req, res);
     let usrID = usr.usrID;
     let body = req.body;
+
     if (usr) {
       let plan = await ProjectPlan.findOne({
         where: {
@@ -221,6 +223,7 @@ self.save = async (req, res) => {
           message: "Plan doesn't exist!",
         });
       }
+
       body.type = plan.type;
       body.year = plan.year;
       body.quarter = plan.quarter

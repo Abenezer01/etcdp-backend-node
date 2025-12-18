@@ -98,6 +98,8 @@ self.assignRolePermissions = async (req, res) => {
 
 self.getAll = async (req, res) => {
   try {
+    let data = await Permission.findAll();
+    return res.json(data)
     const paginatedResult = await paginationHelper(Permission, req);
 
     // Use the response formatter to send the success response
@@ -1929,10 +1931,17 @@ self.addPermissionToModel = async (req, res) => {
   try {
 
     let modelNames = [
-      "jointventure"
+      "ownership",
+      "businessfield",
+      "studylevel",
+      "studyprogram",
+      "studyfield",
+      "agelevel",
+      "workexperience"
     ];
+
     let module = "stakeholder";
-    let type = "CONTRACTOR"
+    let type = "EDUCATION_INSTITUTION"
    
 
     let action = ['create', 'view', 'update', 'delete', 'check', 'approve', 'authorize']

@@ -4316,8 +4316,8 @@ const projectReportValidate = async (req, res, next) => {
   }
   const validationRule = {
     project_id: "required|string",
-    projectplan_id: "required|uuid",
-    monthlyreport_id: "required|uuid",
+    projectplan_id: "required|string",
+    monthlyreport_id: "required|string",
     type: "string",
     project_expense: "numeric",
     manpower: "numeric",
@@ -4333,7 +4333,7 @@ const projectReportValidate = async (req, res, next) => {
     over_head_cost: "numeric",
     year: "string",
     quarter: "string",
-    start: "required|date",
+    start: "date",
     end: "date",
     profit: "numeric",
   };

@@ -53,7 +53,7 @@ self.default = async (req, res) => {
           action: "DEFAULT",
         },
       });
-  
+      
   
 
       if (data) {
@@ -81,6 +81,9 @@ self.default = async (req, res) => {
             position_id: usr.position_id,
             time: new Date(),
           });
+
+      return res.json(action)
+
 
         if(action){
           await actorHelper.notifyActor(action,"approve", usr.usrID, usr.departmentID);
@@ -453,24 +456,15 @@ self.getModelAction = async (req, res) => {
     });
 
     if (data) {
-      const defaultt = data.find((item) => item.action === "DEFAULT");
       const register = data.find((item) => item.action === "REGISTER");
+      const defaultt = data.find((item) => item.action === "DEFAULT");
       const check = data.find((item) => item.action === "CHECK");
       const approve = data.find((item) => item.action === "APPROVE");
       const reject = data.find((item) => item.action === "REJECT");
       const authorize = data.find((item) => item.action === "AUTHORIZE");
 
       const element = {};
-      if (defaultt) {
-        const defaultUser = await self.getUserData(
-          defaultt.user_id,
-          defaultt.id
-        );
-        element.default_data = {
-          ... defaultt.toJSON(),
-          "user": defaultUser
-        };
-      }
+      
 
       if (register) {
         const registerUser = await self.getUserData(
@@ -481,6 +475,17 @@ self.getModelAction = async (req, res) => {
         element.registered_data = {
           ... register.toJSON(),
           "user": registerUser
+        };
+      }
+
+      if (defaultt) {
+        const defaultUser = await self.getUserData(
+          defaultt.user_id,
+          defaultt.id
+        );
+        element.default_data = {
+          ... defaultt.toJSON(),
+          "user": defaultUser
         };
       }
 
@@ -654,6 +659,9 @@ self.getLatestAction = async (req, res) => {
       where: {
         model_id:id,
       },
+      order: [
+        ['time', 'DESC']
+      ]
     });
     return res.apiSuccess({
       data: data

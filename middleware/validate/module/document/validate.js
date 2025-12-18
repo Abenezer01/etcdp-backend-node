@@ -49,17 +49,7 @@ const documentValidate = async (req, res, next) => {
       message: "Invalid id",
     });
   }
-  if (!req.files) {
-    return res.status(412).json({
-      message: "File is empty",
-    });
-  }
-  if (!req.files.attachement) {
-    return res.status(412).json({
-      message: "Attachement is empty",
-    });
-  }
-  const validationRule = {
+   const validationRule = {
     documenttype_id: "required|string",
     documentcategory_id: "required|string",
     documentsubcategory_id: "required|string",

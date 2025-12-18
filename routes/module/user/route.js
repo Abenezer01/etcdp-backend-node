@@ -32,8 +32,7 @@ module.exports = function (express) {
   route.delete("/users/:id", UserController.delete);
   route.get("/department-users/:id", UserController.getDepartmentUsers);
 
-  route.put("/account-activate/:id", validateInput.createUser, UserController.activateAccount);
-  route.put("/account-deactivate/:id", validateInput.createUser, UserController.deactivateAccount);
+  route.post("/account-action/:id/:action", UserController.accountActivation);
 
 
   route.post("/assign-user-position", UserController.assignPosition);
@@ -42,7 +41,8 @@ module.exports = function (express) {
   route.get("/user-positions/:id", UserController.getAllUserPositions);
   route.get("/user-check-status/:id", UserController.checkUserStatus);
   
-  route.get("/change-password", UserController.changeAllPasswords);
+  route.get("/change-all-password", UserController.changeAllPasswords);
+  route.post("/change-password", UserController.changePassword);
 
   //position route
   route.get("/positions", positionController.getAll);
@@ -62,6 +62,7 @@ module.exports = function (express) {
     "/department-positions/:id",
     positionController.getDepartmentPositions
   );
+  route.get("/all-positions", positionController.getAllPositions);
 
   //department route
   route.get("/departments", departmentController.getAll);

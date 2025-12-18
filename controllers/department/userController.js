@@ -44,103 +44,103 @@ self.getHashed = async (req, res) => {
 }
 
 
-self.getUserEmail = async(req, res) => {
+self.getUserEmail = async (req, res) => {
     try {
         let data = await UserEmail.findAll();
         return res.json(data);
     } catch (error) {
-    
+
     }
 }
 self.getAll = async (req, res) => {
 
     try {
 
-      const whereCondition = { };
-  
-      const includeOptions = [
-        {
-            model: UserEmail,
-            as: "useremails",
-            // attributes: ["email"] 
-        },
-        {
-            model: UserPhone,
-            as: "userphones",
-            // attributes: ["phone"] 
-        },
-        {
-            model: UserPosition,
-            as: "positions",
-            include: [
-                {
-                    model: Position,
-                    as: "position",
-                }
-            ]
-        }
-      ];
+        const whereCondition = {};
 
-  
-      const paginatedResult = await paginationHelper(User, req, whereCondition, includeOptions);
-      
+        const includeOptions = [
+            {
+                model: UserEmail,
+                as: "useremails",
+                // attributes: ["email"] 
+            },
+            {
+                model: UserPhone,
+                as: "userphones",
+                // attributes: ["phone"] 
+            },
+            {
+                model: UserPosition,
+                as: "positions",
+                include: [
+                    {
+                        model: Position,
+                        as: "position",
+                    }
+                ]
+            }
+        ];
 
-    //   const usersWithEmail = paginatedResult.data.map(user => {
-    //     const userJson = user.toJSON();
-    //     userJson.email = userJson.useremails ? userJson.useremails.email : null;
-    //     userJson.phone = userJson.userphones ? userJson.userphones.phone : null;
-    //     delete userJson.useremails; // Remove the nested emailInfo object
-    //     delete userJson.userphones; // Remove the nested emailInfo object
-    //     return userJson;
-    //   });
 
-    const usersWithEmail = await Promise.all(
+        const paginatedResult = await paginationHelper(User, req, whereCondition, includeOptions);
+
+
+        //   const usersWithEmail = paginatedResult.data.map(user => {
+        //     const userJson = user.toJSON();
+        //     userJson.email = userJson.useremails ? userJson.useremails.email : null;
+        //     userJson.phone = userJson.userphones ? userJson.userphones.phone : null;
+        //     delete userJson.useremails; // Remove the nested emailInfo object
+        //     delete userJson.userphones; // Remove the nested emailInfo object
+        //     return userJson;
+        //   });
+
+        const usersWithEmail = await Promise.all(
             paginatedResult.data.map(async (user) => {
-              const userJson = user;
-          
-              userJson.email = userJson.useremails ? userJson.useremails : null;
-              userJson.phone = userJson.userphones ? userJson.userphones : null;
-              
-              let position_id = null
-              let department_id = null
+                const userJson = user;
 
-              if(userJson.positions.length !== 0){
-                position_id = userJson.positions ? userJson.positions[0].position_id : null;
-                department_id = userJson.positions ? userJson.positions[0].department_id : null;
-              }
-              
-              
-              let pos = null
-              let dept = null
-              if(position_id){
-                pos = position_id ? await Position.findOne({ where: { id: position_id } }) : null;
-                dept = department_id ? await Department.findOne({ where: { id: department_id } }) : null;
-              }
-              
-              userJson.position_id = position_id;
-              userJson.position = pos;
-              userJson.department = dept;
-             
-              // Remove unnecessary nested objects
-              delete userJson.useremails;
-              delete userJson.userphones;
-              delete userJson.positions;
-          
-              return userJson;
+                userJson.email = userJson.useremails ? userJson.useremails : null;
+                userJson.phone = userJson.userphones ? userJson.userphones : null;
+
+                let position_id = null
+                let department_id = null
+
+                if (userJson.positions.length !== 0) {
+                    position_id = userJson.positions ? userJson.positions[0].position_id : null;
+                    department_id = userJson.positions ? userJson.positions[0].department_id : null;
+                }
+
+
+                let pos = null
+                let dept = null
+                if (position_id) {
+                    pos = position_id ? await Position.findOne({ where: { id: position_id } }) : null;
+                    dept = department_id ? await Department.findOne({ where: { id: department_id } }) : null;
+                }
+
+                userJson.position_id = position_id;
+                userJson.position = pos;
+                userJson.department = dept;
+
+                // Remove unnecessary nested objects
+                delete userJson.useremails;
+                delete userJson.userphones;
+                delete userJson.positions;
+
+                return userJson;
             })
-          );
-      // Use the response formatter to send the success response
-      res.apiSuccess({
-        data: usersWithEmail,
-        total: paginatedResult.total,
-      }, paginatedResult.pagination);
-  
-    } catch (error) {
-      res.apiError(error);
-    }
-  };
+        );
+        // Use the response formatter to send the success response
+        res.apiSuccess({
+            data: usersWithEmail,
+            total: paginatedResult.total,
+        }, paginatedResult.pagination);
 
-self.get = async(req, res) => {
+    } catch (error) {
+        res.apiError(error);
+    }
+};
+
+self.get = async (req, res) => {
     try {
         let id = req.params.id;
         let data = await User.findOne({
@@ -200,7 +200,7 @@ self.get = async(req, res) => {
 
             res.apiSuccess({
                 data: temp
-              });
+            });
             // return res.json(temp);
         }
     } catch (error) {
@@ -210,7 +210,7 @@ self.get = async(req, res) => {
     }
 };
 
-self.search = async(req, res) => {
+self.search = async (req, res) => {
     try {
         let text = req.params.key;
         let data = await User.findAll({
@@ -243,7 +243,7 @@ self.search = async(req, res) => {
     }
 };
 
-self.isEmailValid = async(email) => {
+self.isEmailValid = async (email) => {
     try {
         return emailValidator.validate(email);
     } catch (error) {
@@ -251,12 +251,12 @@ self.isEmailValid = async(email) => {
     }
 };
 
-self.save = async(req, res) => {
+self.save = async (req, res) => {
     try {
 
         let body = req.body;
 
-        
+
 
         //check email is really exist -- consider the domain inclusiveness like eiabc.edu.et
         // let val = await self.isEmailValid(body.email);
@@ -276,20 +276,20 @@ self.save = async(req, res) => {
             }
         });
 
-        if(existed){
+        if (existed) {
             const errorResponse = {
                 _links: {
-                previousPage: null,
-                nextPage: null
+                    previousPage: null,
+                    nextPage: null
                 },
                 _warning: [],
                 payload: [],
                 _attributes: {},
                 _errors: {
                     "email": [
-                            "User Email already exist."
-                        ]
-                    },
+                        "User Email already exist."
+                    ]
+                },
                 _generated: new Date().toISOString()
             };
             return res.status(422).json(errorResponse);
@@ -353,7 +353,7 @@ self.save = async(req, res) => {
                 //     expiresAt: Date.now() + 3600000,
                 //     is_used: false,
                 // });
-                const redirectUrl = body.redirect_url ;
+                const redirectUrl = body.redirect_url;
                 // sendEmail(created_user.id, body.email, redirectUrl, resetString)
                 // const salt = await bcrypt.genSalt();
                 // const hashedResetString = await bcrypt.hash(resetString, salt);
@@ -405,10 +405,10 @@ self.save = async(req, res) => {
         res.apiSuccess({
             data: created_user,
             total: 1 // Assuming a single user is being returned
-          }, {
+        }, {
             pageSize: 1,
             page: 1
-          });
+        });
 
         // return res.json(created_user);
     } catch (err) {
@@ -418,66 +418,66 @@ self.save = async(req, res) => {
     }
 };
 
-self.sendResetPasswordEmail = async(userId, email, redirectUrl) => {
+self.sendResetPasswordEmail = async (userId, email, redirectUrl) => {
     try {
-        
-            const resetString = uuid.v4() + userId;
 
-            await PasswordReset.create({
-                user_id: userId,
-                token: resetString,
-                expiresAt: Date.now() + 3600000,
-                is_used: false,
-            });
+        const resetString = uuid.v4() + userId;
 
-            // sendEmail(us.id, email, redirectUrl, resetString)
-            const salt = await bcrypt.genSalt();
-            const hashedResetString = await bcrypt.hash(resetString, salt);
- 
-            var mailOptions = {
-                from: "1space.mia@gmail.com",
-                // from: process.env.AUTH_EMAIL,
-                to: email,
-                subject: "Setup Password",
-                html:
+        await PasswordReset.create({
+            user_id: userId,
+            token: resetString,
+            expiresAt: Date.now() + 3600000,
+            is_used: false,
+        });
+
+        // sendEmail(us.id, email, redirectUrl, resetString)
+        const salt = await bcrypt.genSalt();
+        const hashedResetString = await bcrypt.hash(resetString, salt);
+
+        var mailOptions = {
+            from: "1space.mia@gmail.com",
+            // from: process.env.AUTH_EMAIL,
+            to: email,
+            subject: "Setup Password",
+            html:
                 `
 				<p>You are registered to ECDMS, click on the link below to fillout your password.</p>
 				<p><a href= ${redirectUrl}?token=${hashedResetString}&user_id=${userId}>Link to setup password</a></p>
 				<p>This link will expire within 60 minutes. </p>`,
-            };
+        };
 
-            var transporter = nodemailer.createTransport(
-                smtpTransport({
-                    service: "gmail",
-                    host: "smtp.gmail.com",
-                    secure: false,
-                    auth: {
-                        user: "1space.mia@gmail.com",
-                        pass: "rjxcwxgyrijvturw",
-                    },
-                    tls: {
-                        rejectUnauthorized: false
-                    }
-                })
-            );
-
-
-            transporter.sendMail(mailOptions, function(error) {
-
-                if (error) {
-                    return apiError(error);
-                    // return res.status(500).json(error)
-                } else {
-
-                    return  { message: "Password reset link sent to you email"}
-                    
+        var transporter = nodemailer.createTransport(
+            smtpTransport({
+                service: "gmail",
+                host: "smtp.gmail.com",
+                secure: false,
+                auth: {
+                    user: "1space.mia@gmail.com",
+                    pass: "rjxcwxgyrijvturw",
+                },
+                tls: {
+                    rejectUnauthorized: false
                 }
-            });
+            })
+        );
+
+
+        transporter.sendMail(mailOptions, function (error) {
+
+            if (error) {
+                return apiError(error);
+                // return res.status(500).json(error)
+            } else {
+
+                return { message: "Password reset link sent to you email" }
+
+            }
+        });
     } catch (error) {
         return error;
     }
 }
-self.sendPasswordSetupEmail = async(userId, email, redirectUrl, hashedResetString) => {
+self.sendPasswordSetupEmail = async (userId, email, redirectUrl, hashedResetString) => {
     try {
         var mailOptions = {
             from: "1space.mia@gmail.com",
@@ -492,7 +492,7 @@ self.sendPasswordSetupEmail = async(userId, email, redirectUrl, hashedResetStrin
                 "slash"
             )}>Link to setup password</a></p>
             `,
-        };      
+        };
         var transporter = nodemailer.createTransport(
             smtpTransport({
                 service: "gmail",
@@ -505,7 +505,7 @@ self.sendPasswordSetupEmail = async(userId, email, redirectUrl, hashedResetStrin
             })
         );
 
-        transporter.sendMail(mailOptions, function(error) {
+        transporter.sendMail(mailOptions, function (error) {
             if (error) {
                 return res.json("error" + error);
             } else {
@@ -521,16 +521,16 @@ self.sendPasswordSetupEmail = async(userId, email, redirectUrl, hashedResetStrin
         });
     }
 };
-      
 
-self.setupPassword = async(req, res) => {
+
+self.setupPassword = async (req, res) => {
     try {
-        
-        let body = req. body;
+
+        let body = req.body;
 
         let data = await User.findOne({
             where: {
-                id:body.id
+                id: body.id
             }
         })
 
@@ -558,42 +558,42 @@ self.update = async (req, res) => {
 
         const [updated] = await User.update(body, {
             where: { id },
-          });
+        });
 
-          if (updated) {
+        if (updated) {
 
-            if(body.email){
+            if (body.email) {
                 let primary_email = await UserEmail.findOne({
                     where: {
                         is_primary: true,
                         user_id: id
                     }
                 });
-    
+
                 primary_email.email = body.email;
                 await primary_email.save();
             }
-            
-            if(body.phone){
+
+            if (body.phone) {
                 let primary_phone = await UserPhone.findOne({
                     where: {
                         is_primary: true,
                         user_id: id
                     }
                 });
-    
+
                 primary_phone.phone = body.phone;
                 await primary_phone.save();
             }
 
-            if(body.position_id){
+            if (body.position_id) {
                 let primary_position = await UserPosition.findOne({
                     where: {
                         is_primary: true,
                         user_id: id
                     }
                 });
-    
+
                 primary_position.position_id = body.position_id;
                 await primary_position.save();
             }
@@ -602,24 +602,25 @@ self.update = async (req, res) => {
 
 
             return res.apiSuccess({
-              data: updatedData}
+                data: updatedData
+            }
             );
-          }
-      
-          throw new Error("Record not found");
-        } catch (error) {
-          return res.apiError(error);
         }
+
+        throw new Error("Record not found");
+    } catch (error) {
+        return res.apiError(error);
+    }
 };
-      
 
-  
-  self.delete = async (req, res) => {
+
+
+self.delete = async (req, res) => {
     deleteRecord(User, req, res);
-  };
+};
 
-  // use this instead of filter as users table doesnt hold department_id attributes
-  self.getDepartmentUsers = async (req, res) => {
+// use this instead of filter as users table doesnt hold department_id attributes
+self.getDepartmentUsers = async (req, res) => {
 
     const { id } = req.params;
     try {
@@ -634,31 +635,33 @@ self.update = async (req, res) => {
 
         let userId = [...new Set(pos.map((item) => item.user_id))].filter((n) => n);
 
-        const whereCondition = {  id: {
-            [Op.in]: userId,
-        }, };
+        const whereCondition = {
+            id: {
+                [Op.in]: userId,
+            },
+        };
 
         const includeOptions = [
             {
                 model: UserEmail,
                 as: "useremails",
-                attributes: ["email"] 
+                attributes: ["email"]
             },
             {
                 model: UserPhone,
                 as: "userphones",
-                attributes: ["phone"] 
+                attributes: ["phone"]
             },
             {
                 model: UserPosition,
                 as: "positions",
-                attributes: ["position_id", "department_id"] 
+                attributes: ["position_id", "department_id"]
             }
-          ];
+        ];
 
         const paginatedResult = await paginationHelper(User, req, whereCondition, includeOptions);
         let userArr = [];
-        
+
         let arr = paginatedResult.data;
         for (const ar of arr) {
             // Extract the needed values, setting defaults if missing
@@ -679,7 +682,7 @@ self.update = async (req, res) => {
                 position,
                 department,
             };
-            
+
             // Remove the original nested data if you don't want it in the final response
             delete newUser.password;
             // delete newUser.useremails;
@@ -694,55 +697,55 @@ self.update = async (req, res) => {
             data: userArr,
             total: paginatedResult.total,
         }, paginatedResult.pagination);
-    
-        
+
+
         // const usersWithEmail = await Promise.all(
         //     paginatedResult.data.map(async (user) => {
         //       const userJson = user;
-          
+
         //       userJson.email = userJson.useremails ? userJson.useremails[0].email : null;
         //       userJson.phone = userJson.userphones ? userJson.userphones[0].phone : null;
         //       let position_id = userJson.positions ? userJson.positions[0].position_id : null;
         //       let department_id = userJson.positions ? userJson.positions[0].department_id : null;
         //       userJson.position_id = position_id;
 
-                
+
         //       // Fetch position and department asynchronously
         //       const pos = position_id ? await Position.findOne({ where: { id: position_id } }) : null;
         //       const dept = department_id ? await Department.findOne({ where: { id: department_id } }) : null;
-          
+
         //       // remove positions from userJson
         //       delete userJson.positions;
         //       userJson.position = pos;
         //       userJson.department = dept;
-            
 
-          
+
+
         //       // Remove unnecessary nested objects
         //       delete userJson.useremails;
         //       delete userJson.userphones;
         //       delete userJson.positions;
-          
+
         //       return userJson;
         //     })
         //   );
-          
+
 
         //   return res.json(usersWithEmail)
-    
+
         // // Use the response formatter to send the success response
         // res.apiSuccess({
         //     data: usersWithEmail,
         //     total: paginatedResult.total,
         // }, paginatedResult.pagination);
-    
+
     } catch (error) {
-      res.apiError(error);
+        res.apiError(error);
     }
-  };
+};
 
 
-self.assignPosition = async(req, res) => {
+self.assignPosition = async (req, res) => {
     try {
         let body = req.body;
         let existing = await UserPosition.findOne({
@@ -787,7 +790,7 @@ self.assignPosition = async(req, res) => {
     }
 };
 
-self.dePosition = async(req, res) => {
+self.dePosition = async (req, res) => {
     try {
         let id = req.params.id;
         let data = await UserPosition.findOne({
@@ -825,7 +828,7 @@ self.dePosition = async(req, res) => {
     }
 };
 
-self.switchAccount = async(req, res) => {
+self.switchAccount = async (req, res) => {
     try {
         let body = req.body;
         let usr = await usrData.userData(req, res);
@@ -928,7 +931,7 @@ self.switchAccount = async(req, res) => {
     }
 };
 
-self.getAllUserPositions = async(req, res) => {
+self.getAllUserPositions = async (req, res) => {
     try {
         let { id } = req.params;
 
@@ -945,7 +948,7 @@ self.getAllUserPositions = async(req, res) => {
         }
 
         let arr = await Promise.all(
-            data.map(async(usrpos) => {
+            data.map(async (usrpos) => {
                 let temp = usrpos.toJSON();
                 let [pos, dept] = await Promise.all([
                     usrpos.getPosition(),
@@ -964,7 +967,7 @@ self.getAllUserPositions = async(req, res) => {
         });
     }
 };
-self.sendMail = async(req, res) => {
+self.sendMail = async (req, res) => {
     let body = req.body;
     let email = body.email;
 
@@ -975,7 +978,7 @@ self.sendMail = async(req, res) => {
             },
         });
         if (us) {
-            const redirectUrl = body.redirect_url ;
+            const redirectUrl = body.redirect_url;
 
             let preset = await PasswordReset.findOne({
                 where: {
@@ -996,9 +999,9 @@ self.sendMail = async(req, res) => {
 
 				<p>Your EtCDP account is ready, click on the link below to fillout your password</p>
 				<p><a href= ${redirectUrl}/auth/${us.id}/${hashedResetString.replace(
-          /\//g,
-          "slash"
-        )}>Link to setup password</a></p>
+                    /\//g,
+                    "slash"
+                )}>Link to setup password</a></p>
 				`,
             };
 
@@ -1014,7 +1017,7 @@ self.sendMail = async(req, res) => {
                 })
             );
 
-            transporter.sendMail(mailOptions, function(error) {
+            transporter.sendMail(mailOptions, function (error) {
                 if (error) {
                     return res.json("error" + error);
                 } else {
@@ -1033,7 +1036,7 @@ self.sendMail = async(req, res) => {
 
 //password reset and requesting it
 
-self.requestPasswordReset = async(req, res) => {
+self.requestPasswordReset = async (req, res) => {
     try {
         const { email, redirectUrl } = req.body;
         //check if user exist
@@ -1050,17 +1053,17 @@ self.requestPasswordReset = async(req, res) => {
         if (!usemail) {
             const errorResponse = {
                 _links: {
-                  previousPage: null,
-                  nextPage: null
+                    previousPage: null,
+                    nextPage: null
                 },
                 _warning: [],
                 payload: [],
                 _attributes: {},
                 _errors: {
-                  message: ["User not Found"]
+                    message: ["User not Found"]
                 },
                 _generated: new Date().toISOString()
-              };
+            };
             return res.status(404).json(errorResponse);
         }
 
@@ -1108,7 +1111,7 @@ self.requestPasswordReset = async(req, res) => {
             const salt = await bcrypt.genSalt();
             const hashedResetString = await bcrypt.hash(resetString, salt);
 
-            
+
             var mailOptions = {
                 from: "1space.mia@gmail.com",
                 // from: process.env.AUTH_EMAIL,
@@ -1137,7 +1140,7 @@ self.requestPasswordReset = async(req, res) => {
             );
 
 
-            transporter.sendMail(mailOptions, function(error) {
+            transporter.sendMail(mailOptions, function (error) {
 
                 if (error) {
                     res.apiError(error);
@@ -1145,10 +1148,10 @@ self.requestPasswordReset = async(req, res) => {
                 } else {
 
                     res.apiSuccess({
-                        data: { message: "Password reset link sent to you email"}
-                      });
+                        data: { message: "Password reset link sent to you email" }
+                    });
 
-                    
+
                 }
             });
 
@@ -1164,7 +1167,7 @@ self.requestPasswordReset = async(req, res) => {
     }
 };
 
-self.resetPassword = async(req, res) => {
+self.resetPassword = async (req, res) => {
     try {
         let { user_id, resetString, password } = req.body;
 
@@ -1179,7 +1182,7 @@ self.resetPassword = async(req, res) => {
         });
 
         if (existing) {
-            
+
             // const expiredAt = existing.expiresAt
             // if(expiredAt < Date.now()){
             // 	return res.status(410).json({
@@ -1224,7 +1227,7 @@ self.resetPassword = async(req, res) => {
         });
     }
 };
-self.checkUserStatus = async(req, res) => {
+self.checkUserStatus = async (req, res) => {
     let id = req.params.id;
     try {
         await User.findOne({
@@ -1260,189 +1263,206 @@ self.checkUserStatus = async(req, res) => {
         res.apiError(error);
     }
 };
-self.changeLanguage = async(req, res) =>{
+self.changeLanguage = async (req, res) => {
     try {
 
-        let body = req.body; 
+        let body = req.body;
         let lang = body.lang;
 
 
         let usr = await usrData.userData(req, res);
-        let us = await User.update({lang:lang}, {
+        let us = await User.update({ lang: lang }, {
             where: {
-                id:usr.usrID
+                id: usr.usrID
             }
         });
 
-        if(us){
+        if (us) {
             return res.status(200).json({
                 message: "Language changed successfully!"
             });
-        }else{
+        } else {
             return res.status(500).json({
                 message: "Try Again!"
             });
         }
-        
-    } catch (error) {
-        return res.status(500).json({
-            message: error.message
-        });
-    }
-}; 
-self.activateAccount = async(req, res) => {
-    try {
-        let {id} = req.params;
-        await User.update({is_activated: true}, {
-            where: {
-                id: id
-            }
-        });
 
-        return res.json({
-            message: "Account activated successfully"
-        });
     } catch (error) {
         return res.status(500).json({
             message: error.message
         });
     }
 };
-self.deactivateAccount = async(req, res) => {
+self.accountActivation = async (req, res) => {
+
     try {
-        let {id} = req.params;
-        await User.update({is_activated: false}, {
+        let id = req.params.id;
+        let action = req.params.action;
+
+        let user = await User.findOne({
             where: {
                 id: id
             }
         });
 
-        return res.json({
-            message: "Account deactivated successfully"
-        });
+        if (user) {
+            user.is_activated = action === "ACTIVATE" ? true : false;
+            await user.save();
+            return res.json({
+                message: "Account " + action.toLowerCase() + "ed successfully"
+            });
+        } else {
+            return res.apiError({
+                message: "Account not found"
+            });
+        }
+
     } catch (error) {
-        return res.status(500).json({
-            message: error.message
+        return res.apiError(error);
+    }
+};
+self.deactivateAccount = async (req, res) => {
+    try {
+        let id = req.params.id;
+
+        let user = await User.findOne({
+            where: {
+                id: id
+            }
         });
+
+        if (user) {
+            user.is_activated = false;
+            await user.save();
+            return res.json({
+                message: "Account deactivated successfully"
+            });
+        } else {
+            return res.apiError({
+                message: "Account not found"
+            });
+        }
+    } catch (error) {
+        return res.apiError(error);
     }
 };
 
 
 
 self.getMe = async (req, res) => {
-  try {
-    const user = await userInfo(req, res);
+    try {
+        const user = await userInfo(req, res);
 
-    // if ( user =! "TOKEN_MISSING" || user != "INVALID_EXPIRED_TOKEN")
-    // return res.json(user)
-    switch (user) {
-        case "TOKEN_MISSING":
-            return res.status(401).json({
-                status: 401,
-                _links: {
-                  previousPage: null,
-                  nextPage: null
-                },
-                _warning: [],
-                payload: [],
-                _attributes: {},
-                _errors: [{ message: "Authorization token is missing" }],
-                _generated: new Date().toISOString()
-              });
-        case "INVALID_EXPIRED_TOKEN":
+        // if ( user =! "TOKEN_MISSING" || user != "INVALID_EXPIRED_TOKEN")
+        // return res.json(user)
+        switch (user) {
+            case "TOKEN_MISSING":
+                return res.status(401).json({
+                    status: 401,
+                    _links: {
+                        previousPage: null,
+                        nextPage: null
+                    },
+                    _warning: [],
+                    payload: [],
+                    _attributes: {},
+                    _errors: [{ message: "Authorization token is missing" }],
+                    _generated: new Date().toISOString()
+                });
+            case "INVALID_EXPIRED_TOKEN":
 
-        
-            return res.status(401).json({
-                _links: {
-                previousPage: null,
-                nextPage: null
-                },
-                _warning: [],
-                payload: [],
-                _attributes: {},
-                _errors: [{ message: "Invalid Authorization header format" }],
-                _generated: new Date().toISOString()
-            });
-        case "TOKEN_NOT_FOUND":
 
-            return res.status(401).json({
-                _links: {
-                previousPage: null,
-                nextPage: null
-                },
-                _warning: [],
-                payload: [],
-                _attributes: {},
-                _errors: [{ message: "Authorization token is missing" }],
-                _generated: new Date().toISOString()
-            });
-            
-    
-        default:
-            // return res.json("default")
-            break;
+                return res.status(401).json({
+                    _links: {
+                        previousPage: null,
+                        nextPage: null
+                    },
+                    _warning: [],
+                    payload: [],
+                    _attributes: {},
+                    _errors: [{ message: "Invalid Authorization header format" }],
+                    _generated: new Date().toISOString()
+                });
+            case "TOKEN_NOT_FOUND":
 
+                return res.status(401).json({
+                    _links: {
+                        previousPage: null,
+                        nextPage: null
+                    },
+                    _warning: [],
+                    payload: [],
+                    _attributes: {},
+                    _errors: [{ message: "Authorization token is missing" }],
+                    _generated: new Date().toISOString()
+                });
+
+
+            default:
+                // return res.json("default")
+                break;
+
+        }
+
+        const usr = await User.findOne({
+            where: { id: user.usrID, is_activated: true },
+            include: [{ model: UserPosition, as: "positions" }]
+        });
+
+        const [usPos, usPhone] = await Promise.all([
+            UserPosition.findOne({ where: { user_id: usr.id, is_primary: true } }),
+            UserPhone.findOne({ where: { user_id: usr.id, is_primary: true } })
+        ]);
+
+        const pos = await Position.findOne({ where: { id: usPos.position_id } });
+        const action = await ActionState.findOne({ where: { model_id: usr.id, action: "CHECK" } });
+        const profile_pic = await Photo.findOne({ where: { model_id: usr.id, type: "USER_PROFILE_PHOTO" } });
+
+        // const userPayload = {
+        //   id: usr.id,
+        //   department_id: pos.department_id,
+        //   position_id: pos.id,
+        //   lang: usr.lang
+        // };
+
+        // const accessToken = jwt.sign(userPayload, process.env.ACCESS_TOKEN_KEY, { expiresIn: "1000h" });
+
+        const replyUser = {
+            id: usr.id,
+            full_name: usr.full_name,
+            name: usr.name,
+            first_name: usr.first_name,
+            middle_name: usr.middle_name,
+            last_name: usr.last_name,
+            phone: usPhone?.phone,
+            gender: usr.gender,
+            position_id: pos.id,
+            position_name: pos.name,
+            department_id: usPos.department_id,
+            user_position_id: usPos.id,
+            is_checked: !!action,
+            profile_completed: !!profile_pic,
+        };
+
+        const data = { user_data: replyUser };
+
+        res.apiSuccess({
+            data: data,
+            total: 1 // Assuming a single user is being returned
+        }, {
+            pageSize: 1,
+            page: 1
+        });
+    } catch (error) {
+        res.apiError(error);
     }
-
-    const usr = await User.findOne({
-      where: { id: user.usrID, is_activated: true },
-      include: [{ model: UserPosition, as: "positions" }]
-    });
-
-    const [usPos, usPhone] = await Promise.all([
-      UserPosition.findOne({ where: { user_id: usr.id, is_primary: true } }),
-      UserPhone.findOne({ where: { user_id: usr.id, is_primary: true } })
-    ]);
-
-    const pos = await Position.findOne({ where: { id: usPos.position_id } });
-    const action = await ActionState.findOne({ where: { model_id: usr.id, action: "CHECK" } });
-    const profile_pic = await Photo.findOne({ where: { model_id: usr.id, type: "USER_PROFILE_PHOTO" } });
-
-    // const userPayload = {
-    //   id: usr.id,
-    //   department_id: pos.department_id,
-    //   position_id: pos.id,
-    //   lang: usr.lang
-    // };
-
-    // const accessToken = jwt.sign(userPayload, process.env.ACCESS_TOKEN_KEY, { expiresIn: "1000h" });
-
-    const replyUser = {
-      id: usr.id,
-      full_name: usr.full_name,
-      name: usr.name,
-      first_name: usr.first_name,
-      middle_name: usr.middle_name,
-      last_name: usr.last_name,
-      phone: usPhone?.phone,
-      gender: usr.gender,
-      position_id: pos.id,
-      position_name: pos.name,
-      department_id: usPos.department_id,
-      user_position_id: usPos.id,
-      is_checked: !!action,
-      profile_completed: !!profile_pic,
-    };
-
-    const data = { user_data: replyUser };
-
-    res.apiSuccess({
-      data: data,
-      total: 1 // Assuming a single user is being returned
-    }, {
-      pageSize: 1,
-      page: 1
-    });
-  } catch (error) {
-    res.apiError(error);
-  }
 };
 
-self.changeAllPasswords = async(req, res) => {
+self.changeAllPasswords = async (req, res) => {
     try {
         let users = await User.findAll();
 
-        for(let usr of users){
+        for (let usr of users) {
             let password = "password"
             const salt = await bcrypt.genSalt();
             const hashed_password = await bcrypt.hash(password, salt);
@@ -1458,6 +1478,59 @@ self.changeAllPasswords = async(req, res) => {
         return res.status(500).json({
             message: error.message
         });
+    }
+}
+
+//change a loggedin user password
+
+self.changePassword = async (req, res) => {
+    try {
+        //logged in user 
+        let body = req.body
+
+        let old_password = body.old_password
+        let new_password = body.new_password
+
+        let usr = await usrData.userData(req, res);
+
+        let user = await User.findOne({
+            where: {
+                id: usr.usrID
+            }
+        })
+
+
+        if (user) {
+            //compare old password with existing password in the user
+            const validPassword = await bcrypt.compare(old_password, user.password);
+            if(validPassword){
+                //change password
+
+                const salt = await bcrypt.genSalt();
+                const hashed_password = await bcrypt.hash(new_password, salt);
+                
+
+                user.password = hashed_password
+                await user.save();
+
+                res.apiSuccess({
+                    data: user
+                });
+                    
+            }else {
+                return res.json({
+                    message: "Old password is incorrect"
+                })
+            }
+
+        } else {
+            return res.json({
+                message: "User not found"
+            })
+        }
+
+    } catch (error) {
+        res.apiError(error)
     }
 }
 module.exports = self;
