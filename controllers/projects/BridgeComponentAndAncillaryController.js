@@ -1,4 +1,4 @@
-const { BridgeBasicData, RoadSegment  , Sequelize } = require("../../models");
+const { BridgeComponentAndAncillary, BridgeBasicData  , Sequelize } = require("../../models");
 const Op = Sequelize.Op;
 const dotenv = require("dotenv");
 dotenv.config();
@@ -9,16 +9,15 @@ let self = {};
 
 self.getAll = async (req, res) => {
   try {
-
     const whereCondition = { };
-
     const includeOptions = [
       {
-        model: RoadSegment,
-        as: 'roadSegment'
+        model: BridgeBasicData,
+        as: 'bridge'
       }
     ];
-    const paginatedResult = await paginationHelper(BridgeBasicData , req, whereCondition, includeOptions);
+
+    const paginatedResult = await paginationHelper(BridgeComponentAndAncillary , req, whereCondition, includeOptions);
 
     // Use the response formatter to send the success response
     res.apiSuccess({
@@ -32,19 +31,19 @@ self.getAll = async (req, res) => {
 };
 
 self.get = async (req, res) => {
-  getRecordById(BridgeBasicData , req, res);
+  getRecordById(BridgeComponentAndAncillary , req, res);
 };
 
 self.save = async (req, res) => {
-  saveRecord(BridgeBasicData , req, res);
+  saveRecord(BridgeComponentAndAncillary , req, res);
 };
 
 self.update = async (req, res) => {
-  updateRecord(BridgeBasicData , req, res);
+  updateRecord(BridgeComponentAndAncillary , req, res);
 };
 
 self.delete = async (req, res) => {
-  deleteRecord(BridgeBasicData , req, res);
+  deleteRecord(BridgeComponentAndAncillary , req, res);
 };
 
 module.exports = self;

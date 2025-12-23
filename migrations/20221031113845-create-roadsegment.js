@@ -34,7 +34,7 @@ module.exports = {
         type: Sequelize.UUID,
         allowNull: false,
         references: {
-          model: "SurfaceTypes",
+          model: "ProjectMasterData",
           key: "id",
         },
         onUpdate: "CASCADE",
@@ -55,7 +55,7 @@ module.exports = {
       design_standard_id: {
         type: Sequelize.UUID,
         references: {
-          model: "DesignStandards",
+          model: "ProjectMasterData",
           key: "id",
         },
         onUpdate: "CASCADE",

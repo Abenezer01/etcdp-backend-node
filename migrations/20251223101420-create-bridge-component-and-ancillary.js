@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('BridgeSuperStructures', {
+    await queryInterface.createTable('BridgeComponentAndAncillaries', {
       id: {
         type: Sequelize.UUID,
         primaryKey: true,
@@ -11,7 +11,7 @@ module.exports = {
       parent_id: {
         type: Sequelize.UUID,
         references: { 
-          model: 'BridgeSuperStructures',
+          model: 'BridgeStructureInformations',
           key: 'id'
         },
         onUpdate: "CASCADE",
@@ -37,7 +37,7 @@ module.exports = {
         onUpdate: "CASCADE",
         onDelete: "CASCADE"
       },
-      bridge_structure_type_id: {
+      expansion_joint_type_id: {
         type: Sequelize.UUID,
         allowNull: false,
         references: {
@@ -47,55 +47,48 @@ module.exports = {
         onUpdate: "CASCADE",
         onDelete: "CASCADE"
       },
-      span_number: {
-        type: Sequelize.INTEGER
-      },
-      span_composition: {
-        type: Sequelize.STRING
-      },
-      total_span_length: {
-        type: Sequelize.DOUBLE
-      },
-      carriage_width: {
-        type: Sequelize.DOUBLE
-      },
-      side_walk_width: {
-        type: Sequelize.DOUBLE
-      },
-      lane_number: {
-        type: Sequelize.INTEGER
-      },
-      span_support_type_id: {
+      guard_railing_type_id: {
         type: Sequelize.UUID,
         allowNull: false,
         references: {
-          model: 'SpanSupportTypes',
+          model: 'ProjectMasterData',
           key: 'id'
         },
         onUpdate: "CASCADE",
         onDelete: "CASCADE"
       },
-      deck_slab_type_id: {
+      abutment_bearing_type_id: {
         type: Sequelize.UUID,
         allowNull: false,
         references: {
-          model: 'DeckSlabTypes',
+          model: 'ProjectMasterData',
           key: 'id'
         },
         onUpdate: "CASCADE",
         onDelete: "CASCADE"
       },
-      girder_number: {
-        type: Sequelize.INTEGER
+      piers_bearing_type_id: {
+        type: Sequelize.UUID,
+        allowNull: false,
+        references: {
+          model: 'ProjectMasterData',
+          key: 'id'
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE"
       },
-      girder_depth: {
-        type: Sequelize.DOUBLE
+      surface_type_id: {
+        type: Sequelize.UUID,
+        allowNull: false,
+        references: {
+          model: 'ProjectMasterData',
+          key: 'id'
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE"
       },
-      girder_spacing: {
-        type: Sequelize.DOUBLE
-      },
-      girder_width: {
-        type: Sequelize.DOUBLE
+      remark: {
+        type: Sequelize.TEXT
       },
       createdAt: {
         allowNull: false,
@@ -108,6 +101,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('BridgeSuperStructures');
+    await queryInterface.dropTable('BridgeComponentAndAncillaries');
   }
 };

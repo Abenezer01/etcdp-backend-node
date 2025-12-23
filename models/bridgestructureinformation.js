@@ -11,6 +11,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      BridgeStructureInformation.belongsTo(models.BridgeBasicData, { 
+        foreignKey: 'bridge_id', 
+        as: 'bridge'
+      });
     }
   }
   BridgeStructureInformation.init({
@@ -24,13 +28,9 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.UUID,
       allowNull: false,
     },
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    bridge_name: {
-      type: DataTypes.STRING,
-      allowNull: false,
+    bridge_id: {
+      type: DataTypes.UUID,
+      allowNull: false
     },
     bridge_structure_type_id: {
       type: DataTypes.UUID,

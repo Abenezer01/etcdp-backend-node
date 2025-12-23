@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class BridgeInspection extends Model {
+  class BridgeComponentAndAncillary extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -11,13 +11,13 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      BridgeInspection.belongsTo(models.BridgeBasicData, { 
-        foreignKey: 'bridge_id', 
+      BridgeComponentAndAncillary.belongsTo(models.BridgeBasicData, {
+        foreignKey: 'bridge_id',
         as: 'bridge'
-      });  
+      })
     }
   }
-  BridgeInspection.init({
+  BridgeComponentAndAncillary.init({
     id: {
       type: DataTypes.UUID,
       primaryKey: true,
@@ -28,35 +28,37 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.UUID,
       allowNull: false,
     },
-   bridge_id: {
+    bridge_id: {
       type: DataTypes.UUID,
       allowNull: false
     },
-    bridge_part_defect_id: {
+    expansion_joint_type_id: {
       type: DataTypes.UUID,
-      allowNull: false,
+      allowNull: false
     },
-    damage_type_id: {
+    guard_railing_type_id: {
       type: DataTypes.UUID,
-      allowNull: false,
+      allowNull: false
     },
-    damage_condition_id: {
+    abutment_bearing_type_id: {
       type: DataTypes.UUID,
-      allowNull: false,
+      allowNull: false
     },
-    hydrology_defect_id: {
+    piers_bearing_type_id: {
       type: DataTypes.UUID,
-      allowNull: false,
+      allowNull: false
     },
-    maintenance_action: DataTypes.TEXT,
-    bridge_history: DataTypes.TEXT,
-    inspector_remark: DataTypes.TEXT
+    surface_type_id: {
+      type: DataTypes.UUID,
+      allowNull: false
+    },
+    remark: DataTypes.TEXT
   }, {
     createdAt: 'created_at',
     updatedAt: 'updated_at',
     sequelize,
-    modelName: 'BridgeInspection',
-    tableName: 'BridgeInspections',
+    modelName: 'BridgeComponentAndAncillary',
+    tableName: 'BridgeComponentAndAncillaries'
   });
-  return BridgeInspection;
+  return BridgeComponentAndAncillary;
 };

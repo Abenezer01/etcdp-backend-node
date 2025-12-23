@@ -27,13 +27,15 @@ module.exports = {
         onUpdate: "CASCADE",
         onDelete: "CASCADE"
       },
-      name: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
-      bridge_name: {
-        type: Sequelize.STRING,
-        allowNull: false
+      bridge_id: {
+        type: Sequelize.UUID,
+        allowNull: false,
+        references: {
+          model: 'BridgeBasicData',
+          key: 'id'
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE"
       },
       abutment_a1_height: {
         type: Sequelize.DOUBLE
@@ -54,7 +56,7 @@ module.exports = {
         type: Sequelize.UUID,
         allowNull: false,
         references: {
-          model: 'PierTypes',
+          model: 'ProjectMasterData',
           key: 'id'
         },
         onUpdate: "CASCADE",

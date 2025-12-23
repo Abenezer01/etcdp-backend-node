@@ -10,7 +10,7 @@ module.exports = {
       },
       parent_id: {
         type: Sequelize.UUID,
-        references: { 
+        references: {
           model: 'BridgeAreaData',
           key: 'id'
         },
@@ -27,13 +27,15 @@ module.exports = {
         onUpdate: "CASCADE",
         onDelete: "CASCADE"
       },
-      name: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
-      bridge_name: {
-        type: Sequelize.STRING,
-        allowNull: false
+      bridge_id: {
+        type: Sequelize.UUID,
+        allowNull: false,
+        references: {
+          model: 'BridgeBasicData',
+          key: 'id'
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE"
       },
       river_width: {
         type: Sequelize.DOUBLE
@@ -48,7 +50,7 @@ module.exports = {
         type: Sequelize.UUID,
         allowNull: false,
         references: {
-          model: 'AreaTopographies',
+          model: 'ProjectMasterData',
           key: 'id'
         },
         onUpdate: "CASCADE",

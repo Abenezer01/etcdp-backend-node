@@ -15,9 +15,9 @@ module.exports = (sequelize, DataTypes) => {
   }
   StakeholderMachinery.init({
     id: {
-        type: DataTypes.UUID,
-        primaryKey: true,
-        defaultValue: DataTypes.UUIDV4,
+      type: DataTypes.UUID,
+      primaryKey: true,
+      defaultValue: DataTypes.UUIDV4,
     },
     parent_id: {
       type: DataTypes.UUID
@@ -46,7 +46,15 @@ module.exports = (sequelize, DataTypes) => {
     purpose: DataTypes.STRING,
     quantity: DataTypes.INTEGER,
     current_situation: DataTypes.STRING,
-    location: DataTypes.STRING
+    // NEW PRECISION COORDINATES
+    latitude: {
+      type: DataTypes.DOUBLE,
+      allowNull: true,
+    },
+    longitude: {
+      type: DataTypes.DOUBLE,
+      allowNull: true,
+    },
   }, {
     createdAt: 'created_at',
     updatedAt: 'updated_at',

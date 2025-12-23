@@ -1,4 +1,4 @@
-const { BridgeStructureInformation  , Sequelize } = require("../../models");
+const { BridgeStructureInformation, BridgeBasicData  , Sequelize } = require("../../models");
 const Op = Sequelize.Op;
 const dotenv = require("dotenv");
 dotenv.config();
@@ -9,7 +9,14 @@ let self = {};
 
 self.getAll = async (req, res) => {
   try {
-    const paginatedResult = await paginationHelper(BridgeStructureInformation , req);
+    const whereCondition = { };
+    const includeOptions = [
+      {
+        model: BridgeBasicData,
+        as: 'bridge'
+      }
+    ];
+    const paginatedResult = await paginationHelper(BridgeStructureInformation , req, whereCondition, includeOptions);
 
     // Use the response formatter to send the success response
     res.apiSuccess({

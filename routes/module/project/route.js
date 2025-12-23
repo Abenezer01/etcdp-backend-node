@@ -237,6 +237,8 @@ const DashboardController = require("../../../controllers/analytics/DashboardCon
 const ConstructionMethodController = require("../../../controllers/projects/ConstructionMethodController.js");
 const ClaimController = require("../../../controllers/projects/ClaimController.js");
 const ChallengeController = require("../../../controllers/projects/ChallengeController.js");
+const BridgeComponentAndAncillaryController = require("../../../controllers/projects/BridgeComponentAndAncillaryController.js");
+
 
 
 const validateData = require("../../../middleware/validate/module/project/validate");
@@ -1190,6 +1192,12 @@ module.exports = function (express) {
   route.post("/bridge-structure-informations", validateData.bridgeStructureInformationValidate, BridgeStructureInformationController.save);
   route.put("/bridge-structure-informations/:id", validateData.bridgeStructureInformationValidate, BridgeStructureInformationController.update);
   route.delete("/bridge-structure-informations/:id", BridgeStructureInformationController.delete);
+
+  route.get("/bridge-component-and-ancillaries", BridgeComponentAndAncillaryController.getAll);
+  route.get("/bridge-component-and-ancillaries/:id", BridgeComponentAndAncillaryController.get);
+  route.post("/bridge-component-and-ancillaries", validateData.bridgeComponentAndAncillaryValidate, BridgeComponentAndAncillaryController.save);
+  route.put("/bridge-component-and-ancillaries/:id", validateData.bridgeComponentAndAncillaryValidate, BridgeComponentAndAncillaryController.update);
+  route.delete("/bridge-component-and-ancillaries/:id", BridgeComponentAndAncillaryController.delete);
 
   
   // TrafficVolume routes with validation

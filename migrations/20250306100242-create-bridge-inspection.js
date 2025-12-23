@@ -27,13 +27,15 @@ module.exports = {
         onUpdate: "CASCADE",
         onDelete: "CASCADE"
       },
-      name: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
-      bridge_name: {
-        type: Sequelize.STRING,
-        allowNull: false
+      bridge_id: {
+        type: Sequelize.UUID,
+        allowNull: false,
+        references: {
+          model: 'BridgeBasicData',
+          key: 'id'
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE"
       },
       bridge_part_defect_id: {
         type: Sequelize.UUID,

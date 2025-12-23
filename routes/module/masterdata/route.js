@@ -912,11 +912,11 @@ route.delete("/address-master-data/:id", AddressMasterDataController.delete);
 route.get("/address-structure", AddressMasterDataController.getAddresses);
 route.get("/address-structure/:id", AddressMasterDataController.getAddresses);
 
-route.get("/stakeholder-master-data", StakeholderMasterDataController.getAll);
-route.get("/stakeholder-master-data/:id", StakeholderMasterDataController.get);
-route.post("/stakeholder-master-data", validateStakeholderData.stakeholderMasterDataValidate, StakeholderMasterDataController.save);
-route.put("/stakeholder-master-data/:id", validateStakeholderData.stakeholderMasterDataValidate, StakeholderMasterDataController.update);
-route.delete("/stakeholder-master-data/:id", StakeholderMasterDataController.delete);
+route.get("/stakeholder-general-master-data", StakeholderMasterDataController.getAll);
+route.get("/stakeholder-general-master-data/:id", StakeholderMasterDataController.get);
+route.post("/stakeholder-general-master-data", validateStakeholderData.stakeholderMasterDataValidate, StakeholderMasterDataController.save);
+route.put("/stakeholder-general-master-data/:id", validateStakeholderData.stakeholderMasterDataValidate, StakeholderMasterDataController.update);
+route.delete("/stakeholder-general-master-data/:id", StakeholderMasterDataController.delete);
 
   return route;
 };

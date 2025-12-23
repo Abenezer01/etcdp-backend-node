@@ -73,7 +73,7 @@ self.getMasterData = async (req, res) => {
   try {
 
     let data = ProjectMasterData .findAll()
-    return res
+    return res.json(data)
 
   } catch (error) {
     res.apiError(error);

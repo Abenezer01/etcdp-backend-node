@@ -2925,8 +2925,7 @@ const bridgeStructureInformationValidate = async (req, res, next) => {
 
   const validationRule = {
     project_id: "required|string",
-    name: "required|string",
-    bridge_name: "required|string",
+    bridge_id: "required|string",
     bridge_structure_type_id: "required|string",
     east_region: "numeric",
     west_region: "numeric",
@@ -2939,6 +2938,26 @@ const bridgeStructureInformationValidate = async (req, res, next) => {
   await validateReply.validateReply(req.body, validationRule, res, next);
 };
 
+const bridgeComponentAndAncillaryValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid id",
+    });
+  }
+
+  const validationRule = {
+    project_id: "required|string",
+    bridge_id: "required|string",
+    expansion_joint_type_id: "required|string",
+    guard_railing_type_id: "required|string",
+    abutment_bearing_type_id: "required|string",
+    piers_bearing_type_id: "required|string",
+    surface_type_id: "required|string",
+    remark: "string"
+  };
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
 
 
 const bridgeInspectionValidate = async (req, res, next) => {
@@ -2951,8 +2970,7 @@ const bridgeInspectionValidate = async (req, res, next) => {
 
   const validationRule = {
     project_id: "required|string",
-    name: "required|string",
-    bridge_name: "required|string",
+    bridge_id: "required|string",
     bridge_part_defect_id: "required|string",
     damage_type_id: "required|string",
     damage_condition_id: "required|string",
@@ -2974,8 +2992,7 @@ const bridgeFoundationValidate = async (req, res, next) => {
   }
   const validationRule = {
     project_id: "required|string",
-    name: "required|string",
-    bridge_name: "required|string",
+    bridge_id: "required|string",
     abutment_type_id: "required|string",
     pier_type_id: "required|string",
     abutment_foundation_size: "numeric",
@@ -3134,8 +3151,7 @@ const bridgeSubStructureValidate = async (req, res, next) => {
   }
   const validationRule = {
     project_id: "required|string",
-    name: "required|string",
-    bridge_name: "required|string",
+    bridge_id: "required|string",
     abutment_a1_height: "numeric",
     abutment_a1_width: "numeric",
     abutment_a2_height: "numeric",
@@ -3161,8 +3177,7 @@ const bridgeSuperStructureValidate = async (req, res, next) => {
   }
   const validationRule = {
     project_id: "required|string",
-    name: "required|string",
-    bridge_name: "required|string",
+    bridge_id: "required|string",
     bridge_structure_type_id: "required|string",
     span_number: "numeric",
     span_composition: "string",
@@ -3190,8 +3205,7 @@ const bridgeAreaDataValidate = async (req, res, next) => {
   }
   const validationRule = {
     project_id: "required|string",
-    name: "required|string",
-    bridge_name: "required|string",
+    bridge_id: "required|string",
     river_width: "numeric",
     highest_water_level: "numeric",
     lowest_water_level: "numeric",
@@ -3213,8 +3227,7 @@ const bridgeBasicDataValidate = async (req, res, next) => {
   }
   const validationRule = {
     project_id: "required|string",
-    name: "required|string",
-    bridge_name: "required|string",
+    road_segment_id: "required|string",
     bridge_number: "string",
     bridge_length: "numeric",
     bridge_width: "numeric",
@@ -4683,6 +4696,7 @@ const paymentValidate = async (req, res, next) => {
   await validateReply.validateReply(req.body, validationRule, res, next);
 };
 module.exports = {
+  bridgeComponentAndAncillaryValidate,
   claimValidate,
   challengeValidate,
   constructionMethodValidate,
