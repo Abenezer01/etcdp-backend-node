@@ -27,9 +27,15 @@ module.exports = {
         onUpdate: "CASCADE",
         onDelete: "CASCADE"
       },
-      name: {
-        type: Sequelize.STRING,
-        allowNull: false
+      culvert_id: {
+        type: Sequelize.UUID,
+        allowNull: false,
+        references: {
+          model: 'CulvertBasicData',
+          key: 'id'
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE"
       },
       carriage_way_width: {
         type: Sequelize.DOUBLE
@@ -50,7 +56,7 @@ module.exports = {
         type: Sequelize.UUID,
         allowNull: false,
         references: {
-          model: 'GuardRailTypes',
+          model: 'ProjectMasterData',
           key: 'id'
         },
         onUpdate: "CASCADE",

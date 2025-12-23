@@ -11,6 +11,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      CulvertRoadOverInformation.belongsTo(models.CulvertBasicData, {
+        foreignKey: 'culvert_id',
+        as: 'culvert'
+      })
     }
   }
   CulvertRoadOverInformation.init({
@@ -24,8 +28,8 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.UUID,
       allowNull: false,
     },
-    name: {
-      type: DataTypes.STRING,
+    culvert_id: {
+      type: DataTypes.UUID,
       allowNull: false,
     },
     carriage_way_width: DataTypes.DOUBLE,

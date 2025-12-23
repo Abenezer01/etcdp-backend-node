@@ -2741,7 +2741,7 @@ const roadSurfaceConditionValidate = async (req, res, next) => {
   }
   const validationRule = {
     project_id: "required|string",
-    road_segment: "required|string",
+    road_segment_id: "required|string",
     cracks: "boolean",
     rutting: "boolean",
     patching: "boolean",
@@ -2901,7 +2901,7 @@ const trafficVolumeValidate = async (req, res, next) => {
   }
   const validationRule = {
     project_id: "required|string",
-    name: "required|string",
+    road_segment_id: "required|string",
     count_location_coordinate_x: "numeric",
     count_location_coordinate_y: "numeric",
     count_time: "date",
@@ -3425,7 +3425,7 @@ const pavementValidate = async (req, res, next) => {
   }
   const validationRule = {
     project_id: "required|string",
-    name: "required|string",
+    road_segment_id: "required|string",
     tangent_length: "numeric",
     curve_length: "numeric", 
     road_length_type_id: "string",
@@ -3443,8 +3443,8 @@ const culvertBasicDataValidate = async (req, res, next) => {
   }
   const validationRule = {
     project_id: "required|string",
+    road_segment_id: "required|string",
     name: "required|string",
-    culvert_name: "required|string",
     culvert_number: "integer",
     culvert_coordinate_x: "numeric",
     culvert_coordinate_y: "numeric",
@@ -3496,7 +3496,7 @@ const trafficParameterValidate = async (req, res, next) => {
   }
   const validationRule = {
     project_id: "required|string",
-    name: "required|string", 
+    road_segment_id: "required|string", 
     pedestrian_facility_id: "required|string",
     parking: "integer",
     design_traffic_flow: "integer",
@@ -3844,7 +3844,7 @@ const intersectionAndDrivewayValidate = async (req, res, next) => {
   }
   const validationRule = {
     project_id: "required|string",
-    name: "required|string",
+    road_segment_id: "required|string",
     number_of_intersections: "integer",
     intersection_type_id: "required|string",
     driveway_access_point_id: "required|string",
@@ -3892,7 +3892,7 @@ const segmentGeometryValidate = async (req, res, next) => {
   }
   const validationRule = {
     project_id: "required|string",
-    name: "required|string",  
+    road_segment_id: "required|string",  
     carriage_way_width: "numeric",  
     cross_section_type_id: "required|string",
     grade_percentage: "numeric",

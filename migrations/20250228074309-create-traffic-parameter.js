@@ -27,15 +27,21 @@ module.exports = {
         onUpdate: "CASCADE",
         onDelete: "CASCADE"
       },
-      name: {
-        type: Sequelize.STRING,
-        allowNull: false
+      road_segment_id: {
+        type: Sequelize.UUID,
+        allowNull: false,
+        references: {
+          model: 'roadsegments',
+          key: 'id'
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE"
       },
       pedestrian_facility_id: {
         type: Sequelize.UUID,
         allowNull: false,
         references: {
-          model: 'PedestrianFacilities',
+          model: 'ProjectMasterData',
           key: 'id'
         },
         onUpdate: "CASCADE",

@@ -1,4 +1,4 @@
-const { CulvertStructuralInformation  , Sequelize } = require("../../models");
+const { CulvertStructuralInformation, CulvertBasicData  , Sequelize } = require("../../models");
 const Op = Sequelize.Op;
 const dotenv = require("dotenv");
 dotenv.config();
@@ -9,7 +9,15 @@ let self = {};
 
 self.getAll = async (req, res) => {
   try {
-    const paginatedResult = await paginationHelper(CulvertStructuralInformation , req);
+    const whereCondition = { };
+
+    const includeOptions = [
+      {
+        model: CulvertBasicData,
+        as: "culvert",
+      }
+    ];
+    const paginatedResult = await paginationHelper(CulvertStructuralInformation , req, whereCondition, includeOptions);
 
     // Use the response formatter to send the success response
     res.apiSuccess({

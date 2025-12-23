@@ -27,9 +27,15 @@ module.exports = {
         onUpdate: "CASCADE",
         onDelete: "CASCADE"
       },
-      name: {
-        type: Sequelize.STRING,
-        allowNull: false
+      culvert_id: {
+        type: Sequelize.UUID,
+        allowNull: false,
+        references: {
+          model: 'CulvertBasicData',
+          key: 'id'
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE"
       },
       culvert_type: {
         type: Sequelize.STRING
@@ -59,7 +65,7 @@ module.exports = {
         type: Sequelize.UUID,
         allowNull: false,
         references: {
-          model: 'PierTypes',
+          model: 'ProjectMasterData',
           key: 'id'
         },
         onUpdate: "CASCADE",
@@ -72,7 +78,7 @@ module.exports = {
         type: Sequelize.UUID,
         allowNull: false,
         references: {
-          model: 'AbutmentTypes',
+          model: 'ProjectMasterData',
           key: 'id'
         },
         onUpdate: "CASCADE",
@@ -85,7 +91,7 @@ module.exports = {
         type: Sequelize.UUID,
         allowNull: false,
         references: {
-          model: 'EndwallTypeInlets',
+          model: 'ProjectMasterData',
           key: 'id'
         },
         onUpdate: "CASCADE",
@@ -95,7 +101,7 @@ module.exports = {
         type: Sequelize.UUID,
         allowNull: false,
         references: {
-          model: 'EndwallTypeOutlets',
+          model: 'ProjectMasterData',
           key: 'id'
         },
         onUpdate: "CASCADE",
@@ -108,7 +114,7 @@ module.exports = {
         type: Sequelize.UUID,
         allowNull: false,
         references: {
-          model: 'PavedWaterWayTypes',
+          model: 'ProjectMasterData',
           key: 'id'
         },
         onUpdate: "CASCADE",
@@ -118,7 +124,7 @@ module.exports = {
         type: Sequelize.UUID,
         allowNull: false,
         references: {
-          model: 'SoilTypes',
+          model: 'ProjectMasterData',
           key: 'id'
         },
         onUpdate: "CASCADE",

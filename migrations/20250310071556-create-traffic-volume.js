@@ -27,9 +27,15 @@ module.exports = {
         onUpdate: "CASCADE",
         onDelete: "CASCADE"
       },
-      name: {
-        type: Sequelize.STRING,
-        allowNull: false
+      road_segment_id: {
+        type: Sequelize.UUID,
+        allowNull: false,
+        references: {
+          model: 'roadsegments',
+          key: 'id'
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE"
       },
       count_location_coordinate_x: {
         type: Sequelize.DOUBLE
@@ -44,7 +50,7 @@ module.exports = {
         type: Sequelize.UUID,
         allowNull: false,
         references: {
-          model: 'CountTypes',
+          model: 'ProjectMasterData',
           key: 'id'
         },
         onUpdate: "CASCADE",

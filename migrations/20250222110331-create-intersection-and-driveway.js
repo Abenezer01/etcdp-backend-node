@@ -27,9 +27,15 @@ module.exports = {
         onUpdate: "CASCADE",
         onDelete: "CASCADE"
       },
-      name: {
-        type: Sequelize.STRING,
-        allowNull: false
+      road_segment_id: {
+        type: Sequelize.UUID,
+        allowNull: false,
+        references: {
+          model: 'roadsegments',
+          key: 'id'
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE"
       },
       number_of_intersections: {
         type: Sequelize.INTEGER
@@ -38,7 +44,7 @@ module.exports = {
         type: Sequelize.UUID,
         allowNull: false,
         references: {
-          model: 'IntersectionTypes',
+          model: 'ProjectMasterData',
           key: 'id'
         },
         onUpdate: "CASCADE",
@@ -48,7 +54,7 @@ module.exports = {
         type: Sequelize.UUID,
         allowNull: false,
         references: {
-          model: 'DrivewayAccessPoints',
+          model: 'ProjectMasterData',
           key: 'id'
         },
         onUpdate: "CASCADE",
