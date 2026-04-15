@@ -40,7 +40,7 @@ self.getAllCatByTypeId = async (req, res) => {
         required: false,
       },
     ];
-   
+
 
     const paginatedResult = await paginationHelper(StakeholderCategory, req, whereCondition, includeOptions);
 

@@ -65,6 +65,15 @@ module.exports = {
       function: {
         type: Sequelize.STRING,
       },
+      source_of_fund_id: {
+        type: Sequelize.UUID,
+        references: {
+          model: "ProjectMasterData",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
+      },
       remark: {
         type: Sequelize.TEXT,
       },

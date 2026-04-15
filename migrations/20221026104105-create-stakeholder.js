@@ -67,7 +67,7 @@ module.exports = {
         type: Sequelize.UUID,
         allowNull: false,
         references: {
-          model: "ownerships",
+          model: "StakeholderMasterData",
           key: "id",
         },
         onUpdate: "CASCADE",
@@ -76,7 +76,7 @@ module.exports = {
       businessfield_id: {
         type: Sequelize.UUID,
         references: {
-          model: "businessfields",
+          model: "StakeholderMasterData",
           key: "id",
         },
         onUpdate: "CASCADE",
@@ -91,6 +91,10 @@ module.exports = {
       },
       revision_no: {
         type: Sequelize.INTEGER,
+      },
+      license_number: {
+        type: Sequelize.STRING,
+        allowNull: true
       },
       createdAt: {
         allowNull: false,

@@ -35,7 +35,7 @@ self.save = async (req, res) => {
   try {
     const body = req.body;
     // check for unique attribute values
-    
+
     const data = await ProjectMasterData.create(body);
     
     if (data) {

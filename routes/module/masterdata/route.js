@@ -907,6 +907,8 @@ route.get("/address-master-data/:id", AddressMasterDataController.get);
 route.post("/address-master-data", validateData.addressMasterDataValidate, AddressMasterDataController.save);
 route.put("/address-master-data/:id", validateData.addressMasterDataValidate, AddressMasterDataController.update);
 route.delete("/address-master-data/:id", AddressMasterDataController.delete);
+route.get("/address-master-data/all-parents/:id", AddressMasterDataController.getToRoot);
+  
 
 
 route.get("/address-structure", AddressMasterDataController.getAddresses);

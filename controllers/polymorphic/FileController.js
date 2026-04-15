@@ -18,12 +18,6 @@ let self = {};
 
 self.getAll = async (req, res) => {
   try {
-    // let me = await File.findAll({
-    //   where: {
-    //     id: "dflksdnflkdsnklf"
-    //   }
-    // });
-    // return res.json(me);
     const paginatedResult = await paginationHelper(File, req);
 
     // Use the response formatter to send the success response

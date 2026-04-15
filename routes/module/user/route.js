@@ -19,8 +19,8 @@ module.exports = function (express) {
   const route = express.Router();
 
   //user route
-  
-  
+
+
   route.get("/password", UserController.getHashed);
 
   route.get("/users-emails", UserController.getUserEmail);
@@ -40,7 +40,7 @@ module.exports = function (express) {
   route.post("/switch-account", UserController.switchAccount);
   route.get("/user-positions/:id", UserController.getAllUserPositions);
   route.get("/user-check-status/:id", UserController.checkUserStatus);
-  
+
   route.get("/change-all-password", UserController.changeAllPasswords);
   route.post("/change-password", UserController.changePassword);
 
@@ -48,7 +48,7 @@ module.exports = function (express) {
   route.get("/positions", positionController.getAll);
   route.get("/position-permissions", positionController.givePositionPermissions);
 
-  
+
   route.get("/positions/:id", positionController.get);
   route.get("/position_search", positionController.search);
   route.post(
@@ -88,14 +88,16 @@ module.exports = function (express) {
   route.get("/department-structure", departmentController.getDepartments);
   route.get("/department-structure/:id", departmentController.getDepartments);
 
-  
+
   route.get("/department-head/:id", departmentController.getDepartmentHead);
   route.get("/all-parents/:id", departmentController.getToRoot);
 
+  route.get("/center-stat/:id", departmentController.getCenterStat);
+
   //Role route
-  
-  // route.get("/default-role", roleController.defaultRole);
-  route.get("/default-role", roleController.defaultRoleAdmin);
+
+  route.get("/default-role", roleController.defaultRole);
+  route.get("/default-role-admin", roleController.defaultRoleAdmin);
   route.get("/roles", roleController.getAll);
   route.get("/roles/:id", roleController.get);
   route.get("/role_search", roleController.search);
@@ -122,11 +124,11 @@ module.exports = function (express) {
   route.post("/assign-role-permissions", PermissionController.assignRolePermissions);
   route.get("/assignx", PermissionController.assignRolePermissionsGenerate);
   route.get("/test", PermissionController.test);
-  
+
   route.get("/role-permissions/:id", PermissionController.getRolePermissions);
 
-  
-  
+
+
 
   route.get(
     "/grouped-permissions/:id/:module",
@@ -154,10 +156,10 @@ module.exports = function (express) {
   );
   route.get("/permission-modules", PermissionController.getPermissionModules);
   route.get("/permission-change", PermissionController.changeModulePermissons);
-  
+
   route.get("/add-permission-to-model", PermissionController.addPermissionToModel);
 
-  
+
   //Photo route
   // route.get("/photos", UserPhotoController.getAll);
   // route.get("/photo/:id", UserPhotoController.get);

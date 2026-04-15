@@ -21,8 +21,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     parent_id: DataTypes.UUID,
     project_type_id: {
-      type: DataTypes.UUID,
-      allowNull: false
+      type: DataTypes.UUID
     },
     model: {
       type: DataTypes.STRING,
@@ -36,6 +35,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING
     },
     description: DataTypes.TEXT,
+    common: DataTypes.BOOLEAN,
   }, {
     createdAt: 'created_at',
     updatedAt: 'updated_at',

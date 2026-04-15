@@ -106,11 +106,14 @@ self.defaultRole = async (req, res) => {
     
     const usr = await usrData.userData(req, res);  
 
-    let rolename = "Viewer";
+    let rolename = "Authorizer";
+
+        // let roleArr = ["Viewer", "Registrar", "Checker", "Aprover", "Authorizer"];
+
 
     let role = await Role.create({
         name: rolename,
-        description: "Viewer Role"
+        description: "Authorizer Role"
     });
 
     if (role) {
@@ -130,7 +133,7 @@ self.defaultRole = async (req, res) => {
 
       
     
-      let actions  = ["view"];
+      let actions  = ["view", "authorize"];
       // let actions  = ["view", "create", "update", "delete", "approve", "check", "authorize"];
       for (let action of actions) {
         let permissions = await Permission.findAll({

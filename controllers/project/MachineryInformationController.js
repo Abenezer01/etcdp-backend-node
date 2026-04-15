@@ -1,0 +1,108 @@
+const paginationHelper = require("../utils/pagination-helper");
+const { getRecordById, saveRecord, updateRecord, deleteRecord } = require("../utils/format-helper");
+const { MachineryInformation, Sequelize } = require("./../../models");
+const dotenv = require("dotenv");
+dotenv.config();
+const Op = Sequelize.Op;
+
+let self = {};
+
+self.getAll = async (req, res) => {
+  try {
+    
+    const paginatedResult = await paginationHelper(MachineryInformation, req);
+
+    // Use the response formatter to send the success response
+    res.apiSuccess({
+      data: paginatedResult.data,
+      total: paginatedResult.total,
+    }, paginatedResult.pagination);
+
+  } catch (error) {
+    res.apiError(error);
+  }
+};
+
+self.getByProjectId = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const whereCondition = { project_id: id };
+    const paginatedResult = await paginationHelper(MachineryInformation, req, whereCondition);
+
+    // Use the response formatter to send the success response
+    res.apiSuccess({
+      data: paginatedResult.data,
+      total: paginatedResult.total,
+    }, paginatedResult.pagination);
+
+  } catch (error) {
+    res.apiError(error);
+  }
+};
+
+self.get = async (req, res) => {
+  getRecordById(MachineryInformation, req, res);
+};
+
+self.getByProjectType = async (req, res) => {
+  try {
+    let { type, project_id } = req.query;
+    if (!project_id) {
+      res.status(400).json({ message: "Can't get project_id at param" });
+    }
+    if (!type) {
+      res.status(400).json({ message: "Can't get type value at param" });
+    }
+    await MachineryInformation
+      .findAll({
+        where: {
+          type: type,
+          project_id: project_id,
+        },
+      })
+      .then(function (datas) {
+        return res.json({
+          data: datas,
+        });
+      })
+      .catch(function (error) {
+        res.apiError(error);
+      });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+self.search = async (req, res) => {
+  try {
+    let text = req.query.text;
+    let data = await MachineryInformation.findAll({
+      where: {
+        name: {
+          [Op.like]: "%" + text + "%",
+        },
+      },
+    });
+    return res.json(data);
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+self.save = async (req, res) => {
+  saveRecord(MachineryInformation, req, res);
+};
+
+self.update = async (req, res) => {
+  updateRecord(MachineryInformation, req, res);
+};
+
+self.delete = async (req, res) => {
+  deleteRecord(MachineryInformation, req, res);
+};
+
+module.exports = self;

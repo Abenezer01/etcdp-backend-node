@@ -96,6 +96,7 @@ module.exports = (sequelize, DataTypes) => {
       grade: DataTypes.STRING,
       end_user: DataTypes.STRING,
       function: DataTypes.STRING,
+      source_of_fund_id: DataTypes.UUID, 
       remark: DataTypes.TEXT,
       contract_no: DataTypes.STRING,
       budget_code: DataTypes.STRING,
@@ -104,7 +105,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       createdAt: "created_at",
-      updatedAt: "updated_at",
+      updatedAt: "updated_at" ,     
       sequelize,
       modelName: "Project",
       tableName: "projects",

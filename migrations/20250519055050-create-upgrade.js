@@ -27,9 +27,15 @@ module.exports = {
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
       },
-      upgrade_type: {
-        type: Sequelize.STRING,
-        allowNull: false
+      upgrade_type_id: {
+        type: Sequelize.UUID,
+        allowNull: false,
+        references: {
+          model: "StakeholderMasterData",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
       },
       previous_level: {
         type: Sequelize.STRING

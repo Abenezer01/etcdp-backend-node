@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      
+
       Stakeholder.belongsTo(models.StakeholderType, {
         as: "stakeholdertype",
         foreignKey: "stakeholdertype_id",
@@ -103,10 +103,14 @@ module.exports = (sequelize, DataTypes) => {
       revision_no: {
         type: DataTypes.INTEGER,
       },
+      license_number: {
+        type: DataTypes.STRING,
+        allowNull: true
+      }
     },
     {
       createdAt: "created_at",
-      updatedAt: "updated_at" ,     
+      updatedAt: "updated_at",
       sequelize,
       modelName: "Stakeholder",
       tableName: "stakeholders"

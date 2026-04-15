@@ -36,6 +36,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING
     },
     description: DataTypes.TEXT,
+    common: DataTypes.BOOLEAN,
   }, {
     createdAt: 'created_at',
     updatedAt: 'updated_at',

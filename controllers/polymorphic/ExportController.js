@@ -25,7 +25,7 @@ const ExcelJS = require("exceljs");
 const PDFDocument = require("pdfkit");
 const { parseParams } = require("../../utils/request/param-hanlder");
 const paginationHelper = require("../utils/pagination-helper");
-const { where } = require("sequelize");
+const { where, Op } = require("sequelize");
 
 let self = {};
 
@@ -471,7 +471,7 @@ self.exportStakeholder = async (req, res) => {
     let format = exports.format || "excel";
 
     let fields = req.query.export?.fields || [];
-
+    let currentPageOnly = req.query.export?.currentPageOnly || false;
     // If fields come as string → parse JSON
     if (typeof fields === "string") {
       try {
@@ -480,7 +480,7 @@ self.exportStakeholder = async (req, res) => {
         fields = [];
       }
     }
-
+  
     // Remove whitespace
     fields = fields.map(f => f.trim());
 
@@ -491,7 +491,19 @@ self.exportStakeholder = async (req, res) => {
 
     let usr = await usrData.userData(req, res);
 
-    const whereCondition = { department_id: usr.departmentID };
+    let children = await Department.findAll({
+      where: {
+        parent_department_id: usr.departmentID
+      }
+    });            
+    let childrenIDs = children.map(child => child.id);
+    
+    const params = parseParams(req);
+    let filter = params.filter; 
+    const whereCondition = { 
+      department_id: { [Op.in]: [usr.departmentID, ...childrenIDs] },
+      ...filter
+    };
 
     const includeOptions = [
       { model: StakeholderType, as: "stakeholdertype" },
@@ -500,9 +512,12 @@ self.exportStakeholder = async (req, res) => {
       { model: Department, as: "department" }
     ];
 
-    const paginatedResult = await paginationHelper(Stakeholder,req,whereCondition,includeOptions);
+    let data = await Stakeholder.findAll({
+      where: whereCondition,
+      include: includeOptions
+    })
 
-    let data = paginatedResult.data;
+    // return res.json(data)
 
     if (!data.length) {
       return res.status(404).json({
@@ -626,6 +641,7 @@ self.exportStakeholder = async (req, res) => {
       }
     }
 
+
     // Remove spaces
     fields = fields.map(f => f.trim());
 
@@ -636,7 +652,18 @@ self.exportStakeholder = async (req, res) => {
 
     let usr = await usrData.userData(req, res);
 
-    const whereCondition = { department_id: usr.departmentID };
+    let children = await Department.findAll({
+                where: {
+                    parent_department_id: usr.departmentID
+                }
+            });
+            
+    let childrenIDs = children.map(child => child.id);
+    
+    const whereCondition = { 
+      department_id: { [Op.in]: [usr.departmentID, ...childrenIDs] },
+    };
+
 
     const includeOptions = [
       { model: ProjectType, as: "projecttype" },
@@ -645,8 +672,10 @@ self.exportStakeholder = async (req, res) => {
       { model: Department, as: "department" }
     ];
 
-    const paginatedResult = await paginationHelper(Project, req, whereCondition, includeOptions);
-    let data = paginatedResult.data;
+    // const paginatedResult = await paginationHelper(Project, req, whereCondition, includeOptions);
+    // let data = paginatedResult.data;
+
+    // let data = 
 
     if (data.length === 0) {
       return res.status(404).json({

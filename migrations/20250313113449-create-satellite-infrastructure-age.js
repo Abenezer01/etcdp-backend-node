@@ -17,6 +17,16 @@ module.exports = {
         onUpdate: "CASCADE",
         onDelete: "CASCADE"
       },
+      project_id: {
+        type: Sequelize.UUID,
+        allowNull: false,
+        references: {
+          model: 'projects',
+          key: 'id'
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE"
+      },
       satellite_network_id: {
         type: Sequelize.UUID,
         allowNull: false,

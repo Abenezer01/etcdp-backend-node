@@ -2,8 +2,14 @@ const DashboardController = require("../../../controllers/analytics/DashboardCon
 const authRequired = require("../../../controllers/utils/auth-required");
 module.exports = function (express) {
   const route = express.Router();
-  //analysis and dashboard
 
+
+  route.get("/category-stat/:module/:id/:department_id?", authRequired, DashboardController.getCategoryStat);
+  route.get("/subcategory-stat/:module/:id/:department_id?", authRequired, DashboardController.getSubCategoryStat);
+// routes  getStakeholderTypeSummary
+  route.get("/type-summary/:module", authRequired, DashboardController.getStakeholderTypeSummary);
+
+  //analysis and dashboard
   route.get("/resource-price-index", authRequired, DashboardController.getResourcePriceIndex);
   route.get("/resource-inflation-rate", authRequired, DashboardController.getResourceInflationRate);
 

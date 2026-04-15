@@ -267,7 +267,7 @@ self.save = async (req, res) => {
         // }
 
 
-        // const salt = await bcrypt.genSalt(10);
+        const salt = await bcrypt.genSalt(10);
 
         const encryptedEmail = cipherHelper.encrypt(body.email)
         let existed = await UserEmail.findOne({
@@ -306,8 +306,8 @@ self.save = async (req, res) => {
             birth_date: body.birth_date,
             revision_no: body.revision_no,
             is_admin: false,
-            lang: "en"
-            // password: await bcrypt.hash(body.password, salt)
+            lang: "en",
+            password: await bcrypt.hash("password", salt)
         };
         let created_user = await User.create(usr);
 

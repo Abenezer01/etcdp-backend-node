@@ -28,10 +28,10 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false
       },
       description: DataTypes.TEXT,
-      is_admin_role: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false
-      } 
+      // is_admin_role: {
+      //   type: DataTypes.BOOLEAN,
+      //   defaultValue: false
+      // } 
     },
     {
       createdAt: "created_at",

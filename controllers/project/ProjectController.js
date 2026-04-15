@@ -16,6 +16,7 @@ const {
   ProjectExtensionTime,
   Payment,
   ProjectContractDataOverview,
+  Department,
   sequelize,
   Sequelize,
 } = require("./../../models");
@@ -142,66 +143,110 @@ self.getAll = async (req, res) => {
 
   try {
 
+
     // 1. Get user data for department filtering
         const usr = await usrData.userData(req, res);
 
         // 2. Determine the desired filtering mode
-        const fetchCompleted = req.query.status === "infrastructure";
+        // const fetchCompleted = req.query.status === "infrastructure";
         
-        // 3. Construct the subquery to find project IDs with the latest status matching the criteria
-        const latestStatusSubQuery = fetchCompleted
-            ? literal(`(
-                -- Select project IDs where the LATEST status is 'Completed'
-                SELECT ps.project_id
-                FROM projectstatuses ps
-                JOIN statuses s ON s.id = ps.status_id
-                WHERE s.title = 'Completed'
-                AND ps.created_at = (
-                    SELECT MAX(ps2.created_at)
-                    FROM projectstatuses ps2
-                    WHERE ps2.project_id = ps.project_id
-                )
-            )`)
-            : literal(`(
-                -- Select project IDs where the LATEST status is NOT 'Completed'
-                SELECT ps.project_id
-                FROM projectstatuses ps
-                JOIN statuses s ON s.id = ps.status_id
-                WHERE ps.created_at = (
-                    SELECT MAX(ps2.created_at)
-                    FROM projectstatuses ps2
-                    WHERE ps2.project_id = ps.project_id
-                )
-                AND s.title <> 'Completed'
-            )`);
+        //  const latestStatusSubQuery = fetchCompleted
+        //   ? literal(`(
+        //       -- Select project IDs where the LATEST status is 'Completed'
+        //       SELECT ps.project_id
+        //       FROM projectstatuses ps
+        //       JOIN ProjectMasterData s ON s.id = ps.status_id
+        //       WHERE s.title = 'Completed' And s.model = 'projectStatus'
+        //       AND ps.created_at = (
+        //           SELECT MAX(ps2.created_at)
+        //           FROM projectstatuses ps2
+        //           WHERE ps2.project_id = ps.project_id
+        //       )
+        //   )`)
+        //   : literal(`(
+        //       -- Select project IDs where the LATEST status is NOT 'Completed'
+        //       SELECT ps.project_id
+        //       FROM projectstatuses ps
+        //       JOIN ProjectMasterData s ON s.id = ps.status_id
+        //       WHERE ps.created_at = (
+        //           SELECT MAX(ps2.created_at)
+        //           FROM projectstatuses ps2
+        //           WHERE ps2.project_id = ps.project_id
+        //       )
+        //       AND s.title <> 'Completed'
+        //   )`);
+
+
+        // // 3. Construct the subquery to find project IDs with the latest status matching the criteria
+        // const latestStatusSubQuery = fetchCompleted
+        //     ? literal(`(
+        //         -- Select project IDs where the LATEST status is 'Completed'
+        //         SELECT ps.project_id
+        //         FROM projectstatuses ps
+        //         JOIN statuses s ON s.id = ps.status_id
+        //         WHERE s.title = 'Completed'
+        //         AND ps.created_at = (
+        //             SELECT MAX(ps2.created_at)
+        //             FROM projectstatuses ps2
+        //             WHERE ps2.project_id = ps.project_id
+        //         )
+        //     )`)
+        //     : literal(`(
+        //         -- Select project IDs where the LATEST status is NOT 'Completed'
+        //         SELECT ps.project_id
+        //         FROM projectstatuses ps
+        //         JOIN statuses s ON s.id = ps.status_id
+        //         WHERE ps.created_at = (
+        //             SELECT MAX(ps2.created_at)
+        //             FROM projectstatuses ps2
+        //             WHERE ps2.project_id = ps.project_id
+        //         )
+        //         AND s.title <> 'Completed'
+        //     )`);
 
 
         // 4. Define the primary WHERE condition
-        const whereCondition = {
-            department_id: usr.departmentID,
-            // Filter by the project IDs returned by the subquery
-            id: {
-                [Op.in]: latestStatusSubQuery
+
+        let children = await Department.findAll({
+            where: {
+                parent_department_id: usr.departmentID
             }
+        });
+        
+        let childrenIDs = children.map(child => child.id);
+
+        const whereCondition = {
+            department_id: { [Op.in]: [usr.departmentID, ...childrenIDs] },
+            // Filter by the project IDs returned by the subquery
+            // id: {
+            //     [Op.in]: latestStatusSubQuery
+            // }
         };
 
         // 5. Define inclusion options to fetch all statuses for post-processing
-        const includeOptions = [
-            {
-                model: ProjectStatus,
-                as: "projectstatuses",
-                include: [
-                    {
-                        model: Status,
-                        as: "status",
-                        attributes: ["title"]
-                    }
-                ]
-            }
-        ];
+        // const includeOptions = [
+        //     {
+        //         model: ProjectStatus,
+        //         as: "projectstatuses",
+        //         include: [
+        //             {
+        //                 model: Status,
+        //                 as: "status",
+        //                 attributes: ["title"]
+        //             }
+        //         ]
+        //     }
+        // ];
 
         // 6. Fetch the paginated results
-        const paginatedResult = await paginationHelper(Project, req, whereCondition, includeOptions);
+
+
+        const paginatedResult = await paginationHelper(Project, req, whereCondition);
+        // return res.json(paginatedResult)
+        res.apiSuccess({
+      data: paginatedResult.data,
+      total: paginatedResult.total,
+    }, paginatedResult.pagination);
 
         let arr = paginatedResult.data;
 
@@ -545,6 +590,20 @@ self.save = async (req, res) => {
     if (usr) {
       let data = await Project.create(body);
       if (data) {
+
+        // finance 
+        await ProjectFinance.create({
+          project_id: data.id,
+          main_contract_price_amount: body.main_contract_price_amount,
+        });
+
+        //time 
+        await ProjectTime.create({
+          project_id: data.id,
+          commencement_date: body.commencement_date,
+          original_contract_duration: body.original_contract_duration,
+        });
+
         let usrID = usr.usrID;
         data.department_id = usr.departmentID;
         await data.save();

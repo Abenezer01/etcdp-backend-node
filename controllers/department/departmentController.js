@@ -779,4 +779,66 @@ function toSnakeCase(str) {
 
 // };
 
+
+self.getCenterStat = async(req, res) => {
+  try {
+    
+    let id = req.params.id;
+
+    let departments = await Department.findAll({
+      where: {
+        parent_department_id: id,
+      },
+    });
+
+
+    let pos = await UserPosition.findAll({
+            attributes: ["user_id"],
+            where: {
+                department_id: id,
+                is_primary: true,
+            },
+        });
+
+        let userId = [...new Set(pos.map((item) => item.user_id))].filter((n) => n);
+
+        const whereCondition = {
+            id: {
+                [Op.in]: userId,
+            },
+        };
+
+        const includeOptions = [
+            {
+                model: UserPosition,
+                as: "positions",
+                attributes: ["position_id", "department_id"]
+            }
+        ];
+
+        const paginatedResult = await paginationHelper(User, req, whereCondition, includeOptions);
+
+        
+        let positions = await Position.findAll({
+            where: {
+                department_id: id,
+            },
+        });
+
+        
+
+  
+
+    return res.apiSuccess({
+      data: {
+        department: departments.length,
+        expert: paginatedResult.data.length,
+        position: positions.length
+      }
+    });
+  } catch (error) {
+    return res.apiError(error.message);
+  }
+}
+
 module.exports = self;

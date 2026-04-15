@@ -23,8 +23,8 @@ module.exports = {
           key: 'id'
         }
       },
-      construction_type: {
-        type: Sequelize.STRING,
+      construction_type_id: {
+        type: Sequelize.UUID,
         allowNull: false,
       },
       description: {

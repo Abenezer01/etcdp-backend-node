@@ -24,6 +24,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.UUID,
       allowNull: false,
     },
+    telecom_infrastructure_id: {
+      type: DataTypes.UUID,
+      allowNull: false,
+    },
     maintenance_frequency: DataTypes.BOOLEAN,
     service_level_agreement: DataTypes.BOOLEAN,
     remark: DataTypes.TEXT

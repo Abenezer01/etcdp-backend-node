@@ -27,10 +27,6 @@ module.exports = {
         onUpdate: "CASCADE",
         onDelete: "CASCADE"
       },
-      name: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
       maintenance_frequency_id: {
         type: Sequelize.UUID,
         allowNull: false,

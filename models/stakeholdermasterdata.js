@@ -33,7 +33,8 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
     flag: DataTypes.STRING,
-    description: DataTypes.TEXT
+    description: DataTypes.TEXT,
+    common: DataTypes.BOOLEAN,
   }, {
     createdAt: "created_at",
     updatedAt: "updated_at",

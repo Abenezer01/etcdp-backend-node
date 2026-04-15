@@ -24,10 +24,6 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.UUID,
       allowNull: false,
     },
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
     transmission_voltage: DataTypes.DOUBLE,
     distance_to_substation: DataTypes.DOUBLE,
     transmission_lines_number: DataTypes.INTEGER,

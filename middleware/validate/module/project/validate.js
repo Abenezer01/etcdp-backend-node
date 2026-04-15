@@ -1,6 +1,6 @@
 const validateReply = require("../../../../utils/validateerror");
 
-const { RailwayPowerSupplyConfiguration  , Sequelize } = require("../../../../models");
+const { RailwayPowerSupplyConfiguration, Sequelize } = require("../../../../models");
 
 const { Op } = require("sequelize");
 
@@ -57,9 +57,29 @@ const { Op } = require("sequelize");
 
 // module.exports = validateModelData;
 
-const claimValidate =   async(req, res, next) => {
+
+
+const thermalBiomassIncinerationDataValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if(param === "failed"){
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+  const validationRule = {
+    project_id: "required|string",
+    type_id: "required|string",
+    fuel_source_id: "required|string",
+    heat_rate_at_max_capacity: "numeric",
+    remark: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
+const claimValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid ID format",
     });
@@ -74,9 +94,9 @@ const claimValidate =   async(req, res, next) => {
   await validateReply.validateReply(req.body, validationRule, res, next);
 };
 
-const challengeValidate = async(req, res, next) => {
+const challengeValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if(param === "failed"){
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid ID format",
     });
@@ -91,24 +111,24 @@ const challengeValidate = async(req, res, next) => {
   await validateReply.validateReply(req.body, validationRule, res, next);
 };
 
-const constructionMethodValidate = async(req, res, next) => {
+const constructionMethodValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if(param === "failed"){
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid ID format",
     });
   }
   const validationRule = {
     project_id: "required|string",
-    construction_method_id: "required|string",
+    project_method_id: "required|string",
     description: "string"
   };
   await validateReply.validateReply(req.body, validationRule, res, next);
 };
 
-const railwayMaintenanceEnvironmentalAndOtherFactorValidate = async(req, res, next) => {
+const railwayMaintenanceEnvironmentalAndOtherFactorValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if(param === "failed"){
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid ID format",
     });
@@ -125,9 +145,9 @@ const railwayMaintenanceEnvironmentalAndOtherFactorValidate = async(req, res, ne
 };
 
 
-const railwayMaintenanceFacilityAndSecurityValidate = async(req, res, next) => {
+const railwayMaintenanceFacilityAndSecurityValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if(param === "failed"){
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid ID format",
     });
@@ -138,14 +158,14 @@ const railwayMaintenanceFacilityAndSecurityValidate = async(req, res, next) => {
     fire_safety_measures: "string",
     ventilation_and_exhaust_system_availability: "boolean",
     security_measures: "string",
-    remark: "string"  
+    remark: "string"
   };
   await validateReply.validateReply(req.body, validationRule, res, next);
 };
 
-const railwayMaintenanceFacilityScheduleAndProcedureValidate = async(req, res, next) => {
+const railwayMaintenanceFacilityScheduleAndProcedureValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if(param === "failed"){
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid ID format",
     });
@@ -161,9 +181,9 @@ const railwayMaintenanceFacilityScheduleAndProcedureValidate = async(req, res, n
   await validateReply.validateReply(req.body, validationRule, res, next);
 };
 
-const railwayMaintenanceWorkforceAndFacilityStaffValidate = async(req, res, next) => {
+const railwayMaintenanceWorkforceAndFacilityStaffValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if(param === "failed"){
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid ID format",
     });
@@ -181,9 +201,9 @@ const railwayMaintenanceWorkforceAndFacilityStaffValidate = async(req, res, next
 };
 
 
-const railwayMaintenanceFacilityInfrastructureAndUtilityValidate = async(req, res, next) => {
+const railwayMaintenanceFacilityInfrastructureAndUtilityValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if(param === "failed"){
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid ID format",
     });
@@ -201,11 +221,11 @@ const railwayMaintenanceFacilityInfrastructureAndUtilityValidate = async(req, re
 
 
 
-const railwayMaintenanceFacilityEquipmentAndToolValidate = async(req, res, next) => {
+const railwayMaintenanceFacilityEquipmentAndToolValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if(param === "failed"){
+  if (param === "failed") {
     return res.status(400).json({
-      message: "Invalid ID format", 
+      message: "Invalid ID format",
     });
   }
   const validationRule = {
@@ -221,11 +241,11 @@ const railwayMaintenanceFacilityEquipmentAndToolValidate = async(req, res, next)
 };
 
 
-const railwayMaintenanceFacilityLayoutAndDesignValidate = async(req, res, next) => {
+const railwayMaintenanceFacilityLayoutAndDesignValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if(param === "failed"){
+  if (param === "failed") {
     return res.status(400).json({
-      message: "Invalid ID format", 
+      message: "Invalid ID format",
     });
   }
   const validationRule = {
@@ -235,14 +255,14 @@ const railwayMaintenanceFacilityLayoutAndDesignValidate = async(req, res, next) 
     maintenance_bays_number_and_size: "string",
     spare_parts_and_equipment_storage_areas: "string",
     office_and_administrative_areas_availability: "boolean",
-    remark: "string" 
+    remark: "string"
   };
   await validateReply.validateReply(req.body, validationRule, res, next);
 };
 
-const railwayMaintenanceFacilityTypeAndPurposeValidate = async(req, res, next) => {
+const railwayMaintenanceFacilityTypeAndPurposeValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if(param === "failed"){
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid ID format",
     });
@@ -251,29 +271,30 @@ const railwayMaintenanceFacilityTypeAndPurposeValidate = async(req, res, next) =
     project_id: "required|string",
     facility_name: "string",
     maintenance_activities_conducted: "string",
-    remark: "string" };
+    remark: "string"
+  };
   await validateReply.validateReply(req.body, validationRule, res, next);
 }
-const railwayPowerSupplyEnvironmentalAndOtherFactorValidate = async(req, res, next) => {  
+const railwayPowerSupplyEnvironmentalAndOtherFactorValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if(param === "failed"){
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid ID format",
     });
-  } 
-  const validationRule = {      
+  }
+  const validationRule = {
     project_id: "required|string",
     railway_station_platform_layout_id: "required|string",
     environmental_compliance_measures: "string",
     remark: "string"
-};
+  };
   await validateReply.validateReply(req.body, validationRule, res, next);
 };
 
 
-const railwayPowerSupplySafetyAndComplianceValidate =  async(req, res, next) => {
+const railwayPowerSupplySafetyAndComplianceValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if(param === "failed"){
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid ID format",
     });
@@ -282,17 +303,17 @@ const railwayPowerSupplySafetyAndComplianceValidate =  async(req, res, next) => 
   const validationRule = {
     project_id: "required|string",
     railway_station_platform_layout_id: "required|string",
-    safety_measures_and_protocols: "boolean", 
+    safety_measures_and_protocols: "boolean",
     compliance_with_electrical_safety_standards_and_regulations: "boolean",
     remark: "string"
-};
+  };
   await validateReply.validateReply(req.body, validationRule, res, next);
 };
 
 
-const railwayPowerSupplyMaintenanceAndTestingValidate = async(req, res, next) => {
+const railwayPowerSupplyMaintenanceAndTestingValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if(param === "failed") {
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid ID format",
     });
@@ -300,22 +321,23 @@ const railwayPowerSupplyMaintenanceAndTestingValidate = async(req, res, next) =>
   const validationRule = {
     project_id: "required|string",
     railway_station_platform_layout_id: "required|string",
-    remark: "string" };
+    remark: "string"
+  };
   await validateReply.validateReply(req.body, validationRule, res, next);
 };
 
-const railwayPowerDistributionValidate =  async (req, res, next) => { 
+const railwayPowerDistributionValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if (param === "failed") { 
-    return res.status(400).json({ 
-      message: "Invalid ID format", 
-    }); 
-  } 
-  const validationRule = { 
-    project_id: "required|string", 
-    railway_station_platform_layout_id: "required|string", 
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+  const validationRule = {
+    project_id: "required|string",
+    railway_station_platform_layout_id: "required|string",
     remark: "string"
-};
+  };
   await validateReply.validateReply(req.body, validationRule, res, next);
 }
 
@@ -336,12 +358,12 @@ const railwayPowerSupplyConfigurationValidate = async (req, res, next) => {
   };
 
   // `remark` is unique
-// const railwayPowerSupplyConfigurationValidate = validateModelData(
-//   RailwayPowerSupplyConfiguration,
-//   validationRule,
-//   ["remark"]
-// );
-  
+  // const railwayPowerSupplyConfigurationValidate = validateModelData(
+  //   RailwayPowerSupplyConfiguration,
+  //   validationRule,
+  //   ["remark"]
+  // );
+
 
   await validateReply.validateReply(req.body, validationRule, res, next);
 }
@@ -359,9 +381,9 @@ const railwayPowerSubstationsAndEquipmentValidate = async (req, res, next) => {
     railway_station_platform_layout_id: "required|string",
     substation_capacity_and_equipment_specifications: "string",
     remark: "string"
-  };  
-   await validateReply.validateReply(req.body, validationRule, res, next);
-}   
+  };
+  await validateReply.validateReply(req.body, validationRule, res, next);
+}
 
 const railwayStationPlatformEnvironmentalAndOtherFactorValidate = async (req, res, next) => {
 
@@ -2468,6 +2490,7 @@ const satelliteNetworkComponentManufacturerValidate = async (req, res, next) => 
   }
 
   const validationRule = {
+    project_id: "required|string",
     satellite_network_id: "required|string",
     satellite: "string",
     ground_stations: "string",
@@ -2479,6 +2502,27 @@ const satelliteNetworkComponentManufacturerValidate = async (req, res, next) => 
   await validateReply.validateReply(req.body, validationRule, res, next);
 };
 
+const satelliteInfrastructureManufacturerValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+
+  const validationRule = {
+    project_id: "required|string",
+    satellite_network_id: "required|string",
+    satellite: "string",
+    ground_stations: "string",
+    modems: "string",
+    routers: "string",
+    others: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+}; 
+
 const satelliteInfrastructureAgeValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
   if (param === "failed") {
@@ -2488,6 +2532,7 @@ const satelliteInfrastructureAgeValidate = async (req, res, next) => {
   }
 
   const validationRule = {
+    project_id: "required|string",
     satellite_network_id: "required|string",
     satellite: "integer",
     ground_stations: "integer",
@@ -2520,7 +2565,29 @@ const satelliteNetworkValidate = async (req, res, next) => {
   await validateReply.validateReply(req.body, validationRule, res, next);
 };
 
+const mobileNetworkCoverageValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
 
+  const validationRule = {
+    mobile_network_id: "required|string",
+    project_id: "required|string",
+    network_infrastructure_type_id: "required|string",
+    total_coverage_area: "numeric",
+    coverage_population_number: "integer",
+    active_users_number: "integer",
+    average_download_speed: "numeric",
+    average_upload_speed: "numeric",
+    signal_strength: "numeric",
+    others: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+}; 
 
 const networkCoverageValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
@@ -2531,6 +2598,7 @@ const networkCoverageValidate = async (req, res, next) => {
   }
 
   const validationRule = {
+    telecom_infrastructure_id: "required|string",
     project_id: "required|string",
     network_infrastructure_type_id: "required|string",
     total_coverage_area: "numeric",
@@ -2545,6 +2613,29 @@ const networkCoverageValidate = async (req, res, next) => {
   await validateReply.validateReply(req.body, validationRule, res, next);
 };
 
+
+const mobileNetworkComponentManufacturerValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+
+  const validationRule = {
+    project_id: "required|string",
+    mobile_network_id: "required|string",
+    cell: "string",
+    towers: "string",
+    antennas: "string",
+    base_stations: "string",
+    repeaters: "string",
+    switches: "string",
+    others: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
 const mobileNetworkComponentAgeValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
   if (param === "failed") {
@@ -2554,6 +2645,7 @@ const mobileNetworkComponentAgeValidate = async (req, res, next) => {
   }
 
   const validationRule = {
+    project_id: "required|string",
     mobile_network_id: "required|string",
     cell: "integer",
     towers: "integer",
@@ -2589,6 +2681,25 @@ const mobileNetworkValidate = async (req, res, next) => {
   await validateReply.validateReply(req.body, validationRule, res, next);
 };
 
+const mobileNetworkCapacityValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+
+  const validationRule = {
+    project_id: "required|string",
+    mobile_network_id: "required|string",
+    network_type_id: "required|string",
+    total_bandwidth: "numeric",
+    users_number: "integer",
+    remark: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
 
 const networkCapacityValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
@@ -2600,6 +2711,7 @@ const networkCapacityValidate = async (req, res, next) => {
 
   const validationRule = {
     project_id: "required|string",
+    telecom_infrastructure_id: "required|string",
     network_type_id: "required|string",
     total_bandwidth: "numeric",
     users_number: "integer",
@@ -2618,6 +2730,7 @@ const maintenanceValidate = async (req, res, next) => {
   }
 
   const validationRule = {
+    telecom_infrastructure_id: "required|string",
     project_id: "required|string",
     maintenance_frequency: "boolean",
     service_level_agreement: "boolean",
@@ -2627,6 +2740,31 @@ const maintenanceValidate = async (req, res, next) => {
   await validateReply.validateReply(req.body, validationRule, res, next);
 };
 
+
+const telecomInfrastructureManufacturerValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+
+  const validationRule = {
+    project_id: "required|string",
+    telecom_infrastructure_id: "required|string",
+    cables: "string",
+    wires: "string",
+    routers: "string",
+    switches: "string",
+    hubs: "string",
+    repeaters: "string",
+    antennas: "string",
+    towers: "string",
+    remark: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
 
 const telecomInfrastructureAgeValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
@@ -2638,6 +2776,7 @@ const telecomInfrastructureAgeValidate = async (req, res, next) => {
 
   const validationRule = {
     project_id: "required|string",
+    telecom_infrastructure_id: "required|string",
     cables: "boolean",
     wires: "boolean",
     routers: "boolean",
@@ -2652,14 +2791,14 @@ const telecomInfrastructureAgeValidate = async (req, res, next) => {
   await validateReply.validateReply(req.body, validationRule, res, next);
 };
 
-const telecomInfrastructureComponentValidate = async (req, res, next) => {
+const telecomInfrastructureValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
   if (param === "failed") {
     return res.status(400).json({
       message: "Invalid ID format",
     });
   }
-  
+
   const validationRule = {
     project_id: "required|string",
     mobile_network_type_id: "required|string",
@@ -3015,7 +3154,7 @@ const projectMasterDataValidate = async (req, res, next) => {
     });
   }
   const validationRule = {
-    project_type_id: "required|string",
+    project_type_id: "string",
     model: "required|string",
     title: "required|string",
     flag: "string",
@@ -3325,7 +3464,7 @@ const groundWaterImpactValidate = async (req, res, next) => {
     });
   }
   const validationRule = {
-    project_type_id: "required|string", 
+    project_type_id: "required|string",
     title: "required|string",
     description: "string"
   };
@@ -3341,7 +3480,7 @@ const slopeStabilityValidate = async (req, res, next) => {
   }
   const validationRule = {
     project_type_id: "required|string",
-    title: "required|string", 
+    title: "required|string",
     description: "string"
   };
   await validateReply.validateReply(req.body, validationRule, res, next);
@@ -3366,7 +3505,7 @@ const culvertRoadOverInformationValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
   if (param === "failed") {
     return res.status(400).json({
-      message: "Invalid id", 
+      message: "Invalid id",
     });
   }
   const validationRule = {
@@ -3398,7 +3537,7 @@ const culvertStructuralInformationValidate = async (req, res, next) => {
     culvert_barrel_length: "numeric",
     culvert_height: "numeric",
     opening_number: "integer",
-    opening_width: "numeric", 
+    opening_width: "numeric",
     total_culvert_width: "numeric",
     distance_between_barrels: "numeric",
     head_wall_length: "numeric",
@@ -3427,7 +3566,7 @@ const pavementValidate = async (req, res, next) => {
     project_id: "required|string",
     road_segment_id: "required|string",
     tangent_length: "numeric",
-    curve_length: "numeric", 
+    curve_length: "numeric",
     road_length_type_id: "string",
     road_pavement_thickness: "numeric",
     paved_road_surface_width: "numeric"
@@ -3475,7 +3614,7 @@ const accessoryValidate = async (req, res, next) => {
     project_id: "required|string",
     name: "required|string",
     under_passes: "integer",
-    ramps: "integer", 
+    ramps: "integer",
     traffic_signals: "integer",
     repair_stations: "integer",
     bicycle_lanes: "boolean",
@@ -3496,7 +3635,7 @@ const trafficParameterValidate = async (req, res, next) => {
   }
   const validationRule = {
     project_id: "required|string",
-    road_segment_id: "required|string", 
+    road_segment_id: "required|string",
     pedestrian_facility_id: "required|string",
     parking: "integer",
     design_traffic_flow: "integer",
@@ -3530,7 +3669,7 @@ const countTypeValidate = async (req, res, next) => {
     });
   }
   const validationRule = {
-    project_type_id: "required|string", 
+    project_type_id: "required|string",
     title: "required|string",
     description: "string",
   };
@@ -3562,7 +3701,7 @@ const inspectionTypeValidate = async (req, res, next) => {
   const validationRule = {
     project_type_id: "required|string",
     title: "required|string",
-    description: "string", 
+    description: "string",
   };
   await validateReply.validateReply(req.body, validationRule, res, next);
 };
@@ -3576,7 +3715,7 @@ const bridgePartDefectValidate = async (req, res, next) => {
   }
   const validationRule = {
     project_type_id: "required|string",
-    title: "required|string", 
+    title: "required|string",
     description: "string",
   };
   await validateReply.validateReply(req.body, validationRule, res, next);
@@ -3601,7 +3740,7 @@ const damageConditionValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
   if (param === "failed") {
     return res.status(400).json({
-      message: "Invalid id", 
+      message: "Invalid id",
     });
   }
   const validationRule = {
@@ -3620,7 +3759,7 @@ const hydrologyDefectValidate = async (req, res, next) => {
     });
   }
   const validationRule = {
-    project_type_id: "required|string", 
+    project_type_id: "required|string",
     title: "required|string",
     description: "string",
   };
@@ -3892,8 +4031,8 @@ const segmentGeometryValidate = async (req, res, next) => {
   }
   const validationRule = {
     project_id: "required|string",
-    road_segment_id: "required|string",  
-    carriage_way_width: "numeric",  
+    road_segment_id: "required|string",
+    carriage_way_width: "numeric",
     cross_section_type_id: "required|string",
     grade_percentage: "numeric",
     elevation_change: "numeric",
@@ -3925,12 +4064,12 @@ const surfaceTypeValidate = async (req, res, next) => {
     return res.status(400).json({
       message: "Invalid id",
     });
-  } 
+  }
   const validationRule = {
     project_type_id: "required|string",
     title: "required|string",
     description: "string",
-  };  
+  };
 
   await validateReply.validateReply(req.body, validationRule, res, next);
 };
@@ -3940,12 +4079,12 @@ const designClassificationValidate = async (req, res, next) => {
     return res.status(400).json({
       message: "Invalid id",
     });
-  } 
+  }
   const validationRule = {
     project_type_id: "required|string",
     title: "required|string",
     description: "string",
-  };  
+  };
 
   await validateReply.validateReply(req.body, validationRule, res, next);
 };
@@ -3964,7 +4103,7 @@ const designStandardValidate = async (req, res, next) => {
   };
 
   await validateReply.validateReply(req.body, validationRule, res, next);
-};  
+};
 
 const designTrafficFlowValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
@@ -4007,7 +4146,7 @@ const projectConstructionTypeValidate = async (req, res, next) => {
   }
   const validationRule = {
     project_id: "required|string",
-    construction_type: "required|string",
+    construction_type_id: "required|string",
     description: "string",
   };
 
@@ -4078,7 +4217,7 @@ const projectContactPersonValidate = async (req, res, next) => {
     department: "string",
     position: "string",
     first_name: "required|string",
-    middle_name: "required|string", 
+    middle_name: "required|string",
     last_name: "required|string",
     national_id_no: "string",
     gender: "string",
@@ -4163,6 +4302,7 @@ const projectValidate = async (req, res, next) => {
   const validationRule = {
     projectcategory_id: "required|string",
     projectsubcategory_id: "required|string",
+    source_of_fund_id: "string",
     name: "required|string",
     grade: "string",
     end_user: "string",
@@ -4696,6 +4836,11 @@ const paymentValidate = async (req, res, next) => {
   await validateReply.validateReply(req.body, validationRule, res, next);
 };
 module.exports = {
+  mobileNetworkCoverageValidate,
+  mobileNetworkCapacityValidate,
+  satelliteInfrastructureManufacturerValidate,
+  mobileNetworkComponentManufacturerValidate,
+  thermalBiomassIncinerationDataValidate,
   bridgeComponentAndAncillaryValidate,
   claimValidate,
   challengeValidate,
@@ -4714,7 +4859,7 @@ module.exports = {
   railwayPowerSupplyMaintenanceAndTestingValidate,
   railwayPowerDistributionValidate,
   railwayPowerSubstationsAndEquipmentValidate,
-  railwayPowerSupplyConfigurationValidate,  
+  railwayPowerSupplyConfigurationValidate,
 
   railwayStationPlatformEnvironmentalAndOtherFactorValidate,
   railwayStationPlatformPassengerFlowAndCapacityValidate,
@@ -4738,7 +4883,7 @@ module.exports = {
   railwayCommunicationSystemValidate,
   railwaySignalingSystemValidate,
   railwayFasteningSystemEnvironmentalFactorValidate,
-  railwayFasteningSystemMaintenanceAndReplacementValidate, 
+  railwayFasteningSystemMaintenanceAndReplacementValidate,
   railwayFasteningSystemConditionAssessmentValidate,
   railwayFasteningSystemCharacteristicValidate,
   railwaySleeperEnvironmentalAndOtherFactorValidate,
@@ -4751,9 +4896,9 @@ module.exports = {
   railwaySubBallastMaintenanceAndRenewalValidate,
   railwaySubBallastConditionAssessmentValidate,
   railwaySubBallastMaterialTestValidate,
-  railwaySubBallastMaterialValidate, 
+  railwaySubBallastMaterialValidate,
   railwayBallastEnvironmentalAndOtherFactorValidate,
-  railwayBallastDrainageAndWaterManagementValidate, 
+  railwayBallastDrainageAndWaterManagementValidate,
   railwayBallastMaintenanceAndRenewalValidate,
   railwayBallastConditionAssessmentValidate,
 
@@ -4773,7 +4918,7 @@ module.exports = {
   runwayAndApproachDataValidate,
   generalAirportInformationValidate,
 
-  
+
   electricGridControlCenterCyberSecurityDataValidate,
   electricGridControlCenterPerformanceAndMaintenanceValidate,
   electricGridControlCenterDataValidate,
@@ -4792,13 +4937,13 @@ module.exports = {
 
 
   miniGridStationValidate,
-  substationLayoutAndCommunicationDataValidate, 
+  substationLayoutAndCommunicationDataValidate,
 
   substationTransformerAndSwitchGearDataValidate,
   transmissionLineEquipmentDataValidate,
   transmissionLineConductorAndTowerDataValidate,
   transmissionLineInformationValidate,
-  
+
   geothermalPowerInfrastructureValidate,
   geothermalPowerWellValidate,
   solarPanelValidate,
@@ -4819,7 +4964,7 @@ module.exports = {
   dataCenterValidate,
   broadcastingInfrastructureManufacturerValidate,
   broadcastingInfrastructureAgeValidate,
-  
+
   broadcastingInfrastructureValidate,
   internetConnectionInfrastructureManufacturerValidate,
   internetConnectionInfrastructureAgeValidate,
@@ -4830,11 +4975,12 @@ module.exports = {
   satelliteNetworkValidate,
   networkCoverageValidate,
   mobileNetworkComponentAgeValidate,
-  mobileNetworkValidate, 
+  mobileNetworkValidate,
   networkCapacityValidate,
   maintenanceValidate,
+  telecomInfrastructureManufacturerValidate,
   telecomInfrastructureAgeValidate,
-  telecomInfrastructureComponentValidate,
+  telecomInfrastructureValidate,
   safetyAndHealthValidate,
   maintenanceHistoryValidate,
 
@@ -4865,7 +5011,7 @@ module.exports = {
   bridgeSuperStructureValidate,
   bridgeAreaDataValidate,
   bridgeBasicDataValidate,
-  
+
   drainageTypeValidate,
   drainageConditionValidate,
   assessmentConditionValidate,
@@ -4887,12 +5033,12 @@ module.exports = {
   waterIrrigationValidate,
   portValidate,
   paymentValidate,
-  
+
   bridgePartDefectValidate,
   damageTypeValidate,
   damageConditionValidate,
   hydrologyDefectValidate,
-  expansionJointTypeValidate, 
+  expansionJointTypeValidate,
   deckSlabTypeValidate,
   spanSupportTypeValidate,
   bridgeStructureTypeValidate,

@@ -3,6 +3,7 @@ const {
   DocumentType,
   DocumentCategory,
   DocumentSubCategory,
+  Department,
   sequelize,
   Sequelize,
 } = require("../../models");
@@ -23,8 +24,16 @@ self.getAll = async (req, res) => {
 
     let usr = await usrData.userData(req, res);
 
+    let children = await Department.findAll({
+            where: {
+                parent_department_id: usr.departmentID
+            }
+        });
+        
+    let childrenIDs = children.map(child => child.id);
+
     const whereCondition = { 
-      department_id: usr.departmentID
+      department_id: { [Op.in]: [usr.departmentID, ...childrenIDs] },
     };
     const paginatedResult = await paginationHelper(Document, req, whereCondition);
 

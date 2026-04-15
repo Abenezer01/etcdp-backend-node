@@ -24,8 +24,8 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.UUID,
       allowNull: false,
     },
-    construction_type: {
-      type: DataTypes.STRING,
+    construction_type_id: {
+      type: DataTypes.UUID,
       allowNull: false,
     },
     description: DataTypes.TEXT

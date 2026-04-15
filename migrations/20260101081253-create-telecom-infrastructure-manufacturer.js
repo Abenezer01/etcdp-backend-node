@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('TelecomInfrastructureComponents', {
+    await queryInterface.createTable('TelecomInfrastructureManufacturers', {
       id: {
         type: Sequelize.UUID,
         primaryKey: true,
@@ -11,11 +11,12 @@ module.exports = {
       parent_id: {
         type: Sequelize.UUID,
         references: { 
-          model: 'TelecomInfrastructureComponents',
+          model: 'TelecomInfrastructureManufacturers',
           key: 'id'
         },
         onUpdate: "CASCADE",
         onDelete: "CASCADE"
+
       },
       project_id: {
         type: Sequelize.UUID,
@@ -27,39 +28,39 @@ module.exports = {
         onUpdate: "CASCADE",
         onDelete: "CASCADE"
       },
-      mobile_network_type_id: {
+      telecom_infrastructure_id: {
         type: Sequelize.UUID,
         allowNull: false,
         references: {
-          model: 'ProjectMasterData',
+          model: 'TelecomInfrastructures',
           key: 'id'
         },
         onUpdate: "CASCADE",
         onDelete: "CASCADE"
       },
       cables: {
-        type: Sequelize.INTEGER
+        type: Sequelize.STRING
       },
       wires: {
-        type: Sequelize.INTEGER
+        type: Sequelize.STRING
       },
       routers: {
-        type: Sequelize.INTEGER
+        type: Sequelize.STRING
       },
       switches: {
-        type: Sequelize.INTEGER
+        type: Sequelize.STRING
       },
       hubs: {
-        type: Sequelize.INTEGER
+        type: Sequelize.STRING
       },
       repeaters: {
-        type: Sequelize.INTEGER
+        type: Sequelize.STRING
       },
       antennas: {
-        type: Sequelize.INTEGER
+        type: Sequelize.STRING
       },
       towers: {
-        type: Sequelize.INTEGER
+        type: Sequelize.STRING
       },
       remark: {
         type: Sequelize.TEXT
@@ -75,6 +76,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('TelecomInfrastructureComponents');
+    await queryInterface.dropTable('TelecomInfrastructureManufacturers');
   }
 };

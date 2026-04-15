@@ -298,6 +298,12 @@ const modulemodels = {
 };
 
 const mainanalysismodules = {
+  infrastructure: [
+    "Project", 
+    "ProjectType", 
+    "ProjectCategory", 
+    "ProjectSubCategory"
+  ],
   project: [
     "Project", 
     "ProjectType", 

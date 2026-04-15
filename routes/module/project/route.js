@@ -7,7 +7,6 @@ const ProjectDocumentController = require("../../../controllers/project/ProjectD
 const ConstructionResourceController = require("../../../controllers/project/ConstructionResourceController.js");
 const BuildingEnvelopMaterialController = require("../../../controllers/project/BuildingEnvelopMaterialController.js");
 const BuildingDimensionDetailsController = require("../../../controllers/project/BuildingDimensionDetailsController.js");
-const TelecomInfrastructureController = require("../../../controllers/project/TelecomInfrastructureController.js");
 const GeneratingCapacityController = require("../../../controllers/project/GeneratingCapacityController.js");
 const TurbineDetailController = require("../../../controllers/project/TurbineDetailController.js");
 const HydroElectricDamController = require("../../../controllers/project/HydroElectricDamController.js");
@@ -44,7 +43,7 @@ const ProjectAdditionalInfoController = require("../../../controllers/project/Pr
 const ProjectManagerController = require("../../../controllers/projects/ProjectManagerController.js");
 const ProjectContactPersonController = require("../../../controllers/projects/ProjectContactPersonController.js");
 const ProjectSafetyStatusController = require("../../../controllers/projects/ProjectSafetyStatusController.js");
-const ProjectQualityController = require("../../../controllers/projects/ProjectQualityController.js");  
+const ProjectQualityController = require("../../../controllers/projects/ProjectQualityController.js");
 const WeatherConditionController = require("../../../controllers/projects/WeatherConditionController.js");
 const ProjectConstructionTypeController = require("../../../controllers/projects/ProjectConstructionTypeController.js");
 const SegmentGeometryController = require("../../../controllers/projects/SegmentGeometryController.js");
@@ -81,7 +80,7 @@ const RoadSurfaceConditionController = require("../../../controllers/projects/Ro
 const DrainageAssessmentController = require("../../../controllers/projects/DrainageAssessmentController.js");
 const MaintenanceHistoryController = require("../../../controllers/projects/MaintenanceHistoryController.js");
 const SafetyAndHealthController = require("../../../controllers/projects/SafetyAndHealthController.js");
-const TelecomInfrastructureComponentController = require("../../../controllers/projects/TelecomInfrastructureComponentController.js");
+const TelecomInfrastructureController = require("../../../controllers/projects/TelecomInfrastructureController.js");
 const TelecomInfrastructureAgeController = require("../../../controllers/projects/TelecomInfrastructureAgeController.js");
 const MaintenanceController = require("../../../controllers/projects/MaintenanceController.js");
 const NetworkCapacityController = require("../../../controllers/projects/NetworkCapacityController.js");
@@ -238,7 +237,13 @@ const ConstructionMethodController = require("../../../controllers/projects/Cons
 const ClaimController = require("../../../controllers/projects/ClaimController.js");
 const ChallengeController = require("../../../controllers/projects/ChallengeController.js");
 const BridgeComponentAndAncillaryController = require("../../../controllers/projects/BridgeComponentAndAncillaryController.js");
-
+const ThermalBiomassIncinerationDataController = require("../../../controllers/projects/ThermalBiomassIncinerationDataController.js");
+const TelecomInfrastructureManufacturerController = require("../../../controllers/projects/TelecomInfrastructureManufacturerController.js");
+const MobileNetworkComponentManufacturerController = require("../../../controllers/projects/MobileNetworkComponentManufacturerController.js");
+const SatelliteInfrastructureManufacturerController = require("../../../controllers/projects/SatelliteInfrastructureManufacturerController.js");
+const MobileNetworkCapacityController = require("../../../controllers/projects/MobileNetworkCapacityController.js");
+const MobileNetworkCoverageController = require("../../../controllers/projects/MobileNetworkCoverageController.js");
+const MachineryInformationController = require("../../../controllers/project/MachineryInformationController.js");
 
 
 const validateData = require("../../../middleware/validate/module/project/validate");
@@ -268,7 +273,7 @@ module.exports = function (express) {
     ProjectAdditionalInfoController.update
   );
   route.delete("/project-additional-infos/:id", ProjectAdditionalInfoController.delete);
-//project outcomes
+  //project outcomes
   route.get("/project-outcomes", ProjectOutcomeController.getAll);
   route.get("/project-outcomes/:id", ProjectOutcomeController.get);
   // route.get("/project/project-outcomes/:id", ProjectOutcomeController.getByProjectId);
@@ -506,31 +511,7 @@ module.exports = function (express) {
     "/building-dimension-detail/:id",
     BuildingDimensionDetailsController.delete
   );
-  //Telecom infrastructure
-  route.get("/telecoms", TelecomInfrastructureController.getAll);
-  route.get("/telecoms/:id", TelecomInfrastructureController.get);
-  route.get(
-    "/project/telecoms/:id",
-    TelecomInfrastructureController.getByProjectId
-  );
-  route.get(
-    "/telecom-infrastructure-searches",
-    TelecomInfrastructureController.search
-  );
-  route.post(
-    "/telecoms",
-    validateData.telecomValidate,
-    TelecomInfrastructureController.save
-  );
-  route.put(
-    "/telecoms/:id",
-    validateData.telecomValidate,
-    TelecomInfrastructureController.update
-  );
-  route.delete(
-    "/telecoms/:id",
-    TelecomInfrastructureController.delete
-  );
+
   //Generating capacity
   route.get("/generatingcapacitys", GeneratingCapacityController.getAll);
   route.get("/generatingcapacitys/:id", GeneratingCapacityController.get);
@@ -646,7 +627,7 @@ module.exports = function (express) {
   );
   route.delete("/irrigationcapacities/:id", IrrigationCapacityController.delete);
 
-  
+
   // route.get("/projects/cpm", ProjectController.getAllCPMProject);
   route.get("/projects/", ProjectController.getAll);
   route.get("/projects/:id", ProjectController.get);
@@ -672,7 +653,7 @@ module.exports = function (express) {
     ProjectController.getFinancialNumbers
   );
 
-  
+
   //project finance route
   route.get("/project-finances/", ProjectFinanceController.getAll);
   route.get("/project-finances/:id", ProjectFinanceController.get);
@@ -1028,7 +1009,7 @@ module.exports = function (express) {
     "/matrix/project",
     ProjectController.countAllProjectWithProjectType
   );
-  route.get(  
+  route.get(
     "/count/project/projectcategories",
     ProjectController.countAllProjectWithProjectCategory
   );
@@ -1071,7 +1052,7 @@ module.exports = function (express) {
   route.post("/weather-conditions", validateData.weatherConditionValidate, WeatherConditionController.save);
   route.put("/weather-conditions/:id", validateData.weatherConditionValidate, WeatherConditionController.update);
   route.delete("/weather-conditions/:id", WeatherConditionController.delete);
-  
+
   // ProjectConstructionType routes with validation
   route.get("/project-construction-types", ProjectConstructionTypeController.getAll);
   route.get("/project-construction-types/:id", ProjectConstructionTypeController.get);
@@ -1094,20 +1075,20 @@ module.exports = function (express) {
   route.delete("/intersection-and-driveways/:id", IntersectionAndDrivewayController.delete);
 
 
-  
-   // TrafficParameter routes with validation
-   route.get("/traffic-parameters", TrafficParameterController.getAll);
-   route.get("/traffic-parameters/:id", TrafficParameterController.get);
-   route.post("/traffic-parameters", validateData.trafficParameterValidate, TrafficParameterController.save);
-   route.put("/traffic-parameters/:id", validateData.trafficParameterValidate, TrafficParameterController.update);
-   route.delete("/traffic-parameters/:id", TrafficParameterController.delete);
- 
-   // Accessory routes with validation
-   route.get("/accessories", AccessoryController.getAll);
-   route.get("/accessories/:id", AccessoryController.get);
-   route.post("/accessories", validateData.accessoryValidate, AccessoryController.save);
-   route.put("/accessories/:id", validateData.accessoryValidate, AccessoryController.update);
-   route.delete("/accessories/:id", AccessoryController.delete);
+
+  // TrafficParameter routes with validation
+  route.get("/traffic-parameters", TrafficParameterController.getAll);
+  route.get("/traffic-parameters/:id", TrafficParameterController.get);
+  route.post("/traffic-parameters", validateData.trafficParameterValidate, TrafficParameterController.save);
+  route.put("/traffic-parameters/:id", validateData.trafficParameterValidate, TrafficParameterController.update);
+  route.delete("/traffic-parameters/:id", TrafficParameterController.delete);
+
+  // Accessory routes with validation
+  route.get("/accessories", AccessoryController.getAll);
+  route.get("/accessories/:id", AccessoryController.get);
+  route.post("/accessories", validateData.accessoryValidate, AccessoryController.save);
+  route.put("/accessories/:id", validateData.accessoryValidate, AccessoryController.update);
+  route.delete("/accessories/:id", AccessoryController.delete);
 
   // Pavement routes with validation
   route.get("/pavements", PavementController.getAll);
@@ -1152,7 +1133,7 @@ module.exports = function (express) {
   route.put("/bridge-area-datas/:id", validateData.bridgeAreaDataValidate, BridgeAreaDataController.update);
   route.delete("/bridge-area-datas/:id", BridgeAreaDataController.delete);
 
-  
+
 
   // BridgeSuperStructure routes with validation
   route.get("/bridge-super-structures", BridgeSuperStructureController.getAll);
@@ -1161,7 +1142,7 @@ module.exports = function (express) {
   route.put("/bridge-super-structures/:id", validateData.bridgeSuperStructureValidate, BridgeSuperStructureController.update);
   route.delete("/bridge-super-structures/:id", BridgeSuperStructureController.delete);
 
-  
+
   // BridgeSuperStructure routes with validation
   route.get("/bridge-sub-structures", BridgeSubStructureController.getAll);
   route.get("/bridge-sub-structures/:id", BridgeSubStructureController.get);
@@ -1199,7 +1180,7 @@ module.exports = function (express) {
   route.put("/bridge-component-and-ancillaries/:id", validateData.bridgeComponentAndAncillaryValidate, BridgeComponentAndAncillaryController.update);
   route.delete("/bridge-component-and-ancillaries/:id", BridgeComponentAndAncillaryController.delete);
 
-  
+
   // TrafficVolume routes with validation
   route.get("/traffic-volumes", TrafficVolumeController.getAll);
   route.get("/traffic-volumes/:id", TrafficVolumeController.get);
@@ -1284,11 +1265,11 @@ module.exports = function (express) {
   route.delete("/safety-and-healths/:id", SafetyAndHealthController.delete);
 
   // TelecomInfrastructureComponent routes with validation
-  route.get("/telecom-infrastructure-components", TelecomInfrastructureComponentController.getAll);
-  route.get("/telecom-infrastructure-components/:id", TelecomInfrastructureComponentController.get);
-  route.post("/telecom-infrastructure-components", validateData.telecomInfrastructureComponentValidate, TelecomInfrastructureComponentController.save);
-  route.put("/telecom-infrastructure-components/:id", validateData.telecomInfrastructureComponentValidate, TelecomInfrastructureComponentController.update);
-  route.delete("/telecom-infrastructure-components/:id", TelecomInfrastructureComponentController.delete);
+  route.get("/telecom-infrastructures", TelecomInfrastructureController.getAll);
+  route.get("/telecom-infrastructures/:id", TelecomInfrastructureController.get);
+  route.post("/telecom-infrastructures", validateData.telecomInfrastructureValidate, TelecomInfrastructureController.save);
+  route.put("/telecom-infrastructures/:id", validateData.telecomInfrastructureValidate, TelecomInfrastructureController.update);
+  route.delete("/telecom-infrastructures/:id", TelecomInfrastructureController.delete);
 
 
   // TelecomInfrastructureAge routes with validation
@@ -1734,7 +1715,7 @@ module.exports = function (express) {
   );
   route.delete("/railway-track-maintenance-and-inspections/:id", RailwayTrackMaintenanceAndInspectionController.delete);
 
-  
+
   // RailwayTrackRehabilitationOrRenewal routes with validation
   route.get("/railway-track-rehabilitation-or-renewals", RailwayTrackRehabilitationOrRenewalController.getAll);
   route.get("/railway-track-rehabilitation-or-renewals/:id", RailwayTrackRehabilitationOrRenewalController.get);
@@ -1750,19 +1731,19 @@ module.exports = function (express) {
   );
   route.delete("/railway-track-rehabilitation-or-renewals/:id", RailwayTrackRehabilitationOrRenewalController.delete);
   // RailwayTrackSafety routes with validation
-route.get("/railway-track-safeties", RailwayTrackSafetyController.getAll);
-route.get("/railway-track-safeties/:id", RailwayTrackSafetyController.get);
-route.post(
-  "/railway-track-safeties",
-  validateData.railwayTrackSafetyValidate,
-  RailwayTrackSafetyController.save
-);
-route.put(
-  "/railway-track-safeties/:id",
-  validateData.railwayTrackSafetyValidate,
-  RailwayTrackSafetyController.update
-);
-route.delete("/railway-track-safeties/:id", RailwayTrackSafetyController.delete);
+  route.get("/railway-track-safeties", RailwayTrackSafetyController.getAll);
+  route.get("/railway-track-safeties/:id", RailwayTrackSafetyController.get);
+  route.post(
+    "/railway-track-safeties",
+    validateData.railwayTrackSafetyValidate,
+    RailwayTrackSafetyController.save
+  );
+  route.put(
+    "/railway-track-safeties/:id",
+    validateData.railwayTrackSafetyValidate,
+    RailwayTrackSafetyController.update
+  );
+  route.delete("/railway-track-safeties/:id", RailwayTrackSafetyController.delete);
 
   // RailwayBallast routes with validation
   route.get("/railway-ballasts", RailwayBallastController.getAll);
@@ -2605,7 +2586,7 @@ route.delete("/railway-track-safeties/:id", RailwayTrackSafetyController.delete)
   route.post("/railway-power-substations-and-equipments", validateData.railwayPowerSubstationsAndEquipmentValidate, RailwayPowerSubstationsAndEquipmentController.save);
   route.put("/railway-power-substations-and-equipments/:id", validateData.railwayPowerSubstationsAndEquipmentValidate, RailwayPowerSubstationsAndEquipmentController.update);
   route.delete("/railway-power-substations-and-equipments/:id", RailwayPowerSubstationsAndEquipmentController.delete);
-  
+
 
   route.get("/railway-power-distributions", RailwayPowerDistributionController.getAll);
   route.get("/railway-power-distributions/:id", RailwayPowerDistributionController.get);
@@ -2613,13 +2594,13 @@ route.delete("/railway-track-safeties/:id", RailwayTrackSafetyController.delete)
   route.put("/railway-power-distributions/:id", validateData.railwayPowerDistributionValidate, RailwayPowerDistributionController.update);
   route.delete("/railway-power-distributions/:id", RailwayPowerDistributionController.delete);
 
-  
+
   route.get("/railway-power-supply-maintenance-and-testings", RailwayPowerSupplyMaintenanceAndTestingController.getAll);
   route.get("/railway-power-supply-maintenance-and-testings/:id", RailwayPowerSupplyMaintenanceAndTestingController.get);
   route.post("/railway-power-supply-maintenance-and-testings", validateData.railwayPowerSupplyMaintenanceAndTestingValidate, RailwayPowerSupplyMaintenanceAndTestingController.save);
   route.put("/railway-power-supply-maintenance-and-testings/:id", validateData.railwayPowerSupplyMaintenanceAndTestingValidate, RailwayPowerSupplyMaintenanceAndTestingController.update);
   route.delete("/railway-power-supply-maintenance-and-testings/:id", RailwayPowerSupplyMaintenanceAndTestingController.delete);
-  
+
   route.get("/railway-power-supply-safety-and-compliances", RailwayPowerSupplySafetyAndComplianceController.getAll);
   route.get("/railway-power-supply-safety-and-compliances/:id", RailwayPowerSupplySafetyAndComplianceController.get);
   route.post("/railway-power-supply-safety-and-compliances", validateData.railwayPowerSupplySafetyAndComplianceValidate, RailwayPowerSupplySafetyAndComplianceController.save);
@@ -2676,7 +2657,7 @@ route.delete("/railway-track-safeties/:id", RailwayTrackSafetyController.delete)
   route.post("/railway-maintenance-facility-schedule-and-procedures", validateData.railwayMaintenanceFacilityScheduleAndProcedureValidate, RailwayMaintenanceFacilityScheduleAndProcedureController.save);
   route.put("/railway-maintenance-facility-schedule-and-procedures/:id", validateData.railwayMaintenanceFacilityScheduleAndProcedureValidate, RailwayMaintenanceFacilityScheduleAndProcedureController.update);
   route.delete("/railway-maintenance-facility-schedule-and-procedures/:id", RailwayMaintenanceFacilityScheduleAndProcedureController.delete);
-  
+
   // RailwayMaintenanceFacilityAndSecurity routes with validation
   route.get("/railway-maintenance-facility-and-securities", RailwayMaintenanceFacilityAndSecurityController.getAll);
   route.get("/railway-maintenance-facility-and-securities/:id", RailwayMaintenanceFacilityAndSecurityController.get);
@@ -2711,8 +2692,54 @@ route.delete("/railway-track-safeties/:id", RailwayTrackSafetyController.delete)
   route.delete("/challenges/:id", ChallengeController.delete);
 
 
-   route.get(
-    "/mapping/:id",ProjectController.getCategoryMapping);
+  route.get("/thermal-biomass-incineration-data", ThermalBiomassIncinerationDataController.getAll);
+  route.get("/thermal-biomass-incineration-data/:id", ThermalBiomassIncinerationDataController.get);
+  route.post("/thermal-biomass-incineration-data", validateData.thermalBiomassIncinerationDataValidate, ThermalBiomassIncinerationDataController.save);
+  route.put("/thermal-biomass-incineration-data/:id", validateData.thermalBiomassIncinerationDataValidate, ThermalBiomassIncinerationDataController.update);
+  route.delete("/thermal-biomass-incineration-data/:id", ThermalBiomassIncinerationDataController.delete);
+
+  route.get("/telecom-infrastructure-manufacturers", TelecomInfrastructureManufacturerController.getAll);
+  route.get("/telecom-infrastructure-manufacturers/:id", TelecomInfrastructureManufacturerController.get);
+  route.post("/telecom-infrastructure-manufacturers", validateData.telecomInfrastructureManufacturerValidate, TelecomInfrastructureManufacturerController.save);
+  route.put("/telecom-infrastructure-manufacturers/:id", validateData.telecomInfrastructureManufacturerValidate, TelecomInfrastructureManufacturerController.update);
+  route.delete("/telecom-infrastructure-manufacturers/:id", TelecomInfrastructureManufacturerController.delete);
+
+
+  route.get("/mobile-network-component-manufacturers", MobileNetworkComponentManufacturerController.getAll);
+  route.get("/mobile-network-component-manufacturers/:id", MobileNetworkComponentManufacturerController.get);
+  route.post("/mobile-network-component-manufacturers", validateData.mobileNetworkComponentManufacturerValidate, MobileNetworkComponentManufacturerController.save);
+  route.put("/mobile-network-component-manufacturers/:id", validateData.mobileNetworkComponentManufacturerValidate, MobileNetworkComponentManufacturerController.update);
+  route.delete("/mobile-network-component-manufacturers/:id", MobileNetworkComponentManufacturerController.delete);
+
+
+  route.get("/satellite-infrastructure-manufacturers", SatelliteInfrastructureManufacturerController.getAll);
+  route.get("/satellite-infrastructure-manufacturers/:id", SatelliteInfrastructureManufacturerController.get);
+  route.post("/satellite-infrastructure-manufacturers", validateData.satelliteInfrastructureManufacturerValidate, SatelliteInfrastructureManufacturerController.save);
+  route.put("/satellite-infrastructure-manufacturers/:id", validateData.satelliteInfrastructureManufacturerValidate, SatelliteInfrastructureManufacturerController.update);
+  route.delete("/satellite-infrastructure-manufacturers/:id", SatelliteInfrastructureManufacturerController.delete);
+
+  route.get("/mobile-network-capacities", MobileNetworkCapacityController.getAll);
+  route.get("/mobile-network-capacities/:id", MobileNetworkCapacityController.get);
+  route.post("/mobile-network-capacities", validateData.mobileNetworkCapacityValidate, MobileNetworkCapacityController.save);
+  route.put("/mobile-network-capacities/:id", validateData.mobileNetworkCapacityValidate, MobileNetworkCapacityController.update);
+  route.delete("/mobile-network-capacities/:id", MobileNetworkCapacityController.delete);
+
+  route.get("/mobile-network-coverages", MobileNetworkCoverageController.getAll);
+  route.get("/mobile-network-coverages/:id", MobileNetworkCoverageController.get);
+  route.post("/mobile-network-coverages", validateData.mobileNetworkCoverageValidate, MobileNetworkCoverageController.save);
+  route.put("/mobile-network-coverages/:id", validateData.mobileNetworkCoverageValidate, MobileNetworkCoverageController.update);
+  route.delete("/mobile-network-coverages/:id", MobileNetworkCoverageController.delete);
+
+
+  route.get("/machinery-informations", MachineryInformationController.getAll);
+  route.get("/machinery-informations/:id", MachineryInformationController.get);
+  route.post("/machinery-informations", MachineryInformationController.save);
+  // route.post("/machinery-information", validateData.machineryInformationValidate, MachineryInformationController.save);
+  // route.put("/machinery-information/:id", validateData.machineryInformationValidate, MachineryInformationController.update);
+  route.delete("/machinery-informations/:id", MachineryInformationController.delete);
+
+  route.get(
+    "/mapping/:id", ProjectController.getCategoryMapping);
   return route;
 
 };

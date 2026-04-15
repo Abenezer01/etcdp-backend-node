@@ -468,6 +468,7 @@ const stakeHolderValidate = async (req, res, next) => {
     ownership_id: "required|string",
     businessfield_id: "string",
     origin: "required|string",
+    license_number: "string",
   };
 
   await validateReply.validateReply(req.body, validationRule, res, next);
@@ -538,7 +539,7 @@ const upgradeValidate = async (req, res, next) => {
   }
   const validationRule = {
     stakeholder_id: "required|string",
-    upgrade_type: "required|string",
+    upgrade_type_id: "required|string",
     previous_level: "string",
     upgraded_level: "string",
     ownership_percentage: "numeric",

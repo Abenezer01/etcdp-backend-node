@@ -24,8 +24,8 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.UUID,
       allowNull: false,
     },
-    name: {
-      type: DataTypes.STRING,
+    road_segment_id: {
+      type: DataTypes.UUID,
       allowNull: false,
     },
     pedestrian_facility_id: {

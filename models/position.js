@@ -37,10 +37,10 @@ module.exports = (sequelize, DataTypes) => {
       },
       quantity_needed: DataTypes.INTEGER,
       revision_no: DataTypes.INTEGER,
-      is_admin_position: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false
-      }
+      // is_admin_position: {
+      //   type: DataTypes.BOOLEAN,
+      //   defaultValue: false
+      // }
     },
     {
       createdAt: "created_at",

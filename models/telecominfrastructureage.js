@@ -24,6 +24,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.UUID,
       allowNull: false,
     },
+    telecom_infrastructure_id: {
+      type: DataTypes.UUID,
+      allowNull: false,
+    },
     cables: DataTypes.BOOLEAN,
     wires: DataTypes.BOOLEAN,
     routers: DataTypes.BOOLEAN,

@@ -17,7 +17,7 @@ const parseParams = (req) => {
           property: req.query.sorting.property,
           direction: req.query.sorting.direction,
         }
-      : null,
+      : { property: "created_at", direction: "DESC" },
     includes: req.query.includes ? req.query.includes.split(",") : null,
     type: req.query.type || null,
     position: req.query.position || null,

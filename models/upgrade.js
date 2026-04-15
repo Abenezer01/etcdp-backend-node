@@ -24,8 +24,8 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.UUID,
       allowNull: false,
     },
-    upgrade_type: {
-      type: DataTypes.STRING,
+    upgrade_type_id: {
+      type: DataTypes.UUID,
       allowNull: false,
     },
     previous_level: DataTypes.STRING,

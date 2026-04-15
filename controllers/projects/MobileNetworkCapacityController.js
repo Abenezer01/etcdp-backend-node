@@ -1,4 +1,4 @@
-const { TelecomInfrastructureComponent  , Sequelize } = require("../../models");
+const { MobileNetworkCapacity  , Sequelize } = require("../../models");
 const Op = Sequelize.Op;
 const dotenv = require("dotenv");
 dotenv.config();
@@ -9,7 +9,7 @@ let self = {};
 
 self.getAll = async (req, res) => {
   try {
-    const paginatedResult = await paginationHelper(TelecomInfrastructureComponent , req);
+    const paginatedResult = await paginationHelper(MobileNetworkCapacity , req);
 
     // Use the response formatter to send the success response
     res.apiSuccess({
@@ -23,19 +23,19 @@ self.getAll = async (req, res) => {
 };
 
 self.get = async (req, res) => {
-  getRecordById(TelecomInfrastructureComponent , req, res);
+  getRecordById(MobileNetworkCapacity , req, res);
 };
 
 self.save = async (req, res) => {
-  saveRecord(TelecomInfrastructureComponent , req, res);
+  saveRecord(MobileNetworkCapacity , req, res);
 };
 
 self.update = async (req, res) => {
-  updateRecord(TelecomInfrastructureComponent , req, res);
+  updateRecord(MobileNetworkCapacity , req, res);
 };
 
 self.delete = async (req, res) => {
-  deleteRecord(TelecomInfrastructureComponent , req, res);
+  deleteRecord(MobileNetworkCapacity , req, res);
 };
 
 module.exports = self;

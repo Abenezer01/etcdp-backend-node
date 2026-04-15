@@ -10,6 +10,9 @@ let self = {};
 self.getAll = async (req, res) => {
   try {
 
+    // let data = await AddressMasterData.findAll();
+    // return res.json(data);
+  
     const whereCondition = { };
     
     
@@ -140,5 +143,51 @@ self.getDepartments = async (req, res) => {
     res.apiError(error);
   }
 };
+
+let all = [];
+self.getToRoot = async (req, res) => {
+  try {
+    let id = req.params.id;
+    let data = await AddressMasterData.findAll();
+    await self.getPath(data, id);
+
+
+    res.apiSuccess({
+      data: all,
+
+    });
+  } catch (error) {
+    res.apiError(error);
+  }
+};
+
+self.getPath = async (arr, x) => {
+  all = [];
+  for (var i = 0; i < arr.length; i++) {
+    if (arr[i].id === x) {
+      self.getPath(arr, arr[i].parent_address_id);
+      if (arr[i].parent_address_id !== null) {
+        let child = await AddressMasterData.findOne({
+          where: {
+            id: arr[i].parent_address_id,
+          },
+        });
+        all.push(child);
+        // all.push(arr[i].parent_department_id);
+      }
+    }
+  }
+};
+
+
+// self.getPath = async (data, id) => {
+//   let temp = data.find((item) => item.id == id);
+//   if (temp) {
+//     all.push(temp);
+//     if (temp.parent_address_id) {
+//       await self.getPath(data, temp.parent_address_id);
+//     }
+//   }
+// };
 
 module.exports = self;

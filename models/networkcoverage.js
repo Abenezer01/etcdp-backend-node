@@ -21,6 +21,10 @@ module.exports = (sequelize, DataTypes) => {
     },
     parent_id: DataTypes.UUID,
     project_id: {
+      type: DataTypes.UUID,
+      allowNull: false,
+    },
+    telecom_infrastructure_id: {
         type: DataTypes.UUID,
         allowNull: false,
     },

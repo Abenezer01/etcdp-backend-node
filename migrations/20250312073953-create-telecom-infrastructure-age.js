@@ -27,6 +27,16 @@ module.exports = {
         onUpdate: "CASCADE",
         onDelete: "CASCADE"
       },
+      telecom_infrastructure_id: {
+        type: Sequelize.UUID,
+        allowNull: false,
+        references: {
+          model: 'TelecomInfrastructures',
+          key: 'id'
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE"
+      },
       cables: {
         type: Sequelize.BOOLEAN
       },

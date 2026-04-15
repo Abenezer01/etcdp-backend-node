@@ -11,8 +11,10 @@ self.getAll = async (req, res) => {
     const paginatedResult = await paginationHelper(StakeholderType, req);
 
     // Use the response formatter to send the success response
+    // order the data alphabetically 
+    let data = paginatedResult.data.sort((a, b) => a.title.localeCompare(b.title));
     res.apiSuccess({
-      data: paginatedResult.data,
+      data: data,
       total: paginatedResult.total,
     }, paginatedResult.pagination);
 

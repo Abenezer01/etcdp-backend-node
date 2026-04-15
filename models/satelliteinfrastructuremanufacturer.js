@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class TelecomInfrastructureComponent extends Model {
+  class SatelliteInfrastructureManufacturer extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -11,9 +11,13 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      SatelliteInfrastructureManufacturer.belongsTo(models.SatelliteNetwork, {
+        foreignKey: "satellite_network_id",
+        as: "satellitenetwork"
+      });
     }
   }
-  TelecomInfrastructureComponent.init({
+  SatelliteInfrastructureManufacturer.init({
     id: {
       type: DataTypes.UUID,
       primaryKey: true,
@@ -24,25 +28,22 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.UUID,
       allowNull: false,
     },
-    mobile_network_type_id: {
+    satellite_network_id: {
       type: DataTypes.UUID,
       allowNull: false,
     },
-    cables: DataTypes.INTEGER,
-    wires: DataTypes.INTEGER,
-    routers: DataTypes.INTEGER,
-    switches: DataTypes.INTEGER,
-    hubs: DataTypes.INTEGER,
-    repeaters: DataTypes.INTEGER,
-    antennas: DataTypes.INTEGER,
-    towers: DataTypes.INTEGER,
-    remark: DataTypes.TEXT
+    satellite: DataTypes.STRING,
+    ground_stations: DataTypes.STRING,
+    modems: DataTypes.STRING,
+    routers: DataTypes.STRING,
+    others: DataTypes.TEXT
   }, {
     createdAt: 'created_at',
     updatedAt: 'updated_at',
     sequelize,
-    modelName: 'TelecomInfrastructureComponent',
-    tableName: 'TelecomInfrastructureComponents',
+    modelName: 'SatelliteInfrastructureManufacturer',
+    tableName: 'SatelliteInfrastructureManufacturers',
+    
   });
-  return TelecomInfrastructureComponent;
+  return SatelliteInfrastructureManufacturer;
 };

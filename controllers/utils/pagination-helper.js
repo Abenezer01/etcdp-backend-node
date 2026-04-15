@@ -42,11 +42,14 @@ const paginationHelper = async (Model, req, where = {}, include = []) => {
     let page = pagination.page || 1; 
     let pageSize = pagination.pageSize || 10;
     const initialFilter = params.filter; // This is for Sequelize WHERE condition
-    
+    let sorting = params.sorting;
+      
     // 🚨 1. Get the search text (assuming you pass it in the query, e.g., ?search=yeti)
     const searchText = req.query.search || ""; 
     const isSmartSearchActive = searchText.length > 0;
 
+    // if the data is null make sure this thing works fine 
+    
     try {
         const fullUrl = req.originalUrl;
         const segments = fullUrl.split("/");
@@ -71,13 +74,13 @@ const paginationHelper = async (Model, req, where = {}, include = []) => {
             const result = await Model.findAll({
                 where: {...where, ...initialFilter},
                 include: include,
-                order: [["created_at", "DESC"]],
+                order: [[sorting.property, sorting.direction]]
             });
             
             // Convert to plain objects for reliable JavaScript searching
             let plainData = result.map(item => item.get({ plain: true })); 
 
-            // 🚨 2. Perform the Smart Search on the full dataset
+            // 🚨 2. Perform the Smart Search on the full dataset0000000000
             fetchedData = smartSearch(plainData, searchText);
             totalCount = fetchedData.length;
             
@@ -94,7 +97,7 @@ const paginationHelper = async (Model, req, where = {}, include = []) => {
                 include: include,
                 offset: (page - 1) * pageSize, // Use original offset here
                 limit: pageSize,
-                order: [["created_at", "DESC"]],
+                order: [[sorting.property, sorting.direction]]
             });
             
             // If smart search is NOT active, use the data and count directly from Sequelize
@@ -103,6 +106,19 @@ const paginationHelper = async (Model, req, where = {}, include = []) => {
         }
         
         // --- RETURN RESULT ---
+
+        // sorting the fetched data 
+
+        // sorting the fetched data 
+        // fetchedData.sort((a, b) => {
+        //     if (a[sorting.property] < b[sorting.property]) {
+        //         return sorting.direction === "ASC" ? -1 : 1;
+        //     }
+        //     if (a[sorting.property] > b[sorting.property]) {
+        //         return sorting.direction === "ASC" ? 1 : -1;
+        //     }
+        //     return 0;
+        // });
         return {
             data: fetchedData,
             total: totalCount,
