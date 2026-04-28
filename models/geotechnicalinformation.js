@@ -11,6 +11,18 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      GeotechnicalInformation.belongsTo(models.ProjectMasterData, {
+        foreignKey: 'soil_type_id',
+        as: 'soilType'
+      });
+      GeotechnicalInformation.belongsTo(models.ProjectMasterData, {
+        foreignKey: 'ground_water_impact_id',
+        as: 'groundWaterImpact'
+      });
+      GeotechnicalInformation.belongsTo(models.ProjectMasterData, {
+        foreignKey: 'slope_stability_id',
+        as: 'slopeStability'
+      });
     }
   }
   GeotechnicalInformation.init({

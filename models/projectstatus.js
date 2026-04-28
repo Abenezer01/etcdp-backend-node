@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      ProjectStatus.belongsTo(models.Status, {
+      ProjectStatus.belongsTo(models.ProjectMasterData, {
         as: "status",
         foreignKey: "status_id",
       });
@@ -18,12 +18,13 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "project_id",
         as: "project"
       });
+
     }
   }
   ProjectStatus.init(
     {
       id: {
-          type: DataTypes.UUID,
+        type: DataTypes.UUID,
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4,
       },

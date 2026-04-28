@@ -1,4 +1,4 @@
-const { GeotechnicalInformation  , Sequelize } = require("../../models");
+const { GeotechnicalInformation, ProjectMasterData, Sequelize } = require("../../models");
 const Op = Sequelize.Op;
 const dotenv = require("dotenv");
 dotenv.config();
@@ -9,7 +9,23 @@ let self = {};
 
 self.getAll = async (req, res) => {
   try {
-    const paginatedResult = await paginationHelper(GeotechnicalInformation , req);
+    //includes
+
+    let includeOptions = [
+      {
+        model: ProjectMasterData,
+        as: 'soilType'
+      },
+      {
+        model: ProjectMasterData,
+        as: 'groundWaterImpact'
+      },
+      {
+        model: ProjectMasterData,
+        as: 'slopeStability'
+      },
+    ];
+    const paginatedResult = await paginationHelper(GeotechnicalInformation , req, [], includeOptions);
 
     // Use the response formatter to send the success response
     res.apiSuccess({

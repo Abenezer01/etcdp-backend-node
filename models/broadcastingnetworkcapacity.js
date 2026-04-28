@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class RoadSafetyFeature extends Model {
+  class BroadcastingNetworkCapacity extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -11,18 +11,17 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-     
-      RoadSafetyFeature.belongsTo(models.RoadSegment, { 
-        foreignKey: 'road_segment_id' ,
-        as: 'roadSegment'
+      BroadcastingNetworkCapacity.belongsTo(models.BroadcastingNetwork, { 
+        foreignKey: 'broadcasting_network_id', 
+        as: 'broadcastingNetwork' 
       });
-      RoadSafetyFeature.belongsTo(models.ProjectMasterData, {
-        foreignKey: 'road_safety_feature_id',
-        as: 'roadSafetyFeature'
+      BroadcastingNetworkCapacity.belongsTo(models.ProjectMasterData, { 
+        foreignKey: 'network_type_id', 
+        as: 'networkType' 
       });
     }
   }
-  RoadSafetyFeature.init({
+  BroadcastingNetworkCapacity.init({
     id: {
       type: DataTypes.UUID,
       primaryKey: true,
@@ -33,24 +32,23 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.UUID,
       allowNull: false
     },
-    road_segment_id: {
+    broadcasting_network_id: {
       type: DataTypes.UUID,
       allowNull: false
     },
-    road_safety_feature_id: {
+    network_type_id: {
       type: DataTypes.UUID,
       allowNull: false
     },
-    safety_feature_condition: {
-      type: DataTypes.STRING
-    },
-    description: DataTypes.TEXT,
+    total_bandwidth: DataTypes.DOUBLE,
+    users_number: DataTypes.INTEGER,
+    remark: DataTypes.STRING
   }, {
     createdAt: 'created_at',
     updatedAt: 'updated_at',
     sequelize,
-    modelName: 'RoadSafetyFeature',
-    tableName: 'RoadSafetyFeatures',
+    modelName: 'BroadcastingNetworkCapacity',
+    tableName: 'BroadcastingNetworkCapacities',
   });
-  return RoadSafetyFeature;
+  return BroadcastingNetworkCapacity;
 };

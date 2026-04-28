@@ -11,6 +11,14 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      CulvertBasicData.belongsTo(models.ProjectMasterData, {
+        foreignKey: 'area_topography_id',
+        as: 'areaTopography'
+      });
+      CulvertBasicData.belongsTo(models.RoadSegment, {
+        foreignKey: 'road_segment_id',
+        as: 'roadSegment'
+      });
     }
   }
   CulvertBasicData.init({

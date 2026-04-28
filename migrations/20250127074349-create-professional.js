@@ -1,4 +1,7 @@
 'use strict';
+
+const { sequelize } = require('../models');
+
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
@@ -17,31 +20,51 @@ module.exports = {
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
       },
-      first_name: {
-        type: Sequelize.STRING,
-        allowNull: false
+      department_id: {
+        type: Sequelize.UUID,
+        references: {
+          model: "departments",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
       },
-      middle_name: {
-        type: Sequelize.STRING,
-        allowNull: false
+      full_name: {
+        type: Sequelize.STRING
       },
-      last_name: {
+      gender: {
         type: Sequelize.STRING,
+        defaultValue: "Male"
+      },
+      study_field: {
+        type: Sequelize.STRING
+      },
+      license_no: {
+        type: Sequelize.STRING
+      },
+      license_category: {
+        type: Sequelize.STRING
+      },
+      license_grade: {
+        type: Sequelize.STRING
       },
       national_id_no: {
         type: Sequelize.STRING
       },
-      date_of_birth: {
-        type: Sequelize.DATE
+      region: {
+        type: Sequelize.STRING
       },
-      gender: {
+      city: {
         type: Sequelize.STRING
       },
       phone_no: {
         type: Sequelize.STRING
       },
-      email: {
-        type: Sequelize.STRING
+      license_given_data: {
+        type: Sequelize.DATE
+      },
+      remark: {
+        type: Sequelize.TEXT
       },
       createdAt: {
         allowNull: false,

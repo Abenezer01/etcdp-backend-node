@@ -11,6 +11,46 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      SafetyAndHealth.belongsTo(models.ProjectMasterData, {
+        foreignKey: 'hazard_type_id',
+        as: 'hazardType'
+      })
+
+      SafetyAndHealth.belongsTo(models.ProjectMasterData, {
+        foreignKey: 'potential_impact_id',
+        as: 'potentialImpact'
+      })
+
+      SafetyAndHealth.belongsTo(models.ProjectMasterData, {
+        foreignKey: 'risk_level_id',
+        as: 'riskLevel'
+      })
+
+      SafetyAndHealth.belongsTo(models.ProjectMasterData, {
+        foreignKey: 'incident_type_id',
+        as: 'incidentType'
+      })
+
+      SafetyAndHealth.belongsTo(models.ProjectMasterData, {
+        foreignKey: 'personal_protective_equipment_type_id',
+        as: 'personalProtectiveEquipmentType'
+      })
+
+      SafetyAndHealth.belongsTo(models.ProjectMasterData, {
+        foreignKey: 'personal_protective_equipment_condition_id',
+        as: 'personalProtectiveEquipmentCondition'
+      })
+
+      SafetyAndHealth.belongsTo(models.ProjectMasterData, {
+        foreignKey: 'weather_condition_during_incident_id',
+        as: 'weatherConditionDuringIncident'
+      })
+
+      SafetyAndHealth.belongsTo(models.ProjectMasterData, {
+        foreignKey: 'injury_severity_id',
+        as: 'injurySeverity'
+      })
+      
     }
   }
   SafetyAndHealth.init({

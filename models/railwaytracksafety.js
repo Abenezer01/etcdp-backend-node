@@ -10,7 +10,21 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      // define associatio  n here
+      // RailwayTrackSafety.belongsTo(models.ProjectMasterData, {
+      //   foreignKey: 'project_id',
+      //   as: 'project'
+      // })
+
+      RailwayTrackSafety.belongsTo(models.ProjectMasterData, {
+        foreignKey: 'railway_track_safety_measures_id',
+        as: 'railwayTrackSafetyMeasure'
+      })
+
+      RailwayTrackSafety.belongsTo(models.ProjectMasterData, {
+        foreignKey: 'track_inspection_frequency_id',
+        as: 'trackInspectionFrequency'
+      })
     }
   }
   RailwayTrackSafety.init({

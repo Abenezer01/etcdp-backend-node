@@ -25,20 +25,43 @@ module.exports = (sequelize, DataTypes) => {
     },
     parent_id: DataTypes.UUID,
     department_id: DataTypes.UUID,
-    first_name: {
-      type: DataTypes.STRING,
-      allowNull: false,
+    full_name: {
+      type: DataTypes.STRING
     },
-    middle_name: {
+    gender: {
       type: DataTypes.STRING,
-      allowNull: false,
+      defaultValue: "Male"
     },
-    last_name: DataTypes.STRING,
-    national_id_no: DataTypes.STRING,
-    date_of_birth: DataTypes.DATE,
-    gender: DataTypes.STRING,
-    phone_no: DataTypes.STRING,
-    email: DataTypes.STRING
+    study_field: {
+      type: DataTypes.STRING
+    },
+    license_no: {
+      type: DataTypes.STRING
+    },
+    license_category: {
+      type: DataTypes.STRING
+    },
+    license_grade: {
+      type: DataTypes.STRING
+    },
+    national_id_no: {
+      type: DataTypes.STRING
+    },
+    region: {
+      type: DataTypes.STRING
+    },
+    city: {
+      type: DataTypes.STRING
+    },
+    phone_no: {
+      type: DataTypes.STRING  
+    },
+    license_given_data: {
+      type: DataTypes.DATE  
+    },
+    remark: {
+      type: DataTypes.TEXT
+    }
   }, {
     
     createdAt: "created_at",

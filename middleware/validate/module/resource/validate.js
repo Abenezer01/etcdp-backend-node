@@ -143,8 +143,18 @@ const professionalValidate = async (req, res, next) => {
     });
   }
   const validationRule = {
-    first_name: "required|string",
-    middle_name: "required|string",
+    full_name: "string",
+    gender: "string",
+    study_field: "string",
+    license_no: "string",
+    license_category: "string",
+    license_grade: "string",
+    national_id_no: "string",
+    region: "string",
+    city: "string",
+    phone_no: "string",
+    license_given_data: "date",
+    remark: "string"
   };
 
   await validateReply.validateReply(req.body, validationRule, res, next);

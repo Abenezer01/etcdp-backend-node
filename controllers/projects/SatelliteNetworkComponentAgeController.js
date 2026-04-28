@@ -1,4 +1,4 @@
-const { RoadDrainage,  ProjectMasterData, Sequelize } = require("../../models");
+const { SatelliteNetworkComponentAge, SatelliteNetwork, Sequelize } = require("../../models");
 const Op = Sequelize.Op;
 const dotenv = require("dotenv");
 dotenv.config();
@@ -9,15 +9,16 @@ let self = {};
 
 self.getAll = async (req, res) => {
   try {
-    //includes
+
+    //include
     const includeOptions = [
-          {
-            model: ProjectMasterData,
-            as: 'currentCondition'
-          }
-        ];      
-            
-    const paginatedResult = await paginationHelper(RoadDrainage , req, [], includeOptions);
+        {
+            model: SatelliteNetwork,
+            as: 'satelliteNetwork'
+        }
+    ];  
+
+    const paginatedResult = await paginationHelper(SatelliteNetworkComponentAge, req, [], includeOptions);
 
     // Use the response formatter to send the success response
     res.apiSuccess({
@@ -31,19 +32,19 @@ self.getAll = async (req, res) => {
 };
 
 self.get = async (req, res) => {
-  getRecordById(RoadDrainage , req, res);
+  getRecordById(SatelliteNetworkComponentAge, req, res);
 };
 
 self.save = async (req, res) => {
-  saveRecord(RoadDrainage , req, res);
+  saveRecord(SatelliteNetworkComponentAge, req, res);
 };
 
 self.update = async (req, res) => {
-  updateRecord(RoadDrainage , req, res);
+  updateRecord(SatelliteNetworkComponentAge, req, res);
 };
 
 self.delete = async (req, res) => {
-  deleteRecord(RoadDrainage , req, res);
+  deleteRecord(SatelliteNetworkComponentAge, req, res);
 };
 
 module.exports = self;

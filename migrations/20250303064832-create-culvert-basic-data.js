@@ -37,6 +37,10 @@ module.exports = {
         onUpdate: "CASCADE",
         onDelete: "CASCADE"
       },
+      name: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
       culvert_number: {
         type: Sequelize.INTEGER
       },

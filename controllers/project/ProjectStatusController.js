@@ -1,4 +1,4 @@
-const { ProjectStatus, Status, Sequelize } = require("../../models");
+const { ProjectStatus, Status, ProjectMasterData, Sequelize } = require("../../models");
 const paginationHelper = require("../utils/pagination-helper");
 const { getRecordById, saveRecord, updateRecord, deleteRecord } = require("../utils/format-helper");
 const Op = Sequelize.Op;
@@ -11,10 +11,9 @@ self.getAll = async (req, res) => {
 
     const whereCondition = { };
 
-
     const includeOptions = [
       {
-          model: Status,
+          model: ProjectMasterData,
           as: "status"
       },
     ];

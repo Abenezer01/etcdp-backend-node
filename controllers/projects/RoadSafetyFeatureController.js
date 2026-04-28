@@ -1,4 +1,4 @@
-const { RoadSafetyFeature  , Sequelize } = require("../../models");
+const { RoadSafetyFeature, RoadSegment, ProjectMasterData, Sequelize } = require("../../models");
 const Op = Sequelize.Op;
 const dotenv = require("dotenv");
 dotenv.config();
@@ -9,7 +9,19 @@ let self = {};
 
 self.getAll = async (req, res) => {
   try {
-    const paginatedResult = await paginationHelper(RoadSafetyFeature , req);
+
+    //include
+    const include = [
+      {
+        model: RoadSegment,
+        as: 'roadSegment'
+      },
+      {
+        model: ProjectMasterData,
+        as: 'roadSafetyFeature'
+      }
+    ]
+    const paginatedResult = await paginationHelper(RoadSafetyFeature , req, [], include);
 
     // Use the response formatter to send the success response
     res.apiSuccess({

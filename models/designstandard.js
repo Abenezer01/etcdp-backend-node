@@ -11,6 +11,25 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      DesignStandard.belongsTo(models.ProjectMasterData, {
+        foreignKey: 'functional_classification_id',
+        as: 'functionalClassification'
+      })
+
+      DesignStandard.belongsTo(models.ProjectMasterData, {
+        foreignKey: 'design_classification_id',
+        as: 'designClassification'
+      })
+
+      DesignStandard.belongsTo(models.ProjectMasterData, {
+        foreignKey: 'design_standard_id',
+        as: 'designStandard'
+      })
+
+      DesignStandard.belongsTo(models.ProjectMasterData, {
+        foreignKey: 'design_traffic_flow_id',
+        as: 'designTrafficFlow'
+      })
     }
   }
   DesignStandard.init({
@@ -20,15 +39,33 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: DataTypes.UUIDV4
     },
     parent_id: DataTypes.UUID,
-    project_type_id: {
+    project_id: {
       type: DataTypes.UUID,
       allowNull: false
     },
-    title: {
-      type: DataTypes.STRING,
+    functional_classification_id  : {
+      type: DataTypes.UUID,
       allowNull: false
     },
-    description: DataTypes.TEXT,  
+    design_classification_id: {
+      type: DataTypes.UUID,
+      allowNull: false
+    },
+    design_standard_id: {
+      type: DataTypes.UUID,
+      allowNull: false
+    },
+    design_traffic_flow_id: {
+      type: DataTypes.UUID,
+      allowNull: false
+    },
+    design_life_time_years: {
+      type: DataTypes.DOUBLE
+    },
+    segment_number: {
+      type: DataTypes.INTEGER
+    },
+    remark: DataTypes.TEXT,  
   }, {
     createdAt: 'created_at',
     updatedAt: 'updated_at',

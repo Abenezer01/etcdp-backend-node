@@ -1,4 +1,4 @@
-const { RailwayBallastMaterialData  , Sequelize } = require("../../models");
+const { RailwayBallastMaterialData, ProjectMasterData, Sequelize } = require("../../models");
 const Op = Sequelize.Op;
 const dotenv = require("dotenv");
 dotenv.config();
@@ -9,7 +9,26 @@ let self = {};
 
 self.getAll = async (req, res) => {
   try {
-    const paginatedResult = await paginationHelper(RailwayBallastMaterialData , req);
+
+      //includes
+
+        const includeOptions = [
+          {
+            model: ProjectMasterData,
+            as: 'ballastMaterialType'
+          },
+          { 
+            model: ProjectMasterData,
+            as: 'ballastSource'
+          },
+          { 
+            model: ProjectMasterData,
+            as: 'compactionMethod'
+          }
+        ];
+
+      
+    const paginatedResult = await paginationHelper(RailwayBallastMaterialData , req, [], includeOptions);
 
     // Use the response formatter to send the success response
     res.apiSuccess({

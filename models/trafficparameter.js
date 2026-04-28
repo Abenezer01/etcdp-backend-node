@@ -11,6 +11,14 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      TrafficParameter.belongsTo(models.RoadSegment, {
+        foreignKey: 'road_segment_id',
+        as: 'roadSegment'
+      })
+      TrafficParameter.belongsTo(models.ProjectMasterData, {
+        foreignKey: 'pedestrian_facility_id',
+        as: 'pedestrianFacility'
+      })
     }
   }
   TrafficParameter.init({

@@ -1,4 +1,4 @@
-const { TrafficParameter  , Sequelize } = require("../../models");
+const { TrafficParameter, RoadSegment, ProjectMasterData, Sequelize } = require("../../models");
 const Op = Sequelize.Op;
 const dotenv = require("dotenv");
 dotenv.config();
@@ -9,7 +9,17 @@ let self = {};
 
 self.getAll = async (req, res) => {
   try {
-    const paginatedResult = await paginationHelper(TrafficParameter , req);
+    const includeOptions = [
+      {
+        model: ProjectMasterData,
+        as: 'pedestrianFacility'
+      },
+      {
+        model: RoadSegment,
+        as: 'roadSegment'
+      }
+    ]
+    const paginatedResult = await paginationHelper(TrafficParameter , req, [], includeOptions);
 
     // Use the response formatter to send the success response
     res.apiSuccess({

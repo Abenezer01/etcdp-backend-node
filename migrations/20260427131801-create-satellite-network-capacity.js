@@ -2,54 +2,59 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('RoadSafetyFeatures', {
+    await queryInterface.createTable('SatelliteNetworkCapacities', {
       id: {
         type: Sequelize.UUID,
-        primaryKey: true,
-        defaultValue: Sequelize.UUIDV4
+        defaultValue: Sequelize.UUIDV4,
+        primaryKey: true
       },
       parent_id: {
         type: Sequelize.UUID,
-        references: {
-          model: 'RoadSafetyFeatures',
-        key: 'id'
-        }
+        reference: {
+          model: 'SatelliteNetworkCapacities',
+          key: 'id'
+        },
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE'
       },
       project_id: {
         type: Sequelize.UUID,
         allowNull: false,
-        references: {
+        reference: {
           model: 'projects',
           key: 'id'
         },
-        onUpdate: "CASCADE",
-        onDelete: "CASCADE",
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE'
       },
-      road_segment_id: {
+      satellite_network_id: {
         type: Sequelize.UUID,
         allowNull: false,
-        references: {
-          model: 'roadsegments',
+        reference: {
+          model: 'SatelliteNetworks',
           key: 'id'
         },
-        onUpdate: "CASCADE",
-        onDelete: "CASCADE",
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE'
       },
-      road_safety_feature_id: {
+      network_type_id: {
         type: Sequelize.UUID,
         allowNull: false,
-        references: {
+        reference: {
           model: 'ProjectMasterData',
           key: 'id'
         },
-        onUpdate: "CASCADE",
-        onDelete: "CASCADE",
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE'
       },
-      safety_feature_condition: {
+      total_bandwidth: {
+        type: Sequelize.DOUBLE
+      },
+      users_number: {
+        type: Sequelize.INTEGER
+      },
+      remark: {
         type: Sequelize.STRING
-      },
-      description:{
-        type: Sequelize.TEXT
       },
       createdAt: {
         allowNull: false,
@@ -62,6 +67,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('RoadSafetyFeatures');
+    await queryInterface.dropTable('SatelliteNetworkCapacities');
   }
 };

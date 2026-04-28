@@ -41,7 +41,6 @@ const getRecordById = async (model, req, res, include = []) => {
     try {        
       const body = req.body;
       // check for unique attribute values
-
       if(uniqueAttribute){
         const existingRecord = await model.findOne({
           where: {

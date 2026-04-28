@@ -360,6 +360,7 @@ const mainanalysismodules = {
     "HydrologyDefect",
     "RoadSafetyFeature",
     "CountType",
+    "CulvertType",
     "ProjectPhase",
     "InspectionType",
     "CurrentCondition",

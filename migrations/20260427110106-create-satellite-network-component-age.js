@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('RoadSafetyFeatures', {
+    await queryInterface.createTable('SatelliteNetworkComponentAges', {
       id: {
         type: Sequelize.UUID,
         primaryKey: true,
@@ -11,9 +11,11 @@ module.exports = {
       parent_id: {
         type: Sequelize.UUID,
         references: {
-          model: 'RoadSafetyFeatures',
-        key: 'id'
-        }
+          model: 'SatelliteNetworkComponentAges',
+          key: 'id'
+        },
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE'
       },
       project_id: {
         type: Sequelize.UUID,
@@ -21,35 +23,38 @@ module.exports = {
         references: {
           model: 'projects',
           key: 'id'
-        },
-        onUpdate: "CASCADE",
-        onDelete: "CASCADE",
+        },  
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE'
       },
-      road_segment_id: {
+      
+      satellite_network_id: {
         type: Sequelize.UUID,
         allowNull: false,
         references: {
-          model: 'roadsegments',
+          model: 'SatelliteNetworks',
           key: 'id'
         },
-        onUpdate: "CASCADE",
-        onDelete: "CASCADE",
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE'
       },
-      road_safety_feature_id: {
-        type: Sequelize.UUID,
-        allowNull: false,
-        references: {
-          model: 'ProjectMasterData',
-          key: 'id'
-        },
-        onUpdate: "CASCADE",
-        onDelete: "CASCADE",
+      cell_towers: {
+        type: Sequelize.INTEGER
       },
-      safety_feature_condition: {
+      antennas: {
+        type: Sequelize.INTEGER
+      },
+      base_stations: {
+        type: Sequelize.INTEGER
+      },
+      repeaters: {
+        type: Sequelize.INTEGER
+      },
+      switches: {
+        type: Sequelize.INTEGER
+      },
+      others: {
         type: Sequelize.STRING
-      },
-      description:{
-        type: Sequelize.TEXT
       },
       createdAt: {
         allowNull: false,
@@ -62,6 +67,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('RoadSafetyFeatures');
+    await queryInterface.dropTable('SatelliteNetworkComponentAges');
   }
 };

@@ -2481,6 +2481,74 @@ const internetConnectionValidate = async (req, res, next) => {
   await validateReply.validateReply(req.body, validationRule, res, next);
 };
 
+const SatelliteNetworkCapacityValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+
+  const validationRule = {
+    project_id: "required|string",
+    satellite_network_id: "required|string",
+    network_type_id: "required|string",
+    total_bandwidth: "numeric",
+    users_number: "integer",
+    remark: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
+
+const SatelliteNetworkComponentAgeValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+
+  const validationRule = {
+    project_id: "required|string",
+    satellite_network_id: "required|string",
+    cell_towers: "integer",
+    antennas: "integer",
+    base_stations: "integer",
+    repeaters: "integer",
+    switches: "integer",
+    others: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
+const satelliteNetworkCoverageValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+
+  const validationRule = {
+    project_id: "required|string",
+    satellite_network_id: "required|string",
+    network_infrastructure_type_id: "required|string",
+    total_coverage_area: "numeric",
+    coverage_population_no: "integer",
+    active_users_no: "integer",
+    average_download_speed: "numeric",
+    average_upload_speed: "numeric",
+    signal_strength: "numeric",
+    others: "string"
+
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
 const satelliteNetworkComponentManufacturerValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
   if (param === "failed") {
@@ -3533,7 +3601,7 @@ const culvertStructuralInformationValidate = async (req, res, next) => {
   const validationRule = {
     project_id: "required|string",
     name: "required|string",
-    culvert_type: "string",
+    culvert_type_id: "required|string",
     culvert_barrel_length: "numeric",
     culvert_height: "numeric",
     opening_number: "integer",
@@ -3654,9 +3722,12 @@ const roadSafetyFeatureValidate = async (req, res, next) => {
     });
   }
   const validationRule = {
-    project_type_id: "required|string",
-    title: "required|string",
+    project_id: "required|string",  
+    road_segment_id: "required|string",
+    road_safety_feature_id: "required|string",
+    safety_feature_condition: "string",
     description: "string",
+    
   };
   await validateReply.validateReply(req.body, validationRule, res, next);
 };
@@ -4097,9 +4168,13 @@ const designStandardValidate = async (req, res, next) => {
     });
   }
   const validationRule = {
-    project_type_id: "required|string",
-    title: "required|string",
-    description: "string",
+    project_id: "required|string",
+    functional_classification_id: "required|string",
+    design_classification_id: "required|string",
+    design_standard_id: "required|string",
+    design_traffic_flow_id: "required|string",
+    design_life_time_years: "required|numeric",
+    segment_number: "required|integer",
   };
 
   await validateReply.validateReply(req.body, validationRule, res, next);
@@ -4969,6 +5044,9 @@ module.exports = {
   internetConnectionInfrastructureManufacturerValidate,
   internetConnectionInfrastructureAgeValidate,
   internetConnectionValidate,
+  SatelliteNetworkCapacityValidate,
+  SatelliteNetworkComponentAgeValidate,
+  satelliteNetworkCoverageValidate,
   satelliteNetworkComponentManufacturerValidate,
 
   satelliteInfrastructureAgeValidate,

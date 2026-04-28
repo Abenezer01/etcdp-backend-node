@@ -1,4 +1,4 @@
-const { DesignStandard  , Sequelize } = require("../../models");
+const { DesignStandard, ProjectMasterData, Sequelize } = require("../../models");
 const Op = Sequelize.Op;
 const dotenv = require("dotenv");
 dotenv.config();
@@ -9,7 +9,27 @@ let self = {};
 
 self.getAll = async (req, res) => {
   try {
-    const paginatedResult = await paginationHelper(DesignStandard , req);
+  
+    //includes 
+    const includeOptions = [
+      {
+        model: ProjectMasterData,
+        as: 'functionalClassification'
+      },
+      {
+        model: ProjectMasterData,
+        as: 'designClassification'
+      },
+      {
+        model: ProjectMasterData,
+        as: 'designStandard'
+      },
+      {
+        model: ProjectMasterData,
+        as: 'designTrafficFlow'
+      }
+    ]
+    const paginatedResult = await paginationHelper(DesignStandard , req, [], includeOptions);
 
     // Use the response formatter to send the success response
     res.apiSuccess({

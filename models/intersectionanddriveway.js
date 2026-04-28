@@ -11,6 +11,20 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      IntersectionAndDriveway.belongsTo(models.RoadSegment, {
+        foreignKey: 'road_segment_id',
+        as: 'roadSegment'
+      })
+      
+      IntersectionAndDriveway.belongsTo(models.ProjectMasterData, {
+        foreignKey: 'intersection_type_id',
+        as: 'intersectionType'
+      })
+
+      IntersectionAndDriveway.belongsTo(models.ProjectMasterData, {
+        foreignKey: 'driveway_access_point_id',
+        as: 'drivewayAccessPoint'
+      })
     }
   }
   IntersectionAndDriveway.init({

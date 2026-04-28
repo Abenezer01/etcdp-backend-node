@@ -1,4 +1,4 @@
-const { RailwayTrackSafety  , Sequelize } = require("../../models");
+const { RailwayTrackSafety, ProjectMasterData, Sequelize } = require("../../models");
 const Op = Sequelize.Op;
 const dotenv = require("dotenv");
 dotenv.config();
@@ -8,9 +8,28 @@ const { getRecordById, saveRecord, updateRecord, deleteRecord } = require("../ut
 let self = {};
 
 self.getAll = async (req, res) => {
-  try {
-    const paginatedResult = await paginationHelper(RailwayTrackSafety , req);
+  try { 
 
+    // let data = await RailwayTrackSafety.findAll();
+    // return res.json(data);
+  
+    //includes
+    const includeOptions = [
+        {
+          model: ProjectMasterData,
+          as: 'railwayTrackSafetyMeasure'
+        },
+        { 
+          model: ProjectMasterData,
+          as: 'trackInspectionFrequency'
+        }
+      ];
+
+ 
+    const paginatedResult = await paginationHelper(RailwayTrackSafety , req,[], includeOptions);
+
+
+    // return res.json(paginatedResult.data)
     // Use the response formatter to send the success response
     res.apiSuccess({
       data: paginatedResult.data,

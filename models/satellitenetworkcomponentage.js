@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class RoadDrainage extends Model {
+  class SatelliteNetworkComponentAge extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -11,13 +11,13 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      RoadDrainage.belongsTo(models.ProjectMasterData, {
-        foreignKey: 'current_condition_id',
-        as: 'currentCondition'
-      })
+      SatelliteNetworkComponentAge.belongsTo(models.SatelliteNetwork, {
+        foreignKey: "satellite_network_id",
+        as: "satelliteNetwork"
+      });
     }
   }
-  RoadDrainage.init({
+  SatelliteNetworkComponentAge.init({
     id: {
       type: DataTypes.UUID,
       primaryKey: true,
@@ -28,28 +28,22 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.UUID,
       allowNull: false,
     },
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    length: DataTypes.DOUBLE,
-    height: DataTypes.DOUBLE,
-    width: DataTypes.DOUBLE,
-    current_condition_id: {
+    satellite_network_id: {
       type: DataTypes.UUID,
       allowNull: false,
     },
-    weight_limit: DataTypes.DOUBLE,
-    design_life_span: DataTypes.INTEGER,
-    inspection_frequency: DataTypes.INTEGER,
-    construction_completion_year: DataTypes.INTEGER,
-    remark: DataTypes.TEXT
+    cell_towers: DataTypes.INTEGER,
+    antennas: DataTypes.INTEGER,
+    base_stations: DataTypes.INTEGER,
+    repeaters: DataTypes.INTEGER,
+    switches: DataTypes.INTEGER,
+    others: DataTypes.STRING
   }, {
     createdAt: 'created_at',
     updatedAt: 'updated_at',
     sequelize,
-    modelName: 'RoadDrainage',
-    tableName: 'RoadDrainages',
+    modelName: 'SatelliteNetworkComponentAge',
+    tableName: 'SatelliteNetworkComponentAges',
   });
-  return RoadDrainage;
+  return SatelliteNetworkComponentAge;
 };

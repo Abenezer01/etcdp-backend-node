@@ -244,7 +244,11 @@ const SatelliteInfrastructureManufacturerController = require("../../../controll
 const MobileNetworkCapacityController = require("../../../controllers/projects/MobileNetworkCapacityController.js");
 const MobileNetworkCoverageController = require("../../../controllers/projects/MobileNetworkCoverageController.js");
 const MachineryInformationController = require("../../../controllers/project/MachineryInformationController.js");
-
+const DesignStandardController = require("../../../controllers/projects/DesignStandardController.js");
+const RoadSafetyFeatureController = require("../../../controllers/projects/RoadSafetyFeatureController.js");
+const SatelliteNetworkCoverageController = require("../../../controllers/projects/SatelliteNetworkCoverageController.js")
+const SatelliteNetworkComponentAgeController = require("../../../controllers/projects/SatelliteNetworkComponentAgeController.js")
+const SatelliteNetworkCapacityController = require("../../../controllers/projects/SatelliteNetworkCapacityController.js")
 
 const validateData = require("../../../middleware/validate/module/project/validate");
 
@@ -2737,6 +2741,37 @@ module.exports = function (express) {
   // route.post("/machinery-information", validateData.machineryInformationValidate, MachineryInformationController.save);
   // route.put("/machinery-information/:id", validateData.machineryInformationValidate, MachineryInformationController.update);
   route.delete("/machinery-informations/:id", MachineryInformationController.delete);
+
+  route.get("/design-standards", DesignStandardController.getAll);
+  route.get("/design-standards/:id", DesignStandardController.get);
+  route.post("/design-standards", validateData.designStandardValidate, DesignStandardController.save);
+  route.put("/design-standards/:id", validateData.designStandardValidate, DesignStandardController.update);
+  route.delete("/design-standards/:id", DesignStandardController.delete);
+
+  route.get("/road-safety-features", RoadSafetyFeatureController.getAll);
+  route.get("/road-safety-features/:id", RoadSafetyFeatureController.get);
+  route.post("/road-safety-features", validateData.roadSafetyFeatureValidate, RoadSafetyFeatureController.save);
+  route.put("/road-safety-features/:id", validateData.roadSafetyFeatureValidate, RoadSafetyFeatureController.update);
+  route.delete("/road-safety-features/:id", RoadSafetyFeatureController.delete);
+
+  route.get("/satellite-network-coverages", SatelliteNetworkCoverageController.getAll);
+  route.get("/satellite-network-coverages/:id", SatelliteNetworkCoverageController.get);
+  route.post("/satellite-network-coverages", validateData.satelliteNetworkCoverageValidate, SatelliteNetworkCoverageController.save);
+  route.put("/satellite-network-coverages/:id", validateData.satelliteNetworkCoverageValidate, SatelliteNetworkCoverageController.update);
+  route.delete("/satellite-network-coverages/:id", SatelliteNetworkCoverageController.delete);
+
+  route.get("/satellite-network-component-ages", SatelliteNetworkComponentAgeController.getAll);
+  route.get("/satellite-network-component-ages/:id", SatelliteNetworkComponentAgeController.get);
+  route.post("/satellite-network-component-ages", validateData.SatelliteNetworkComponentAgeValidate, SatelliteNetworkComponentAgeController.save);
+  route.put("/satellite-network-component-ages/:id", validateData.SatelliteNetworkComponentAgeValidate, SatelliteNetworkComponentAgeController.update);
+  route.delete("/satellite-network-component-ages/:id", SatelliteNetworkComponentAgeController.delete);
+  
+  // SatelliteNetworkCapacity routes
+  route.get("/satellite-network-capacities", SatelliteNetworkCapacityController.getAll);
+  route.get("/satellite-network-capacities/:id", SatelliteNetworkCapacityController.get);
+  route.post("/satellite-network-capacities", validateData.SatelliteNetworkCapacityValidate, SatelliteNetworkCapacityController.save);
+  route.put("/satellite-network-capacities/:id", validateData.SatelliteNetworkCapacityValidate, SatelliteNetworkCapacityController.update);
+  route.delete("/satellite-network-capacities/:id", SatelliteNetworkCapacityController.delete);
 
   route.get(
     "/mapping/:id", ProjectController.getCategoryMapping);

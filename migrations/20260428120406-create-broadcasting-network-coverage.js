@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('DesignStandards', {
+    await queryInterface.createTable('BroadcastingNetworkCoverages', {
       id: {
         type: Sequelize.UUID,
         primaryKey: true,
@@ -11,10 +11,12 @@ module.exports = {
       parent_id: {
         type: Sequelize.UUID,
         references: {
-          model: 'DesignStandards',
+          model: 'BroadcastingNetworkCoverages',
           key: 'id'
-        }
-      },
+        },
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE'
+      },  
       project_id: {
         type: Sequelize.UUID,
         allowNull: false,
@@ -22,57 +24,49 @@ module.exports = {
           model: 'projects',
           key: 'id'
         },
-        onUpdate: "CASCADE",
-        onDelete: "CASCADE"
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE'
       },
-      functional_classification_id: {
+      broadcasting_network_id: {
+        type: Sequelize.UUID,
+        allowNull: false,
+        references: {
+          model: 'BroadcastingNetworks',
+          key: 'id'
+        },
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE'
+      },
+      network_infrastructure_type_id: {
         type: Sequelize.UUID,
         allowNull: false,
         references: {
           model: 'ProjectMasterData',
           key: 'id'
         },
-        onUpdate: "CASCADE",
-        onDelete: "CASCADE"
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE'
       },
-      design_classification_id: {
-        type: Sequelize.UUID,
-        allowNull: false,
-        references: {
-          model: 'ProjectMasterData',
-          key: 'id'
-        },
-        onUpdate: "CASCADE",
-        onDelete: "CASCADE"
-      },
-      design_standard_id: {
-        type: Sequelize.UUID,
-        allowNull: false,
-        references: {
-          model: 'ProjectMasterData',
-          key: 'id'
-        },
-        onUpdate: "CASCADE",
-        onDelete: "CASCADE"
-      },
-      design_traffic_flow_id: {
-        type: Sequelize.UUID,
-        allowNull: false,
-        references: {
-          model: 'ProjectMasterData',
-          key: 'id'
-        },
-        onUpdate: "CASCADE",
-        onDelete: "CASCADE"
-      },
-      design_life_time_years: {
+      total_coverage_area: {
         type: Sequelize.DOUBLE
       },
-      segment_number: {
+      coverage_population_no: {
         type: Sequelize.INTEGER
       },
-      remark: {
-        type: Sequelize.TEXT
+      active_users_no: {
+        type: Sequelize.INTEGER
+      },
+      average_download_speed: {
+        type: Sequelize.DOUBLE
+      },
+      average_upload_speed: {
+        type: Sequelize.DOUBLE
+      },
+      signal_strength: {
+        type: Sequelize.DOUBLE
+      },
+      others: {
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,
@@ -85,6 +79,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('DesignStandards');
+    await queryInterface.dropTable('BroadcastingNetworkCoverages');
   }
 };

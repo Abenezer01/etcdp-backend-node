@@ -16,6 +16,7 @@ const {
   ProjectExtensionTime,
   Payment,
   ProjectContractDataOverview,
+  ProjectMasterData,
   Department,
   sequelize,
   Sequelize,
@@ -140,7 +141,7 @@ self.getAllCPMProject = async(req, res) => {
 // };
 
 self.getAll = async (req, res) => {
-
+  
   try {
 
 
@@ -148,33 +149,33 @@ self.getAll = async (req, res) => {
         const usr = await usrData.userData(req, res);
 
         // 2. Determine the desired filtering mode
-        // const fetchCompleted = req.query.status === "infrastructure";
+        const fetchCompleted = req.query.status === "infrastructure";
         
-        //  const latestStatusSubQuery = fetchCompleted
-        //   ? literal(`(
-        //       -- Select project IDs where the LATEST status is 'Completed'
-        //       SELECT ps.project_id
-        //       FROM projectstatuses ps
-        //       JOIN ProjectMasterData s ON s.id = ps.status_id
-        //       WHERE s.title = 'Completed' And s.model = 'projectStatus'
-        //       AND ps.created_at = (
-        //           SELECT MAX(ps2.created_at)
-        //           FROM projectstatuses ps2
-        //           WHERE ps2.project_id = ps.project_id
-        //       )
-        //   )`)
-        //   : literal(`(
-        //       -- Select project IDs where the LATEST status is NOT 'Completed'
-        //       SELECT ps.project_id
-        //       FROM projectstatuses ps
-        //       JOIN ProjectMasterData s ON s.id = ps.status_id
-        //       WHERE ps.created_at = (
-        //           SELECT MAX(ps2.created_at)
-        //           FROM projectstatuses ps2
-        //           WHERE ps2.project_id = ps.project_id
-        //       )
-        //       AND s.title <> 'Completed'
-        //   )`);
+        const latestStatusSubQuery = fetchCompleted
+          ? literal(`(
+              -- Select project IDs where the LATEST status is 'Completed'
+              SELECT ps.project_id
+              FROM projectstatuses ps
+              JOIN ProjectMasterData s ON s.id = ps.status_id
+              WHERE s.title = 'Completed' And s.model = 'projectStatus'
+              AND ps.created_at = (
+                  SELECT MAX(ps2.created_at)
+                  FROM projectstatuses ps2
+                  WHERE ps2.project_id = ps.project_id
+              )
+          )`)
+          : literal(`(
+              -- Select project IDs where the LATEST status is NOT 'Completed'
+              SELECT ps.project_id
+              FROM projectstatuses ps
+              JOIN ProjectMasterData s ON s.id = ps.status_id
+              WHERE ps.created_at = (
+                  SELECT MAX(ps2.created_at)
+                  FROM projectstatuses ps2
+                  WHERE ps2.project_id = ps.project_id
+              )
+              AND s.title <> 'Completed'
+          )`);
 
 
         // // 3. Construct the subquery to find project IDs with the latest status matching the criteria
@@ -183,7 +184,7 @@ self.getAll = async (req, res) => {
         //         -- Select project IDs where the LATEST status is 'Completed'
         //         SELECT ps.project_id
         //         FROM projectstatuses ps
-        //         JOIN statuses s ON s.id = ps.status_id
+        //         JOIN ProjectMasterData s ON s.id = ps.status_id
         //         WHERE s.title = 'Completed'
         //         AND ps.created_at = (
         //             SELECT MAX(ps2.created_at)
@@ -194,8 +195,8 @@ self.getAll = async (req, res) => {
         //     : literal(`(
         //         -- Select project IDs where the LATEST status is NOT 'Completed'
         //         SELECT ps.project_id
-        //         FROM projectstatuses ps
-        //         JOIN statuses s ON s.id = ps.status_id
+        //         FROM projectstatuses ps  
+        //         JOIN ProjectMasterData s ON s.id = ps.status_id
         //         WHERE ps.created_at = (
         //             SELECT MAX(ps2.created_at)
         //             FROM projectstatuses ps2
@@ -218,35 +219,30 @@ self.getAll = async (req, res) => {
         const whereCondition = {
             department_id: { [Op.in]: [usr.departmentID, ...childrenIDs] },
             // Filter by the project IDs returned by the subquery
-            // id: {
-            //     [Op.in]: latestStatusSubQuery
-            // }
+            id: {
+                [Op.in]: latestStatusSubQuery
+            }
         };
 
         // 5. Define inclusion options to fetch all statuses for post-processing
-        // const includeOptions = [
-        //     {
-        //         model: ProjectStatus,
-        //         as: "projectstatuses",
-        //         include: [
-        //             {
-        //                 model: Status,
-        //                 as: "status",
-        //                 attributes: ["title"]
-        //             }
-        //         ]
-        //     }
-        // ];
+        const includeOptions = [
+            {
+                model: ProjectStatus,
+                as: "projectstatuses",
+                include: [
+                    {
+                        model: ProjectMasterData,
+                        as: "status",
+                        attributes: ["title"]
+                    }
+                ]
+            }
+        ];
 
         // 6. Fetch the paginated results
 
 
-        const paginatedResult = await paginationHelper(Project, req, whereCondition);
-        // return res.json(paginatedResult)
-        res.apiSuccess({
-      data: paginatedResult.data,
-      total: paginatedResult.total,
-    }, paginatedResult.pagination);
+        const paginatedResult = await paginationHelper(Project, req, whereCondition, includeOptions);
 
         let arr = paginatedResult.data;
 
@@ -256,6 +252,8 @@ self.getAll = async (req, res) => {
                 total: 0
             });
         }
+
+        // return res.json(arr)
         
         let projectWithStatus = [];
 
@@ -272,6 +270,35 @@ self.getAll = async (req, res) => {
             // Attach the latest status details
             projectData.status_id = latestStatusRecord.status_id;
             projectData.status_title = latestStatusRecord.status.title;
+            
+            ProjectContractDataOverview.removeAttribute('id');
+            const projectDataOverview = await ProjectContractDataOverview.findOne({
+              where: { project_id: project.id}
+            });
+
+            // if (!project) return res.apiError("Project not found");
+
+            // Compute derived values
+            const used_time = projectDataOverview.commencement_date
+              ? moment().diff(projectDataOverview.commencement_date, 'days')
+              : null;
+
+            const completion_date = projectDataOverview.commencement_date
+              ? moment(projectDataOverview.commencement_date)
+                  .add(projectDataOverview.original_contract_duration + project.total_extension_days, 'days')
+              : null;
+
+            const spi = (projectDataOverview.actual_financial_performance / (projectDataOverview.planned_financial_performance || 1)) * 100;
+            const cpi = (projectDataOverview.actual_financial_performance / (projectDataOverview.actual_cost || 1)) * 100;
+            const sv = projectDataOverview.actual_financial_performance - projectDataOverview.planned_financial_performance;
+            const cv = projectDataOverview.actual_financial_performance - projectDataOverview.actual_cost;
+
+            projectData.elapsed_time = used_time;
+            // projectData.completion_date = completion_date;
+            projectData.spi = spi;
+            projectData.cpi = cpi;
+            // projectData.sv = sv;
+            // projectData.cv = cv;
             
             // Clean up the large statuses array before sending (optional but recommended)
             delete projectData.projectstatuses; 
@@ -732,6 +759,7 @@ self.getProjectDetail = async (req, res) => {
       }),
     ]);
 
+
     let client = clientStake
       ? await self.getStakeholderName(clientStake.stakeholder_id)
       : null;
@@ -743,7 +771,7 @@ self.getProjectDetail = async (req, res) => {
       : null;
 
     let stat = proStatus
-      ? await Status.findOne({ where: { id: proStatus.status_id } })
+      ? await ProjectMasterData.findOne({ where: { id: proStatus.status_id } })
       : null;
 
     return res.apiSuccess({

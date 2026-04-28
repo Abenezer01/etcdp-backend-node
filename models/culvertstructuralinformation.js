@@ -15,6 +15,42 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'culvert_id',
         as: 'culvert'
       })
+
+      CulvertStructuralInformation.belongsTo(models.ProjectMasterData, {
+        foreignKey: 'culvert_type_id',
+        as: 'culvertType'
+      }) 
+
+      CulvertStructuralInformation.belongsTo(models.ProjectMasterData, {
+        foreignKey: 'pier_type_id',
+        as: 'pierType'
+      }) 
+
+      CulvertStructuralInformation.belongsTo(models.ProjectMasterData, {
+        foreignKey: 'abutment_type_id',
+        as: 'abutmentType'
+      }) 
+
+      CulvertStructuralInformation.belongsTo(models.ProjectMasterData, {
+        foreignKey: 'endwall_type_inlet_id',
+        as: 'endwallTypeInlet'
+      }) 
+
+      CulvertStructuralInformation.belongsTo(models.ProjectMasterData, {
+        foreignKey: 'endwall_type_outlet_id',
+        as: 'endwallTypeOutlet'
+      }) 
+
+      CulvertStructuralInformation.belongsTo(models.ProjectMasterData, {
+        foreignKey: 'paved_water_way_type_id',
+        as: 'pavedWaterWayType'
+      })
+
+      CulvertStructuralInformation.belongsTo(models.ProjectMasterData, {
+        foreignKey: 'soil_type_id',
+        as: 'soilType'
+      })  
+
     }
   }
   CulvertStructuralInformation.init({
@@ -32,7 +68,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.UUID,
       allowNull: false,
     },
-    culvert_type: DataTypes.STRING,
+    culvert_type_id: {
+      type: DataTypes.UUID,
+      allowNull: false,
+    },
     culvert_barrel_length: DataTypes.DOUBLE,
     culvert_height: DataTypes.DOUBLE,
     opening_number: DataTypes.INTEGER,

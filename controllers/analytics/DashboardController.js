@@ -1265,7 +1265,7 @@ self.getDepartmentDistributionPerType = async (req, res) => {
                     [Op.in]: literal(`(
                         SELECT ps.project_id
                         FROM projectstatuses ps
-                        JOIN statuses s ON s.id = ps.status_id
+                        JOIN ProjectMasterData s ON s.id = ps.status_id
                         WHERE s.title ${operator} 'Completed'
                         AND ps.created_at = (
                             SELECT MAX(ps2.created_at)
@@ -1387,7 +1387,7 @@ self.getDepartmentDistributionPerSubCategory = async (req, res) => {
                     [Op.in]: literal(`(
                         SELECT ps.project_id
                         FROM projectstatuses ps
-                        JOIN statuses s ON s.id = ps.status_id
+                        JOIN ProjectMasterData s ON s.id = ps.status_id
                         WHERE s.title ${operator} 'Completed'
                         AND ps.created_at = (
                             SELECT MAX(ps2.created_at)

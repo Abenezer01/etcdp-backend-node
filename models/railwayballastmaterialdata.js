@@ -11,6 +11,20 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      RailwayBallastMaterialData.belongsTo(models.ProjectMasterData, {
+        foreignKey: 'ballast_material_type_id',
+        as: 'ballastMaterialType'
+      })
+
+      RailwayBallastMaterialData.belongsTo(models.ProjectMasterData, {
+        foreignKey: 'ballast_source_id',
+        as: 'ballastSource'
+      })
+
+      RailwayBallastMaterialData.belongsTo(models.ProjectMasterData, {
+        foreignKey: 'compaction_method_id',
+        as: 'compactionMethod'
+      })
     }
   }
   RailwayBallastMaterialData.init({

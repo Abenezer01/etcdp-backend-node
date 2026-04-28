@@ -37,9 +37,16 @@ module.exports = {
         onUpdate: "CASCADE",
         onDelete: "CASCADE"
       },
-      culvert_type: {
-        type: Sequelize.STRING
-      },
+      culvert_type_id: {
+        type: Sequelize.UUID,
+        allowNull: false,
+        references: {
+          model: 'ProjectMasterData',
+          key: 'id'
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE"
+      },  
       culvert_barrel_length: {
         type: Sequelize.DOUBLE
       },
