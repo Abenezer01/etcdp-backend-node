@@ -9,3 +9,5 @@
 # /config/config.json
 /controllers/TestController.js
 /config/config.json
+token
+token.pub
