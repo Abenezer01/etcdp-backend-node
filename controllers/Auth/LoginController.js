@@ -12,7 +12,7 @@ const {
 
 const dotenv = require("dotenv");
 dotenv.config();
-
+const { rateLimit } = require('express-rate-limit');
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
@@ -29,10 +29,44 @@ const REFRESH_TOKEN_KEY = process.env.REFRESH_TOKEN_KEY;
 // NOTE: REFRESH_TOKEN_KEY is not strictly needed if using the opaque token approach, 
 // but is kept here if you want to sign the access token and refresh token differently.
 
+/**
+ * 1. IP-BASED RATE LIMITER (Middleware)
+ * Prevents a single IP from hammering the login endpoint.
+ */
+const loginRateLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 10, // Limit each IP to 10 login requests per window
+  message: {
+    _errors: { message: ["Too many login attempts from this IP. Please try again after 15 minutes."] }
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+/**
+ * 2. ACCOUNT LOCKOUT LOGIC (Internal Helper)
+ */
+
+  const LOCKOUT_LIMIT = 5;
+  const LOCKOUT_DURATION_MINS = 15;
+  const checkAccountLockout = async (userId) => {
+  const user = await User.findOne({
+      where: {
+          id: userId,
+      }
+});
+  if (user.locked_until && user.locked_until > new Date()) {
+    const remaining = Math.ceil((user.locked_until - new Date()) / 60000);
+    throw new Error(`Account locked. Please try again in ${remaining} minutes.`);
+  } 
+  return user;
+};
+
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
   try {
+    
     const encryptedEmail = cipherHelper.encrypt(email);
 
     const usEmail = await UserEmail.findOne({
@@ -54,6 +88,22 @@ const loginUser = async (req, res) => {
       return res.apiError("User account not activated or does not exist."); 
     }
 
+    // 1. CHECK IF ACCOUNT IS LOCKED
+    if (usr.locked_until && usr.locked_until > new Date()) {
+      const remainingTime = Math.ceil((usr.locked_until - new Date()) / 60000);
+      const errorResponse = {
+        _links: { previousPage: null, nextPage: null },
+        _warning: [],
+        payload: [],
+        _attributes: {},
+        _errors: {
+          message: [`Account is temporarily locked. Try again in ${remainingTime} minutes`]
+        },
+        _generated: new Date().toISOString()
+      };
+      return res.status(401).json(errorResponse);
+
+    }
     const [usPos, usPhone] = await Promise.all([
       UserPosition.findOne({ where: { user_id: usEmail.user_id } }),
       UserPhone.findOne({ where: { user_id: usEmail.user_id, is_primary: true } })
@@ -84,9 +134,37 @@ const loginUser = async (req, res) => {
       user_position_id: usPos.id,
       is_checked: !!action,
       profile_completed: !!profile_pic,
+      failed_login_attempts: usr.failed_login_attempts,
+      locked_until: usr.locked_until,
     };
 
     const auth = bcrypt.compareSync(password, usr.password);
+
+    if (!auth) {
+      // 2. TRACK FAILED ATTEMPT
+      const newFailCount = (usr.failed_login_attempts || 0) + 1;
+      let updateData = { failed_login_attempts: newFailCount };
+
+      // 3. APPLY LOCKOUT AFTER 5 FAILURES
+      if (newFailCount >= 5) {
+        updateData.locked_until = new Date(Date.now() + 15 * 60 * 1000); // Lock for 15 mins
+        updateData.failed_login_attempts = 0; // Reset counter for next cycle
+      }
+
+      await usr.update(updateData);
+
+      const errorResponse = {
+        _links: { previousPage: null, nextPage: null },
+        _warning: [],
+        payload: [],
+        _attributes: {},
+        _errors: {
+          message: ["Invalid email or password. Remaining attempts: " +Math.max(0, 5 - newFailCount)]
+        },
+        _generated: new Date().toISOString()
+      };
+      return res.status(401).json(errorResponse);
+    }
 
     if (!auth) {
       const errorResponse = {
@@ -102,6 +180,12 @@ const loginUser = async (req, res) => {
       return res.status(401).json(errorResponse);
     }
 
+    // 4. SUCCESS: RESET LOCKOUT ATTRIBUTES
+    await usr.update({ 
+      failed_login_attempts: 0, 
+      locked_until: null 
+    });
+
     // --- TOKEN GENERATION LOGIC ---
 
     const userPayload = {
@@ -113,7 +197,7 @@ const loginUser = async (req, res) => {
     };
 
     // 1. ACCESS TOKEN: Short-lived, signed JWT for API access
-    const accessToken = jwt.sign(userPayload, ACCESS_TOKEN_KEY, { expiresIn: "12h" }); 
+    const accessToken = jwt.sign(userPayload, ACCESS_TOKEN_KEY, { expiresIn: "15m" }); 
     
     // 2. REFRESH TOKEN: Long-lived, random string stored in the database
     // This is the CRITICAL change for security and proper expiration management.

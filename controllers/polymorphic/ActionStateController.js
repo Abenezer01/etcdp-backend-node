@@ -18,8 +18,6 @@ const { getRecordById, saveRecord, updateRecord, deleteRecord } = require("../ut
 self.getAll = async (req, res) => {
   try {
 
-    let data = await ActionState.findAll();
-    return res.json(data);
     const paginatedResult = await paginationHelper(ActionState, req);
 
     // Use the response formatter to send the success response

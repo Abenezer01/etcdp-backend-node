@@ -11,6 +11,18 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      RailwayTrackConditionAssessment.belongsTo(models.RailwayTrackData, {
+        foreignKey: 'railway_track_data_id',
+        as: 'railwayTrackData'
+      });
+      RailwayTrackConditionAssessment.belongsTo(models.ProjectMasterData, {
+        foreignKey: 'track_condition_rating_id',
+        as: 'trackConditionRating'
+      });
+      RailwayTrackConditionAssessment.belongsTo(models.ProjectMasterData, {
+        foreignKey: 'observed_defects_id',
+        as: 'observedDefects'
+      });
     }
   }
   RailwayTrackConditionAssessment.init({
@@ -21,6 +33,10 @@ module.exports = (sequelize, DataTypes) => {
     },
     parent_id: DataTypes.UUID,
     project_id: {
+      type: DataTypes.UUID,
+      allowNull: false,
+    },
+    railway_track_data_id : {
       type: DataTypes.UUID,
       allowNull: false,
     },

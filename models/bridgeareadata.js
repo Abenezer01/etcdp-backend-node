@@ -15,6 +15,10 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'bridge_id',
         as: 'bridge'
       })
+      BridgeAreaData.belongsTo(models.ProjectMasterData, {
+        foreignKey: 'area_topography_id',
+        as: 'areaTopography'
+      })
     }
   }
   BridgeAreaData.init({

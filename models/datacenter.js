@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       DataCenter.belongsTo(models.ProjectMasterData, {
         foreignKey: "data_center_type_id",
-        as: "datacentertype"
+        as: "dataDenterType"
       })
     }
   }
@@ -27,6 +27,9 @@ module.exports = (sequelize, DataTypes) => {
     project_id: {
       type: DataTypes.UUID,
       allowNull: false,
+    },
+    name: {
+      type: DataTypes.STRING
     },
     data_center_type_id: {
       type: DataTypes.UUID,

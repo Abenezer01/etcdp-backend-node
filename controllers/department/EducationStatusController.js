@@ -1,4 +1,4 @@
-const { EducationStatus, StudyField, Sequelize } = require("../../models");
+const { EducationStatus, StakeholderMasterData, Sequelize } = require("../../models");
 const paginationHelper = require("../utils/pagination-helper");
 const { getRecordById, saveRecord, updateRecord, deleteRecord } = require("../utils/format-helper");
 
@@ -14,9 +14,14 @@ self.getAll = async (req, res) => {
 
     const includeOptions = [
       {
-          model: StudyField,
+          model: StakeholderMasterData,
           as: "studyField"
       },
+      {
+        model: StakeholderMasterData,
+        as: "studyLevel"
+      },
+      
     ];
     const paginatedResult = await paginationHelper(EducationStatus, req, whereCondition, includeOptions);
 

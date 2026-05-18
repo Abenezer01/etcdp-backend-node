@@ -10,7 +10,11 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      // define association here  
+      RailwayPowerSupplyEnvironmentalAndOtherFactor.belongsTo(models.RailwayStationPlatformLayout, {
+        foreignKey: 'railway_station_platform_layout_id',
+        as: 'railwayStationPlatformLayout'
+      });
     }
   }
   RailwayPowerSupplyEnvironmentalAndOtherFactor.init({

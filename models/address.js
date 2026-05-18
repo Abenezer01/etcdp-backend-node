@@ -1,3 +1,4 @@
+
 "use strict";
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
@@ -7,8 +8,32 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate(/* models*/) {
+    static associate(models) {
       // define association here
+      Address.belongsTo(models.AddressMasterData, {
+        foreignKey: "country_id",
+        as: "country",
+      });
+      Address.belongsTo(models.AddressMasterData, {
+        foreignKey: "region_id",
+        as: "region",
+      });
+      Address.belongsTo(models.AddressMasterData, {
+        foreignKey: "city_id",
+        as: "city",
+      });
+      Address.belongsTo(models.AddressMasterData, {
+        foreignKey: "subcity_id",
+        as: "subcity",
+      });
+      Address.belongsTo(models.AddressMasterData, {
+        foreignKey: "woreda_id",
+        as: "woreda",
+      });
+      Address.belongsTo(models.AddressMasterData, {
+        foreignKey: "street_id",
+        as: "street",
+      });
     }
   }
   Address.init(
@@ -23,14 +48,13 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.UUID,
         allowNull: false,
       },
-      country: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      region: DataTypes.STRING,
-      city: DataTypes.STRING,
-      subcity: DataTypes.STRING,
-      street: DataTypes.STRING,
+      country_id: DataTypes.UUID,
+      region_id: DataTypes.UUID,
+      city_id: DataTypes.UUID,
+      subcity_id: DataTypes.UUID,
+      woreda_id: DataTypes.UUID,
+      kebele: DataTypes.UUID,
+      street_id: DataTypes.UUID,
       block_number: DataTypes.STRING,
       house_number: DataTypes.STRING,
       hq: DataTypes.BOOLEAN,

@@ -31,7 +31,7 @@ module.exports = {
         type: Sequelize.UUID,
         allowNull: false,
         references: {
-          model: "studyfields",
+          model: "StakeholderMasterData",
           key: "id",
         },
         onUpdate: "CASCADE",
@@ -40,8 +40,15 @@ module.exports = {
       school_name: {
         type: Sequelize.STRING
       },
-      education_level: {
-        type: Sequelize.STRING
+      study_level_id: {
+        type: Sequelize.UUID,
+        allowNull: false,
+        references: {
+          model: "StakeholderMasterData",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
       },
       program_type: {
         type: Sequelize.STRING,

@@ -11,6 +11,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      RailwayCommunicationSystem.belongsTo(models.ProjectMasterData, {
+        foreignKey: "communication_system_type_id",
+        as: "communicationSystemType",
+      });
     }
   }
   RailwayCommunicationSystem.init({
@@ -28,7 +32,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    communication_system_type: DataTypes.STRING,
+    communication_system_type_id: {
+      type: DataTypes.UUID,
+      allowNull: false,
+    },
     communication_system_protocols_or_standards: DataTypes.STRING,
     communication_system_components: DataTypes.STRING,
     signaling_system_components: DataTypes.STRING,

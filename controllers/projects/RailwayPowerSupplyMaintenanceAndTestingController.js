@@ -1,4 +1,4 @@
-const { RailwayPowerSupplyMaintenanceAndTesting , Sequelize } = require("../../models");
+const { RailwayPowerSupplyMaintenanceAndTesting,RailwayStationPlatformLayout, Sequelize } = require("../../models");
 const Op = Sequelize.Op;
 const dotenv = require("dotenv");
 dotenv.config();
@@ -8,8 +8,16 @@ const { getRecordById, saveRecord, updateRecord, deleteRecord } = require("../ut
 let self = {};
 
 self.getAll = async (req, res) => {
-  try {
-    const paginatedResult = await paginationHelper(RailwayPowerSupplyMaintenanceAndTesting , req);
+  try { 
+    const whereCondition = {};
+    // const includeOptions = [  
+    //   {
+    //     model: RailwayStationPlatformLayout,
+    //     as: 'RailwayStationPlatformLayout',
+    //   }
+    // ];
+      
+    const paginatedResult = await paginationHelper(RailwayPowerSupplyMaintenanceAndTesting, req, whereCondition);
 
     // Use the response formatter to send the success response
     res.apiSuccess({

@@ -11,6 +11,31 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+
+      MaintenanceHistory.belongsTo(models.RoadSegment, {
+        foreignKey: "road_segment_id",
+        as: "roadSegment",
+      });
+
+      MaintenanceHistory.belongsTo(models.ProjectMasterData, {
+        foreignKey: "maintenance_type_id",
+        as: "maintenanceType",
+      });
+      MaintenanceHistory.belongsTo(models.ProjectMasterData, {
+        foreignKey: "severity_level_id",
+        as: "severityLevel",
+      });
+
+      MaintenanceHistory.belongsTo(models.ProjectMasterData, {
+        foreignKey: "suggested_repair_id",
+        as: "suggestedRepair",
+      });
+
+      MaintenanceHistory.belongsTo(models.ProjectMasterData, {
+        foreignKey: "recommended_action_urgency_id",
+        as: "recommendedActionUrgency",
+      });
+
     }
   }
   MaintenanceHistory.init({
@@ -24,8 +49,8 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.UUID,
       allowNull: false,
     },
-    road_segment: {
-      type: DataTypes.STRING,
+    road_segment_id: {
+      type: DataTypes.UUID,
       allowNull: false,
     },
     last_maintenance_date: DataTypes.DATE,

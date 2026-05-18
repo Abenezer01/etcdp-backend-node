@@ -1,4 +1,4 @@
-const { CulvertRoadOverInformation, CulvertBasicData  , Sequelize } = require("../../models");
+const { CulvertRoadOverInformation, CulvertBasicData, ProjectMasterData, RoadSegment, Sequelize } = require("../../models");
 const Op = Sequelize.Op;
 const dotenv = require("dotenv");
 dotenv.config();
@@ -18,6 +18,14 @@ self.getAll = async (req, res) => {
       {
         model: CulvertBasicData,
         as: "culvert"
+      },
+      {
+        model: RoadSegment,
+        as: 'roadSegment'
+      },
+      {
+        model: ProjectMasterData,
+        as: "guardRailType"
       }
     ];
     

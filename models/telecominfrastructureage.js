@@ -11,6 +11,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      TelecomInfrastructureAge.belongsTo(models.TelecomInfrastructure, {
+        foreignKey: 'telecom_infrastructure_id',
+        as: 'telecomInfrastructure'
+      });
     }
   }
   TelecomInfrastructureAge.init({

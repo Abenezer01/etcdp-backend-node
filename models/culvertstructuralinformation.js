@@ -15,6 +15,10 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'culvert_id',
         as: 'culvert'
       })
+      CulvertStructuralInformation.belongsTo(models.RoadSegment, {
+        foreignKey: 'road_segment_id',
+        as: 'roadSegment'
+      });
 
       CulvertStructuralInformation.belongsTo(models.ProjectMasterData, {
         foreignKey: 'culvert_type_id',
@@ -65,6 +69,10 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
     culvert_id: {
+      type: DataTypes.UUID,
+      allowNull: false,
+    },
+    road_segment_id: {
       type: DataTypes.UUID,
       allowNull: false,
     },

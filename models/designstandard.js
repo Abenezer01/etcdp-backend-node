@@ -11,6 +11,15 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      DesignStandard.belongsTo(models.Project, {
+        foreignKey: 'project_id',
+        as: 'project'
+      })
+      DesignStandard.belongsTo(models.RoadSegment, {
+        foreignKey: 'road_segment_id',
+        as: 'roadSegment'
+      })
+
       DesignStandard.belongsTo(models.ProjectMasterData, {
         foreignKey: 'functional_classification_id',
         as: 'functionalClassification'
@@ -43,7 +52,11 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.UUID,
       allowNull: false
     },
-    functional_classification_id  : {
+    road_segment_id: {
+      type: DataTypes.UUID,
+      allowNull: false
+    },
+    functional_classification_id: {
       type: DataTypes.UUID,
       allowNull: false
     },

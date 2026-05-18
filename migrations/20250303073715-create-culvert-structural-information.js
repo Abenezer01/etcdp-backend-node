@@ -37,6 +37,16 @@ module.exports = {
         onUpdate: "CASCADE",
         onDelete: "CASCADE"
       },
+      road_segment_id: {
+        type: Sequelize.UUID,
+        allowNull: false,
+        references: {
+          model: 'roadsegments',
+          key: 'id'
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE"
+      },
       culvert_type_id: {
         type: Sequelize.UUID,
         allowNull: false,

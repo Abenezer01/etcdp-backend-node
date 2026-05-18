@@ -31,8 +31,15 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
-      signaling_system_type: {
-        type: Sequelize.STRING
+      signaling_system_type_id:   {
+        type: Sequelize.UUID,
+        allowNull: false,
+        references: {
+          model: 'ProjectMasterData',
+          key: 'id'
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE"
       },
       signaling_system_manufacturer_or_supplier_name: {
         type: Sequelize.STRING

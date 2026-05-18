@@ -25,12 +25,13 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
     joint_venture_id: {
-      type: DataTypes.UUID,
-      allowNull: false,
+      type: DataTypes.UUID
+    },
+    title: {
+      type: DataTypes.STRING
     },
     company_name: {
-      type: DataTypes.STRING,
-      allowNull: false
+      type: DataTypes.STRING
     },
     specialization: {
       type: DataTypes.STRING

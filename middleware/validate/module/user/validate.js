@@ -87,7 +87,7 @@ const educationStatusValidate = async (req, res, next) => {
     user_id: "required|string",
     study_field_id: "required|string",
     school_name: "string",
-    education_level: "string",
+    study_level_id: "required|string",
     program_type: "required|string",
     start_date: "required|date",
     end_date: "required|date",
@@ -128,7 +128,8 @@ const contactPersonValidate = async (req, res, next) => {
     last_name: "required|string",
     gender: "required|string",
     phone_no: "required|string",
-    email: "email"
+    email: "email",
+    nationality: "string"
   };
 
   await validateReply.validateReply(req.body, validationRule, res, next);
@@ -169,6 +170,26 @@ const childValidate = async (req, res, next) => {
 
   await validateReply.validateReply(req.body, validationRule, res, next);
 };
+
+const CenterDocumentValidate = async (req, res, next) => {
+    let param = await validateReply.checkParam(req, res, next);
+    if (param === "failed") {
+      return res.status(400).json({
+        message: "Invalid id",
+      });
+    }
+    const validationRule = {
+      department_id: "required|string",
+      title: "required|string",
+      description: "string",
+      file_type: "string"
+    };
+
+    await validateReply.validateReply(req.body, validationRule, res, next);
+  };
+
+
+
 const departmentValidate = async (req, res, next) => {
 
   let param = await validateReply.checkParam(req, res, next);
@@ -185,7 +206,6 @@ const departmentValidate = async (req, res, next) => {
 
 
   await validateReply.validateReply(req.body, validationRule, res, next);
-  
 
 };
 const roleValidate = async (req, res, next) => {
@@ -243,6 +263,7 @@ module.exports = {
   createUser,
   userPhotoValidate,
   positionValidate,
+  CenterDocumentValidate,
   departmentValidate,
   roleValidate,
   educationStatusValidate,

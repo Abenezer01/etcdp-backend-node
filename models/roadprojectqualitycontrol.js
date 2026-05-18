@@ -11,6 +11,14 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      RoadProjectQualityControl.belongsTo(models.ProjectMasterData, {
+        foreignKey: 'inspection_type_id',
+        as: 'inspectionType'
+      })
+      RoadProjectQualityControl.belongsTo(models.ProjectMasterData, {
+        foreignKey: 'project_phase_id',
+        as: 'projectPhase'
+      })
     }
   }
   RoadProjectQualityControl.init({

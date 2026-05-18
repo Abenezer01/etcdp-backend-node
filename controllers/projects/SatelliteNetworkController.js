@@ -1,4 +1,4 @@
-const { SatelliteNetwork  , Sequelize } = require("../../models");
+const { SatelliteNetwork, ProjectMasterData , Sequelize } = require("../../models");
 const Op = Sequelize.Op;
 const dotenv = require("dotenv");
 dotenv.config();
@@ -9,7 +9,15 @@ let self = {};
 
 self.getAll = async (req, res) => {
   try {
-    const paginatedResult = await paginationHelper(SatelliteNetwork , req);
+    //includes
+    let includeOptions = [
+      {
+        model: ProjectMasterData,
+        as: 'satelliteNetworkType',
+        attributes: ['id', 'title']
+      }
+    ]
+    const paginatedResult = await paginationHelper(SatelliteNetwork , req, [], includeOptions);
 
     // Use the response formatter to send the success response
     res.apiSuccess({

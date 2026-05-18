@@ -96,7 +96,7 @@ const safetyEquipmentValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
   if (param === "failed") {
     return res.status(400).json({
-      message: "Invalid id", 
+      message: "Invalid id",
     });
   }
 
@@ -104,7 +104,7 @@ const safetyEquipmentValidate = async (req, res, next) => {
     stakeholder_id: "required|string",
     name: "required|string",
     serial_no: "string",
-    brand_name: "string", 
+    brand_name: "string",
     model: "required|string",
     year: "integer",
     capacity: "string",
@@ -133,12 +133,13 @@ const stakeholderMachineryValidate = async (req, res, next) => {
     model: "required|string",
     year: "integer",
     chassis_number: "string",
-    engine_number: "string", 
+    engine_number: "string",
     capacity: "string",
     purpose: "string",
     quantity: "integer",
     current_situation: "string",
-    location: "string",
+    latitude: "string",
+    longitude: "string",
   };
 
   await validateReply.validateReply(req.body, validationRule, res, next);
@@ -155,12 +156,12 @@ const stakeholderPositionValidate = async (req, res, next) => {
 
   const validationRule = {
     stakeholder_id: "required|string",
-    stakeholder_department_id: "required|string", 
+    stakeholder_department_id: "required|string",
     name: "required|string",
     required_education: "string",
     required_work_experience: "string",
     salary: "numeric",
-    no_of_professionals: "integer", 
+    no_of_professionals: "integer",
     description: "string",
     reference: "string",
   };
@@ -173,7 +174,7 @@ const stakeholderDepartmentValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
   if (param === "failed") {
     return res.status(400).json({
-      message: "Invalid id", 
+      message: "Invalid id",
     });
   }
 
@@ -293,8 +294,6 @@ const stakeholderBranchValidate = async (req, res, next) => {
   const validationRule = {
     stakeholder_id: "required|string",
     name: "required|string",
-    tin_number: "string",
-    business_field_id: "required|string",
     description: "string",
     reference: "string",
   };
@@ -328,8 +327,9 @@ const jointVentureCompanyValidate = async (req, res, next) => {
   }
 
   const validationRule = {
-    joint_venture_id: "required|string",
-    company_name: "required|string",
+    joint_venture_id: "string",
+    title: "string",
+    company_name: "string",
     specialization: "string",
     roles_and_responsibilities: "string",
     ownership_percentage: "numeric",
@@ -387,7 +387,7 @@ const stakeholderCategoryValidate = async (req, res, next) => {
 };
 const stakeholderSubCategoryValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
-  if (param ==="failed") {
+  if (param === "failed") {
     return res.status(400).json({
       message: "Invalid id",
     });
@@ -542,7 +542,6 @@ const upgradeValidate = async (req, res, next) => {
     upgrade_type_id: "required|string",
     previous_level: "string",
     upgraded_level: "string",
-    ownership_percentage: "numeric",
     description: "string"
   };
 

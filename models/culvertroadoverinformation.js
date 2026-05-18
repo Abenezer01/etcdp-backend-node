@@ -15,6 +15,14 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'culvert_id',
         as: 'culvert'
       })
+      CulvertRoadOverInformation.belongsTo(models.RoadSegment, {
+        foreignKey: 'road_segment_id',
+        as: 'roadSegment'
+      });
+      CulvertRoadOverInformation.belongsTo(models.ProjectMasterData, { 
+        foreignKey: 'guard_rail_type_id', 
+        as: 'guardRailType'
+      })
     }
   }
   CulvertRoadOverInformation.init({
@@ -29,6 +37,10 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
     culvert_id: {
+      type: DataTypes.UUID,
+      allowNull: false,
+    },
+    road_segment_id: {
       type: DataTypes.UUID,
       allowNull: false,
     },

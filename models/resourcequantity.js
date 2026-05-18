@@ -11,6 +11,30 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      ResourceQuantity.belongsTo(models.ResourceBrand, {
+        foreignKey: "resource_brand_id",
+        as: "resourceBrand",
+      });
+      ResourceQuantity.belongsTo(models.ResourceSpecification, {
+        foreignKey: "resource_specification_id",
+        as: "resourceSpecification",
+      });
+      ResourceQuantity.belongsTo(models.ResourceMasterData, {
+        foreignKey: "unit_price_id",
+        as: "unitPrice",
+      });
+      ResourceQuantity.belongsTo(models.ResourceMasterData, {
+        foreignKey: "supplier_name_id",
+        as: "supplierName",
+      });
+      ResourceQuantity.belongsTo(models.ResourceMasterData, {
+        foreignKey: "supplier_address_id",
+        as: "supplierAddress",
+      });
+      ResourceQuantity.belongsTo(models.ResourceMasterData, {
+        foreignKey: "quality_id",
+        as: "quality",
+      });
     }
   }
   ResourceQuantity.init({

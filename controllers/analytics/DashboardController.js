@@ -175,6 +175,7 @@ self.getStakeholderTypeSummary = async (req, res) => {
 
 
             arr.push({
+                id: moduletype.id,
                 name: moduletype.title,
                 count: models.count
             })
@@ -779,6 +780,11 @@ self.getStakeholderTypesAnalysis = async (req, res) => {
                 });
 
                 let temp = item.toJSON();
+                delete temp.created_at;
+                delete temp.updated_at;
+                delete temp.revision_no;
+                delete temp.parent_id;
+        
                 temp["total"] = model.count;
                 temp["this_year"] = this_year_model.count;
                 temp["last_year"] = last_year_model.count;
@@ -818,6 +824,7 @@ self.getProjectTypesAnalysis = async (req, res) => {
                     },
                     include: [{
                         model: ProjectTime,
+                        as: "projecttime",
                         where: {
                             commencement_date: {
                                 [Op.gte]: new Date(year, 0, 1), // Start of the year
@@ -832,6 +839,7 @@ self.getProjectTypesAnalysis = async (req, res) => {
                     },
                     include: [{
                         model: ProjectTime,
+                        as: "projecttime",
                         where: {
                             commencement_date: {
                                 [Op.gte]: new Date(last_year, 0, 1), // Start of the year
@@ -3114,6 +3122,56 @@ self.getStakeholderCategoryMapping = async (req, res) => {
         return res.apiSuccess({
             data: result
         });
+    } catch (error) {
+        res.apiError(error);
+    }
+};
+
+self.getContractorsSplit = async (req, res) => {
+    try {
+        const { department_id } = req.query.filter || {};
+        let id = req.params.id;
+
+        // Build query conditions
+        const whereCondition = {};
+        if (department_id && department_id !== 'ALL') {
+            whereCondition.department_id = department_id;
+        }
+        whereCondition.projectcategory_id = id;
+
+        // Fetch subcategories and count projects for each
+        const subcategories = await ProjectSubCategory.findAll({
+            where: { projectcategory_id: id },
+            attributes: ['id', ['title', 'subcategory']],
+            include: [{
+                model: Project,
+                as: 'projects',
+                attributes: [],
+                where: whereCondition,
+                required: false
+            }],
+            group: ['ProjectSubCategory.id'],
+            attributes: {
+                include: [
+                    [Sequelize.fn('COUNT', Sequelize.col('projects.id')), 'value']
+                ]
+            }
+        });
+
+        return res.json(subcategories)
+
+        return res.apiSuccess({
+            data: {
+                category_id: id,
+                category: "Contractors",
+                subcategories: subcategories.map(sub => ({
+                    id: sub.id,
+                    subcategory: sub.getDataValue('subcategory'),
+                    value: parseInt(sub.getDataValue('value'), 10) || 0
+                }))
+            }
+        });
+
     } catch (error) {
         res.apiError(error);
     }

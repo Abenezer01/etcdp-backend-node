@@ -1,4 +1,4 @@
-const { RailwayTrackConditionAssessment  , Sequelize } = require("../../models");
+const { RailwayTrackConditionAssessment, ProjectMasterData, Sequelize, RailwayTrackData } = require("../../models");
 const Op = Sequelize.Op;
 const dotenv = require("dotenv");
 dotenv.config();
@@ -9,7 +9,24 @@ let self = {};
 
 self.getAll = async (req, res) => {
   try {
-    const paginatedResult = await paginationHelper(RailwayTrackConditionAssessment , req);
+
+    let whereCondition = {};
+    let includeOptions = [
+      {
+        model: RailwayTrackData,
+        as: 'railwayTrackData'
+      },
+      {
+        model: ProjectMasterData,
+        as: 'trackConditionRating'
+      },
+      {
+        model: ProjectMasterData,
+        as: 'observedDefects'
+      }
+    ];
+
+    const paginatedResult = await paginationHelper(RailwayTrackConditionAssessment , req, whereCondition, includeOptions);
 
     // Use the response formatter to send the success response
     res.apiSuccess({

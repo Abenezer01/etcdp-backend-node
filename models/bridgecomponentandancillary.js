@@ -15,6 +15,28 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'bridge_id',
         as: 'bridge'
       })
+      BridgeComponentAndAncillary.belongsTo(models.ProjectMasterData, {
+        foreignKey: 'expansion_joint_type_id',
+        as: 'expansionJointType'  
+      })
+      BridgeComponentAndAncillary.belongsTo(models.ProjectMasterData, {
+        foreignKey: 'guard_railing_type_id',
+        as: 'guardRailingType'
+      })
+      BridgeComponentAndAncillary.belongsTo(models.ProjectMasterData, {
+        foreignKey: 'abutment_bearing_type_id',
+        as: 'abutmentBearingType'
+      })
+      BridgeComponentAndAncillary.belongsTo(models.ProjectMasterData, {
+        foreignKey: 'piers_bearing_type_id',
+        as: 'piersBearingType'
+      })
+      BridgeComponentAndAncillary.belongsTo(models.ProjectMasterData, {
+        foreignKey: 'surface_type_id',
+        as: 'surfaceType'
+      })
+
+
     }
   }
   BridgeComponentAndAncillary.init({
@@ -44,7 +66,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.UUID,
       allowNull: false
     },
-    piers_bearing_type_id: {
+  piers_bearing_type_id: {
       type: DataTypes.UUID,
       allowNull: false
     },

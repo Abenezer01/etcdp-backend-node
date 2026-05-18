@@ -46,8 +46,15 @@ module.exports = {
       maximum_speed: {
         type: Sequelize.DOUBLE
       },
-      braking_system_type: {
-        type: Sequelize.STRING
+      braking_system_type_id: {
+        type: Sequelize.UUID,
+        allowNull: false,
+        references: {
+          model: "ProjectMasterData",
+          key: "id"
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE"
       },
       remark: {
         type: Sequelize.TEXT

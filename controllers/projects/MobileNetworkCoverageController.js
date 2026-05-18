@@ -1,4 +1,4 @@
-const { MobileNetworkCoverage  , Sequelize } = require("../../models");
+const { MobileNetworkCoverage, ProjectMasterData, Sequelize } = require("../../models");
 const Op = Sequelize.Op;
 const dotenv = require("dotenv");
 dotenv.config();
@@ -9,7 +9,13 @@ let self = {};
 
 self.getAll = async (req, res) => {
   try {
-    const paginatedResult = await paginationHelper(MobileNetworkCoverage , req);
+    let includeOptions = [
+      {
+        model: ProjectMasterData,
+        as: 'networkInfrastructureType'
+      }
+    ];
+    const paginatedResult = await paginationHelper(MobileNetworkCoverage , req, [], includeOptions );
 
     // Use the response formatter to send the success response
     res.apiSuccess({

@@ -27,6 +27,10 @@ module.exports = {
         onUpdate: "CASCADE",
         onDelete: "CASCADE"
       },
+      name: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
       broadcasting_infrastructure_type_id: {
         type: Sequelize.UUID,
         allowNull: false,

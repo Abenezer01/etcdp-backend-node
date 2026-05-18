@@ -24,13 +24,13 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.UUID,
       allowNull: false,
     },
-    study_field: {
+    study_field_id: {
       type: DataTypes.UUID,
       allowNull: false
     },
     school_name: DataTypes.STRING,
     education_level: DataTypes.STRING,
-    program_type: {
+    program_type_id: {
       type: DataTypes.STRING,
       allowNull: false
     },

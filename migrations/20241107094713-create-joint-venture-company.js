@@ -28,17 +28,18 @@ module.exports = {
       },
       joint_venture_id: {
         type: Sequelize.UUID,
-        allowNull: false,
         references: {
-          model: "JointVenture34A1s",
+          model: "JointVentures",
           key: "id",
         },
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
       },
+      title: {
+        type: Sequelize.STRING
+      },
       company_name: {
-        type: Sequelize.STRING,
-        allowNull: false
+        type: Sequelize.STRING
       },
       specialization: {
         type: Sequelize.STRING

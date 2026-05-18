@@ -1,4 +1,4 @@
-const { DrainageAssessment  , Sequelize } = require("../../models");
+const { DrainageAssessment, ProjectMasterData, Sequelize } = require("../../models");
 const Op = Sequelize.Op;
 const dotenv = require("dotenv");
 dotenv.config();
@@ -9,7 +9,20 @@ let self = {};
 
 self.getAll = async (req, res) => {
   try {
-    const paginatedResult = await paginationHelper(DrainageAssessment , req);
+
+    const whereCondition = {};
+   
+    const includeOptions = [
+      {
+          model: ProjectMasterData,
+          as: "drainageType"
+      },
+      {
+          model: ProjectMasterData,
+          as: "drainageCondition"
+      }
+    ]
+    const paginatedResult = await paginationHelper(DrainageAssessment , req, whereCondition, includeOptions);
 
     // Use the response formatter to send the success response
     res.apiSuccess({

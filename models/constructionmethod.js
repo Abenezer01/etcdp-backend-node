@@ -11,6 +11,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      ConstructionMethod.belongsTo(models.ProjectMasterData, {
+        foreignKey: 'project_method_id',
+        as: 'projectMethod'
+      });
     }
   }
   ConstructionMethod.init({

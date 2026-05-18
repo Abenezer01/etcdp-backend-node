@@ -20,6 +20,9 @@ module.exports = {
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
       },
+      parent: {
+        type: Sequelize.UUID
+      },
       department_id: {
         type: Sequelize.UUID,
         references: {

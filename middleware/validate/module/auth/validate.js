@@ -32,7 +32,7 @@ const loginValidate = async (req, res, next) => {
           payload: [],
           _attributes: {},
           _errors: {
-            email: ["email not found!"]
+            email: ["Invalid email or password!"]
           },
           _generated: new Date().toISOString()
         };

@@ -1,4 +1,4 @@
-const { RailwayTrackMaintenanceAndInspection  , Sequelize } = require("../../models");
+const { RailwayTrackMaintenanceAndInspection, ProjectMasterData, Sequelize } = require("../../models");
 const Op = Sequelize.Op;
 const dotenv = require("dotenv");
 dotenv.config();
@@ -9,7 +9,20 @@ let self = {};
 
 self.getAll = async (req, res) => {
   try {
-    const paginatedResult = await paginationHelper(RailwayTrackMaintenanceAndInspection , req);
+
+    const whereCondition = {};
+    const includeOptions = [
+      {
+        model: ProjectMasterData,
+        as: 'scheduledMaintenanceActivity'
+      },
+      {
+        model: ProjectMasterData,
+        as: 'trackMaintenanceFrequency'
+      }
+    ]
+
+    const paginatedResult = await paginationHelper(RailwayTrackMaintenanceAndInspection, req, whereCondition, includeOptions);
 
     // Use the response formatter to send the success response
     res.apiSuccess({

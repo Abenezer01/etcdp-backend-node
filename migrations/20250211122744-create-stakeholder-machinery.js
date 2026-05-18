@@ -63,8 +63,11 @@ module.exports = {
       current_situation: {
         type: Sequelize.STRING
       },
-      location: {
-        type: Sequelize.STRING
+      latitude: {
+        type: Sequelize.DOUBLE
+      },
+      longitude: {
+        type: Sequelize.DOUBLE
       },
       createdAt: {
         allowNull: false,

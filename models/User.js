@@ -101,6 +101,15 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.BOOLEAN,
         defaultValue: false
       },
+      failed_login_attempts: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0
+      },
+      // 🛡️ SECURITY ADDITION: Store lockout expiration timestamp
+      locked_until: {
+        type: DataTypes.DATE,
+        allowNull: true
+      },
       full_name: {
         type: DataTypes.VIRTUAL,
         get() {

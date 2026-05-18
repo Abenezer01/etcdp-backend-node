@@ -27,6 +27,10 @@ module.exports = {
         onUpdate: "CASCADE",
         onDelete: "CASCADE"
       },
+      name: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
       railway_track_infrastructure_type_id: {
         type: Sequelize.UUID,
         allowNull: false,

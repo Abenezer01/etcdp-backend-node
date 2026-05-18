@@ -15,6 +15,22 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'bridge_id', 
         as: 'bridge'
       });  
+      BridgeInspection.belongsTo(models.ProjectMasterData, { 
+        foreignKey: 'bridge_part_defect_id', 
+        as: 'bridgePartDefect'
+      });
+      BridgeInspection.belongsTo(models.ProjectMasterData, { 
+        foreignKey: 'damage_type_id', 
+        as: 'damageType'
+      });
+      BridgeInspection.belongsTo(models.ProjectMasterData, { 
+        foreignKey: 'damage_condition_id', 
+        as: 'damageCondition'
+      });
+      BridgeInspection.belongsTo(models.ProjectMasterData, { 
+        foreignKey: 'hydrology_defect_id', 
+        as: 'hydrologyDefect'
+      });
     }
   }
   BridgeInspection.init({

@@ -31,8 +31,15 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
-      communication_system_type: {
-        type: Sequelize.STRING
+      communication_system_type_id: {
+        type: Sequelize.UUID,
+        allowNull: false,
+        references: {
+          model: 'ProjectMasterData',
+          key: 'id'
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE"
       },
       communication_system_protocols_or_standards: {
         type: Sequelize.STRING

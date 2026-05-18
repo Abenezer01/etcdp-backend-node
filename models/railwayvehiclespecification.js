@@ -11,6 +11,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      RailwayVehicleSpecification.belongsTo(models.ProjectMasterData, {
+        foreignKey: "braking_system_type_id",
+        as: "brakingSystemType",
+      });
     }
   }
   RailwayVehicleSpecification.init({
@@ -31,7 +35,10 @@ module.exports = (sequelize, DataTypes) => {
     vehicle_dimensions: DataTypes.STRING,
     vehicle_weight_and_load_capacity: DataTypes.STRING,
     maximum_speed: DataTypes.DOUBLE,
-    braking_system_type: DataTypes.STRING,
+    braking_system_type_id: {
+      type: DataTypes.UUID,
+      allow: false
+    },
     remark: DataTypes.TEXT
   }, {
     createdAt: 'created_at',

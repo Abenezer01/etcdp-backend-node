@@ -81,7 +81,16 @@ const addressValidate = async (req, res, next) => {
   }
   const validationRule = {
     model_id: "required|string",
-    country: "required|string",
+    country_id: "string",
+    region_id: "string",
+    city_id: "string",
+    subcity_id: "string",
+    woreda_id: "string",
+    kebele: "string",
+    street_id: "string",
+    block_number: "string",
+    house_number: "string",
+    hq: "boolean",
     northing: "required",
     easting: "required",
   };

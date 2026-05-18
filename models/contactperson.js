@@ -47,6 +47,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       email: DataTypes.STRING,
+      nationality: DataTypes.STRING,
       full_name: {
         type: DataTypes.VIRTUAL,
         get() {

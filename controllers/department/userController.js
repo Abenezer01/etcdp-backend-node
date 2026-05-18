@@ -599,6 +599,22 @@ self.update = async (req, res) => {
             }
 
             const updatedData = await User.findOne({ where: { id } });
+            const actionState = await ActionState.findOne({
+                where: {
+                    model_id: id,
+                    action: "REJECTED"
+                }
+            })
+            if (actionState) {
+                await ActionState.update({
+                action: "REGISTERED"
+                },{
+                where: {
+                    id: actionState.id
+                }
+                })
+            
+            }
 
 
             return res.apiSuccess({
@@ -673,8 +689,10 @@ self.getDepartmentUsers = async (req, res) => {
             const position = await Position.findOne({ where: { id: position_id } });
             const department = await Department.findOne({ where: { id: department_id } });
             // Create a NEW object (deep copy or specific properties)
+            let temp =  req.query.search ?ar: ar.toJSON();
+
             const newUser = {
-                ...ar.toJSON(), // Important: Use .toJSON() to get a plain data object
+                ...temp, // Important: Use .toJSON() to get a plain data object
                 email,
                 phone,
                 position_id,

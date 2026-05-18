@@ -11,6 +11,11 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      MobileNetworkCapacity.belongsTo(models.ProjectMasterData, { 
+        foreignKey: 'network_type_id',
+        as: 'networkType'
+      })
+
     }
   }
   MobileNetworkCapacity.init({

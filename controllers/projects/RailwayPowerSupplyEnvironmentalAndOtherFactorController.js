@@ -1,5 +1,6 @@
 const {
   RailwayPowerSupplyEnvironmentalAndOtherFactor,
+  RailwayStationPlatformLayout,
   Sequelize
 } = require("../../models");
 const Op = Sequelize.Op;
@@ -17,7 +18,14 @@ let self = {};
 
 self.getAll = async (req, res) => {
   try {
-    const paginatedResult = await paginationHelper(RailwayPowerSupplyEnvironmentalAndOtherFactor, req);
+    const whereCondition = {};
+    const includeOptions = [  
+      {
+        model: RailwayStationPlatformLayout,
+        as: 'railwayStationPlatformLayout'
+      }
+    ];
+    const paginatedResult = await paginationHelper(RailwayPowerSupplyEnvironmentalAndOtherFactor, req, whereCondition, includeOptions);
 
     // Use the response formatter to send the success response
     res.apiSuccess({

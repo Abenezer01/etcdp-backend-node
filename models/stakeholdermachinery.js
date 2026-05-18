@@ -48,12 +48,10 @@ module.exports = (sequelize, DataTypes) => {
     current_situation: DataTypes.STRING,
     // NEW PRECISION COORDINATES
     latitude: {
-      type: DataTypes.DOUBLE,
-      allowNull: true,
+      type: DataTypes.DOUBLE
     },
     longitude: {
-      type: DataTypes.DOUBLE,
-      allowNull: true,
+      type: DataTypes.DOUBLE
     },
   }, {
     createdAt: 'created_at',

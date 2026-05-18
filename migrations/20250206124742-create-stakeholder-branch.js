@@ -31,19 +31,19 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
-      tin_number: {
-        type: Sequelize.STRING
-      },
-      business_field_id: {
-        type: Sequelize.UUID,
-        allowNull: false,
-        references: {
-          model: "businessfields",
-          key: "id",
-        },
-        onUpdate: "CASCADE",
-        onDelete: "CASCADE",
-      },
+      // tin_number: {
+      //   type: Sequelize.STRING
+      // },
+      // business_field_id: {
+      //   type: Sequelize.UUID,
+      //   allowNull: false,
+      //   references: {
+      //     model: "businessfields",
+      //     key: "id",
+      //   },
+      //   onUpdate: "CASCADE",
+      //   onDelete: "CASCADE",
+      // },
       description: {
         type: Sequelize.TEXT
       },

@@ -27,9 +27,15 @@ module.exports = {
         onUpdate: "CASCADE",
         onDelete: "CASCADE"
       },
-      road_segment: {
-        type: Sequelize.STRING,
-        allowNull: false
+      road_segment_id: {
+        type: Sequelize.UUID,
+        allowNull: false,
+        references: {
+          model: 'roadsegments',
+          key: 'id'
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE"
       },
       last_maintenance_date: {
         type: Sequelize.DATE

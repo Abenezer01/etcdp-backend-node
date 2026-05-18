@@ -1,4 +1,4 @@
-const { DesignStandard, ProjectMasterData, Sequelize } = require("../../models");
+const { DesignStandard, ProjectMasterData, RoadSegment, Sequelize } = require("../../models");
 const Op = Sequelize.Op;
 const dotenv = require("dotenv");
 dotenv.config();
@@ -12,6 +12,10 @@ self.getAll = async (req, res) => {
   
     //includes 
     const includeOptions = [
+      {
+        model: RoadSegment,
+        as: 'roadSegment'
+      },
       {
         model: ProjectMasterData,
         as: 'functionalClassification'

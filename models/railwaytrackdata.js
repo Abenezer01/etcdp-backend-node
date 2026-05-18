@@ -9,8 +9,20 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate(models) {
+    static associate(models) {  
       // define association here
+      RailwayTrackData.belongsTo(models.ProjectMasterData, {
+        foreignKey: 'railway_track_infrastructure_type_id',
+        as: 'railwayTrackInfrastructureType'
+      });
+      RailwayTrackData.belongsTo(models.ProjectMasterData, {
+        foreignKey: 'track_type_id',
+        as: 'trackType'
+      });
+      RailwayTrackData.belongsTo(models.ProjectMasterData, {
+        foreignKey: 'track_gauge_id',
+        as: 'trackGauge'
+      });
     }
   }
   RailwayTrackData.init({
@@ -22,6 +34,10 @@ module.exports = (sequelize, DataTypes) => {
     parent_id: DataTypes.UUID,
     project_id: {
       type: DataTypes.UUID,
+      allowNull: false,
+    },
+    name: {
+      type: DataTypes.STRING,
       allowNull: false,
     },
     railway_track_infrastructure_type_id: {

@@ -11,6 +11,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      RailwayPowerSubstationsAndEquipment.belongsTo(models.RailwayStationPlatformLayout, {
+        foreignKey: 'railway_station_platform_layout_id',
+        as: 'railwayStationPlatformLayout'
+      });
     }
   }
   RailwayPowerSubstationsAndEquipment.init({

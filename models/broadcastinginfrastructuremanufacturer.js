@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       BroadcastingInfrastructureManufacturer.belongsTo(models.BroadcastingInfrastructure, {
         foreignKey: "broadcasting_infrastructure_id",
-        as: "broadcastinginfrastructure"
+        as: "broadcastingInfrastructure"
       })
     }
   }

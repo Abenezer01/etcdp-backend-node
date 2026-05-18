@@ -11,6 +11,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      RailwayPowerSupplyConfiguration.belongsTo(models.ProjectMasterData, {
+        foreignKey: 'power_supply_system_type_id',
+        as: 'powerSupplySystemType'
+      });
     }
   }
   RailwayPowerSupplyConfiguration.init({

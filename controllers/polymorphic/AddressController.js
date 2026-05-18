@@ -1,4 +1,4 @@
-const { Address, Sequelize } = require("../../models");
+const { Address, AddressMasterData, Sequelize } = require("../../models");
 const usrData = require("../../utils/userDataFromToken");
 const actionHelper = require("../utils/action-helper");
 const paginationHelper = require("../utils/pagination-helper");
@@ -11,7 +11,37 @@ let self = {};
 
 self.getAll = async (req, res) => {
   try {
-    const paginatedResult = await paginationHelper(Address, req);
+  
+    let includeOptions = [
+      {
+        model: AddressMasterData,
+        as: "country",
+      },
+      {
+        model: AddressMasterData,
+        as: "region",
+      },
+      {
+        model: AddressMasterData,
+        as: "city",
+      },
+      {
+        model: AddressMasterData,
+        as: "subcity",
+      },
+      {
+        model: AddressMasterData,
+        as: "woreda",
+      },
+      {
+        model: AddressMasterData,
+        as: "street",
+      },
+
+
+    ]
+
+    const paginatedResult = await paginationHelper(Address, req, [], includeOptions);
 
     // Use the response formatter to send the success response
     res.apiSuccess({

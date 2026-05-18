@@ -11,6 +11,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      SatelliteNetwork.belongsTo(models.ProjectMasterData, {
+        foreignKey: 'satellite_network_type_id',
+        as: 'satelliteNetworkType'
+      })
     }
   }
   SatelliteNetwork.init({
@@ -22,6 +26,10 @@ module.exports = (sequelize, DataTypes) => {
     parent_id: DataTypes.UUID,
     project_id: {
       type: DataTypes.UUID,
+      allowNull: false,
+    },
+    name: {
+      type: DataTypes.STRING,
       allowNull: false,
     },
     satellite_network_type_id: {

@@ -93,8 +93,9 @@ self.save = async (req, res) => {
           pos = await Position.create({
             department_id: data.id,
             name: name,
-            description: "discr",
+            description: "description",
             is_head: true,
+            role_id: "d46ea29e-45f3-4219-bca1-155602d08036" // this id for existing defualt admin role. so if its changed make sure to modify this line of code
           });
         } else {
           pos = await Position.create({
@@ -148,7 +149,10 @@ self.save = async (req, res) => {
 self.getSubDepartments = async (req, res) => {
   const { id } = req.params;
   try {
-    const whereCondition = { parent_department_id: id };
+    const usr = await usrData.userData(req, res);
+    const department_id = id ? id: usr.departmentID
+
+    const whereCondition = { parent_department_id: department_id };
     const paginatedResult = await paginationHelper(Department, req, whereCondition);
 
     // Use the response formatter to send the success response
@@ -181,7 +185,11 @@ self.getParentDepartment = async (req, res) => {
 
 self.getParentOrGivenId = async (req, res) => {
   try {
+
     let id = req.params.id;
+    const usr = await usrData.userData(req, res);
+    const department_id = usr.departmentID;
+    
     let data = null;
     if (id) {
       data = await Department.findOne({
@@ -192,7 +200,7 @@ self.getParentOrGivenId = async (req, res) => {
     } else {
       data = await Department.findOne({
         where: {
-          parent_department_id: null,
+          id: department_id,
         },
       });
     }
@@ -212,9 +220,14 @@ self.getParentOrGivenId = async (req, res) => {
 self.getDepartmentHead = async (req, res) => {
   let id = req.params.id;
   try {
+
+    //
+    const usr = await usrData.userData(req, res);
+    const department_id = usr.departmentID;
+
     let data = await Department.findOne({
       where: {
-        id: id,
+        id: department_id,
       },
     });
     if (data) {
@@ -453,10 +466,12 @@ self.getDepartments = async (req, res) => {
       }
     };
 
+
+
     // Request with specific ID → include only it + descendants
     if (id) {
       await processDepartment(id);
-      flatDepartments[0].parentNodeId = null; // root
+      flatDepartments[0].parent_node_id = null; // root
     } 
     else {
       // No id → fetch only root departments, then recurse

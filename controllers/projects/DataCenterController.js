@@ -16,7 +16,7 @@ self.getAll = async (req, res) => {
     const includeOptions = [
       {
           model: ProjectMasterData,
-          as: "datacentertype"
+          as: "dataDenterType"
       },
     ];
     const paginatedResult = await paginationHelper(DataCenter , req, whereCondition, includeOptions);

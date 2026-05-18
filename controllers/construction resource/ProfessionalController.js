@@ -1,4 +1,4 @@
-const { Professional , Sequelize } = require("../../models");
+const { Professional, Sequelize } = require("../../models");
 const Op = Sequelize.Op;
 const dotenv = require("dotenv");
 dotenv.config();
@@ -15,7 +15,7 @@ self.getAll = async (req, res) => {
 
     let usr = await usrData.userData(req, res);
 
-    const whereCondition = { 
+    const whereCondition = {
       department_id: usr.departmentID
     };
     const paginatedResult = await paginationHelper(Professional, req, whereCondition);
@@ -42,7 +42,7 @@ self.save = async (req, res) => {
     let data = await Professional.create(body);
     let usr = await usrData.userData(req, res);
 
-    if(data){
+    if (data) {
 
       data.department_id = usr.departmentID;
       await data.save();
@@ -62,7 +62,11 @@ self.save = async (req, res) => {
 
     }
 
+    res.apiSuccess({
+      data: data
+    });
   } catch (error) {
+    console.log('error', error)
     res.apiError(error);
   }
 };

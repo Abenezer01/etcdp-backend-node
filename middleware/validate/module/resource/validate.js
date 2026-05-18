@@ -70,10 +70,10 @@ const professionalEducationValidate = async (req, res, next) => {
   }
   const validationRule = {
     professional_id: "required|string",
-    study_field: "required|string",
+    study_field_id: "required|string",
     school_name: "string",
     education_level: "string",
-    program_type: "required|string",
+    program_type_id: "required|string",
     start_date: "required|date",
     end_date: "required|date",
     gpa: "required:double"  
@@ -143,6 +143,8 @@ const professionalValidate = async (req, res, next) => {
     });
   }
   const validationRule = {
+    parent: "string",
+    department_id: "string",
     full_name: "string",
     gender: "string",
     study_field: "string",
@@ -292,7 +294,8 @@ const resourceValidate = async (req, res, next) => {
     }
   
     const validationRule = {
-        department_id: "rstring",
+        parent: "string",
+        department_id: "string",
         resourcetype_id: "required|string",
         resourcecategory_id: "required|string",
         resourcesubcategory_id: "required|string",

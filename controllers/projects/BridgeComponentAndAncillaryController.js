@@ -1,4 +1,4 @@
-const { BridgeComponentAndAncillary, BridgeBasicData  , Sequelize } = require("../../models");
+const { BridgeComponentAndAncillary, BridgeBasicData, ProjectMasterData , Sequelize } = require("../../models");
 const Op = Sequelize.Op;
 const dotenv = require("dotenv");
 dotenv.config();
@@ -14,6 +14,26 @@ self.getAll = async (req, res) => {
       {
         model: BridgeBasicData,
         as: 'bridge'
+      },
+      {
+        model: ProjectMasterData,
+        as: 'expansionJointType'
+      },
+      {
+        model: ProjectMasterData,
+        as: 'guardRailingType'
+      },
+      {
+        model: ProjectMasterData,
+        as: 'abutmentBearingType'
+      },
+      {
+        model: ProjectMasterData,
+        as: 'piersBearingType'
+      },
+      {
+        model: ProjectMasterData,
+        as: 'surfaceType'
       }
     ];
 

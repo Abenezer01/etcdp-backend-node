@@ -16,7 +16,7 @@ self.getAll = async (req, res) => {
     const includeOptions = [
       {
           model: BroadcastingInfrastructure,
-          as: "broadcastinginfrastructure"
+          as: "broadcastingInfrastructure"
       },
     ];
     const paginatedResult = await paginationHelper(BroadcastingInfrastructureAge , req, whereCondition, includeOptions);

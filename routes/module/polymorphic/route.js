@@ -13,28 +13,29 @@ const ReportController = require("../../../controllers/polymorphic/ReportControl
 const DataCollectionGuideController = require("../../../controllers/polymorphic/DataCollectionGuideController.js");
 const ExportController = require("../../../controllers/polymorphic/ExportController.js");
 
+const hasPermission = require("../../../middleware/hasPermission.js");
 
 module.exports = function (express) {
   const route = express.Router();
 
   //address route
-  
-  
+
+
   // route.get("/generate-report", ReportController.generateReport);
   route.get("/generate", ReportController.generate);
   route.get("/generate-csv", ReportController.generateCSV);
   route.get("/generate-pdf", ReportController.generatePDF);
-  route.get("/addresses", AddressController.getAll);
-  route.get("/addresses/:id", AddressController.get);
+  route.get("/addresses", hasPermission('view_address'), AddressController.getAll);
+  route.get("/addresses/:id", hasPermission('view_address'), AddressController.get);
   route.get("/addresses/model/:id", AddressController.getAddressByModelId);
-  route.get("/address_search", AddressController.search);
-  route.post("/addresses", validateData.addressValidate, AddressController.save);
+  route.post("/addresses", hasPermission('create_address'), validateData.addressValidate, AddressController.save);
   route.put(
     "/addresses/:id",
+    hasPermission('update_address'),
     validateData.addressValidate,
     AddressController.update
   );
-  route.delete("/addresses/:id", AddressController.delete);
+  route.delete("/addresses/:id", hasPermission('delete_address'), AddressController.delete);
 
   //action state route
   route.get("/action-state", ActionStateController.getAll);
@@ -65,12 +66,17 @@ module.exports = function (express) {
     validateData.filterValidate,
     FileController.getMyFilteredFiles
   );
+
   
-  route.get("/file_search", FileController.search);
   route.post("/files", validateData.fileValidate, FileController.save);
+  // route.post("/filesx", FileController.savex);
   route.put("/files/:id", validateData.fileValidate, FileController.update);
   route.delete("/files/:id", FileController.delete);
   route.get("/link-files/:model/:id", FileController.linkfiles);
+
+
+  route.get("/download-file/:id", FileController.download);
+  route.get("/view-image/:id", FileController.viewImage);
 
   //reply
   route.get("/replies", ReplyController.getAll);
@@ -121,25 +127,25 @@ module.exports = function (express) {
 
 
   // DataCollectionGuide routes with validation
-route.get("/data-collection-guides", DataCollectionGuideController.getAll);
-route.get("/data-collection-guides/:id", DataCollectionGuideController.get);
-route.post(
-  "/data-collection-guides",
-  validateData.dataCollectionGuideValidate,
-  DataCollectionGuideController.save
-);
-route.put(
-  "/data-collection-guides/:id",
-  validateData.dataCollectionGuideValidate,
-  DataCollectionGuideController.update
-);
-route.delete("/data-collection-guides/:id", DataCollectionGuideController.delete);
+  route.get("/data-collection-guides", DataCollectionGuideController.getAll);
+  route.get("/data-collection-guides/:id", DataCollectionGuideController.get);
+  route.post(
+    "/data-collection-guides",
+    validateData.dataCollectionGuideValidate,
+    DataCollectionGuideController.save
+  );
+  route.put(
+    "/data-collection-guides/:id",
+    validateData.dataCollectionGuideValidate,
+    DataCollectionGuideController.update
+  );
+  route.delete("/data-collection-guides/:id", DataCollectionGuideController.delete);
 
-route.get("/stakeholder-export", ExportController.exportStakeholder);
-route.get("/project-export", ExportController.exportProject);
-route.get("/resource-export", ExportController.exportResource);
-route.get("/document-export", ExportController.exportDocument);
-route.get("/professional-export", ExportController.exportProfessional);
-  
+  route.get("/stakeholder-export", ExportController.exportStakeholder);
+  route.get("/project-export", ExportController.exportProject);
+  route.get("/resource-export", ExportController.exportResource);
+  route.get("/document-export", ExportController.exportDocument);
+  route.get("/professional-export", ExportController.exportProfessional);
+
   return route;
 };

@@ -57,7 +57,22 @@ const { Op } = require("sequelize");
 
 // module.exports = validateModelData;
 
+const projectFileValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+  const validationRule = {
+    project_id: "required|string",
+    title: "required|string",
+    type: "required|string",
+    description: "string"
+};
 
+  await validateReply.validateReply(req.body, validationRule, res, next);
+}
 
 const thermalBiomassIncinerationDataValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
@@ -657,7 +672,7 @@ const railwayVehicleSpecificationValidate = async (req, res, next) => {
     vehicle_dimensions: "string",
     vehicle_weight_and_load_capacity: "string",
     maximum_speed: "numeric",
-    braking_system_type: "string",
+    braking_system_type_id: "required|string",
     remark: "string"
 
   };
@@ -779,7 +794,7 @@ const railwayCommunicationSystemValidate = async (req, res, next) => {
   const validationRule = {
     project_id: "required|string",
     railway_line_section_name: "required|string",
-    communication_system_type: "string",
+    communication_system_type_id:"required|string",
     communication_system_protocols_or_standards: "string",
     communication_system_components: "string",
     signaling_system_components: "string",
@@ -1022,6 +1037,30 @@ const railwaySubBallastEnvironmentalAndOtherFactorValidate = async (req, res, ne
 
   await validateReply.validateReply(req.body, validationRule, res, next);
 }
+
+const drainageMaintenanceValidate = async (req, res, next) => {
+
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+  const validationRule = {
+    project_id: "required|string",
+    road_segment_id: "required|string",
+    soil_type_id: "required|string", 
+    ground_water_impact_id: "required|string",
+    soil_bearing_capacity: "string",
+    slope_stability_id: "required|string",
+    retaining_walls: "boolean",
+    geological_hazard: "string",
+    remark: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+}
+
 const railwaySubBallastDrainageAndWaterManagementValidate = async (req, res, next) => {
 
   let param = await validateReply.checkParam(req, res, next);
@@ -1360,15 +1399,21 @@ const railwayTrackConditionAssessmentValidate = async (req, res, next) => {
   }
   const validationRule = {
     project_id: "required|string",
-    alignment: "string",
-    gradient: "numeric",
-    curvature_radius: "numeric",
-    cant: "string",
-    track_gauge: "string",
-    cross_level: "string",
-    track_surface_profile: "string",
-    twist: "string",
+    railway_track_data_id: "required|string",
+    inspection_dates: "date",
+    track_condition_rating_id: "required|string",
+    observed_defects_id: "required|string",
+    track_settlement_irregularities: "string",
     remark: "string"
+    // alignment: "string",
+    // gradient: "numeric",
+    // curvature_radius: "numeric",
+    // cant: "string",
+    // track_gauge: "string",
+    // cross_level: "string",
+    // track_surface_profile: "string",
+    // twist: "string",
+    // remark: "string"
 
   };
 
@@ -1408,6 +1453,7 @@ const railwayTrackDataValidate = async (req, res, next) => {
   }
   const validationRule = {
     project_id: "required|string",
+    name: "required|string",
     railway_track_infrastructure_type_id: "required|string",
     track_type_id: "required|string",
     track_gauge_id: "required|string",
@@ -2168,6 +2214,7 @@ const transmissionValidate = async (req, res, next) => {
 
   const validationRule = {
     project_id: "required|string", // UUID should be a string
+    name: "required|string",
     transmission_voltage: "numeric",
     distance_to_substation: "numeric",
     transmission_lines_number: "integer",
@@ -2343,6 +2390,7 @@ const dataCenterValidate = async (req, res, next) => {
 
   const validationRule = {
     project_id: "required|string", // UUID should be string in the request body
+    name: "required|string",
     data_center_type_id: "required|string", // UUID should be string in the request body
     servers: "boolean",
     storage_devices: "boolean",
@@ -2354,7 +2402,49 @@ const dataCenterValidate = async (req, res, next) => {
 
   await validateReply.validateReply(req.body, validationRule, res, next);
 };
+const broadcastingNetworkCoverageValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
 
+  const validationRule = {
+    project_id: "required|string", // UUID should be string in the request body
+    broadcasting_infrastructure_id: "required|string", // UUID should be string in the request body
+    network_infrastructure_type_id: "required|string", // UUID should be string in the request body
+    total_coverage_area: "numeric",
+    coverage_population_no: "integer",
+    active_users_no: "integer",
+    average_download_speed: "numeric",
+    average_upload_speed: "numeric",
+    signal_strength: "numeric",
+    others: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
+const broadcastingNetworkCapacityValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid ID format",
+    });
+  }
+
+  const validationRule = {
+    project_id: "required|string", // UUID should be string in the request body
+    broadcasting_infrastructure_id: "required|string", // UUID should be string in the request body
+    network_type_id: "required|string", // UUID should be string in the request body
+    total_bandwidth: "numeric",
+    users_number: "integer",
+    remark: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
 const broadcastingInfrastructureManufacturerValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
   if (param === "failed") {
@@ -2406,6 +2496,7 @@ const broadcastingInfrastructureValidate = async (req, res, next) => {
 
   const validationRule = {
     project_id: "required|string",
+    name: "required|string",
     broadcasting_infrastructure_type_id: "required|string",
     broadcasting_network: "boolean",
     antennas: "boolean",
@@ -2622,6 +2713,7 @@ const satelliteNetworkValidate = async (req, res, next) => {
 
   const validationRule = {
     project_id: "required|string",
+    name: "required|string",
     satellite_network_type_id: "required|string",
     satellite: "boolean",
     ground_stations: "boolean",
@@ -2737,6 +2829,7 @@ const mobileNetworkValidate = async (req, res, next) => {
 
   const validationRule = {
     project_id: "required|string",
+    name: "required|string",
     mobile_network_type_id: "required|string",
     cell_towers: "boolean",
     antennas: "boolean",
@@ -2869,6 +2962,7 @@ const telecomInfrastructureValidate = async (req, res, next) => {
 
   const validationRule = {
     project_id: "required|string",
+    name: "required|string",
     mobile_network_type_id: "required|string",
     cables: "integer",
     wires: "integer",
@@ -2926,7 +3020,7 @@ const maintenanceHistoryValidate = async (req, res, next) => {
   }
   const validationRule = {
     project_id: "required|string",
-    road_segment: "required|string",
+    road_segment_id: "required|string",
     last_maintenance_date: "date",
     maintenance_type_id: "required|string",
     maintenance_cost: "numeric",
@@ -2993,7 +3087,7 @@ const roadMaintenanceActivityValidate = async (req, res, next) => {
   }
   const validationRule = {
     project_id: "required|string",
-    road_segment: "required|string",
+    road_segment_id: "required|string",
     maintenance_frequency_id: "required|string",
     maintenance_type_id: "required|string",
     consultant: "string",
@@ -3569,6 +3663,28 @@ const maintenanceFrequencyValidate = async (req, res, next) => {
   await validateReply.validateReply(req.body, validationRule, res, next);
 };
 
+const culvertConditionAssessmentValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid id",
+    });
+  }
+  const validationRule = {
+    project_id: "required|string",
+    culvert_basic_data_id: "required|string",
+    road_segment_id: "required|string",
+    structure_type_id: "required|string",
+    north_id: "required|string",
+    east_id: "required|string",
+    west_id: "required|string",
+    south_id: "required|string",
+    central_id: "required|string",
+    assessment_date: "date"
+  };
+  await validateReply.validateReply(req.body, validationRule, res, next);
+}
+
 const culvertRoadOverInformationValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
   if (param === "failed") {
@@ -3578,7 +3694,7 @@ const culvertRoadOverInformationValidate = async (req, res, next) => {
   }
   const validationRule = {
     project_id: "required|string",
-    name: "required|string",
+    road_segment_id: "required|string",
     carriage_way_width: "numeric",
     side_walk_width: "numeric",
     lane_number: "integer",
@@ -3600,7 +3716,7 @@ const culvertStructuralInformationValidate = async (req, res, next) => {
   }
   const validationRule = {
     project_id: "required|string",
-    name: "required|string",
+    road_segment_id: "required|string",
     culvert_type_id: "required|string",
     culvert_barrel_length: "numeric",
     culvert_height: "numeric",
@@ -4169,6 +4285,7 @@ const designStandardValidate = async (req, res, next) => {
   }
   const validationRule = {
     project_id: "required|string",
+    road_segment_id: "required|string",
     functional_classification_id: "required|string",
     design_classification_id: "required|string",
     design_standard_id: "required|string",
@@ -4911,6 +5028,7 @@ const paymentValidate = async (req, res, next) => {
   await validateReply.validateReply(req.body, validationRule, res, next);
 };
 module.exports = {
+  projectFileValidate,
   mobileNetworkCoverageValidate,
   mobileNetworkCapacityValidate,
   satelliteInfrastructureManufacturerValidate,
@@ -4967,6 +5085,7 @@ module.exports = {
   railwaySleeperConditionAssessmentValidate,
   railwaySleeperCharacteristicValidate,
   railwaySubBallastEnvironmentalAndOtherFactorValidate,
+  drainageMaintenanceValidate,
   railwaySubBallastDrainageAndWaterManagementValidate,
   railwaySubBallastMaintenanceAndRenewalValidate,
   railwaySubBallastConditionAssessmentValidate,
@@ -5037,6 +5156,8 @@ module.exports = {
   dataCenterComponentManufacturerValidate,
   dataCenterComponentAgeValidate,
   dataCenterValidate,
+  broadcastingNetworkCoverageValidate,
+  broadcastingNetworkCapacityValidate,
   broadcastingInfrastructureManufacturerValidate,
   broadcastingInfrastructureAgeValidate,
 
@@ -5098,6 +5219,7 @@ module.exports = {
   maintenanceTypeValidate,
   slopeStabilityValidate,
   maintenanceFrequencyValidate,
+  culvertConditionAssessmentValidate,
   culvertStructuralInformationValidate,
   culvertRoadOverInformationValidate,
   pavementValidate,

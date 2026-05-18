@@ -27,6 +27,16 @@ module.exports = {
         onUpdate: "CASCADE",
         onDelete: "CASCADE"
       },
+      railway_track_data_id :{
+        type: Sequelize.UUID,
+        allowNull: false,
+        references: {
+          model: 'RailwayTrackData',
+          key: 'id'
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE"
+      },
       inspection_dates: {
         type: Sequelize.DATE
       },

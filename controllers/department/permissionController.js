@@ -1,4 +1,4 @@
-const { Permission, PositionPermission, RolePermission, Position, Sequelize } = require("../../models");
+const { Permission, RolePermissionView, PositionPermission, RolePermission, Position, Sequelize } = require("../../models");
 const paginationHelper = require("../utils/pagination-helper");
 const usrData = require("../../utils/userDataFromToken");
 
@@ -15,6 +15,7 @@ let self = {};
 
 self.getRolePermissions = async (req, res) => {
   try {
+
     let id = req.params.id;
     const params = parseParams(req);
     const filter = params.filter
@@ -98,11 +99,22 @@ self.assignRolePermissions = async (req, res) => {
 
 self.getAll = async (req, res) => {
   try {
-    let data = await Permission.findAll();
+    // RolePermissionView.removeAttribute('id');
+    // let data = await RolePermissionView.findAll({
+    //   where: {
+    //     role_id: "5f268c97-1fc2-437d-8db8-197534a91141"
+    //   }
+    // })
 
-    return res.json(data)
+    // let permissions = data.map(d => d.permission_name);
+
+    // return res.json(permissions)
+
+    // let data = await Permission.findAll();
+
+    // return res.json(data)
     const paginatedResult = await paginationHelper(Permission, req);
-
+    
     // Use the response formatter to send the success response
     res.apiSuccess({
       data: paginatedResult.data,
@@ -477,6 +489,9 @@ self.initPermission = async (req, res) => {
 
 self.generate = async (req, res) => {
   try {
+
+
+    return res.json("Generate")
     // const modelNames = [
     //   "stakeholdercategory",
     //   "stakeholdersubcategory",
@@ -866,8 +881,11 @@ self.generate = async (req, res) => {
 
     //ThermalBiomassIncinerationData
 
+  
     let modelNames = [
-      "satellitenetworkcapacity"
+      "projectmachinery",
+      "projectmaterial",
+      "projectmanpower"
     ]
     let action = ['create', 'view', 'update', 'delete', 'check', 'approve', 'authorize']
 
@@ -880,8 +898,8 @@ self.generate = async (req, res) => {
           name: `${action[j]}_${modelNames[i]}`,
           model: `${modelNames[i]}`,
           module: "project",
-          type: "TELECOMMUNICATION",
-          description: "desc"
+          type: "BUILDING",
+          description: "description"
         });
       }
 

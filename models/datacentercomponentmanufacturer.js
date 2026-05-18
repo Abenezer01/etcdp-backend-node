@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       DataCenterComponentManufacturer.belongsTo(models.DataCenter, {
         foreignKey: "data_center_id",
-        as: "datacenter"
+        as: "dataCenter"
       })
     }
   }

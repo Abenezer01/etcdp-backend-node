@@ -1,4 +1,4 @@
-const { BridgeSuperStructure, BridgeBasicData  , Sequelize } = require("../../models");
+const { BridgeSuperStructure, BridgeBasicData, ProjectMasterData, Sequelize } = require("../../models");
 const Op = Sequelize.Op;
 const dotenv = require("dotenv");
 dotenv.config();
@@ -14,6 +14,18 @@ self.getAll = async (req, res) => {
       {
         model: BridgeBasicData,
         as: 'bridge'
+      },
+      {
+        model: ProjectMasterData,
+        as: 'bridgeStructureType'
+      },
+      {
+        model: ProjectMasterData,
+        as: 'spanSupportType'
+      },
+      {
+        model: ProjectMasterData,
+        as: 'deckSlabType'
       }
     ];
     const paginatedResult = await paginationHelper(BridgeSuperStructure , req, whereCondition, includeOptions);

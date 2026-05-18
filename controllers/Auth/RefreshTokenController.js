@@ -115,11 +115,11 @@ self.refreshToken = async (request, response, next) => {
       lang: usr.lang
     };
     const access_tokener = jwt.sign(payload, ACCESS_TOKEN_KEY, {
-      expiresIn: "1000h",
+      expiresIn: "7d",
     });
 
     const refreshtokener = jwt.sign(payload, REFRESH_TOKEN_KEY, {
-      expiresIn: "1000h",
+      expiresIn: "7d",
     });
     await User
       .update(

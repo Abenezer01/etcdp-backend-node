@@ -27,11 +27,11 @@ module.exports = {
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
       },
-      study_field: {
+      study_field_id: {
         type: Sequelize.UUID,
         allowNull: false,
         references: {
-          model: "studyfields",
+          model: "StakeholderMasterData",
           key: "id",
         },
         onUpdate: "CASCADE",
@@ -43,9 +43,15 @@ module.exports = {
       education_level: {
         type: Sequelize.STRING
       },
-      program_type: {
-        type: Sequelize.STRING,
+      program_type_id: {
+        type: Sequelize.UUID,
         allowNull: false,
+        references: {
+          model: "StakeholderMasterData",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
       },
       start_date: {
         type: Sequelize.DATE,

@@ -43,9 +43,6 @@ module.exports = {
       upgraded_level: {
         type: Sequelize.STRING
       },
-      ownership_percentage: {
-        type: Sequelize.DOUBLE
-      },
       description: {
         type: Sequelize.TEXT
       },

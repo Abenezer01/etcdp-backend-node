@@ -8,6 +8,9 @@ module.exports = {
         primaryKey: true,
         defaultValue: Sequelize.UUIDV4
       },
+      parent: {
+        type: Sequelize.UUID
+      },
       department_id: {
         type: Sequelize.UUID
       },

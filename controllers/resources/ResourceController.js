@@ -59,6 +59,7 @@ self.get = async (req, res) => {
 };
 
 self.save = async (req, res) => {
+
   try {
     let body = req.body;
 
@@ -82,8 +83,11 @@ self.save = async (req, res) => {
       await actionHelper.saveActivityLog(
         usr.usrID, "create", "module", data.id, "Resource", req, res
       )
-
+      res.apiSuccess({
+          data: data
+        });
     }
+    
 
   } catch (error) {
     res.apiError(error);

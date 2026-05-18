@@ -1,4 +1,4 @@
-const { ResourceQuantity, Sequelize } = require("../../models");
+const { ResourceQuantity, ResourceMasterData,Resource , ResourceBrand, ResourceSpecification,  Sequelize } = require("../../models");
 const Op = Sequelize.Op;
 const dotenv = require("dotenv");
 dotenv.config();
@@ -10,7 +10,36 @@ let self = {};
 self.getAll = async (req, res) => {
   try {
 
-    const paginatedResult = await paginationHelper(ResourceQuantity , req);
+    let whereCondition = {};
+
+    let includeCondition = [
+      {
+        model: ResourceBrand,
+        as: "resourceBrand"
+      },
+      {
+        model: ResourceSpecification,
+        as: "resourceSpecification"
+      },
+      {
+        model: ResourceMasterData,
+        as: "unitPrice"
+      },
+      {
+        model: ResourceMasterData,
+        as: "supplierName"
+      },
+      {
+        model: ResourceMasterData,
+        as: "supplierAddress"
+      },
+      {
+        model: ResourceMasterData,
+        as: "quality"
+      }
+    ];
+
+    const paginatedResult = await paginationHelper(ResourceQuantity , req, whereCondition, includeCondition);
 
     // Use the response formatter to send the success response
     res.apiSuccess({

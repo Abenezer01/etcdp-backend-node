@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       EnvironmentalControl.belongsTo(models.DataCenter, {
         foreignKey: "data_center_id",
-        as: "datacenter"
+        as: "dataCenter"
       })
     }
   }

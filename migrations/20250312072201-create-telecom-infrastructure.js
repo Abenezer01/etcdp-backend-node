@@ -27,6 +27,10 @@ module.exports = {
         onUpdate: "CASCADE",
         onDelete: "CASCADE"
       },
+      name: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
       mobile_network_type_id: {
         type: Sequelize.UUID,
         allowNull: false,

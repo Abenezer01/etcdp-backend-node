@@ -27,11 +27,11 @@ module.exports = {
         onDelete: 'CASCADE',
         onUpdate: 'CASCADE'
       },
-      broadcasting_network_id: {
+      broadcasting_infrastructure_id: {
         type: Sequelize.UUID,
         allowNull: false,
         references: {
-          model: 'BroadcastingNetworks',
+          model: 'BroadcastingInfrastructures',
           key: 'id'
         },
         onDelete: 'CASCADE',

@@ -30,7 +30,6 @@ module.exports = (sequelize, DataTypes) => {
     },
     previous_level: DataTypes.STRING,
     upgraded_level: DataTypes.STRING,
-    ownership_percentage: DataTypes.DOUBLE,
     description: DataTypes.TEXT
   }, {
     createdAt: "created_at",

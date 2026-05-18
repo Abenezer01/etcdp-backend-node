@@ -1,4 +1,4 @@
-const { BroadcastingInfrastructureManufacturer, BroadcastingInfrastructure  , Sequelize } = require("../../models");
+const { BroadcastingInfrastructureManufacturer, BroadcastingInfrastructure, Sequelize } = require("../../models");
 const Op = Sequelize.Op;
 const dotenv = require("dotenv");
 dotenv.config();
@@ -10,16 +10,16 @@ let self = {};
 self.getAll = async (req, res) => {
   try {
 
-    const whereCondition = { };
+    const whereCondition = {};
 
 
     const includeOptions = [
       {
-          model: BroadcastingInfrastructure,
-          as: "broadcastinginfrastructure"
+        model: BroadcastingInfrastructure,
+        as: "broadcastingInfrastructure"
       },
     ];
-    const paginatedResult = await paginationHelper(BroadcastingInfrastructureManufacturer , req, whereCondition, includeOptions);
+    const paginatedResult = await paginationHelper(BroadcastingInfrastructureManufacturer, req, whereCondition, includeOptions);
 
     // Use the response formatter to send the success response
     res.apiSuccess({
@@ -33,19 +33,19 @@ self.getAll = async (req, res) => {
 };
 
 self.get = async (req, res) => {
-  getRecordById(BroadcastingInfrastructureManufacturer , req, res);
+  getRecordById(BroadcastingInfrastructureManufacturer, req, res);
 };
 
 self.save = async (req, res) => {
-  saveRecord(BroadcastingInfrastructureManufacturer , req, res);
+  saveRecord(BroadcastingInfrastructureManufacturer, req, res);
 };
 
 self.update = async (req, res) => {
-  updateRecord(BroadcastingInfrastructureManufacturer , req, res);
+  updateRecord(BroadcastingInfrastructureManufacturer, req, res);
 };
 
 self.delete = async (req, res) => {
-  deleteRecord(BroadcastingInfrastructureManufacturer , req, res);
+  deleteRecord(BroadcastingInfrastructureManufacturer, req, res);
 };
 
 module.exports = self;

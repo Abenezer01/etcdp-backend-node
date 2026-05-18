@@ -51,7 +51,7 @@ module.exports = function (express) {
   );
   // );
   route.get(
-    "/type-analytics/project", authRequired, 
+    "/type-analytics/project", 
     DashboardController.getProjectTypesAnalysis
   );
 
@@ -179,7 +179,6 @@ module.exports = function (express) {
   
   route.get("/project-catagory-mapping/:id", authRequired, DashboardController.getProjectCategoryMapping);
   route.get("/stakeholder-catagory-mapping/:id", authRequired, DashboardController.getStakeholderCategoryMapping);
-
   
   return route;
 };

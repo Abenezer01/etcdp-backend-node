@@ -1,4 +1,5 @@
 const {
+  ActionState,
   Project,
   ProjectStakeholder,
   Stakeholder,
@@ -263,9 +264,11 @@ self.getAll = async (req, res) => {
             const latestStatusRecord = project.projectstatuses.reduce((latest, current) => {
                 return new Date(current.created_at) > new Date(latest.created_at) ? current : latest;
             }, project.projectstatuses[0]);
-
+            
             // Create a temporary object to hold the project data
-            const projectData = { ...project.get({ plain: true }) }; // Use get({ plain: true }) for safe cloning
+
+            const projectData = req.query.search ? project:  { ...project.get({ plain: true }) }
+            // const projectData = { ...project.get({ plain: true }) }; // Use get({ plain: true }) for safe cloning
 
             // Attach the latest status details
             projectData.status_id = latestStatusRecord.status_id;
@@ -677,7 +680,6 @@ self.update = async (req, res) => {
         id: id,
       },
     });
-
     if(updated) {
       const proStatus = await ProjectStatus.findOne({
         order: [["created_at", "DESC"]],
@@ -689,6 +691,23 @@ self.update = async (req, res) => {
       });
 
       const updatedData = await Project.findOne({ where: { id: id } });
+
+      const actionState = await ActionState.findOne({
+          where: {
+            model_id: id,
+            action: "REJECTED"
+          }
+        })
+        if (actionState) {
+            await ActionState.update({
+              action: "REGISTERED"
+            },{
+              where: {
+                id: actionState.id
+              }
+            })
+          
+        }
       return res.apiSuccess({
         data: updatedData
       });

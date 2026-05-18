@@ -30,11 +30,6 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false
     },
-    tin_number: DataTypes.STRING,
-    business_field_id: {
-      type: DataTypes.UUID,
-      allowNull: false
-    },
     description: DataTypes.TEXT,
     reference: DataTypes.STRING
   }, {

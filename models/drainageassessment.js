@@ -11,6 +11,14 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      DrainageAssessment.belongsTo(models.ProjectMasterData, {
+        foreignKey: 'drainage_type_id',
+        as: 'drainageType'
+      })
+      DrainageAssessment.belongsTo(models.ProjectMasterData, {
+        foreignKey: 'drainage_condition_id',
+        as: 'drainageCondition'
+      })
     }
   }
   DrainageAssessment.init({

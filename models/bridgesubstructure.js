@@ -15,6 +15,10 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'bridge_id',
         as: 'bridge'
       });
+      BridgeSubStructure.belongsTo(models.ProjectMasterData, { 
+        foreignKey: 'pier_type_id', 
+        as: 'pierType'
+      });
     }
   }
   BridgeSubStructure.init({

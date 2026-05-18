@@ -53,6 +53,9 @@ module.exports = {
       email: {
         type: Sequelize.STRING
       },
+      nationality: {
+        type: Sequelize.STRING
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

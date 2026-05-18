@@ -91,6 +91,7 @@ const ResourceMasterDataController = require("../../../controllers/resources/Res
 const AddressMasterDataController = require("../../../controllers/polymorphic/AddressMasterDataController.js");
 const StakeholderMasterDataController = require("../../../controllers/projects/StakeholderMasterDataController.js");
 
+const hasPermission = require("../../../middleware/hasPermission.js");
 
 const validateStakeholderData = require("../../../middleware/validate/module/stakeholder/validate");
 const validateResourceData = require("../../../middleware/validate/module/construction resource/validate.js");
@@ -105,316 +106,328 @@ module.exports = function (express) {
   const route = express.Router();
 
   //ownership route
-  route.get("/ownerships/", OwnershipTypeController.getAll);
-  route.get("/ownerships/:id", OwnershipTypeController.get);
-  route.get("/ownership-searches", OwnershipTypeController.search);
+  route.get("/ownerships/", hasPermission('view_ownership'), OwnershipTypeController.getAll);
+  route.get("/ownerships/:id", hasPermission('view_ownership'), OwnershipTypeController.get);
   route.post(
     "/ownerships",
+    validateStakeholderData.ownerShipValidate,
     validateStakeholderData.ownerShipValidate,
     OwnershipTypeController.save
   );
   route.put(
     "/ownerships/:id",
+    hasPermission('update_ownership'),
     validateStakeholderData.ownerShipValidate,
     OwnershipTypeController.update
   );
-  route.delete("/ownerships/:id", OwnershipTypeController.delete);
+  route.delete("/ownerships/:id", hasPermission('delete_ownership'), OwnershipTypeController.delete);
   //business field route
-  route.get("/business-fields/", BusinessFieldController.getAll);
-  route.get("/business-fields/:id", BusinessFieldController.get);
-  route.get("/business-field-searches", BusinessFieldController.search);
+  route.get("/business-fields/", hasPermission('view_businessfield'), BusinessFieldController.getAll);
+  route.get("/business-fields/:id", hasPermission('view_businessfield'), BusinessFieldController.get);
   route.post(
     "/business-fields",
+    hasPermission('create_businessfield'),
     validateStakeholderData.buisnessFieldValidate,
     BusinessFieldController.save
   );
   route.put(
     "/business-fields/:id",
+    hasPermission('update_businessfield'),
     validateStakeholderData.buisnessFieldValidate,
     BusinessFieldController.update
   );
-  route.delete("/business-fields/:id", BusinessFieldController.delete);
+  route.delete("/business-fields/:id", hasPermission('delete_businessfield'), BusinessFieldController.delete);
   //stakeholder category route
-  route.get("/stakeholder-categories/", StakeholderCategoryController.getAll);
-  route.get("/stakeholder-categories/:id", StakeholderCategoryController.get);
+  route.get("/stakeholder-categories/", hasPermission('view_stakeholdercategory'), StakeholderCategoryController.getAll);
+  route.get("/stakeholder-categories/:id", hasPermission('view_stakeholdercategory'), StakeholderCategoryController.get);
   route.get(
     "/stakeholder-categories/stakeholder-type/:id",
+    hasPermission('view_stakeholdercategory'),
     StakeholderCategoryController.getAllCatByTypeId
   );
   // route.get("/stakeholder-category/staketype/:id", StakeholderCategoryController.getCatByTypeId);
-  route.get(
-    "/stakeholder-category-searches",
-    StakeholderCategoryController.search
-  );
   route.post(
     "/stakeholder-categories",
+    hasPermission('create_stakeholdercategory'),
     validateStakeholderData.stakeholderCategoryValidate,
     StakeholderCategoryController.save
   );
   route.put(
     "/stakeholder-categories/:id",
+    hasPermission('update_stakeholdercategory'),
     validateStakeholderData.stakeholderCategoryValidate,
     StakeholderCategoryController.update
   );
   route.delete(
     "/stakeholder-categories/:id",
+    hasPermission('delete_stakeholdercategory'),
     StakeholderCategoryController.delete
   );
   //stakeholder subcategory route
   route.get(
     "/stakeholder-sub-categories/",
+    hasPermission('view_stakeholdersubcategory'),
     StakeholderSubCategoryController.getAll
   );
   route.get(
     "/stakeholder-sub-categories/:id",
+    hasPermission('view_stakeholdersubcategory'),
     StakeholderSubCategoryController.get
-  );
-  route.get(
-    "/stakeholder-sub-category-searches",
-    StakeholderSubCategoryController.search
   );
   route.post(
     "/stakeholder-sub-categories",
+    hasPermission('create_stakeholdersubcategory'),
     validateStakeholderData.stakeholderSubCategoryValidate,
     StakeholderSubCategoryController.save
   );
   route.put(
     "/stakeholder-sub-categories/:id",
+    hasPermission('update_stakeholdersubcategory'),
     validateStakeholderData.stakeholderSubCategoryValidate,
     StakeholderSubCategoryController.update
   );
   route.delete(
     "/stakeholder-sub-categories/:id",
+    hasPermission('delete_stakeholdersubcategory'),
     StakeholderSubCategoryController.delete
   );
   //stakeholder type route
-  route.get("/stakeholder-types", StakeholderTypeController.getAll);
-  route.get("/stakeholder-types/:id", StakeholderTypeController.get);
-  route.get("/stakeholder-type-searches", StakeholderTypeController.search);
+  route.get("/stakeholder-types", hasPermission('view_stakeholdertype'), StakeholderTypeController.getAll);
+  route.get("/stakeholder-types/:id", hasPermission('view_stakeholdertype'), StakeholderTypeController.get);
   route.post(
     "/stakeholder-types",
+    hasPermission('create_stakeholdertype'),
     validateStakeholderData.stakeholderTypeValidate,
     StakeholderTypeController.save
   );
   route.put(
     "/stakeholder-types/:id",
+    hasPermission('update_stakeholdertype'),
     validateStakeholderData.stakeholderTypeValidate,
     StakeholderTypeController.update
   );
-  route.delete("/stakeholder-types/:id", StakeholderTypeController.delete);
+  route.delete("/stakeholder-types/:id", hasPermission('delete_stakeholdertype'), StakeholderTypeController.delete);
   //stakeholder info route
  
   //age level route
-  route.get("/age-levels/", AgeLevelController.getAll);
-  route.get("/age-levels/:id", AgeLevelController.get);
-  route.get("/age-level-searches", AgeLevelController.search);
+  route.get("/age-levels/", hasPermission('view_agelevel'), AgeLevelController.getAll);
+  route.get("/age-levels/:id", hasPermission('view_agelevel'), AgeLevelController.get);
   route.post(
     "/age-levels",
+    hasPermission('create_agelevel'),
     validateStakeholderData.ageLevelValidate,
     AgeLevelController.save
   );
   route.put(
     "/age-levels/:id",
+    hasPermission('update_agelevel'),
     validateStakeholderData.ageLevelValidate,
     AgeLevelController.update
   );
-  route.delete("/age-levels/:id", AgeLevelController.delete);
+  route.delete("/age-levels/:id", hasPermission('delete_agelevel'), AgeLevelController.delete);
   
   //study level route
-  route.get("/study-levels/", StudyLevelController.getAll);
-  route.get("/study-levels/:id", StudyLevelController.get);
-  route.get("/study-level-searches", StudyLevelController.search);
+  route.get("/study-levels/", hasPermission('view_studylevel'), StudyLevelController.getAll);
+  route.get("/study-levels/:id", hasPermission('view_studylevel'), StudyLevelController.get);
   route.post(
     "/study-levels",
+    hasPermission('create_studylevel'),
     validateStakeholderData.studyLevelValidate,
     StudyLevelController.save
   );
   route.put(
     "/study-levels/:id",
+    hasPermission('update_studylevel'),
     validateStakeholderData.studyLevelValidate,
     StudyLevelController.update
   );
-  route.delete("/study-levels/:id", StudyLevelController.delete);
+  route.delete("/study-levels/:id", hasPermission('delete_studylevel'), StudyLevelController.delete);
   
 
   //work experience
-  route.get("/work-experiences/", WorkExperienceController.getAll);
-  route.get("/work-experiences/:id", WorkExperienceController.get);
+  route.get("/work-experiences/", hasPermission('view_workexperience'), WorkExperienceController.getAll);
+  route.get("/work-experiences/:id", hasPermission('view_workexperience'), WorkExperienceController.get);
   route.get(
-    "/work-experiences/stakeholder/:id",
+    "/work-experiences/stakeholder/:id", hasPermission('view_workexperience'),
     WorkExperienceController.getWorkExperienceByStakeholderId
   );
-  route.get("/work-experience-searches", WorkExperienceController.search);
   route.post(
     "/work-experiences",
+    hasPermission('create_workexperience'),
     validateStakeholderData.workExperienceValidate,
     WorkExperienceController.save
   );
   route.put(
     "/work-experiences",
+    hasPermission('update_workexperience'),
     validateStakeholderData.workExperienceValidate,
     WorkExperienceController.update
   );
-  route.delete("/work-experiences/:id", WorkExperienceController.delete);
+  route.delete("/work-experiences/:id", hasPermission('delete_workexperience'), WorkExperienceController.delete);
   
   //study field
-  route.get("/study-fields/", StudyFieldController.getAll);
-  route.get("/study-fields/:id", StudyFieldController.getStudyFieldById);
-  route.get("/study-field-searches", StudyFieldController.search);
+  route.get("/study-fields/", hasPermission('view_studyfield'), StudyFieldController.getAll);
+  route.get("/study-fields/:id", hasPermission('view_studyfield'), StudyFieldController.getStudyFieldById);
   route.post(
     "/study-fields",
+    hasPermission('create_studyfield'),
     validateStakeholderData.studyFieldValidate,
     StudyFieldController.save
   );
   route.put(
     "/study-fields/:id",
+    hasPermission('update_studyfield'),
     validateStakeholderData.studyFieldValidate,
     StudyFieldController.update
   );
-  route.delete("/study-fields/:id", StudyFieldController.delete);
+  route.delete("/study-fields/:id", hasPermission('delete_studyfield'), StudyFieldController.delete);
  
   //study program
-  route.get("/study-programs/", StudyProgramController.getAll);
-  route.get("/study-programs/:id", StudyProgramController.get);
-  route.get("/study-program-searches", StudyProgramController.search);
+  route.get("/study-programs/", hasPermission('view_studyprogram'), StudyProgramController.getAll);
+  route.get("/study-programs/:id", hasPermission('view_studyprogram'), StudyProgramController.get);
   route.post(
     "/study-programs",
+    hasPermission('create_studyprogram'),
     validateStakeholderData.studyProgramValidate,
     StudyProgramController.save
   );
   route.put(
     "/study-programs/:id",
+    hasPermission('update_studyprogram'),
     validateStakeholderData.studyProgramValidate,
     StudyProgramController.update
   );
-  route.delete("/study-programs/:id", StudyProgramController.delete);
+  route.delete("/study-programs/:id", hasPermission('delete_studyprogram'), StudyProgramController.delete);
   
   //Construction related service
   route.get(
     "/construction-related-services/",
+    hasPermission('view_constructionrelatedservice'),
     ConstructionRelatedServiceController.getAll
   );
   route.get(
     "/construction-related-services/:id",
+    hasPermission('view_constructionrelatedservice'),
     ConstructionRelatedServiceController.get
   );
   route.get(
     "/construction-related-services/stakeholder/:id",
+    hasPermission('view_constructionrelatedservice'),
     ConstructionRelatedServiceController.getConstructionRelatedServiceByStakeholderId
-  );
-  route.get(
-    "/construction-related-service-searches",
-    ConstructionRelatedServiceController.search
   );
   route.post(
     "/construction-related-services",
+    hasPermission('create_constructionrelatedservice'),
     validateStakeholderData.constructionRelatedServiceValidate,
     ConstructionRelatedServiceController.save
   );
   route.put(
     "/construction-related-services/:id",
+    hasPermission('update_constructionrelatedservice'),
     validateStakeholderData.constructionRelatedServiceValidate,
     ConstructionRelatedServiceController.update
   );
   route.delete(
     "/construction-related-services/:id",
+    hasPermission('delete_constructionrelatedservice'),
     ConstructionRelatedServiceController.delete
   );
   
   //status
-  route.get("/project-progress-statuses", StatusController.getAll);
-  route.get("/project-progress-statuses/:id", StatusController.get);
-  route.get("/project-progress-status-searches", StatusController.search);
-  route.post("/project-progress-statuses", validateProjectData.statusValidate, StatusController.save);
+  route.get("/project-progress-statuses", hasPermission('view_projectprogressstatus'),  StatusController.getAll);
+  route.get("/project-progress-statuses/:id",  hasPermission('view_projectprogressstatus'), StatusController.get);
+  route.post("/project-progress-statuses",  hasPermission('create_projectprogressstatus'), validateProjectData.statusValidate, StatusController.save);
   route.put(
     "/project-progress-statuses/:id",
+    hasPermission('update_projectprogressstatus'),
     validateProjectData.statusValidate,
     StatusController.update
   );
-  route.delete("/project-progress-statuses/:id", StatusController.delete);
+  route.delete("/project-progress-statuses/:id", hasPermission('delete_projectprogressstatus'), StatusController.delete);
 
   
   //project route
 
-  route.get("/project-types", ProjectTypeController.getAll);
-  route.get("/project-types/:id", ProjectTypeController.get);
-  route.get("/project-type-searches", ProjectTypeController.search);
+  route.get("/project-types", hasPermission('view_projecttype'), ProjectTypeController.getAll);
+  route.get("/project-types/:id", hasPermission('view_projecttype'), ProjectTypeController.get);
   route.post(
     "/project-types",
+    hasPermission('create_projecttype'),
     validateProjectData.projectTypeValidate,
     ProjectTypeController.save
   );
   route.put(
     "/project-types/:id",
+    hasPermission('update_projecttype'),
     validateProjectData.projectTypeValidate,
     ProjectTypeController.update
   );
-  route.delete("/project-types/:id", ProjectTypeController.delete);
+  route.delete("/project-types/:id",  hasPermission('delete_projecttype'), ProjectTypeController.delete);
   
   //project category
-  route.get("/project-categories", ProjectCategoryController.getAll);
-  route.get("/project-categories/:id", ProjectCategoryController.get);
-  route.get("/project-categories-searches", ProjectCategoryController.search);
-  
+  route.get("/project-categories", hasPermission('view_projectcategory'), ProjectCategoryController.getAll);
+  route.get("/project-categories/:id", hasPermission('view_projectcategory'), ProjectCategoryController.get);
+
   route.post(
     "/project-categories",
+    hasPermission('create_projectcategory'),
     validateProjectData.projectCategoryValidate,
     ProjectCategoryController.save
   );
   route.put(
     "/project-categories/:id",
+    hasPermission('update_projectcategory'),
     validateProjectData.projectCategoryValidate,
     ProjectCategoryController.update
   );
-  route.delete("/project-categories/:id", ProjectCategoryController.delete);
+  route.delete("/project-categories/:id",  hasPermission('delete_projectcategory'), ProjectCategoryController.delete);
   //project subcategory
-  route.get("/project-sub-categories", ProjectSubCategoryController.getAll);
-  route.get("/project-sub-categories/:id", ProjectSubCategoryController.get);
-
-  route.get(
-    "/project-sub-category-searches",
-    ProjectSubCategoryController.search
-  );
+  route.get("/project-sub-categories", hasPermission('view_projectsubcategory'), ProjectSubCategoryController.getAll);
+  route.get("/project-sub-categories/:id", hasPermission('view_projectsubcategory'), ProjectSubCategoryController.get);
   route.post(
     "/project-sub-categories",
+    hasPermission('create_projectsubcategory'),
     validateProjectData.projectSubCategoryValidate,
     ProjectSubCategoryController.save
   );
   route.put(
     "/project-sub-categories/:id",
+    hasPermission('update_projectsubcategory'),
     validateProjectData.projectSubCategoryValidate,
     ProjectSubCategoryController.update
   );
   route.delete(
     "/project-sub-categories/:id",
+    hasPermission('delete_projectsubcategory'),
     ProjectSubCategoryController.delete
   );
   
    //construction resource type controller
    route.get(
     "/resource-types",
+    hasPermission('view_resourcetype'),
     ConstructionResourceTypeController.getAll
   );
   route.get(
     "/resource-types/:id",
+    hasPermission('view_resourcetype'),
     ConstructionResourceTypeController.get
-  );
-  route.get(
-    "/resource-type-search",
-    ConstructionResourceTypeController.search
   );
   route.post(
     "/resource-types",
+    hasPermission('create_resourcetype'),
     validateResourceData.constructionResourceTypeValidate,
     ConstructionResourceTypeController.save
   );
   route.put(
     "/resource-types/:id",
+    hasPermission('update_resourcetype'),
     validateResourceData.constructionResourceTypeValidate,
     ConstructionResourceTypeController.update
   );
   route.delete(
     "/resource-types/:id",
+    hasPermission('delete_resourcetype'),
     ConstructionResourceTypeController.delete
   );
   
@@ -422,134 +435,137 @@ module.exports = function (express) {
   //construction resource category controller
   route.get(
     "/resource-categories",
+    hasPermission('view_resourcecategory'),
     ConstructionResourceCategoryController.getAll
   );
   route.get(
     "/resource-categories/:id",
+    hasPermission('view_resourcecategory'),
     ConstructionResourceCategoryController.get
   );
   route.get(
     "/type/resource-categories/:id",
     ConstructionResourceCategoryController.getCRCByResourceTypeId
   );
-  route.get(
-    "/resource-category_search",
-    ConstructionResourceCategoryController.search
-  );
   route.post(
     "/resource-categories",
+    hasPermission('create_resourcecategory'),
     validateResourceData.constructionResourceCategoryValidate,
     ConstructionResourceCategoryController.save
   );
   route.put(
     "/resource-categories/:id",
+    hasPermission('update_resourcecategory'),
     validateResourceData.constructionResourceCategoryValidate,
     ConstructionResourceCategoryController.update
   );
   route.delete(
     "/resource-categories/:id",
+    hasPermission('delete_resourcecategory'),
     ConstructionResourceCategoryController.delete
   );
   //construction resource subcategory controller
   route.get(
     "/resource-sub-categories",
+    hasPermission('view_resourcesubcategory'),
     ConstructionResourceSubCategoryController.getAll
   );
   route.get(
     "/resource-sub-categories/:id",
+    hasPermission('view_resourcesubcategory'),
     ConstructionResourceSubCategoryController.get
-  );
-  route.get(
-    "/resource-subcategory-searches",
-    ConstructionResourceSubCategoryController.search
   );
   route.post(
     "/resource-sub-categories",
+    hasPermission('create_resourcesubcategory'),
     validateResourceData.constructionResourceSubCategoryValidate,
     ConstructionResourceSubCategoryController.save
   );
   route.put(
     "/resource-sub-categories/:id",
+    hasPermission('update_resourcesubcategory'),
     validateResourceData.constructionResourceSubCategoryValidate,
     ConstructionResourceSubCategoryController.update
   );
   route.delete(
     "/resource-sub-categories/:id",
+    hasPermission('delete_resourcesubcategory'),
     ConstructionResourceSubCategoryController.delete
   );
 
   
   //construction document type controller
-  route.get("/document-types", DocumentTypeController.getAll);
-  route.get("/document-types/:id", DocumentTypeController.get);
-  route.get("/document-type_search", DocumentTypeController.search);
+  route.get("/document-types", hasPermission('view_documenttype'), DocumentTypeController.getAll);
+  route.get("/document-types/:id", hasPermission('view_documenttype'), DocumentTypeController.get);
   route.post(
     "/document-types",
+    hasPermission('create_documenttype'),
     validateDocumentData.documentTypeValidate,
     DocumentTypeController.save
   );
   route.put(
     "/document-types/:id",
+    hasPermission('update_documenttype'),
     validateDocumentData.documentTypeValidate,
     DocumentTypeController.update
   );
-  route.delete("/document-types/:id", DocumentTypeController.delete);
+  route.delete("/document-types/:id", hasPermission('delete_documenttype'), DocumentTypeController.delete);
   //construction document category controller
-  route.get("/document-categories", DocumentCategoryController.getAll);
-  route.get("/document-categories/:id", DocumentCategoryController.get);
+  route.get("/document-categories", hasPermission('view_documentcategory'), DocumentCategoryController.getAll);
+  route.get("/document-categories/:id", hasPermission('view_documentcategory'), DocumentCategoryController.get);
   route.get(
     "/type/document-categories/:id",
     DocumentCategoryController.getCRCBydocumentTypeId
   );
-  route.get("/document-category_search", DocumentCategoryController.search);
   route.post(
     "/document-categories",
+    hasPermission('create_documentcategory'),
     validateDocumentData.documentCategoryValidate,
     DocumentCategoryController.save
   );
   route.put(
     "/document-categories/:id",
+    hasPermission('update_documentcategory'),
     validateDocumentData.documentCategoryValidate,
     DocumentCategoryController.update
   );
-  route.delete("/document-categories/:id", DocumentCategoryController.delete);
+  route.delete("/document-categories/:id", hasPermission('delete_documentcategory'), DocumentCategoryController.delete);
   //construction document subcategory controller
-  route.get("/document-sub-categories", DocumentSubCategoryController.getAll);
-  route.get("/document-sub-categories/:id", DocumentSubCategoryController.get);
-  route.get(
-    "/document-subcategory_search",
-    DocumentSubCategoryController.search
-  );
+  route.get("/document-sub-categories", hasPermission('view_documentsubcategory'), DocumentSubCategoryController.getAll);
+  route.get("/document-sub-categories/:id", hasPermission('view_documentsubcategory'), DocumentSubCategoryController.get);
   route.post(
     "/document-sub-categories",
+    hasPermission('create_documentsubcategory'),
     validateDocumentData.documentSubCategoryValidate,
     DocumentSubCategoryController.save
   );
   route.put(
     "/document-sub-categories/:id",
+    hasPermission('update_documentsubcategory'),
     validateDocumentData.documentSubCategoryValidate,
     DocumentSubCategoryController.update
   );
   route.delete(
     "/document-sub-categories/:id",
+    hasPermission('delete_documentsubcategory'),
     DocumentSubCategoryController.delete
   );
 
   // new
 
   // FunctionalClassification routes with validation
-  route.get("/functional-classifications", FunctionalClassificationController.getAll);
-  route.get("/functional-classifications/:id", FunctionalClassificationController.get);
-  route.post("/functional-classifications", validateProjectData.functionalClassificationValidate, FunctionalClassificationController.save);
-  route.put("/functional-classifications/:id", validateProjectData.functionalClassificationValidate, FunctionalClassificationController.update);
-  route.delete("/functional-classifications/:id", FunctionalClassificationController.delete);
+  route.get("/functional-classifications", hasPermission('view_functionalclassification'), FunctionalClassificationController.getAll);
+  route.get("/functional-classifications/:id", hasPermission('view_functionalclassification'), FunctionalClassificationController.get);
+  route.post("/functional-classifications", hasPermission('create_functionalclassification'), validateProjectData.functionalClassificationValidate, FunctionalClassificationController.save);
+  route.put("/functional-classifications/:id", hasPermission('update_functionalclassification'), validateProjectData.functionalClassificationValidate, FunctionalClassificationController.update);
+  route.delete("/functional-classifications/:id", hasPermission('delete_functionalclassification'), FunctionalClassificationController.delete);
 
   // DesignClassification routes with validation
-  route.get("/design-classifications", DesignClassificationController.getAll);
-  route.get("/design-classifications/:id", DesignClassificationController.get);
-  route.post("/design-classifications", validateProjectData.designClassificationValidate, DesignClassificationController.save);
-  route.put("/design-classifications/:id", validateProjectData.designClassificationValidate, DesignClassificationController.update);
-  route.delete("/design-classifications/:id", DesignClassificationController.delete);
+  route.get("/design-classifications", hasPermission('view_designclassification'), DesignClassificationController.getAll);
+  route.get("/design-classifications/:id", hasPermission('view_designclassification'), DesignClassificationController.get);
+  route.post("/design-classifications", hasPermission('create_designclassification'), validateProjectData.designClassificationValidate, DesignClassificationController.save);
+  route.put("/design-classifications/:id", hasPermission('update_designclassification'), validateProjectData.designClassificationValidate, DesignClassificationController.update);
+  route.delete("/design-classifications/:id", hasPermission('delete_designclassification'), DesignClassificationController.delete);
 
   // DesignStandard routes with validation
   route.get("/design-standards", DesignStandardController.getAll);
@@ -862,51 +878,51 @@ route.delete("/incident-times/:id", IncidentTimeController.delete);
 
 
 // ProjectMasterData routes with validation
-route.get("/project-general-master-data", ProjectMasterDataController.getAll);
-route.get("/project-general-master-data/:id", ProjectMasterDataController.get);
-route.post("/project-general-master-data", validateProjectData.projectMasterDataValidate, ProjectMasterDataController.save);
-route.put("/project-general-master-data/:id", validateProjectData.projectMasterDataValidate, ProjectMasterDataController.update);
-route.delete("/project-general-master-data/:id", ProjectMasterDataController.delete);
+route.get("/project-general-master-data", hasPermission('view_projectmasterdata'), ProjectMasterDataController.getAll);
+route.get("/project-general-master-data/:id", hasPermission('view_projectmasterdata'), ProjectMasterDataController.get);
+route.post("/project-general-master-data", hasPermission('create_projectmasterdata'), validateProjectData.projectMasterDataValidate, ProjectMasterDataController.save);
+route.put("/project-general-master-data/:id", hasPermission('update_projectmasterdata'), validateProjectData.projectMasterDataValidate, ProjectMasterDataController.update);
+route.delete("/project-general-master-data/:id", hasPermission('delete_projectmasterdata'), ProjectMasterDataController.delete);
 
 route.get("/project-general", ProjectMasterDataController.getMasterData);
 
 
 // ModuleType routes with validation
-route.get("/infrastructure-types", ModuleTypeController.getAll);
-route.get("/infrastructure-types/:id", ModuleTypeController.get);
-route.post("/infrastructure-types", validateData.moduleTypeValidate, ModuleTypeController.save);
-route.put("/infrastructure-types/:id", validateData.moduleTypeValidate, ModuleTypeController.update);
-route.delete("/infrastructure-types/:id", ModuleTypeController.delete);
+route.get("/infrastructure-types",hasPermission('view_infrastructuretype'), ModuleTypeController.getAll);
+route.get("/infrastructure-types/:id", hasPermission('view_infrastructuretype'), ModuleTypeController.get);
+route.post("/infrastructure-types", hasPermission('create_infrastructuretype'), validateData.moduleTypeValidate, ModuleTypeController.save);
+route.put("/infrastructure-types/:id", hasPermission('update_infrastructuretype'), validateData.moduleTypeValidate, ModuleTypeController.update);
+route.delete("/infrastructure-types/:id", hasPermission('delete_infrastructuretype'), ModuleTypeController.delete);
 
 // InfrastructureCategory routes with validation
-route.get("/infrastructure-categories", InfrastructureCategoryController.getAll);
-route.get("/infrastructure-categories/:id", InfrastructureCategoryController.get);
-route.post("/infrastructure-categories", validateData.infrastructureCategoryValidate, InfrastructureCategoryController.save);
-route.put("/infrastructure-categories/:id", validateData.infrastructureCategoryValidate, InfrastructureCategoryController.update);
-route.delete("/infrastructure-categories/:id", InfrastructureCategoryController.delete);
+route.get("/infrastructure-categories", hasPermission('view_infrastructurecategory'), InfrastructureCategoryController.getAll);
+route.get("/infrastructure-categories/:id", hasPermission('view_infrastructurecategory'), InfrastructureCategoryController.get);
+route.post("/infrastructure-categories", hasPermission('create_infrastructurecategory'), validateData.infrastructureCategoryValidate, InfrastructureCategoryController.save);
+route.put("/infrastructure-categories/:id", hasPermission('update_infrastructurecategory'), validateData.infrastructureCategoryValidate, InfrastructureCategoryController.update);
+route.delete("/infrastructure-categories/:id", hasPermission('delete_infrastructurecategory'), InfrastructureCategoryController.delete);
 
 // InfrastructureSubCategory routes with validation
-route.get("/infrastructure-sub-categories", InfrastructureSubCategoryController.getAll);
-route.get("/infrastructure-sub-categories/:id", InfrastructureSubCategoryController.get);
-route.post("/infrastructure-sub-categories", validateData.infrastructureSubCategoryValidate, InfrastructureSubCategoryController.save);
-route.put("/infrastructure-sub-categories/:id", validateData.infrastructureSubCategoryValidate, InfrastructureSubCategoryController.update);
-route.delete("/infrastructure-sub-categories/:id", InfrastructureSubCategoryController.delete);
+route.get("/infrastructure-sub-categories", hasPermission('view_infrastructuresubcategory'), InfrastructureSubCategoryController.getAll);
+route.get("/infrastructure-sub-categories/:id", hasPermission('view_infrastructuresubcategory'), InfrastructureSubCategoryController.get);
+route.post("/infrastructure-sub-categories", hasPermission('create_infrastructuresubcategory'), validateData.infrastructureSubCategoryValidate, InfrastructureSubCategoryController.save);
+route.put("/infrastructure-sub-categories/:id", hasPermission('update_infrastructuresubcategory'), validateData.infrastructureSubCategoryValidate, InfrastructureSubCategoryController.update);
+route.delete("/infrastructure-sub-categories/:id", hasPermission('delete_infrastructuresubcategory'), InfrastructureSubCategoryController.delete);
 
 
 // ResourceMasterData routes with validation
-route.get("/resource-general-master-data", ResourceMasterDataController.getAll);
-route.get("/resource-general-master-data/:id", ResourceMasterDataController.get);
-route.post("/resource-general-master-data", validateResource.resourceMasterDataValidate, ResourceMasterDataController.save);
-route.put("/resource-general-master-data/:id", validateResource.resourceMasterDataValidate, ResourceMasterDataController.update);
-route.delete("/resource-general-master-data/:id", ResourceMasterDataController.delete);
+route.get("/resource-general-master-data", hasPermission('view_resourcemasterdata'), ResourceMasterDataController.getAll);
+route.get("/resource-general-master-data/:id", hasPermission('view_resourcemasterdata'), ResourceMasterDataController.get);
+route.post("/resource-general-master-data", hasPermission('create_resourcemasterdata'), validateResource.resourceMasterDataValidate, ResourceMasterDataController.save);
+route.put("/resource-general-master-data/:id", hasPermission('update_resourcemasterdata'), validateResource.resourceMasterDataValidate, ResourceMasterDataController.update);
+route.delete("/resource-general-master-data/:id", hasPermission('delete_resourcemasterdata'), ResourceMasterDataController.delete);
 
 
 // AddressMasterData routes with validation
-route.get("/address-master-data", AddressMasterDataController.getAll);
-route.get("/address-master-data/:id", AddressMasterDataController.get);
-route.post("/address-master-data", validateData.addressMasterDataValidate, AddressMasterDataController.save);
-route.put("/address-master-data/:id", validateData.addressMasterDataValidate, AddressMasterDataController.update);
-route.delete("/address-master-data/:id", AddressMasterDataController.delete);
+route.get("/address-master-data", hasPermission('view_addressmasterdata'), AddressMasterDataController.getAll);
+route.get("/address-master-data/:id", hasPermission('view_addressmasterdata'), AddressMasterDataController.get);
+route.post("/address-master-data", hasPermission('create_addressmasterdata'), validateData.addressMasterDataValidate, AddressMasterDataController.save);
+route.put("/address-master-data/:id", hasPermission('update_addressmasterdata'), validateData.addressMasterDataValidate, AddressMasterDataController.update);
+route.delete("/address-master-data/:id", hasPermission('delete_addressmasterdata'), AddressMasterDataController.delete);
 route.get("/address-master-data/all-parents/:id", AddressMasterDataController.getToRoot);
   
 
@@ -914,11 +930,11 @@ route.get("/address-master-data/all-parents/:id", AddressMasterDataController.ge
 route.get("/address-structure", AddressMasterDataController.getAddresses);
 route.get("/address-structure/:id", AddressMasterDataController.getAddresses);
 
-route.get("/stakeholder-general-master-data", StakeholderMasterDataController.getAll);
-route.get("/stakeholder-general-master-data/:id", StakeholderMasterDataController.get);
-route.post("/stakeholder-general-master-data", validateStakeholderData.stakeholderMasterDataValidate, StakeholderMasterDataController.save);
-route.put("/stakeholder-general-master-data/:id", validateStakeholderData.stakeholderMasterDataValidate, StakeholderMasterDataController.update);
-route.delete("/stakeholder-general-master-data/:id", StakeholderMasterDataController.delete);
+route.get("/stakeholder-general-master-data", hasPermission('view_stakholdermasterdata'), StakeholderMasterDataController.getAll);
+route.get("/stakeholder-general-master-data/:id", hasPermission('view_stakholdermasterdata'), StakeholderMasterDataController.get);
+route.post("/stakeholder-general-master-data", hasPermission('create_stakholdermasterdata'), validateStakeholderData.stakeholderMasterDataValidate, StakeholderMasterDataController.save);
+route.put("/stakeholder-general-master-data/:id", hasPermission('update_stakholdermasterdata'), validateStakeholderData.stakeholderMasterDataValidate, StakeholderMasterDataController.update);
+route.delete("/stakeholder-general-master-data/:id", hasPermission('delete_stakholdermasterdata') ,StakeholderMasterDataController.delete);
 
   return route;
 };

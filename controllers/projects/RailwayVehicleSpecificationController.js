@@ -1,4 +1,4 @@
-const { RailwayVehicleSpecification  , Sequelize } = require("../../models");
+const { RailwayVehicleSpecification, ProjectMasterData, Sequelize } = require("../../models");
 const Op = Sequelize.Op;
 const dotenv = require("dotenv");
 dotenv.config();
@@ -9,7 +9,17 @@ let self = {};
 
 self.getAll = async (req, res) => {
   try {
-    const paginatedResult = await paginationHelper(RailwayVehicleSpecification , req);
+
+    let whereCondition = {};
+
+    let includeCondition = [
+      {
+        model: ProjectMasterData,
+        as: "brakingSystemType"
+      },
+    ];
+
+    const paginatedResult = await paginationHelper(RailwayVehicleSpecification , req, whereCondition, includeCondition);
 
     // Use the response formatter to send the success response
     res.apiSuccess({

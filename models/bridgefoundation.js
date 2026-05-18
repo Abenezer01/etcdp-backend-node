@@ -14,7 +14,20 @@ module.exports = (sequelize, DataTypes) => {
       BridgeFoundation.belongsTo(models.BridgeBasicData, { 
         foreignKey: 'bridge_id', 
         as: 'bridge'
-      });
+      }) 
+      BridgeFoundation.belongsTo(models.ProjectMasterData, { 
+        foreignKey: 'abutment_type_id', 
+        as: 'abutmentType'
+      })
+      BridgeFoundation.belongsTo(models.ProjectMasterData, { 
+        foreignKey: 'pier_type_id', 
+        as: 'pierType'
+      })
+      BridgeFoundation.belongsTo(models.ProjectMasterData, { 
+        foreignKey: 'soil_type_id', 
+        as: 'soilType'
+      })
+
     }
   }
   BridgeFoundation.init({

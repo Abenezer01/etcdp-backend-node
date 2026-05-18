@@ -11,13 +11,13 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      BroadcastingNetworkCapacity.belongsTo(models.BroadcastingNetwork, { 
-        foreignKey: 'broadcasting_network_id', 
-        as: 'broadcastingNetwork' 
+      BroadcastingNetworkCapacity.belongsTo(models.BroadcastingInfrastructure, {
+        foreignKey: 'broadcasting_infrastructure_id',
+        as: 'broadcastingInfrastructure'
       });
-      BroadcastingNetworkCapacity.belongsTo(models.ProjectMasterData, { 
-        foreignKey: 'network_type_id', 
-        as: 'networkType' 
+      BroadcastingNetworkCapacity.belongsTo(models.ProjectMasterData, {
+        foreignKey: 'network_type_id',
+        as: 'networkType'
       });
     }
   }
@@ -32,7 +32,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.UUID,
       allowNull: false
     },
-    broadcasting_network_id: {
+    broadcasting_infrastructure_id: {
       type: DataTypes.UUID,
       allowNull: false
     },

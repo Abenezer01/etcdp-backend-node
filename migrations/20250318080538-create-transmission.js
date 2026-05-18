@@ -27,6 +27,10 @@ module.exports = {
         onUpdate: "CASCADE",
         onDelete: "CASCADE"
       },
+      name: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
       transmission_voltage: {
         type: Sequelize.DOUBLE
       },

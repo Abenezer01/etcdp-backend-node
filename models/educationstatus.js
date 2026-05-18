@@ -9,9 +9,13 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      EducationStatus.belongsTo(models.StudyField, {
+      EducationStatus.belongsTo(models.StakeholderMasterData, {
         foreignKey: "study_field_id",
         as: "studyField"
+      })
+      EducationStatus.belongsTo(models.StakeholderMasterData, {
+        foreignKey: "study_level_id",
+        as: "studyLevel"
       })
     }
   }
@@ -32,7 +36,10 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false
       },
       school_name: DataTypes.STRING,
-      education_level: DataTypes.STRING,
+      study_level_id: {
+        type: DataTypes.UUID,
+        allowNull: false
+      },
       program_type: {
         type: DataTypes.STRING,
         allowNull: false

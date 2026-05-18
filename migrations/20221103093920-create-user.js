@@ -63,6 +63,15 @@ module.exports = {
         type: Sequelize.BOOLEAN,
         default: false
       },
+      failed_login_attempts: {
+        type: Sequelize.INTEGER,
+        defaultValue: 0
+      },
+      // 🛡️ SECURITY ADDITION: Store lockout expiration timestamp
+      locked_until: {
+        type: Sequelize.DATE,
+        allowNull: true
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
