@@ -20,10 +20,6 @@ module.exports = (sequelize, DataTypes) => {
         as: "resourceSpecification",
       });
       ResourceQuantity.belongsTo(models.ResourceMasterData, {
-        foreignKey: "unit_price_id",
-        as: "unitPrice",
-      });
-      ResourceQuantity.belongsTo(models.ResourceMasterData, {
         foreignKey: "supplier_name_id",
         as: "supplierName",
       });

@@ -1,6 +1,8 @@
 const ProjectStatusController = require("../../../controllers/project/ProjectStatusController.js");
 const ProjectController = require("../../../controllers/project/ProjectController.js");
 const ProjectStakeholderController = require("../../../controllers/project/ProjectStakeholderController.js");
+const ProjectJointVentureCompanyController = require("../../../controllers/project/ProjectJointVentureCompanyController.js");
+
 const ProjectPlanController = require("../../../controllers/project/ProjectPlanController.js");
 const ProjectReportController = require("../../../controllers/project/ProjectReportController.js");
 const ProjectDocumentController = require("../../../controllers/project/ProjectDocumentController.js");
@@ -337,6 +339,7 @@ module.exports = function (express) {
   // route.post("/project", validateData.projectValidate, ProjectController.save);
   // route.put("/project/:id", validateData.projectValidate, ProjectController.update);
   // route.delete("/project/:id", ProjectController.delete);
+
   //Project stakeholder
   route.get("/project-stakeholders", hasPermission('view_projectstakeholder'), ProjectStakeholderController.getAll);
   route.get("/project-stakeholders/:id", hasPermission('view_projectstakeholder'), ProjectStakeholderController.get);
@@ -361,6 +364,31 @@ module.exports = function (express) {
     ProjectStakeholderController.update
   );
   route.delete("/project-stakeholders/:id", hasPermission('delete_projectstakeholder'), ProjectStakeholderController.delete);
+ // ProjectJointVentureCompany
+ route.get("/project-joint-venture-companies", hasPermission('view_projectjointventurecompany'), ProjectJointVentureCompanyController.getAll);
+  route.get("/project-joint-venture-companies/:id", hasPermission('view_projectjointventurecompany'), ProjectJointVentureCompanyController.get);
+  route.get(
+    "/project/project-joint-venture-companies/:id",
+    ProjectJointVentureCompanyController.getByProjectId
+  );
+  route.get(
+    "/stakeholder/project-joint-venture-companies/:id",
+    ProjectJointVentureCompanyController.getByStakeholderId
+  );
+  route.post(
+    "/project-joint-venture-companies",
+    hasPermission('create_projectjointventurecompany'),
+    validateData.projectJointVentureCompanyValidate,
+    ProjectJointVentureCompanyController.save
+  );
+  route.put(
+    "/project-joint-venture-companies/:id",
+    hasPermission('update_projectjointventurecompany'),
+    validateData.projectJointVentureCompanyValidate,
+    ProjectJointVentureCompanyController.update
+  );
+  route.delete("/project-joint-venture-companies/:id", hasPermission('delete_projectjointventurecompany'), ProjectJointVentureCompanyController.delete);
+  
   //Project plan
   route.get("/project-plans", hasPermission('view_projectplan'), ProjectPlanController.getAll);
   route.get("/project-plans/:id", hasPermission('view_projectplan'), ProjectPlanController.get);

@@ -41,6 +41,7 @@ const VehicleController = require("../../../controllers/stakeholder/VehicleContr
 const LicenseController = require("../../../controllers/stakeholder/LicenseController.js");
 
 const StakeholderDocumentController = require("../../../controllers/stakeholder/StakeholderDocumentController.js");
+const StakeholderAccreditationController = require("../../../controllers/stakeholder/StakeholderAccreditationController.js");
 
 const validateData = require("../../../middleware/validate/module/stakeholder/validate");
 const hasPermission = require("../../../middleware/hasPermission.js");
@@ -682,6 +683,14 @@ module.exports = function (express) {
     route.post("/stakeholder-documents", hasPermission('create_stakeholderdocument'), validateData.stakeholderDocumentValidate, StakeholderDocumentController.save);
     route.put("/stakeholder-documents/:id", hasPermission('update_stakeholderdocument'), validateData.stakeholderDocumentValidate, StakeholderDocumentController.update);
     route.delete("/stakeholder-documents/:id", hasPermission('delete_stakeholderdocument'), StakeholderDocumentController.delete);
+    
+    // stakeholder accreditation routes with validation
+    route.get("/stakeholder-accreditations", hasPermission('view_stakeholderaccreditation'), StakeholderAccreditationController.getAll);
+    route.get("/stakeholder-accreditations/:id", hasPermission('view_stakeholderaccreditation'), StakeholderAccreditationController.get);
+    route.post("/stakeholder-accreditations", hasPermission('create_stakeholderaccreditation'), validateData.stakeholderAccreditationValidate, StakeholderAccreditationController.save);
+    route.put("/stakeholder-accreditations/:id", hasPermission('update_stakeholderaccreditation'), validateData.stakeholderAccreditationValidate, StakeholderAccreditationController.update);
+    route.delete("/stakeholder-accreditations/:id", hasPermission('delete_stakeholderaccreditation'), StakeholderAccreditationController.delete);
+    
     return route;
 
 };

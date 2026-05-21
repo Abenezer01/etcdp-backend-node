@@ -1,4 +1,4 @@
-const { ResourceQuantity, ResourceMasterData,Resource , ResourceBrand, ResourceSpecification,  Sequelize } = require("../../models");
+const { ResourceQuantity, ResourceMasterData, ResourceBrand, ResourceSpecification,  Sequelize } = require("../../models");
 const Op = Sequelize.Op;
 const dotenv = require("dotenv");
 dotenv.config();
@@ -21,10 +21,7 @@ self.getAll = async (req, res) => {
         model: ResourceSpecification,
         as: "resourceSpecification"
       },
-      {
-        model: ResourceMasterData,
-        as: "unitPrice"
-      },
+  
       {
         model: ResourceMasterData,
         as: "supplierName"

@@ -4534,6 +4534,24 @@ const projectStatusValidate = async (req, res, next) => {
 
   await validateReply.validateReply(req.body, validationRule, res, next);
 };
+
+const projectJointVentureCompanyValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid id",
+    });
+  }
+  const validationRule = {
+    project_id: "required|string",
+    joint_venture_company_id: "required|string",
+    title: "required|string",
+    description: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
 const projectStakeholderValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
   if (param === "failed") {
@@ -4549,6 +4567,7 @@ const projectStakeholderValidate = async (req, res, next) => {
 
   await validateReply.validateReply(req.body, validationRule, res, next);
 };
+
 const projectFinanceValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
   if (param === "failed") {
@@ -5295,6 +5314,7 @@ module.exports = {
   projectFinanceValidate,
   projectPlanValidate,
   projectReportValidate,
+  projectJointVentureCompanyValidate,
   projectStakeholderValidate,
   projectStatusValidate,
   projectSubCategoryValidate,

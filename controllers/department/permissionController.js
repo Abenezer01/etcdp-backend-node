@@ -886,7 +886,7 @@ self.generate = async (req, res) => {
       // "projectmachinery",
       // "projectmaterial",
       // "projectmanpower"
-      "recommendation"
+      "projectjointventurecompany"
     ]
     let action = ['create', 'view', 'update', 'delete', 'check', 'approve', 'authorize']
 
@@ -898,8 +898,8 @@ self.generate = async (req, res) => {
         const data = await Permission.create({
           name: `${action[j]}_${modelNames[i]}`,
           model: `${modelNames[i]}`,
-          module: "resource",
-          type: "PROFESSIONAL",
+          module: "project",
+          type: "BUILDING",
           description: "description"
         });
       }
