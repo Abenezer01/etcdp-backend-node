@@ -930,11 +930,11 @@ route.get("/address-master-data/all-parents/:id", AddressMasterDataController.ge
 route.get("/address-structure", AddressMasterDataController.getAddresses);
 route.get("/address-structure/:id", AddressMasterDataController.getAddresses);
 
-route.get("/stakeholder-general-master-data", hasPermission('view_stakholdermasterdata'), StakeholderMasterDataController.getAll);
-route.get("/stakeholder-general-master-data/:id", hasPermission('view_stakholdermasterdata'), StakeholderMasterDataController.get);
-route.post("/stakeholder-general-master-data", hasPermission('create_stakholdermasterdata'), validateStakeholderData.stakeholderMasterDataValidate, StakeholderMasterDataController.save);
-route.put("/stakeholder-general-master-data/:id", hasPermission('update_stakholdermasterdata'), validateStakeholderData.stakeholderMasterDataValidate, StakeholderMasterDataController.update);
-route.delete("/stakeholder-general-master-data/:id", hasPermission('delete_stakholdermasterdata') ,StakeholderMasterDataController.delete);
+route.get("/stakeholder-general-master-data", hasPermission('view_stakeholdermasterdata'), StakeholderMasterDataController.getAll);
+route.get("/stakeholder-general-master-data/:id", hasPermission('view_stakeholdermasterdata'), StakeholderMasterDataController.get);
+route.post("/stakeholder-general-master-data", hasPermission('create_stakeholdermasterdata'), validateStakeholderData.stakeholderMasterDataValidate, StakeholderMasterDataController.save);
+route.put("/stakeholder-general-master-data/:id", hasPermission('update_stakeholdermasterdata'), validateStakeholderData.stakeholderMasterDataValidate, StakeholderMasterDataController.update);
+route.delete("/stakeholder-general-master-data/:id", hasPermission('delete_stakeholdermasterdata') ,StakeholderMasterDataController.delete);
 
   return route;
 };

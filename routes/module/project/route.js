@@ -254,6 +254,7 @@ const BroadcastingNetworkCoverageController = require("../../../controllers/proj
 const CulvertConditionAssessmentController = require("../../../controllers/projects/CulvertConditionAssessmentController.js") 
 const DrainageMaintenanceController = require("../../../controllers/projects/DrainageMaintenanceController.js") 
 const ProjectFileController = require("../../../controllers/projects/ProjectFileController.js")
+const SegmentCoordinateController = require("../../../controllers/projects/SegmentCoordinateController.js")
 
 const hasPermission = require("../../../middleware/hasPermission.js");
 
@@ -2319,6 +2320,12 @@ module.exports = function (express) {
   route.put("/project-files/:id", hasPermission('update_projectfile'), validateData.projectFileValidate, ProjectFileController.update);
   route.delete("/project-files/:id", hasPermission('delete_projectfile'), ProjectFileController.delete);
 
+  // SegmentCoordinate routes with validation and permissions
+  route.get("/segment-coordinates", hasPermission('view_segmentcoordinate'), SegmentCoordinateController.getAll);
+  route.get("/segment-coordinates/:id", hasPermission('view_segmentcoordinate'), SegmentCoordinateController.get);
+  route.post("/segment-coordinates", hasPermission('create_segmentcoordinate'), validateData.segmentCoordinateValidate, SegmentCoordinateController.save);
+  route.put("/segment-coordinates/:id", hasPermission('update_segmentcoordinate'), validateData.segmentCoordinateValidate, SegmentCoordinateController.update);
+  route.delete("/segment-coordinates/:id", hasPermission('delete_segmentcoordinate'), SegmentCoordinateController.delete);
   route.get(
     "/mapping/:id", ProjectController.getCategoryMapping);
   return route;

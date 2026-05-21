@@ -110,9 +110,9 @@ self.getAll = async (req, res) => {
 
     // return res.json(permissions)
 
-    // let data = await Permission.findAll();
+    let data = await Permission.findAll();
 
-    // return res.json(data)
+    return res.json(data)
     const paginatedResult = await paginationHelper(Permission, req);
     
     // Use the response formatter to send the success response
@@ -491,7 +491,7 @@ self.generate = async (req, res) => {
   try {
 
 
-    return res.json("Generate")
+    // return res.json("Generate")
     // const modelNames = [
     //   "stakeholdercategory",
     //   "stakeholdersubcategory",
@@ -883,9 +883,10 @@ self.generate = async (req, res) => {
 
   
     let modelNames = [
-      "projectmachinery",
-      "projectmaterial",
-      "projectmanpower"
+      // "projectmachinery",
+      // "projectmaterial",
+      // "projectmanpower"
+      "recommendation"
     ]
     let action = ['create', 'view', 'update', 'delete', 'check', 'approve', 'authorize']
 
@@ -897,8 +898,8 @@ self.generate = async (req, res) => {
         const data = await Permission.create({
           name: `${action[j]}_${modelNames[i]}`,
           model: `${modelNames[i]}`,
-          module: "project",
-          type: "BUILDING",
+          module: "resource",
+          type: "PROFESSIONAL",
           description: "description"
         });
       }

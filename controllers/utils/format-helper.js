@@ -95,6 +95,7 @@ const saveRecord = async (model, req, res, uniqueAttribute = null) => {
 };
 
 const updateRecord = async (model, req, res) => {
+  
   try {
     const id = req.params.id;
     const body = req.body;
@@ -105,20 +106,52 @@ const updateRecord = async (model, req, res) => {
     if (updated) {
       const updatedData = await model.findOne({ where: { id } });
       //find action state of that model
-      const actionState = await ActionState.findOne({
+      const rejectedActionState = await ActionState.findOne({
         where: {
           model_id: id,
           action: "REJECTED"
         }
       })
-      if (actionState) {
-        await ActionState.update({
-          action: "REGISTERED"
-        }, {
-          where: {
-            id: actionState.id
-          }
-        })
+    
+      if (rejectedActionState) {
+
+        //delete all action state of a given model
+          await ActionState.destroy({
+            where: {
+              model_id: id
+            }
+          })
+
+          const usr = await usrData.userData(req, res);
+          await actionHelper.saveActionState(
+            updatedData.id,
+            model.name,
+            "REGISTER",
+            usr.usrID,
+            req,
+            res
+          );
+
+          await actionHelper.saveActivityLog(
+            usr.usrID, "create", "module", updatedData.id, model.name, req, res
+          )
+        
+        //delete all previous action state except rejected
+      // await ActionState.destroy({
+      //   where: {
+      //     model_id: id,
+      //     action: {
+      //       [Op.ne]: "REJECTED"
+      //     }
+      //   }
+      // })
+        // await ActionState.update({
+        //   action: "REGISTERED"
+        // }, {
+        //   where: {
+        //     id: actionState.id
+        //   }
+        // })
 
       }
 

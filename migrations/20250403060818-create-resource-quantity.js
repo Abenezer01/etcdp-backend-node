@@ -47,15 +47,9 @@ module.exports = {
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
       },
-      unit_price_id: {
-        type: Sequelize.UUID,
-        allowNull: false,
-        references: {
-          model: "ResourceMasterData",
-          key: "id",
-        },
-        onUpdate: "CASCADE",
-        onDelete: "CASCADE",
+      unit_price: {
+        type: Sequelize.DOUBLE,
+        allowNull: false
       },
       price_date: {
         type: Sequelize.DATE

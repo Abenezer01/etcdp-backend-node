@@ -56,8 +56,8 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.UUID,
       allowNull: false
     },
-    unit_price_id: {
-      type: DataTypes.UUID,
+    unit_price: {
+      type: DataTypes.DOUBLE,
       allowNull: false
     },
     price_date: DataTypes.DATE,

@@ -11,6 +11,14 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+        ProfessionalEducation.belongsTo(models.StakeholderMasterData, {
+          foreignKey: 'study_field_id',
+          as: 'studyField',
+        });
+        ProfessionalEducation.belongsTo(models.StakeholderMasterData, {
+          foreignKey: 'program_type_id',
+          as: 'programType',
+        });
     }
   }
   ProfessionalEducation.init({

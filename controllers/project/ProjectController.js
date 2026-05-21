@@ -30,6 +30,7 @@ const actionHelper = require("../utils/action-helper");
 const cipherHelper = require("../utils/cipher-helper");
 const apiHelper = require("../utils/API-helper");
 const paginationHelper = require("../utils/pagination-helper");
+const paginationHelperTest = require("../utils/pagination-helper-test");
 const { deleteRecord } = require("../utils/format-helper");
 
 let self = {};
@@ -244,6 +245,7 @@ self.getAll = async (req, res) => {
 
 
         const paginatedResult = await paginationHelper(Project, req, whereCondition, includeOptions);
+        // const paginatedResult = await paginationHelperTest(Project, req, whereCondition, includeOptions);
 
         let arr = paginatedResult.data;
 

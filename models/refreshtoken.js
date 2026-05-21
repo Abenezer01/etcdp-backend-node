@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       RefreshToken.belongsTo(models.User, {
-            foreignKey: 'userId', // This field will be added to the RefreshToken table
+            foreignKey: 'user_id', // This field will be added to the RefreshToken table
             as: 'user',
             onDelete: 'CASCADE' // If the user is deleted, delete the tokens
         });

@@ -1,4 +1,4 @@
-const { RailwayVehicleSpecification, ProjectMasterData, Sequelize } = require("../../models");
+const { RailwayVehicleSpecification, RailwayVehicleIdentification, ProjectMasterData, Sequelize } = require("../../models");
 const Op = Sequelize.Op;
 const dotenv = require("dotenv");
 dotenv.config();
@@ -17,6 +17,10 @@ self.getAll = async (req, res) => {
         model: ProjectMasterData,
         as: "brakingSystemType"
       },
+      {
+        model: RailwayVehicleIdentification,
+        as: "railwayVehicleIdentification"
+      }
     ];
 
     const paginatedResult = await paginationHelper(RailwayVehicleSpecification , req, whereCondition, includeCondition);

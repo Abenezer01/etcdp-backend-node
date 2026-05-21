@@ -1,31 +1,15 @@
-const { ProfessionalLicense, ResourceMasterData, Sequelize } = require("../../models");
+const { Recommendation, Sequelize } = require("../../models");
 const Op = Sequelize.Op;
 const dotenv = require("dotenv");
 dotenv.config();
 
 const paginationHelper = require("../utils/pagination-helper");
 const { getRecordById, saveRecord, updateRecord, deleteRecord } = require("../utils/format-helper");
-let master = require("../../config/master");
-
 let self = {};
 
 self.getAll = async (req, res) => {
   try {
-
-    let whereCondition = {};
-    let includeOption = [
-      {
-        model: ResourceMasterData,
-        as: "licenseType"
-      },
-      {
-        model: ResourceMasterData,
-        as: "licenseCategory"
-      },
-
-    ];
-
-    const paginatedResult = await paginationHelper(ProfessionalLicense , req ,whereCondition, includeOption);
+    const paginatedResult = await paginationHelper(Recommendation, req);
 
     // Use the response formatter to send the success response
     res.apiSuccess({
@@ -39,21 +23,19 @@ self.getAll = async (req, res) => {
 };
 
 self.get = async (req, res) => {
-  getRecordById(ProfessionalLicense , req, res);
+  getRecordById(Recommendation, req, res);
 };
 
 self.save = async (req, res) => {
-  saveRecord(ProfessionalLicense , req, res);
+  saveRecord(Recommendation, req, res);
 };
 
 self.update = async (req, res) => {
-  updateRecord(ProfessionalLicense , req, res);
+  updateRecord(Recommendation, req, res);
 };
 
 self.delete = async (req, res) => {
-  deleteRecord(ProfessionalLicense , req, res);
+  deleteRecord(Recommendation, req, res);
 };
-
-
 
 module.exports = self;

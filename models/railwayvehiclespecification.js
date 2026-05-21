@@ -11,6 +11,11 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      RailwayVehicleSpecification.belongsTo(models.RailwayVehicleIdentification, {
+        foreignKey: "railway_vehicle_identification_id",
+        as: "railwayVehicleIdentification",
+      });
+
       RailwayVehicleSpecification.belongsTo(models.ProjectMasterData, {
         foreignKey: "braking_system_type_id",
         as: "brakingSystemType",

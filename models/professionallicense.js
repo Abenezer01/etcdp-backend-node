@@ -11,6 +11,14 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      ProfessionalLicense.belongsTo(models.ResourceMasterData, {
+        foreignKey: 'license_type_id',
+        as: 'licenseType'
+      });
+      ProfessionalLicense.belongsTo(models.ResourceMasterData, {
+        foreignKey: 'license_category_id',
+        as: 'licenseCategory'
+      });
     }
   }
   ProfessionalLicense.init({

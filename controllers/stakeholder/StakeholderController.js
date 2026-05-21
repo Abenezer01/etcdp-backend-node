@@ -22,6 +22,7 @@ const paginationHelper = require("../utils/pagination-helper");
 
 const usrData = require("../../utils/userDataFromToken");
 const actionHelper = require("../utils/action-helper");
+const cipherHelper = require("../utils/cipher-helper");
 
 
 const Op = Sequelize.Op;
@@ -133,7 +134,19 @@ self.search = async (req, res) => {
 self.save = async (req, res) => {
   try {
     let body = req.body;
+    // check if trade_name is exist
+    //trade name is encypted in database
 
+    const encrypted_trade_name = cipherHelper.encrypt(body.trade_name);
+    let existing = await Stakeholder.findOne({ 
+      where: { 
+        trade_name: encrypted_trade_name 
+      } 
+    });
+    
+    if (existing) {
+      return res.apiError("Trade name already exists");
+    }
     let data = await Stakeholder.create(body);
     let usr = await usrData.userData(req, res);
 

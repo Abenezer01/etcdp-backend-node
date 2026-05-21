@@ -1,5 +1,22 @@
 const validateReply = require("../../../../utils/validateerror");
 
+const recommendationValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid id",
+    });
+  }
+  const validationRule = {
+    professional_id: "required|string",
+    title: "required|string",
+    description: "string",
+    file_type: "string"
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
 const professionalLicenseValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
   if (param === "failed") {
@@ -210,7 +227,7 @@ const resourceQuantityValidate = async (req, res, next) => {
     resource_id: "required|string",
     resource_brand_id: "required|string",
     resource_specification_id: "required|string",
-    unit_price_id: "required|string",
+    unit_price: "required|numeric",
     price_date: "date",
     supplier_name_id: "required|string",
     supplier_address_id: "required|string",
@@ -310,6 +327,7 @@ const resourceValidate = async (req, res, next) => {
   
 
 module.exports = {
+  recommendationValidate,
   professionalLicenseValidate,
   professionalWorkExperienceValidate,
   professionalAssociationMembershipValidate,

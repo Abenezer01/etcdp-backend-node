@@ -4765,6 +4765,27 @@ const roadSegmentValidate = async (req, res, next) => {
 
   await validateReply.validateReply(req.body, validationRule, res, next);
 };
+
+const segmentCoordinateValidate = async (req, res, next) => {
+  let param = await validateReply.checkParam(req, res, next);
+  if (param === "failed") {
+    return res.status(400).json({
+      message: "Invalid id",
+    });
+  }
+  const validationRule = {
+    project_id: "required|string",
+    road_segment_id: "required|string",
+    start_x: "required|numeric",
+    start_y: "required|numeric",
+    end_x: "required|numeric",
+    end_y: "required|numeric",
+
+  };
+
+  await validateReply.validateReply(req.body, validationRule, res, next);
+};
+
 const roadLayerValidate = async (req, res, next) => {
   let param = await validateReply.checkParam(req, res, next);
   if (param === "failed") {
@@ -5286,6 +5307,7 @@ module.exports = {
   buildingEnvelopMaterialValidate,
   buildingDimensionDetailValidate,
   roadDetailValidate,
+  segmentCoordinateValidate,
   roadSegmentValidate,
   roadLayerValidate,
   telecomValidate,

@@ -1,4 +1,4 @@
-const { ProfessionalEducation , Sequelize } = require("../../models");
+const { ProfessionalEducation, StakeholderMasterData , Sequelize } = require("../../models");
 const Op = Sequelize.Op;
 const dotenv = require("dotenv");
 dotenv.config();
@@ -9,7 +9,18 @@ let self = {};
 
 self.getAll = async (req, res) => {
   try {
-    const paginatedResult = await paginationHelper(ProfessionalEducation, req);
+    let whereCondition = {};
+    let includeCondition = [
+      {
+        model: StakeholderMasterData,
+        as: "studyField"
+      },
+      {
+        model: StakeholderMasterData,
+        as: "programType",
+      },
+    ];
+    const paginatedResult = await paginationHelper(ProfessionalEducation, req, whereCondition, includeCondition);
 
     // Use the response formatter to send the success response
     res.apiSuccess({

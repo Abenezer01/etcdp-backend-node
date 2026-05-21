@@ -15,6 +15,7 @@ const ProfessionalWorkExperienceController = require("../../../controllers/const
 const ProfessionalAssociationMembershipController = require("../../../controllers/construction resource/ProfessionalAssociationMembershipController");
 const ProfessionalCertificationController = require("../../../controllers/construction resource/ProfessionalCertificationController");
 const ProfessionalLicenseController = require("../../../controllers/projects/ProfessionalLicenseController.js");
+const RecommendationController = require("../../../controllers/construction resource/RecommendationController");
 
 const hasPermission = require("../../../middleware/hasPermission.js");
 const validateData = require("../../../middleware/validate/module/resource/validate");
@@ -175,6 +176,13 @@ module.exports = function (express) {
   route.post("/professional-licenses", hasPermission('create_professionallicense'), validateData.professionalLicenseValidate, ProfessionalLicenseController.save);
   route.put("/professional-licenses/:id", hasPermission('update_professionallicense'), validateData.professionalLicenseValidate, ProfessionalLicenseController.update);
   route.delete("/professional-licenses/:id", hasPermission('delete_professionallicense'), ProfessionalLicenseController.delete);
+
+  //Professional Recommendation
+  route.get("/recommendations", hasPermission('view_recommendation'), RecommendationController.getAll);
+  route.get("/recommendations/:id", hasPermission('view_recommendation'), RecommendationController.get);
+  route.post("/recommendations", hasPermission('create_recommendation'), validateData.recommendationValidate, RecommendationController.save);
+  route.put("/recommendations/:id", hasPermission('update_recommendation'), validateData.recommendationValidate, RecommendationController.update);
+  route.delete("/recommendations/:id", hasPermission('delete_recommendation'), RecommendationController.delete);
 
   //Matrix
   route.get(
