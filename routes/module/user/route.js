@@ -43,7 +43,7 @@ module.exports = function (express) {
   route.delete("/users/:id", hasPermission('delete_user'), UserController.delete);
   route.get("/department-users/:id", UserController.getDepartmentUsers);
 
-  route.post("/account-action/:id/:action", UserController.accountActivation);
+  route.post("/account-action/:id/:action", hasPermission('activate_user'), UserController.accountActivation);
 
 
   route.post("/assign-user-position", UserController.assignPosition);

@@ -26,12 +26,12 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.UUID,
       allowNull: false,
     },
-    material_category: {
+    material_category_id: {
       type: DataTypes.UUID,
       allowNull: false,
     },
-    material_subcategory: {
-      type: DataTypes.STRING
+    material_subcategory_id: {
+      type: DataTypes.UUID
     },
     name: {
       type: DataTypes.STRING,

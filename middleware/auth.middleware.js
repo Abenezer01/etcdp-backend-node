@@ -5,6 +5,9 @@ dotenv.config();
 const ACCESS_TOKEN_KEY = process.env.ACCESS_TOKEN_KEY;
 
 exports.verifyAccessToken = async(req, res, next) => {
+    if (req.method === "OPTIONS") {
+        return next();
+    }
     // 1. Get the Authorization header from the request
     const authHeader = req.headers.authorization;
 

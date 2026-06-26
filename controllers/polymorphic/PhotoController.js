@@ -1,4 +1,4 @@
-const {User, Photo, Sequelize } = require("../../models");
+const { User, Photo, Sequelize } = require("../../models");
 const path = require("path");
 
 const fs = require("fs");
@@ -11,6 +11,44 @@ const { getRecordById, deleteRecord } = require("../utils/format-helper");
 const Op = Sequelize.Op;
 
 let self = {};
+const ALLOWED_PHOTO_EXTENSIONS = [".jpg", ".jpeg", ".png", ".gif", ".webp"];
+const ALLOWED_PHOTO_MIMES = [
+  "image/jpeg",
+  "image/png",
+  "image/gif",
+  "image/webp",
+];
+
+const logPhotoUploadEvent = (level, message, details = {}) => {
+  console[level](`[PhotoUpload] ${message}`, details);
+};
+
+const getSingleUpload = (req) => {
+  if (!req.files || !req.files.upload) {
+    return null;
+  }
+
+  if (Array.isArray(req.files.upload)) {
+    return req.files.upload.length === 1 ? req.files.upload[0] : "MULTIPLE";
+  }
+
+  return req.files.upload;
+};
+
+const safeRemoveFile = (filePath) => {
+  if (!filePath || !fs.existsSync(filePath)) {
+    return;
+  }
+
+  try {
+    fs.unlinkSync(filePath);
+  } catch (error) {
+    logPhotoUploadEvent("warn", "Failed to remove photo during cleanup", {
+      filePath,
+      error: error.message,
+    });
+  }
+};
 
 self.getAll = async (req, res) => {
   try {
@@ -57,12 +95,38 @@ self.save = async (req, res) => {
       return;
     }
 
-    const {type, model_id} = req.body;
-    const { upload } = req.files;
-
+    const { type, model_id } = req.body;
+    const upload = getSingleUpload(req);
 
     if (!upload) {
-      return res.status(400).send({ message: "File is empty" });
+      logPhotoUploadEvent("warn", "Photo upload rejected because no file was provided", {
+        userId: userData.usrID,
+        modelId: model_id,
+        type,
+      });
+      return res.apiError("File is empty", 400);
+    }
+
+    if (upload === "MULTIPLE") {
+      logPhotoUploadEvent("warn", "Photo upload rejected because multiple files were provided", {
+        userId: userData.usrID,
+        modelId: model_id,
+        type,
+      });
+      return res.apiError("Only single file upload is supported.", 400);
+    }
+
+    const extension = path.extname(upload.name).toLowerCase();
+    if (!ALLOWED_PHOTO_EXTENSIONS.includes(extension) || !ALLOWED_PHOTO_MIMES.includes(upload.mimetype)) {
+      logPhotoUploadEvent("warn", "Photo upload rejected because file type is not allowed", {
+        userId: userData.usrID,
+        modelId: model_id,
+        type,
+        fileName: upload.name,
+        extension,
+        mimetype: upload.mimetype,
+      });
+      return res.apiError("Unsupported photo type", 415);
     }
 
     const ext = upload.mimetype.split("/")[1];
@@ -77,19 +141,37 @@ self.save = async (req, res) => {
       `${checkedNew}.${ext}`
     );
     const filePathh = filePath.split("public").pop();
+    fs.mkdirSync(path.dirname(filePath), { recursive: true });
 
-    const photoData = await Photo.create(
-      { 
-      title: checkedNew,
-      url: filePathh, 
-      type: type, 
-      model_id: model_id 
-      }
-    );
+    logPhotoUploadEvent("info", "Starting photo upload", {
+      userId: userData.usrID,
+      modelId: model_id,
+      type,
+      originalName: upload.name,
+      targetPath: filePath,
+      mimetype: upload.mimetype,
+      size: upload.size,
+    });
+
+    await upload.mv(filePath);
+
+    let photoData;
+
+    try {
+      photoData = await Photo.create({
+        title: checkedNew,
+        url: filePathh,
+        type: type,
+        model_id: model_id
+      });
+    } catch (error) {
+      safeRemoveFile(filePath);
+      throw error;
+    }
 
     if (photoData) {
       const userID = userData.usrID;
-      actionHelper.saveActionState(
+      await actionHelper.saveActionState(
         photoData.id,
         "Photo",
         "REGISTER",
@@ -99,14 +181,23 @@ self.save = async (req, res) => {
       );
     }
 
-    upload.mv(filePath, (err) => {
-      if (err) {return res.status(500).send(err);}
+    logPhotoUploadEvent("info", "Photo upload completed", {
+      userId: userData.usrID,
+      photoId: photoData.id,
+      modelId: model_id,
+      type,
+      storedPath: filePath,
     });
 
     res.apiSuccess({
       data: photoData
     });
   } catch (error) {
+    logPhotoUploadEvent("error", "Photo upload failed", {
+      modelId: req.body.model_id,
+      type: req.body.type,
+      error: error.message,
+    });
     res.apiError(error);
   }
 };
@@ -168,13 +259,27 @@ self.serveMultiplePhoto = async (req, res) => {
 };
 self.update = async (req, res) => {
   let id = req.params.id;
-  const file = req.files.upload;
   if (!id) {
-    return res.status(412).json({
-      message: "Can't get user id",
-    });
+    logPhotoUploadEvent("warn", "Photo update rejected because photo id is missing");
+    return res.apiError("Can't get photo id", 412);
   }
   try {
+    const file = getSingleUpload(req);
+
+    if (!file) {
+      logPhotoUploadEvent("warn", "Photo update rejected because no file was provided", {
+        photoId: id,
+      });
+      return res.apiError("File is empty", 400);
+    }
+
+    if (file === "MULTIPLE") {
+      logPhotoUploadEvent("warn", "Photo update rejected because multiple files were provided", {
+        photoId: id,
+      });
+      return res.apiError("Only single file upload is supported.", 400);
+    }
+
     let userData = await User.findOne({
       attributes: ["photo_id"],
       include: [
@@ -187,6 +292,13 @@ self.update = async (req, res) => {
         id: id,
       },
     });
+    if (!userData || !userData.Photo) {
+      logPhotoUploadEvent("warn", "Photo update rejected because the related photo was not found", {
+        photoId: id,
+      });
+      return res.apiError("Photo not found", 404);
+    }
+
     if (userData.Photo.avatar) {
       if (fs.existsSync(userData.Photo.avatar)) {
         fs.unlink(userData.Photo.avatar, (err) => {
@@ -196,7 +308,19 @@ self.update = async (req, res) => {
         });
       }
     }
-    const ext = req.files.upload.mimetype.split("/")[1];
+
+    const extension = path.extname(file.name).toLowerCase();
+    if (!ALLOWED_PHOTO_EXTENSIONS.includes(extension) || !ALLOWED_PHOTO_MIMES.includes(file.mimetype)) {
+      logPhotoUploadEvent("warn", "Photo update rejected because file type is not allowed", {
+        photoId: id,
+        fileName: file.name,
+        extension,
+        mimetype: file.mimetype,
+      });
+      return res.apiError("Unsupported photo type", 415);
+    }
+
+    const ext = file.mimetype.split("/")[1];
     let rand = Math.floor(100000 + Math.random() * 900000);
     const filePath = path.join(
       __dirname,
@@ -204,25 +328,44 @@ self.update = async (req, res) => {
       "images/user Photo",
       rand + "." + `${ext}`
     );
-    //console.log("The file path is ", filePath)
+    fs.mkdirSync(path.dirname(filePath), { recursive: true });
 
-    file.mv(filePath, (err) => {
-      if (err) {return res.status(500).send(err);}
-      // res.redirect('/')
+    logPhotoUploadEvent("info", "Starting photo update", {
+      photoId: userData.photo_id,
+      userId: id,
+      targetPath: filePath,
+      mimetype: file.mimetype,
+      size: file.size,
     });
 
-    const [updated] = await Photo.update({avatar: filePath}, {
+    await file.mv(filePath);
+
+    const [updated] = await Photo.update({ avatar: filePath }, {
       where: { id: userData.photo_id },
     });
 
     if (updated) {
       const updatedData = await Photo.findOne({ where: { id: userData.photo_id } });
+      logPhotoUploadEvent("info", "Photo update completed", {
+        photoId: userData.photo_id,
+        userId: id,
+      });
       return res.apiSuccess({
         data: updatedData
       });
     }
 
+    logPhotoUploadEvent("warn", "Photo update did not modify any records", {
+      photoId: userData.photo_id,
+      userId: id,
+    });
+    return res.apiError("Photo update failed", 500);
+
   } catch (error) {
+    logPhotoUploadEvent("error", "Photo update failed", {
+      photoId: id,
+      error: error.message,
+    });
     return res.apiError(error);
   }
 };

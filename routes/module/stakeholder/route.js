@@ -95,6 +95,7 @@ module.exports = function (express) {
   route.get("/general-infos/:id", StakeholderController.getStakeholderData);
 
   route.get("/stakeholder-projects/:id", StakeholderController.getStakeholderProjects);
+  route.get("/joint-venture-company-projects/:id", JointVentureCompanyController.getJointVentureCompanyProjects);
   //stakeholder contact person
   route.get(
     "/stakeholder-contact-people",

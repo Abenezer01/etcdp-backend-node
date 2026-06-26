@@ -25,6 +25,10 @@ module.exports = {
       description: {
         type: Sequelize.TEXT,
       },
+      is_deactivatable: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: true
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

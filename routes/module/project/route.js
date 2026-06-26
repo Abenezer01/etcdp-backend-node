@@ -2273,10 +2273,16 @@ module.exports = function (express) {
   route.delete("/mobile-network-coverages/:id", hasPermission('delete_mobilenetworkcoverage'), MobileNetworkCoverageController.delete);
 
   // MachineryInformation routes with permissions
-  route.get("/machinery-informations", hasPermission('view_machineryinformation'), MachineryInformationController.getAll);
-  route.get("/machinery-informations/:id", hasPermission('view_machineryinformation'), MachineryInformationController.get);
-  route.post("/machinery-informations", hasPermission('create_machineryinformation'), MachineryInformationController.save);
-  route.delete("/machinery-informations/:id", hasPermission('delete_machineryinformation'), MachineryInformationController.delete);
+  route.get("/machinery-informations", MachineryInformationController.getAll);
+  route.get("/machinery-informations/:id", MachineryInformationController.get);
+  route.post("/machinery-informations", MachineryInformationController.save);
+  route.delete("/machinery-informations/:id", MachineryInformationController.delete);
+
+  //   // MachineryInformation routes with permissions
+  // route.get("/machinery-informations", hasPermission('view_machineryinformation'), MachineryInformationController.getAll);
+  // route.get("/machinery-informations/:id", hasPermission('view_machineryinformation'), MachineryInformationController.get);
+  // route.post("/machinery-informations", hasPermission('create_machineryinformation'), MachineryInformationController.save);
+  // route.delete("/machinery-informations/:id", hasPermission('delete_machineryinformation'), MachineryInformationController.delete);
 
   // DesignStandard routes with validation and permissions
   route.get("/design-standards", hasPermission('view_designstandard'), DesignStandardController.getAll);

@@ -14,6 +14,7 @@ dotenv.config();
 const jwt = require("jsonwebtoken");
 let self = {};
 let ACCESS_TOKEN_KEY = process.env.ACCESS_TOKEN_KEY;
+const TOKEN_MAX_AGE = process.env.TOKEN_MAX_AGE || "4h";
 
 self.refreshToken = async (request, response, next) => {
   // Read token from Authorization header (Expected format: "Bearer <TOKEN>" or just "<TOKEN>")
@@ -104,11 +105,9 @@ self.refreshToken = async (request, response, next) => {
       stakeholder_id: usr.stakeholder_id
     };
 
-    // 🚨 ACCESS TOKEN SLIDING LEASE: Set to 15 minutes.
-    // If the user remains active, the frontend interceptor hits this endpoint, 
-    // extending their login status smoothly without interruption.
+    // Re-issue the same access token TTL used at login.
     const access_tokener = jwt.sign(payload, ACCESS_TOKEN_KEY, {
-      expiresIn: "15m", 
+      expiresIn: TOKEN_MAX_AGE,
     });
 
     // Return the fresh access token along with the same valid refresh token back to the user

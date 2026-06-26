@@ -2,6 +2,7 @@ const {
     User,
     ActionState,
     Position,
+    Role,
     UserPosition,
     UserEmail,
     UserPhone,
@@ -9,6 +10,7 @@ const {
     PasswordReset,
     Photo,
     Sequelize,
+    sequelize,
 } = require("../../models");
 const bcrypt = require("bcrypt");
 const Op = Sequelize.Op;
@@ -28,10 +30,18 @@ var smtpTransport = require("nodemailer-smtp-transport");
 const emailValidator = require("deep-email-validator");
 const paginationHelper = require("../utils/pagination-helper");
 const { deleteRecord } = require("../utils/format-helper");
+const { roleName } = require("../../config/master");
 
 
-let TOKEN_KEY = process.env.ACCESS_TOKEN_KEY;
-let REFRESH_TOKEN_KEY = process.env.REFRESH_TOKEN_KEY;
+const TOKEN_KEY = process.env.ACCESS_TOKEN_KEY;
+const REFRESH_TOKEN_KEY = process.env.REFRESH_TOKEN_KEY;
+
+const MAIL_DRIVER = process.env.MAIL_DRIVER;
+const MAIL_HOST = process.env.MAIL_HOST;
+const MAIL_USERNAME = process.env.MAIL_USERNAME;
+const MAIL_PASSWORD = process.env.MAIL_PASSWORD;
+
+
 // let TOKEN_MAX_AGE = process.env.TOKEN_MAX_AGE;
 
 let self = {};
@@ -267,13 +277,60 @@ self.save = async (req, res) => {
         // }
 
 
+        const positionId = body.position_id;
+        if (!positionId) {
+            const errorResponse = {
+                _links: { previousPage: null, nextPage: null },
+                _warning: [],
+                payload: [],
+                _attributes: {},
+                _errors: { position_id: ["position_id is required."] },
+                _generated: new Date().toISOString()
+            };
+            return res.status(422).json(errorResponse);
+        }
+
+        const pos = await Position.findOne({
+            where: { id: positionId }
+        });
+        if (!pos) {
+            const errorResponse = {
+                _links: { previousPage: null, nextPage: null },
+                _warning: [],
+                payload: [],
+                _attributes: {},
+                _errors: { position_id: ["Position not found."] },
+                _generated: new Date().toISOString()
+            };
+            return res.status(422).json(errorResponse);
+        }
+
+        const role = await Role.findOne({
+            where: { id: pos.role_id }
+        });
+        if (!role) {
+            const errorResponse = {
+                _links: { previousPage: null, nextPage: null },
+                _warning: [],
+                payload: [],
+                _attributes: {},
+                _errors: { position_id: ["Position role not found."] },
+                _generated: new Date().toISOString()
+            };
+            return res.status(422).json(errorResponse);
+        }
+
+        const tokenUser = await usrData.userData(req, res);
+        if (!tokenUser || tokenUser.error) {
+            const message = tokenUser && tokenUser.error ? tokenUser.error : "Unauthorized";
+            return res.apiError(message, 401);
+        }
+
         const salt = await bcrypt.genSalt(10);
 
-        const encryptedEmail = cipherHelper.encrypt(body.email)
+        const encryptedEmail = cipherHelper.encrypt(body.email);
         let existed = await UserEmail.findOne({
-            where: {
-                email: encryptedEmail
-            }
+            where: { email: encryptedEmail }
         });
 
         if (existed) {
@@ -295,111 +352,94 @@ self.save = async (req, res) => {
             return res.status(422).json(errorResponse);
         }
 
-        var usr = {
-            first_name: body.first_name,
-            last_name: body.last_name,
-            middle_name: body.middle_name,
+        const created_user = await sequelize.transaction(async (transaction) => {
+            var usr = {
+                first_name: body.first_name,
+                last_name: body.last_name,
+                middle_name: body.middle_name,
 
-            gender: body.gender,
-            marital_status: body.marital_status,
-            partner_name: body.partner_name,
-            birth_date: body.birth_date,
-            revision_no: body.revision_no,
-            is_admin: false,
-            lang: "en",
-            password: await bcrypt.hash("password", salt)
-        };
-        let created_user = await User.create(usr);
+                gender: body.gender,
+                marital_status: body.marital_status,
+                partner_name: body.partner_name,
+                birth_date: body.birth_date,
+                revision_no: body.revision_no,
+                is_admin: false,
+                lang: "en",
+                password: await bcrypt.hash("password", salt)
+            };
 
-        if (created_user) {
-            let usr = await usrData.userData(req, res);
+            const createdUser = await User.create(usr, { transaction });
+
             await ActionState.create({
-                model_id: created_user.id,
+                model_id: createdUser.id,
                 model: "User",
-                action: "REGISTER",
-                user_id: usr.usrID,
-                position_id: usr.position_id,
+                action: role.name === "SUPER-ADMIN-ROLE" ? "DEFAULT" : "REGISTER",
+                user_id: tokenUser.usrID,
+                position_id: tokenUser.position_id,
                 time: new Date(),
-            });
+            }, { transaction });
 
-            // await actionHelper.saveActionState(created_user.id, "User", "REGISTER", usr.usrID, req, res)
-            //create Position
-            let usemail = await UserEmail.create({
-                user_id: created_user.id,
+            const usemail = await UserEmail.create({
+                user_id: createdUser.id,
                 email: body.email,
                 is_primary: true,
-            });
+            }, { transaction });
 
-            if (usemail) {
-                actionHelper.saveActionState(
-                    usemail.id,
-                    "UserEmail",
-                    "REGISTER",
-                    usr.usrID,
-                    req,
-                    res
-                );
+            await ActionState.create({
+                model_id: usemail.id,
+                model: "UserEmail",
+                action: "REGISTER",
+                user_id: tokenUser.usrID,
+                position_id: tokenUser.position_id,
+                time: new Date(),
+            }, { transaction });
 
-                let usphone = await UserPhone.create({
-                    user_id: created_user.id,
-                    phone: body.phone,
-                    is_primary: true,
-                });
-                //email to user
-                // const resetString = uuid.v4() + created_user.id;
-                // await PasswordReset.create({
-                //     user_id: created_user.id,
-                //     token: resetString,
-                //     expiresAt: Date.now() + 3600000,
-                //     is_used: false,
-                // });
-                const redirectUrl = body.redirect_url;
-                // sendEmail(created_user.id, body.email, redirectUrl, resetString)
-                // const salt = await bcrypt.genSalt();
-                // const hashedResetString = await bcrypt.hash(resetString, salt);
+            const usphone = await UserPhone.create({
+                user_id: createdUser.id,
+                phone: body.phone,
+                is_primary: true,
+            }, { transaction });
 
-                // self.sendPasswordSetupEmail(created_user.id, body.email, redirectUrl, hashedResetString);
-                self.sendResetPasswordEmail(created_user.id, body.email, redirectUrl)
+            await ActionState.create({
+                model_id: usphone.id,
+                model: "UserPhone",
+                action: "REGISTER",
+                user_id: tokenUser.usrID,
+                position_id: tokenUser.position_id,
+                time: new Date(),
+            }, { transaction });
 
+            const uspos = await UserPosition.create({
+                user_id: createdUser.id,
+                department_id: pos.department_id,
+                position_id: positionId,
+                is_primary: true,
+            }, { transaction });
 
-                if (usphone) {
-                    if (usphone) {
-                        actionHelper.saveActionState(
-                            usphone.id,
-                            "UserPhone",
-                            "REGISTER",
-                            usr.usrID,
-                            req,
-                            res
-                        );
-                    }
+            await ActionState.create({
+                model_id: uspos.id,
+                model: "UserPosition",
+                action: "REGISTER",
+                user_id: tokenUser.usrID,
+                position_id: tokenUser.position_id,
+                time: new Date(),
+            }, { transaction });
 
-                    let pos = await Position.findOne({
-                        where: {
-                            id: body.position_id,
-                        },
-                    });
-                    if (pos) {
-                        let uspos = await UserPosition.create({
-                            user_id: created_user.id,
-                            department_id: pos.department_id,
-                            position_id: body.position_id,
-                            is_primary: true,
-                        });
+            return createdUser;
+        });
 
-                        if (uspos) {
-                            actionHelper.saveActionState(
-                                uspos.id,
-                                "UserPosition",
-                                "REGISTER",
-                                usr.usrID,
-                                req,
-                                res
-                            );
-                        }
-                    }
-                }
-            }
+        const cleanedRedirectUrl = (body.redirect_url || "")
+            .toString()
+            .trim()
+            .replace(/^`+/, "")
+            .replace(/`+$/, "")
+            .replace(/^"+/, "")
+            .replace(/"+$/, "")
+            .replace(/^'+/, "")
+            .replace(/'+$/, "");
+
+        if (cleanedRedirectUrl) {
+            self.sendResetPasswordEmail(created_user.id, body.email, cleanedRedirectUrl);
         }
 
         res.apiSuccess({
@@ -448,12 +488,12 @@ self.sendResetPasswordEmail = async (userId, email, redirectUrl) => {
 
         var transporter = nodemailer.createTransport(
             smtpTransport({
-                service: "gmail",
-                host: "smtp.gmail.com",
+                service: MAIL_DRIVER,
+                host: MAIL_HOST,
                 secure: false,
                 auth: {
-                    user: "1space.mia@gmail.com",
-                    pass: "rjxcwxgyrijvturw",
+                    user: MAIL_USERNAME,
+                    pass: MAIL_PASSWORD,
                 },
                 tls: {
                     rejectUnauthorized: false
@@ -495,12 +535,12 @@ self.sendPasswordSetupEmail = async (userId, email, redirectUrl, hashedResetStri
         };
         var transporter = nodemailer.createTransport(
             smtpTransport({
-                service: "gmail",
-                host: "smtp.gmail.com",
+                service: MAIL_DRIVER,
+                host: MAIL_HOST,
                 secure: false,
                 auth: {
-                    user: "1space.mia@gmail.com",
-                    pass: "rjxcwxgyrijvturw",
+                    user: MAIL_USERNAME,
+                    pass: MAIL_PASSWORD,
                 },
             })
         );
@@ -607,13 +647,13 @@ self.update = async (req, res) => {
             })
             if (actionState) {
                 await ActionState.update({
-                action: "REGISTERED"
-                },{
-                where: {
-                    id: actionState.id
-                }
+                    action: "REGISTERED"
+                }, {
+                    where: {
+                        id: actionState.id
+                    }
                 })
-            
+
             }
 
 
@@ -687,9 +727,11 @@ self.getDepartmentUsers = async (req, res) => {
             const department_id = ar.positions && ar.positions.length > 0 ? ar.positions[0].department_id : null;
 
             const position = await Position.findOne({ where: { id: position_id } });
+            const role = await Role.findOne({ where: { id: position.role_id } });
+
             const department = await Department.findOne({ where: { id: department_id } });
             // Create a NEW object (deep copy or specific properties)
-            let temp =  req.query.search ?ar: ar.toJSON();
+            let temp = req.query.search ? ar : ar.toJSON();
 
             const newUser = {
                 ...temp, // Important: Use .toJSON() to get a plain data object
@@ -699,6 +741,7 @@ self.getDepartmentUsers = async (req, res) => {
                 department_id,
                 position,
                 department,
+                role
             };
 
             // Remove the original nested data if you don't want it in the final response
@@ -927,7 +970,7 @@ self.switchAccount = async (req, res) => {
             };
 
             accessToken = jwt.sign(us, TOKEN_KEY, {
-                expiresIn: "1000h",
+                expiresIn: process.env.TOKEN_MAX_AGE || "4h",
             });
             refreshToken = jwt.sign(us, REFRESH_TOKEN_KEY, {
                 expiresIn: "1000h",
@@ -1025,12 +1068,12 @@ self.sendMail = async (req, res) => {
 
             var transporter = nodemailer.createTransport(
                 smtpTransport({
-                    service: "gmail",
-                    host: "smtp.gmail.com",
+                    service: MAIL_DRIVER,
+                    host: MAIL_HOST,
                     secure: false,
                     auth: {
-                        user: "1space.mia@gmail.com",
-                        pass: "rjxcwxgyrijvturw",
+                        user: MAIL_USERNAME,
+                        pass: MAIL_PASSWORD,
                     },
                 })
             );
@@ -1144,12 +1187,12 @@ self.requestPasswordReset = async (req, res) => {
 
             var transporter = nodemailer.createTransport(
                 smtpTransport({
-                    service: "gmail",
-                    host: "smtp.gmail.com",
+                    service: MAIL_DRIVER,
+                    host: MAIL_HOST,
                     secure: false,
                     auth: {
-                        user: "1space.mia@gmail.com",
-                        pass: "rjxcwxgyrijvturw",
+                        user: MAIL_USERNAME,
+                        pass: MAIL_PASSWORD,
                     },
                     tls: {
                         rejectUnauthorized: false
@@ -1322,6 +1365,41 @@ self.accountActivation = async (req, res) => {
                 id: id
             }
         });
+
+        let userpos = await UserPosition.findOne({
+            where: {
+                user_id: id,
+                is_primary: true
+            }
+        })
+
+        let pos = await Position.findOne({
+            where: {
+                id: userpos.position_id
+            }
+        })
+
+        let role = await Role.findOne({
+            where: {
+                id: pos.role_id
+            }
+        })
+
+        if (role.name === "SUPER-ADMIN-ROLE") {
+            // not allowed to deactivate this user
+
+            const errorResponse = {
+                _links: { previousPage: null, nextPage: null },
+                _warning: [],
+                payload: [],
+                _attributes: {},
+                _errors: {
+                    message: ["You cannot deactivate this user because they have a super admin role."]
+                },
+                _generated: new Date().toISOString()
+            };
+            return res.status(401).json(errorResponse);
+        }
 
         if (user) {
             user.is_activated = action === "ACTIVATE" ? true : false;
@@ -1521,12 +1599,12 @@ self.changePassword = async (req, res) => {
         if (user) {
             //compare old password with existing password in the user
             const validPassword = await bcrypt.compare(old_password, user.password);
-            if(validPassword){
+            if (validPassword) {
                 //change password
 
                 const salt = await bcrypt.genSalt();
                 const hashed_password = await bcrypt.hash(new_password, salt);
-                
+
 
                 user.password = hashed_password
                 await user.save();
@@ -1534,8 +1612,8 @@ self.changePassword = async (req, res) => {
                 res.apiSuccess({
                     data: user
                 });
-                    
-            }else {
+
+            } else {
                 return res.json({
                     message: "Old password is incorrect"
                 })

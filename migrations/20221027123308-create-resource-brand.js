@@ -19,12 +19,12 @@ module.exports = {
       resource_id: {
         type: Sequelize.UUID,
         allowNull: false,
-        references: {
-          model: "Resources",
-          key: "id",
-        },
-        onUpdate: "CASCADE",
-        onDelete: "CASCADE",
+        // references: {
+        //   model: "Resources",
+        //   key: "id",
+        // },
+        // onUpdate: "CASCADE",
+        // onDelete: "CASCADE",
       },
       name: {
         type: Sequelize.STRING,

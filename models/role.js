@@ -9,6 +9,11 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(/* models*/) {
       // define association here
+
+      // Role.belongsTo(models.Position, {
+      //   as: "role",
+      //   foreignKey: "role_id",
+      // });
     }
   }
   Role.init(
@@ -28,10 +33,10 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false
       },
       description: DataTypes.TEXT,
-      // is_admin_role: {
-      //   type: DataTypes.BOOLEAN,
-      //   defaultValue: false
-      // } 
+      is_deactivatable: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true
+      } 
     },
     {
       createdAt: "created_at",

@@ -27,6 +27,16 @@ module.exports = {
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
       },
+      stakeholder_id: {
+        type: Sequelize.UUID,
+        allowNull: false,
+        references: {
+          model: "stakeholders",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
+      },
       joint_venture_company_id: {
         type: Sequelize.UUID,
         allowNull: false,

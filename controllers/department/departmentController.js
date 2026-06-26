@@ -600,10 +600,121 @@ self.getDepartmentDashboad = async (req, res) => {
     });
   }
 };
+
+// self.getUserDashboard = async (req, res) => {
+//   try {
+//     const usr = await usrData.userData(req, res);
+//     const department_id = usr.departmentID;
+
+//     // Fetch everything in parallel
+//     const [
+//       stakeholders,
+//       projects,
+//       resources,
+//       documents,
+//       projectTypes,
+//       stakeholderTypes,
+//       resourceTypes,
+//       documentTypes
+//     ] = await Promise.all([
+//       Stakeholder.findAll({ where: { department_id } }),
+//       Project.findAll({ where: { department_id } }),
+//       Resource.findAll({ where: { department_id } }),
+//       Document.findAll({ where: { department_id } }),
+//       ProjectType.findAll(),
+//       StakeholderType.findAll(),
+//       ResourceType.findAll(),
+//       DocumentType.findAll()
+//     ]);
+
+//     // Count queries
+//     const [
+//       projectCounts,
+//       stakeholderCounts,
+//       resourceCounts,
+//       documentCounts
+//     ] = await Promise.all([
+//       Project.findAll({
+//         attributes: ["projecttype_id", [Sequelize.fn("COUNT", "*"), "count"]],
+//         where: { department_id },
+//         group: ["projecttype_id"]
+//       }),
+//       Stakeholder.findAll({
+//         attributes: ["stakeholdertype_id", [Sequelize.fn("COUNT", "*"), "count"]],
+//         where: { department_id },
+//         group: ["stakeholdertype_id"]
+//       }),
+//       Resource.findAll({
+//         attributes: ["resourcetype_id", [Sequelize.fn("COUNT", "*"), "count"]],
+//         where: { department_id },
+//         group: ["resourcetype_id"]
+//       }),
+//       Document.findAll({
+//         attributes: ["documenttype_id", [Sequelize.fn("COUNT", "*"), "count"]],
+//         where: { department_id },
+//         group: ["documenttype_id"]
+//       })
+//     ]);
+
+//     // Helper → return array of objects like [{electric:1}, {mechanical:0}]
+//     const mapTypesToObjects = (types, counts, typeIdKey) => {
+//       return types.map(type => {
+//         const found = counts.find(c => c[typeIdKey] === type.id);
+//         const count = found ? Number(found.get("count")) : 0;
+
+//         return {
+//           [toSnakeCase(type.title)]: count
+//         };
+//       });
+//     };
+
+//     const data = {
+//       project: {
+//         total: projects.length,
+//         types: mapTypesToObjects(projectTypes, projectCounts, "projecttype_id")
+//       },
+//       stakeholder: {
+//         total: stakeholders.length,
+//         types: mapTypesToObjects(stakeholderTypes, stakeholderCounts, "stakeholdertype_id")
+//       },
+//       resource: {
+//         total: resources.length,
+//         types: mapTypesToObjects(resourceTypes, resourceCounts, "resourcetype_id")
+//       },
+//       document: {
+//         total: documents.length,
+//         types: mapTypesToObjects(documentTypes, documentCounts, "documenttype_id")
+//       }
+//     };
+
+//     res.apiSuccess({
+//       data: data
+//     })
+
+//   } catch (error) {
+//     return res.status(500).json({
+//       message: error.message,
+//     });
+//   }
+// };
+
 self.getUserDashboard = async (req, res) => {
   try {
     const usr = await usrData.userData(req, res);
     const department_id = usr.departmentID;
+
+    // Helper function to filter only APPROVED records
+   const approvedWhere = (model) => ({
+    department_id,
+    id: {
+      [Op.in]: Sequelize.literal(`(
+        SELECT model_id
+        FROM actionstates
+        WHERE model = '${model}'
+          AND action IN ('APPROVED', 'AUTHORIZED')
+      )`)
+    }
+  });
 
     // Fetch everything in parallel
     const [
@@ -616,10 +727,18 @@ self.getUserDashboard = async (req, res) => {
       resourceTypes,
       documentTypes
     ] = await Promise.all([
-      Stakeholder.findAll({ where: { department_id } }),
-      Project.findAll({ where: { department_id } }),
-      Resource.findAll({ where: { department_id } }),
-      Document.findAll({ where: { department_id } }),
+      Stakeholder.findAll({
+        where: approvedWhere("Stakeholder")
+      }),
+      Project.findAll({
+        where: approvedWhere("Project")
+      }),
+      Resource.findAll({
+        where: approvedWhere("Resource")
+      }),
+      Document.findAll({
+        where: approvedWhere("Document")
+      }),
       ProjectType.findAll(),
       StakeholderType.findAll(),
       ResourceType.findAll(),
@@ -634,23 +753,38 @@ self.getUserDashboard = async (req, res) => {
       documentCounts
     ] = await Promise.all([
       Project.findAll({
-        attributes: ["projecttype_id", [Sequelize.fn("COUNT", "*"), "count"]],
-        where: { department_id },
+        attributes: [
+          "projecttype_id",
+          [Sequelize.fn("COUNT", Sequelize.col("id")), "count"]
+        ],
+        where: approvedWhere("Project"),
         group: ["projecttype_id"]
       }),
+
       Stakeholder.findAll({
-        attributes: ["stakeholdertype_id", [Sequelize.fn("COUNT", "*"), "count"]],
-        where: { department_id },
+        attributes: [
+          "stakeholdertype_id",
+          [Sequelize.fn("COUNT", Sequelize.col("id")), "count"]
+        ],
+        where: approvedWhere("Stakeholder"),
         group: ["stakeholdertype_id"]
       }),
+
       Resource.findAll({
-        attributes: ["resourcetype_id", [Sequelize.fn("COUNT", "*"), "count"]],
-        where: { department_id },
+        attributes: [
+          "resourcetype_id",
+          [Sequelize.fn("COUNT", Sequelize.col("id")), "count"]
+        ],
+        where: approvedWhere("Resource"),
         group: ["resourcetype_id"]
       }),
+
       Document.findAll({
-        attributes: ["documenttype_id", [Sequelize.fn("COUNT", "*"), "count"]],
-        where: { department_id },
+        attributes: [
+          "documenttype_id",
+          [Sequelize.fn("COUNT", Sequelize.col("id")), "count"]
+        ],
+        where: approvedWhere("Document"),
         group: ["documenttype_id"]
       })
     ]);
@@ -674,29 +808,40 @@ self.getUserDashboard = async (req, res) => {
       },
       stakeholder: {
         total: stakeholders.length,
-        types: mapTypesToObjects(stakeholderTypes, stakeholderCounts, "stakeholdertype_id")
+        types: mapTypesToObjects(
+          stakeholderTypes,
+          stakeholderCounts,
+          "stakeholdertype_id"
+        )
       },
       resource: {
         total: resources.length,
-        types: mapTypesToObjects(resourceTypes, resourceCounts, "resourcetype_id")
+        types: mapTypesToObjects(
+          resourceTypes,
+          resourceCounts,
+          "resourcetype_id"
+        )
       },
       document: {
         total: documents.length,
-        types: mapTypesToObjects(documentTypes, documentCounts, "documenttype_id")
+        types: mapTypesToObjects(
+          documentTypes,
+          documentCounts,
+          "documenttype_id"
+        )
       }
     };
 
-    res.apiSuccess({
-      data: data
-    })
+    return res.apiSuccess({
+      data
+    });
 
   } catch (error) {
     return res.status(500).json({
-      message: error.message,
+      message: error.message
     });
   }
 };
-
 // helper
 function toSnakeCase(str) {
   return str

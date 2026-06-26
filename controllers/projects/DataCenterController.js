@@ -37,7 +37,7 @@ self.get = async (req, res) => {
 };
 
 self.save = async (req, res) => {
-  saveRecord(DataCenter , req, res);
+  saveRecord(DataCenter , req, res, "title");
 };
 
 self.update = async (req, res) => {

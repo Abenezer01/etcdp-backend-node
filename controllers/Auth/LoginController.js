@@ -26,6 +26,7 @@ const cipherHelper = require("../utils/cipher-helper");
 // Ensure these keys are strong, unique, and stored in your environment variables
 const ACCESS_TOKEN_KEY = process.env.ACCESS_TOKEN_KEY;
 const REFRESH_TOKEN_KEY = process.env.REFRESH_TOKEN_KEY; 
+const TOKEN_MAX_AGE = process.env.TOKEN_MAX_AGE || "4h";
 // NOTE: REFRESH_TOKEN_KEY is not strictly needed if using the opaque token approach, 
 // but is kept here if you want to sign the access token and refresh token differently.
 
@@ -147,7 +148,7 @@ const loginUser = async (req, res) => {
 
       // 3. APPLY LOCKOUT AFTER 5 FAILURES
       if (newFailCount >= 5) {
-        updateData.locked_until = new Date(Date.now() + 15 * 60 * 1000); // Lock for 15 mins
+        updateData.locked_until = new Date(Date.now() + LOCKOUT_DURATION_MINS * 60 * 1000); // Lock for 15 mins
         updateData.failed_login_attempts = 0; // Reset counter for next cycle
       }
 
@@ -197,7 +198,7 @@ const loginUser = async (req, res) => {
     };
 
     // 1. ACCESS TOKEN: Short-lived, signed JWT for API access
-    const accessToken = jwt.sign(userPayload, ACCESS_TOKEN_KEY, { expiresIn: "15m" }); 
+    const accessToken = jwt.sign(userPayload, ACCESS_TOKEN_KEY, { expiresIn: TOKEN_MAX_AGE }); 
     
     // 2. REFRESH TOKEN: Long-lived, random string stored in the database
     // This is the CRITICAL change for security and proper expiration management.

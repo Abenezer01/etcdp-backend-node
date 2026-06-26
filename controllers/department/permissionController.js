@@ -99,18 +99,16 @@ self.assignRolePermissions = async (req, res) => {
 
 self.getAll = async (req, res) => {
   try {
-    // RolePermissionView.removeAttribute('id');
-    // let data = await RolePermissionView.findAll({
-    //   where: {
-    //     role_id: "5f268c97-1fc2-437d-8db8-197534a91141"
-    //   }
-    // })
 
-    // let permissions = data.map(d => d.permission_name);
-
-    // return res.json(permissions)
+   
 
     let data = await Permission.findAll();
+
+    // for(let item of data){
+    //     item.module = "stakeholder";
+    //     item.type =  "CONTRACTOR";
+    //     await item.save();
+    // }
 
     return res.json(data)
     const paginatedResult = await paginationHelper(Permission, req);
@@ -886,7 +884,8 @@ self.generate = async (req, res) => {
       // "projectmachinery",
       // "projectmaterial",
       // "projectmanpower"
-      "projectjointventurecompany"
+      // "projectjointventurecompany"
+      "projectfile"
     ]
     let action = ['create', 'view', 'update', 'delete', 'check', 'approve', 'authorize']
 

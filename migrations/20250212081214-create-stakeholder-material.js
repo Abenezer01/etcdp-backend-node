@@ -27,12 +27,24 @@ module.exports = {
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
       },
-      material_category: {
+      material_category_id: {
         type: Sequelize.UUID,
         allowNull: false,
+        references: {
+          model: "StakeholderMasterData",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
       },
-      material_subcategory: {
-        type: Sequelize.STRING
+      material_subcategory_id: {
+        type: Sequelize.UUID,
+        references: {
+          model: "StakeholderMasterData",
+          key: "id",
+        },
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
       },
       name: {
         type: Sequelize.STRING,

@@ -4544,6 +4544,7 @@ const projectJointVentureCompanyValidate = async (req, res, next) => {
   }
   const validationRule = {
     project_id: "required|string",
+    stakeholder_id: "required|string",
     joint_venture_company_id: "required|string",
     title: "required|string",
     description: "string"

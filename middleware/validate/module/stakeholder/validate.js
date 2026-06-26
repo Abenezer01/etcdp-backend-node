@@ -92,8 +92,8 @@ const stakeholderMaterialValidate = async (req, res, next) => {
   }
   const validationRule = {
     stakeholder_id: "required|string",
-    material_category: "required|string",
-    material_subcategory: "string",
+    material_category_id: "required|string",
+    material_subcategory_id: "string",
     name: "required|string",
     description: "string",
     purpose: "string",
@@ -771,6 +771,8 @@ const trainingValidate = async (req, res, next) => {
     type: "required|string",
     provider: "required|string",
     provision_date: "required|date",
+    description: "string",
+    quantity:"integer",
   };
 
   await validateReply.validateReply(req.body, validationRule, res, next);
@@ -881,6 +883,8 @@ const StakeholderServiceValidate = async (req, res, next) => {
   }
   const validationRule = {
     stakeholder_id: "required|string",
+    construction_related_service_id: "string",
+    unit_price: "numeric"
   };
 
   await validateReply.validateReply(req.body, validationRule, res, next);

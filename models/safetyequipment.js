@@ -41,14 +41,8 @@ module.exports = (sequelize, DataTypes) => {
     purpose: DataTypes.STRING,
     quantity: DataTypes.INTEGER,
     current_situation: DataTypes.STRING,
-    // NEW ATTRIBUTES
-    latitude: {
-      type: DataTypes.DOUBLE,
-      allowNull: true,
-    },
-    longitude: {
-      type: DataTypes.DOUBLE,
-      allowNull: true,
+    location: {
+      type: DataTypes.STRING,
     },
   }, {
     createdAt: 'created_at',

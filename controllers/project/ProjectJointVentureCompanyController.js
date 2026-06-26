@@ -28,8 +28,13 @@ self.getAll = async (req, res) => {
     const includeOptions = [
       {
           model: JointVentureCompany,
-          as: "stakeholder"
+          as: "jointventurecompany"
       },
+      {
+        model: Stakeholder,
+        as: "stakeholder"
+      },
+      
     ];
     const paginatedResult = await paginationHelper(ProjectJointVentureCompany, req, whereCondition, includeOptions);
 
@@ -50,9 +55,10 @@ self.getByProjectId = async (req, res) => {
     const whereCondition = { project_id: id };
 
     const includeOptions = [
-      { model: Stakeholder, as: "stakeholder" } // Example association
+      { model: JointVentureCompany, as: "jointVentureCompany" } // Example association
     ];
    
+    let response = await ProjectJointVentureCompany.findAndCountAll();
     const paginatedResult = await paginationHelper(ProjectJointVentureCompany, req, whereCondition, includeOptions);
 
     // Use the response formatter to send the success response

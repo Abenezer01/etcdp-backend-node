@@ -14,22 +14,72 @@ const paginationHelper = require("../utils/pagination-helper");
 const { getRecordById } = require("../utils/format-helper");
 const crypto = require("crypto");
 const FileType = require('file-type');
+const dotenv = require("dotenv");
+dotenv.config();
+
 let self = {};
 
 // 1. Define strict security constants
-const ALLOWED_EXTENSIONS = ['.pdf', '.jpg', '.jpeg', '.png', '.docx', '.doc'];
+const ALLOWED_EXTENSIONS = ['.pdf', '.jpg', '.jpeg', '.png', '.docx', '.doc', '.xlsx', '.xls', '.csv', '.ods'];
 const ALLOWED_MIMES = [
-  'application/pdf', 
-  'image/jpeg', 
-  'image/png', 
+  'application/pdf',
+  'image/jpeg',
+  'image/png',
   'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-  'application/msword'
+  'application/msword',
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  'application/vnd.ms-excel',
+  'text/csv',
+  'application/vnd.oasis.opendocument.spreadsheet'
 ];
 
+const uploadDir = process.env.UPLOAD_STORAGE_DIR;
+
+const logFileUploadEvent = (level, message, details = {}) => {
+  console[level](`[FileUpload] ${message}`, details);
+};
+
+const getSingleUpload = (req) => {
+  if (!req.files || !req.files.upload) {
+    return null;
+  }
+
+  if (Array.isArray(req.files.upload)) {
+    return req.files.upload.length === 1 ? req.files.upload[0] : "MULTIPLE";
+  }
+
+  return req.files.upload;
+};
+
+const ensureUploadDirectory = (dirPath) => {
+  if (!dirPath) {
+    throw new Error("UPLOAD_STORAGE_DIR is not configured");
+  }
+
+  if (!fs.existsSync(dirPath)) {
+    fs.mkdirSync(dirPath, { recursive: true });
+  }
+};
+
+const safeRemoveFile = (filePath) => {
+  if (!filePath || !path.isAbsolute(filePath) || !fs.existsSync(filePath)) {
+    return;
+  }
+
+  try {
+    fs.unlinkSync(filePath);
+  } catch (error) {
+    logFileUploadEvent("warn", "Failed to remove file during cleanup", {
+      filePath,
+      error: error.message,
+    });
+  }
+};
 
 
 self.getAll = async (req, res) => {
   try {
+
 
     const paginatedResult = await paginationHelper(File, req);
 
@@ -67,13 +117,13 @@ self.getMyFiles = async (req, res) => {
 
 
 self.getMyFilteredFiles = async (req, res) => {
-  
-  const { id, project_type} = req.query;
+
+  const { id, project_type } = req.query;
   try {
-    const whereCondition = { 
+    const whereCondition = {
       reference_id: id,
       project_type: project_type,
-     };
+    };
     const paginatedResult = await paginationHelper(File, req, whereCondition);
 
     // Use the response formatter to send the success response
@@ -88,47 +138,57 @@ self.getMyFilteredFiles = async (req, res) => {
 };
 
 self.save = async (req, res) => {
-  if (!req.files || !req.files.upload) {
-      return res.apiError("No file uploaded.");
-  }
-
   try {
+    const filer = getSingleUpload(req);
 
-  const filer = req.files.upload;
+    if (!filer) {
+      logFileUploadEvent("warn", "Upload rejected because no file was provided", {
+        bodyType: req.body.type,
+        referenceId: req.body.reference_id,
+      });
+      return res.apiError("No file uploaded.", 400);
+    }
 
+    if (filer === "MULTIPLE") {
+      logFileUploadEvent("warn", "Upload rejected because multiple files were provided", {
+        bodyType: req.body.type,
+        referenceId: req.body.reference_id,
+      });
+      return res.apiError("Only single file upload is supported.", 400);
+    }
 
-// 2. Validate Extension (Client-side bypass check)
-  const extt = path.extname(filer.name).toLowerCase();
-  if (!ALLOWED_EXTENSIONS.includes(extt)) {
-    return res.apiError(`Forbidden file type: ${extt}`);
-  }
+    const extt = path.extname(filer.name).toLowerCase();
+    if (!ALLOWED_EXTENSIONS.includes(extt)) {
+      logFileUploadEvent("warn", "Upload rejected because extension is not allowed", {
+        fileName: filer.name,
+        extension: extt,
+        mimetype: filer.mimetype,
+      });
+      return res.apiError(`Forbidden file type: ${extt}`, 415);
+    }
 
-  // 3. VALIDATE CONTENT (Prevents XSS in SVG/HTML disguised as JPG)
-  // We check the first few bytes of the file buffer
-  
-  const typeBuffer = await FileType.fromBuffer(filer.data);
-  if (!typeBuffer || !ALLOWED_MIMES.includes(typeBuffer.mime)) {
-    return res.apiError("File content mismatch. The file content does not match its extension.");
-  }
+    const typeBuffer = filer.tempFilePath
+      ? await FileType.fromFile(filer.tempFilePath)
+      : await FileType.fromBuffer(filer.data);
+    if (!typeBuffer || !ALLOWED_MIMES.includes(typeBuffer.mime)) {
+      logFileUploadEvent("warn", "Upload rejected because file content validation failed", {
+        fileName: filer.name,
+        extension: extt,
+        detectedMime: typeBuffer ? typeBuffer.mime : null,
+        providedMime: filer.mimetype,
+      });
+      return res.apiError("File content mismatch. The file content does not match its extension.", 415);
+    }
 
+    const type = req.body.type;
+    const description = req.body.description;
+    const referenceId = req.body.reference_id;
+    const fileabletype = req.body.fileable_type;
+    const projectType = req.body.project_type;
 
-  const type = req.body.type;
-  const description = req.body.description;
-  const referenceId = req.body.reference_id;
-  const fileabletype = req.body.fileable_type;
-  const projectType = req.body.project_type;
-
-  // 🔐 Generate secure random filename
     const ext = path.extname(filer.name) || `.${filer.mimetype.split("/")[1]}`;
     const storedName = crypto.randomBytes(16).toString("hex") + ext;
-
-    // 🔒 PRIVATE STORAGE PATH (IMPORTANT)
-    const uploadDir = "/home/deploy/data/files";
-
-    // Ensure directory exists
-    if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir, { recursive: true });
-    }
+    ensureUploadDirectory(uploadDir);
 
     const absolutePath = path.join(uploadDir, storedName);
 
@@ -136,13 +196,10 @@ self.save = async (req, res) => {
     const fileSizeInKB = filer.size / 1024;
     const docSize = Math.round(fileSizeInKB);
 
-    // 🧠 IMPORTANT CHANGE:
-    // - url now stores INTERNAL PATH (not public URL)
-    // - client will NEVER see this
     const document = {
       fileable_type: fileabletype,
-      title: filer.name, // original name
-      url: absolutePath, // 🔒 internal path
+      title: filer.name,
+      url: absolutePath,
       type,
       description,
       extension: ext.replace(".", ""),
@@ -154,11 +211,27 @@ self.save = async (req, res) => {
     const usr = await usrData.userData(req, res);
     if (!usr) return;
 
-    // Save file to disk FIRST (safer)
+    logFileUploadEvent("info", "Starting file upload", {
+      userId: usr.usrID,
+      referenceId,
+      fileableType: fileabletype,
+      projectType,
+      originalName: filer.name,
+      storedName,
+      size: filer.size,
+      mimetype: filer.mimetype,
+    });
+
     await filer.mv(absolutePath);
 
-    // Save DB record
-    const doc = await File.create(document);
+    let doc;
+
+    try {
+      doc = await File.create(document);
+    } catch (error) {
+      safeRemoveFile(absolutePath);
+      throw error;
+    }
 
     if (doc) {
       const usrID = usr.usrID;
@@ -172,76 +245,152 @@ self.save = async (req, res) => {
         res
       );
     }
-      
-      res.apiSuccess({
-        data: doc
-      });
-  
+
+    logFileUploadEvent("info", "File upload completed", {
+      userId: usr.usrID,
+      fileId: doc.id,
+      referenceId,
+      storedPath: absolutePath,
+    });
+
+    res.apiSuccess({
+      data: doc
+    });
+
   } catch (error) {
+    logFileUploadEvent("error", "File upload failed", {
+      bodyType: req.body.type,
+      referenceId: req.body.reference_id,
+      fileableType: req.body.fileable_type,
+      error: error.message,
+    });
     res.apiError(error);
   }
 };
 
 self.update = async (req, res) => {
   let id = req.params.id;
-  const filer = req.files.upload;
+
   if (!id) {
-    return res.status(412).json({
-      message: "Can't get File id",
-    });
+    logFileUploadEvent("warn", "File update rejected because file id is missing");
+    return res.apiError("Can't get File id", 412);
   }
+
   try {
+    const filer = getSingleUpload(req);
+
+    if (!filer) {
+      logFileUploadEvent("warn", "File update rejected because no file was provided", {
+        fileId: id,
+      });
+      return res.apiError("No file uploaded.", 400);
+    }
+
+    if (filer === "MULTIPLE") {
+      logFileUploadEvent("warn", "File update rejected because multiple files were provided", {
+        fileId: id,
+      });
+      return res.apiError("Only single file upload is supported.", 400);
+    }
+
+    const extt = path.extname(filer.name).toLowerCase();
+    if (!ALLOWED_EXTENSIONS.includes(extt)) {
+      logFileUploadEvent("warn", "File update rejected because extension is not allowed", {
+        fileId: id,
+        fileName: filer.name,
+        extension: extt,
+      });
+      return res.apiError(`Forbidden file type: ${extt}`, 415);
+    }
+
+    const typeBuffer = filer.tempFilePath
+      ? await FileType.fromFile(filer.tempFilePath)
+      : await FileType.fromBuffer(filer.data);
+
+    if (!typeBuffer || !ALLOWED_MIMES.includes(typeBuffer.mime)) {
+      logFileUploadEvent("warn", "File update rejected because file content validation failed", {
+        fileId: id,
+        fileName: filer.name,
+        detectedMime: typeBuffer ? typeBuffer.mime : null,
+        providedMime: filer.mimetype,
+      });
+      return res.apiError("File content mismatch. The file content does not match its extension.", 415);
+    }
+
     let fileData = await File.findOne({
       where: {
         id: id,
       },
     });
-    if (fileData) {
-      if (fs.existsSync(fileData.url)) {
-        fs.unlink(fileData.url, (err) => {
-          if (err) {
-            throw err;
-          }
-        });
-      }
-    }
-    const ext = req.files.upload.mimetype.split("/")[1];
-    let rand = Math.floor(100000 + Math.random() * 900000);
-    var name = req.files.upload.name;
-    let parsedName = path.parse(name).name;
-    let checkedNew = parsedName.concat(rand);
-    const filePath = path.join(
-      __dirname,
-      "../../public",
-      "files",
-      checkedNew + "." + `${ext}`
-    );
-    //console.log("The File path is ", filePath)
 
-    filer.mv(filePath, (err) => {
-      if (err) {return res.status(500).send(err);}
-      // res.redirect('/')
+    if (!fileData) {
+      logFileUploadEvent("warn", "File update rejected because the file record was not found", {
+        fileId: id,
+      });
+      return res.apiError("File not found", 404);
+    }
+
+    ensureUploadDirectory(uploadDir);
+
+    const ext = path.extname(filer.name) || `.${filer.mimetype.split("/")[1]}`;
+    const storedName = crypto.randomBytes(16).toString("hex") + ext;
+    const filePath = path.join(uploadDir, storedName);
+    const previousPath = fileData.url;
+
+    logFileUploadEvent("info", "Starting file update", {
+      fileId: id,
+      originalName: filer.name,
+      storedName,
+      previousPath,
     });
+
+    await filer.mv(filePath);
+
     let updatedFile = {
-      type: req.body.type,
-      title: req.body.title,
+      type: req.body.type || fileData.type,
+      title: req.body.title || filer.name,
       description: req.body.description,
       url: filePath,
+      extension: ext.replace(".", ""),
+      size: Math.round(filer.size / 1024),
     };
 
+    let updated = 0;
 
-    const [updated] = await File.update(updatedFile, {
+    try {
+      [updated] = await File.update(updatedFile, {
         where: { id },
-    });
+      });
+    } catch (error) {
+      safeRemoveFile(filePath);
+      throw error;
+    }
 
     if (updated) {
+      if (previousPath !== filePath) {
+        safeRemoveFile(previousPath);
+      }
+
       const updatedData = await File.findOne({ where: { id } });
+      logFileUploadEvent("info", "File update completed", {
+        fileId: id,
+        storedPath: filePath,
+      });
       return res.apiSuccess({
         data: updatedData
       });
     }
 
+    safeRemoveFile(filePath);
+    logFileUploadEvent("warn", "File update did not modify any records", {
+      fileId: id,
+    });
+    return res.apiError("File update failed", 500);
   } catch (error) {
+    logFileUploadEvent("error", "File update failed", {
+      fileId: id,
+      error: error.message,
+    });
     return res.apiError(error);
   }
 };
@@ -429,7 +578,7 @@ self.linkfiles = async (req, res) => {
 //     if (!fileData) return res.status(404).json({ message: "File not found" });
 
 //     const filePath = fileData.url; 
-    
+
 //     if (!fs.existsSync(filePath)) {
 //       return res.status(404).json({ message: "Physical file not found" });
 //     }
@@ -448,7 +597,7 @@ self.linkfiles = async (req, res) => {
 //     // 2. SECURITY & DOWNLOAD HEADERS
 //     // We use 'application/force-download' to stop the browser from trying to preview
 //     res.setHeader('Content-Type', 'application/force-download');
-    
+
 //     // CRITICAL: The filename must be in quotes inside Content-Disposition
 //     // We use encodeURIComponent to handle spaces/special characters
 //     // const encodedName = encodeURIComponent(fileNameWithExt);
@@ -459,7 +608,7 @@ self.linkfiles = async (req, res) => {
 
 
 //     // res.setHeader('Content-Disposition', `attachment; filename="${fileNameWithExt}"; filename*=UTF-8''${encodedName}`);
-    
+
 //     res.setHeader('Content-Security-Policy', "default-src 'none'");
 //     res.setHeader('X-Content-Type-Options', 'nosniff');
 
@@ -556,12 +705,12 @@ self.download = async (req, res) => {
   } catch (error) {
     return apiError(error)
   }
-};  
+};
 
 //show uploaded images api
 
 self.showImages = async (req, res) => {
-  try { 
+  try {
     let id = req.params.id;
     let data = await File.findOne({
       where: {
@@ -597,7 +746,7 @@ self.viewImage = async (req, res) => {
     // 2. Set headers for viewing, not downloading
     res.setHeader('Content-Type', mimeType);
     res.setHeader('Content-Disposition', 'inline'); // 'inline' tells browser to show it
-    
+
     // 3. Security headers (keep these!)
     res.setHeader('X-Content-Type-Options', 'nosniff');
     res.setHeader('Cache-Control', 'public, max-age=86400'); // Cache for 24 hours

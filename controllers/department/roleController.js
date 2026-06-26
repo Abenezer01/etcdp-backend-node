@@ -31,7 +31,7 @@ self.get = async (req, res) => {
 };
 
 self.save = async (req, res) => {
-  saveRecord(Role, req, res);
+  saveRecord(Role, req, res, "name");
 };
 
 self.update = async (req, res) => {

@@ -25,7 +25,10 @@
 
 const express = require("express");
 const app = express();
-const port = 1200; // setting the port
+const dotenv = require("dotenv");
+dotenv.config();
+const port = process.env.SOCKET_PORT;
+
 const server = app.listen(port);
 // const usrData = require("../../utils/userDataFromToken");
 

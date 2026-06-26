@@ -18,9 +18,11 @@ const helmet = require('helmet');
 const cookieParser = require("cookie-parser");
 const fileUpload = require("express-fileupload");
 const formatResponse = require("./middleware/formatters/response-formatter");
+const dotenv = require("dotenv");
+dotenv.config();
 
 // IMPORT YOUR AUTH MIDDLEWARE
-const { verifyAccessToken } = require("./middleware/auth.middleware"); 
+const { verifyAccessToken } = require("./middleware/auth.middleware");
 
 let app = express();
 
@@ -49,23 +51,36 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(fileUpload());
 app.use(cookieParser());
 app.use(express.static("public"));
+app.use("/api", express.static("public"));
+app.use("/api/v1", express.static("public"));
+app.use("/api/api/v1", express.static("public"));
 
 // CORS Settings
 const whitelist = [
-  'http://196.189.50.52',       // Production IP
-  'http://196.189.50.52:3000',  // React dev port
-  'http://196.189.50.52:7400',  // backend
-  'http://196.189.50.52:5200',  // socket port
-  'http://localhost:3000'       // Local development
+  'http://196.189.50.52',
+  'http://196.189.50.52:3000',
+  'http://196.189.50.52:3001',
+  'http://196.189.50.52:7400',
+  'http://196.189.50.52:5200',
+  'http://196.189.50.52:1200',
+  'http://localhost:3000',
+  'http://localhost:3001',
+  'https://196.189.50.52',
+  'https://196.189.50.52:443',
+  'http://ecdms.mui.gov.et',
+  'http://ecdms.mui.gov.et:3001',
+  'https://ecdms.mui.gov.et',
+  'http://www.ecdms.mui.gov.et',
+  'http://www.ecdms.mui.gov.et:3001',
+  'https://www.ecdms.mui.gov.et'
 ];
 
 const corsOptions = {
   origin: function (origin, callback) {
     if (!origin) return callback(null, true);
-    
+
     if (whitelist.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
@@ -74,17 +89,30 @@ const corsOptions = {
     }
   },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
   credentials: true,
   maxAge: 86400
 };
 
 app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
+
+app.use(fileUpload({
+  limits: { fileSize: 100 * 1024 * 1024 },
+  abortOnLimit: true,
+  useTempFiles: true,
+  tempFileDir: "/tmp/ecdms-uploads",
+  createParentPath: true,
+  limitHandler: (req, res) => {
+    res.status(413).json({
+      message: "File size exceeds the maximum limit"
+    });
+  }
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/public", express.static("public"));
 app.set("view engine", "ejs");
-
 
 // =================================================================
 // --- PUBLIC ROUTES (No Token Required) ---
@@ -92,7 +120,7 @@ app.set("view engine", "ejs");
 
 // Single entry point for Login & Token Refresh endpoints.
 // Frontend should hit: POST /api/v1/auth/refresh-token (or your exact sub-route)
-app.use("/api/v1/auth", loginRoute(express)); 
+app.use("/api/v1/auth", loginRoute(express));
 
 
 // =================================================================
@@ -101,7 +129,7 @@ app.use("/api/v1/auth", loginRoute(express));
 
 // Middleware checks Access Token lifecycle. 
 // If expired, blocks immediately & emits status 401 with 'ACCESS_TOKEN_EXPIRED'
-app.use("/api/v1", verifyAccessToken); 
+app.use("/api/v1", verifyAccessToken);
 
 
 // =================================================================
@@ -123,9 +151,20 @@ app.use("/api/v1/analytics", analyticRoute(express));
 // =================================================================
 // --- CATCH-ALL / VIEW ROUTE ---
 // =================================================================
+
+const PORT = process.env.PORT;
+
 app.use("/", route_view(express));
 
-app.listen(7400, () => {
+app.use((err, req, res, next) => {
+  console.error("Unhandled error:", err);
+  if (res.headersSent) {
+    return next(err);
+  }
+  return res.apiError(err);
+});
+
+app.listen(PORT, () => {
   console.log("Success running on port 7400");
 });
 

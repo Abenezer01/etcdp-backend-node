@@ -36,7 +36,7 @@ self.get = async (req, res) => {
 };
 
 self.save = async (req, res) => {
-  saveRecord(BridgeBasicData , req, res);
+  saveRecord(BridgeBasicData , req, res, "name");
 };
 
 self.update = async (req, res) => {

@@ -1,4 +1,4 @@
-const { JointVentureCompany , Sequelize } = require("../../models");
+const { JointVentureCompany, Project, ProjectJointVentureCompany, Sequelize } = require("../../models");
 const Op = Sequelize.Op;
 const dotenv = require("dotenv");
 dotenv.config();
@@ -37,5 +37,35 @@ self.update = async (req, res) => {
 self.delete = async (req, res) => {
   deleteRecord(JointVentureCompany, req, res);
 };
+
+
+self.getJointVentureCompanyProjects = async(req, res) => {
+
+    let {id} = req.params;
+
+    try {
+
+        let data = await Project.findAll({
+            include: [{
+                model: ProjectJointVentureCompany,
+                as: 'projectJointVentureCompany',
+                where: { stakeholder_id: id },
+                attributes: [] // We don't need attributes from the join table itself
+            }],
+            // If you only want projects directly associated with the stakeholder,
+            // and not projects that might have other stakeholderprojects entries,
+            // you might need to adjust the include or add a distinct clause.
+            // For a simple join, this should work.
+        });
+
+
+        res.apiSuccess({
+          data: data
+        });
+
+  } catch (error) {
+    res.apiError(error);
+  }
+}
 
 module.exports = self;

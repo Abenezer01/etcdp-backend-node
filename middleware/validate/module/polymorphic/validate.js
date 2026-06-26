@@ -177,10 +177,16 @@ const photoValidate = async (req, res, next) => {
       message: "Can't get upload name",
     });
   }
+  if (Array.isArray(req.files.upload) && req.files.upload.length !== 1) {
+    return res.status(400).json({
+      message: "Only single file upload is supported.",
+    });
+  }
 
+  const file = Array.isArray(req.files.upload) ? req.files.upload[0] : req.files.upload;
   // Check file size (max 2MB)
   const maxFileSize = 2 * 1024 * 1024; // 2MB in bytes
-  if (req.files.upload.size > maxFileSize) {
+  if (file.size > maxFileSize) {
     return res.status(413).json({
       message: "File size exceeds the maximum limit of 2MB",
     });
@@ -202,6 +208,16 @@ const fileValidate = async (req, res, next) => {
   if (!req.files) {
     return res.status(412).json({
       message: "File is empty",
+    });
+  }
+  if (!req.files.upload) {
+    return res.status(412).json({
+      message: "Can't get upload name",
+    });
+  }
+  if (Array.isArray(req.files.upload) && req.files.upload.length !== 1) {
+    return res.status(400).json({
+      message: "Only single file upload is supported.",
     });
   }
   // const array_of_allowed_files = ["pdf"];

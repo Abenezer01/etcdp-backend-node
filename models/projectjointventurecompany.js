@@ -11,9 +11,14 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       ProjectJointVentureCompany.belongsTo(models.Stakeholder, {
+        foreignKey: "stakeholder_id",
+        as: "stakeholder"
+      });
+      ProjectJointVentureCompany.belongsTo(models.JointVentureCompany, {
         foreignKey: "joint_venture_company_id",
         as: "jointVentureCompany"
       });
+
       ProjectJointVentureCompany.belongsTo(models.Project, {
         foreignKey: "project_id",
         as: "project"
@@ -28,6 +33,10 @@ module.exports = (sequelize, DataTypes) => {
     },
     parent_id: DataTypes.UUID,
     project_id: {
+      type: DataTypes.UUID,
+      allowNull: false,
+    },
+    stakeholder_id: {
       type: DataTypes.UUID,
       allowNull: false,
     },
